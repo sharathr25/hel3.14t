@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "1047233306320",
+    "firebase_url": "https://haisaa-f674b.firebaseio.com",
+    "project_id": "haisaa-f674b",
+    "storage_bucket": "haisaa-f674b.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1047233306320:android:5571edc392dd5551",
+        "android_client_info": {
+          "package_name": "com.haisaa"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1047233306320-6buda1a10ks849ifdvs1t0f7nrfbk7qj.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.haisaa",
+            "certificate_hash": "93735b7eb49dfd72498cd9cf8f32a9c944defea6"
+          }
+        },
+        {
+          "client_id": "1047233306320-dge8c88ojpj44pllkb6g5kj2p7e0sp02.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAPl6U99QzfaO2JkofTN8PJMjGdBezuGRU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1047233306320-dge8c88ojpj44pllkb6g5kj2p7e0sp02.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
