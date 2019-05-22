@@ -7,11 +7,33 @@
  */
 
 import React, { Component } from "react";
-import { Text } from 'react-native';
+import { createStackNavigator, createAppContainer } from "react-navigation";
+import SignUpScreen from "./screens/signUpScreen";
+import { BG_COLOR } from "./constants/styleConstants";
+
+const MainNavigator = createStackNavigator(
+  {
+    SignUp: { screen: SignUpScreen }
+  },
+  {
+    initialRouteName: "SignUp",
+    defaultNavigationOptions: {
+      headerStyle: {
+        backgroundColor: "black"
+      },
+      headerTintColor: "#fff",
+      headerTitleStyle: {
+        fontWeight: "bold"
+      }
+    }
+  }
+);
+
+const AppContainer = createAppContainer(MainNavigator);
 
 class App extends Component {
   render() {
-    return <Text>hel3.14t</Text>
+    return <AppContainer />;
   }
 }
 
