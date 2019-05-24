@@ -3,13 +3,13 @@ import { Input, Button, Text } from 'react-native-elements';
 import { View } from 'react-native';
 import { ScrollView } from 'react-native-gesture-handler';
 import firebase from 'react-native-firebase';
-import { SIGN_UP_SCREEN } from '../constants/appConstants';
+import { SIGN_UP_SCREEN, SCREEN_TITLES } from '../constants/appConstants';
 import { styles } from '../constants/styleConstants';
 import { updateUser } from '../common/fireBaseFunctions';
 
 class SignUpScreen extends Component {
   static navigationOptions = {
-    title: 'Sign Up'
+    title: SCREEN_TITLES.SIGN_UP
   };
 
   constructor() {

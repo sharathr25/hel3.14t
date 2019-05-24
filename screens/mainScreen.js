@@ -1,10 +1,11 @@
 import React, { Component } from 'react';
 import { Text } from 'react-native-elements';
 import { View } from 'react-native';
+import { SCREEN_TITLES, MAIN_SCREEN } from '../constants/appConstants';
 
 class MainScreen extends Component {
   static navigationOptions = {
-    title: 'Haisaa'
+    title: SCREEN_TITLES.MAIN
   };
 
   constructor(props) {
@@ -29,23 +30,19 @@ class MainScreen extends Component {
     return (
       <View style={{ alignItems: 'center', justifyContent: 'center' }}>
         <Text>
-Name:
-          {' '}
+          {MAIN_SCREEN.NAME}
           { name }
         </Text>
         <Text>
-Email:
-          {' '}
+          {MAIN_SCREEN.EMAIL}
           { email }
         </Text>
         <Text>
-Mobile No:
-          {' '}
+          {MAIN_SCREEN.MOBILE_NO}
           { mobileNumber }
         </Text>
         <Text>
-UID:
-          {' '}
+          {MAIN_SCREEN.UID}
           { uid }
         </Text>
       </View>

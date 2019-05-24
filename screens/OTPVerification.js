@@ -4,10 +4,11 @@ import { View } from 'react-native';
 import firebase from 'react-native-firebase';
 import { styles } from '../constants/styleConstants';
 import { updateUser } from '../common/fireBaseFunctions';
+import { OTP_SCREEN, SCREEN_TITLES } from '../constants/appConstants';
 
 class OTPVerification extends Component {
   static navigationOptions = {
-    title: 'OTP Verification'
+    title: SCREEN_TITLES.OTP
   };
 
   constructor(props) {
@@ -38,7 +39,7 @@ class OTPVerification extends Component {
       .catch((error) => {
         console.log(error);
         this.setState({
-          error: 'Some error happend please try again later...'
+          error: OTP_SCREEN.ERRORS.TIME_OUT_ERROR
         });
       });
   }
@@ -63,7 +64,7 @@ class OTPVerification extends Component {
       } catch (error) {
         console.log(error.toString());
         this.setState({
-          otpConfimationErrorMessage: 'OTP Invalid. Please try again'
+          otpConfimationErrorMessage: OTP_SCREEN.ERRORS.OTP_INVALID_ERROR
         });
       }
     }
@@ -74,7 +75,7 @@ class OTPVerification extends Component {
     return (
       <View style={{ flex: 1, alignItems: 'center' }}>
         <Text style={{ margin: 10, fontWeight: 'bold' }}>
-          We have sent an OTP to your mobile number. please enter to verify
+          {OTP_SCREEN.REMINDER}
         </Text>
         <Input
           placeholder="OTP"
