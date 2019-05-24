@@ -6,24 +6,33 @@
  * @flow
  */
 
-import React, { Component } from "react";
-import { createStackNavigator, createAppContainer } from "react-navigation";
-import SignUpScreen from "./screens/signUpScreen";
-import { BG_COLOR } from "./constants/styleConstants";
+// packages
+import React, { Component } from 'react';
+import { createStackNavigator, createAppContainer } from 'react-navigation';
+
+// screens
+import SignUpScreen from './screens/signUpScreen';
+import OTPVerification from './screens/OTPVerification';
+import MainScreen from './screens/mainScreen';
+
+// constants
+import { THEME_COLOR } from './constants/styleConstants';
 
 const MainNavigator = createStackNavigator(
   {
-    SignUp: { screen: SignUpScreen }
+    SignUp: { screen: SignUpScreen },
+    OTP: { screen: OTPVerification },
+    Main: { screen: MainScreen }
   },
   {
-    initialRouteName: "SignUp",
+    initialRouteName: 'SignUp',
     defaultNavigationOptions: {
       headerStyle: {
-        backgroundColor: "black"
+        backgroundColor: THEME_COLOR
       },
-      headerTintColor: "#fff",
+      headerTintColor: '#fff',
       headerTitleStyle: {
-        fontWeight: "bold"
+        fontWeight: 'bold'
       }
     }
   }
@@ -32,6 +41,12 @@ const MainNavigator = createStackNavigator(
 const AppContainer = createAppContainer(MainNavigator);
 
 class App extends Component {
+  constructor() {
+    super();
+    this.state = {
+    };
+  }
+
   render() {
     return <AppContainer />;
   }
