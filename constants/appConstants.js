@@ -30,5 +30,5 @@ export const MAIN_SCREEN = {
 export const SCREEN_TITLES = {
   SIGN_UP: 'Sign Up',
   OTP: 'OTP Verification',
-  MAIN: 'Haisaa'
+  MAIN: 'Hel3.14t'
 };
