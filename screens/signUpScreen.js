@@ -30,6 +30,11 @@ class SignUpScreen extends Component {
     };
   }
 
+  componentWillMount() {
+    const { currentUser } = firebase.auth();
+    const { navigation } = this.props;
+    if (currentUser) navigation.navigate('Main', { currentUser });
+  }
 
   checkFields = () => {
     let valid = false;
@@ -128,7 +133,8 @@ class SignUpScreen extends Component {
         <View style={{ alignItems: 'center', justifyContent: 'center' }}>
           <Input
             placeholder="Name"
-            inputContainerStyle={styles.input}
+            inputContainerStyle={styles.inputContainerStyle}
+            inputStyle={styles.inputStyle}
             containerStyle={{ margin: 10 }}
             onChangeText={value => this.setState({ name: value, nameErrorMessage: '' })
             }
@@ -140,7 +146,8 @@ class SignUpScreen extends Component {
           )}
           <Input
             placeholder="Email"
-            inputContainerStyle={styles.input}
+            inputContainerStyle={styles.inputContainerStyle}
+            inputStyle={styles.inputStyle}
             containerStyle={{ margin: 10 }}
             onChangeText={value => this.setState({ email: value, emailErrorMessage: '' })
             }
@@ -152,8 +159,9 @@ class SignUpScreen extends Component {
           )}
           <Input
             placeholder="Mobile Number"
-            inputContainerStyle={styles.input}
-            containerStyle={{ flex: 3 }}
+            inputContainerStyle={styles.inputContainerStyle}
+            inputStyle={styles.inputStyle}
+            containerStyle={{ margin: 10 }}
             onChangeText={value => this.setState({
               mobileNumber: value,
               mobileNumberErrorMessage: ''
@@ -168,7 +176,8 @@ class SignUpScreen extends Component {
           <Input
             placeholder="Password"
             containerStyle={{ margin: 10 }}
-            inputContainerStyle={styles.input}
+            inputContainerStyle={styles.inputContainerStyle}
+            inputStyle={styles.inputStyle}
             secureTextEntry
             onChangeText={value => this.setState({ password: value, passwordErrorMessage: '' })
             }
@@ -180,7 +189,8 @@ class SignUpScreen extends Component {
           )}
           <Input
             placeholder="Confirm Password"
-            inputContainerStyle={styles.input}
+            inputContainerStyle={styles.inputContainerStyle}
+            inputStyle={styles.inputStyle}
             containerStyle={{ margin: 10 }}
             secureTextEntry
             onChangeText={value => this.setState({

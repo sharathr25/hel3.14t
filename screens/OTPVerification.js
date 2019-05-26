@@ -79,7 +79,8 @@ class OTPVerification extends Component {
         </Text>
         <Input
           placeholder="OTP"
-          inputContainerStyle={styles.input}
+          inputContainerStyle={styles.inputContainerStyle}
+          inputStyle={styles.inputStyle}
           containerStyle={{ margin: 10 }}
           onChangeText={value => this.setState({ otp: value })}
         />
