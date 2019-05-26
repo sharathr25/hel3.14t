@@ -27,6 +27,10 @@ export const MAIN_SCREEN = {
   MOBILE_NO: 'Mobile No: '
 };
 
+export const LOADER = {
+  TITLE: 'Loading...'
+};
+
 export const SCREEN_TITLES = {
   SIGN_UP: 'Sign Up',
   OTP: 'OTP Verification',

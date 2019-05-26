@@ -22,7 +22,7 @@ const MainNavigator = createStackNavigator(
   {
     SignUp: { screen: SignUpScreen },
     OTP: { screen: OTPVerification },
-    Main: { screen: MainScreen }
+    Main: { screen: MainScreen },
   },
   {
     initialRouteName: 'SignUp',

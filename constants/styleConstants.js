@@ -1,6 +1,6 @@
 import { StyleSheet } from 'react-native';
 
-export const THEME_COLOR = '#dd4b39';
+export const THEME_COLOR = 'orange';
 export const FONT_FAMILY = 'monospace';
 export const FONT_COLOR = 'white';
 export const FONT_SIZE_HEADING = 16;
@@ -12,7 +12,7 @@ export const styles = StyleSheet.create({
     borderColor: THEME_COLOR,
     borderWidth: 1.5,
     borderRadius: 5,
-    paddingLeft: 5
+    paddingLeft: 5,
   },
   button: {
     backgroundColor: THEME_COLOR,

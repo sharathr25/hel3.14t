@@ -6,6 +6,7 @@ import firebase from 'react-native-firebase';
 import { SIGN_UP_SCREEN, SCREEN_TITLES } from '../constants/appConstants';
 import { styles } from '../constants/styleConstants';
 import { updateUser } from '../common/fireBaseFunctions';
+import Loader from '../components/loader';
 
 class SignUpScreen extends Component {
   static navigationOptions = {
@@ -24,7 +25,8 @@ class SignUpScreen extends Component {
       password: '',
       passwordErrorMessage: '',
       confirmPassword: '',
-      confirmPasswordErrorMessage: ''
+      confirmPasswordErrorMessage: '',
+      loaderVisible: false
     };
   }
 
@@ -85,6 +87,7 @@ class SignUpScreen extends Component {
         mobileNumber, name, email, password
       } = this.state;
       try {
+        this.setState({ loaderVisible: true });
         await firebase.auth().signInWithPhoneNumber(`+91${mobileNumber}`);
         const { currentUser } = firebase.auth();
         const { navigation } = this.props;
@@ -92,11 +95,13 @@ class SignUpScreen extends Component {
           console.log(currentUser);
           await updateUser(currentUser, email, password, name);
           console.log('user updated');
+          this.setState({ loaderVisible: false });
           navigation.navigate('Main', {
             currentUser: firebase.auth().currentUser
           });
         } else {
           console.log('navigating to OTP screen ...');
+          this.setState({ loaderVisible: false });
           navigation.navigate('OTP', {
             userDetails: {
               mobileNumber, name, email, password
@@ -115,7 +120,8 @@ class SignUpScreen extends Component {
       passwordErrorMessage,
       confirmPasswordErrorMessage,
       emailErrorMessage,
-      mobileNumberErrorMessage
+      mobileNumberErrorMessage,
+      loaderVisible
     } = this.state;
     return (
       <ScrollView>
@@ -194,6 +200,7 @@ class SignUpScreen extends Component {
             onPress={this.handleSignUp}
           />
         </View>
+        <Loader loaderVisible={loaderVisible} />
       </ScrollView>
     );
   }
