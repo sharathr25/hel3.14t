@@ -32,8 +32,9 @@ class SignUpScreen extends Component {
 
   componentWillMount() {
     const { currentUser } = firebase.auth();
-    const { navigation } = this.props;
-    if (currentUser) navigation.navigate('Main', { currentUser });
+    // const { navigation } = this.props;
+    // if (currentUser) navigation.navigate('Main', { currentUser });
+    if (currentUser) firebase.auth().signOut();
   }
 
   checkFields = () => {
@@ -99,7 +100,8 @@ class SignUpScreen extends Component {
         if (currentUser) {
           console.log(currentUser);
           await updateUser(currentUser, email, password, name);
-          console.log('user updated');
+          await firebase.database().ref(`/users/+91${mobileNumber}`).set({ email });
+          console.log('user updated in sign up');
           this.setState({ loaderVisible: false });
           navigation.navigate('Main', {
             currentUser: firebase.auth().currentUser
@@ -114,6 +116,7 @@ class SignUpScreen extends Component {
           });
         }
       } catch (error) {
+        this.setState({ loaderVisible: false });
         console.log(error);
       }
     }

@@ -5,6 +5,7 @@ import firebase from 'react-native-firebase';
 import { styles } from '../constants/styleConstants';
 import { updateUser } from '../common/fireBaseFunctions';
 import { OTP_SCREEN, SCREEN_TITLES } from '../constants/appConstants';
+import Loader from '../components/loader';
 
 class OTPVerification extends Component {
   static navigationOptions = {
@@ -19,7 +20,8 @@ class OTPVerification extends Component {
       otp: '',
       confirmResult: null,
       otpConfimationErrorMessage: '',
-      error: ''
+      error: '',
+      loaderVisible: false
     };
   }
 
@@ -57,7 +59,15 @@ class OTPVerification extends Component {
         if (user) {
           const { navigation } = this.props;
           const { name, password, email } = navigation.state.params.userDetails;
-          await updateUser(user, email, password, name);
+          if (email && password && name) { await updateUser(user, email, password, name); }
+          if (password) {
+            console.log('updating password');
+            try {
+              await user.updatePassword(password);
+            } catch (err) {
+              console.log(err);
+            }
+          }
           console.log('user updated after OTP verification');
           navigation.navigate('Main', { currentUser: firebase.auth().currentUser });
         }
@@ -71,9 +81,10 @@ class OTPVerification extends Component {
   };
 
   render() {
-    const { otpConfimationErrorMessage, error } = this.state;
+    const { otpConfimationErrorMessage, error, loaderVisible } = this.state;
     return (
       <View style={{ flex: 1, alignItems: 'center' }}>
+        <Loader loaderVisible={loaderVisible} />
         <Text style={{ margin: 10, fontWeight: 'bold' }}>
           {OTP_SCREEN.REMINDER}
         </Text>
