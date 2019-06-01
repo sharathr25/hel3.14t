@@ -1,11 +1,11 @@
 import { StyleSheet } from 'react-native';
 
-export const THEME_COLOR = '#000080';
-
 export const FLAG_COLOR_ORANGE = '#FF9933';
 export const FLAG_COLOR_WHITE = '#FFFFFF';
 export const FLAG_COLOR_GREEN = '#138808';
 export const FLAG_COLOR_BLUE = '#000080';
+
+export const THEME_COLOR = FLAG_COLOR_GREEN;
 
 export const INPUT_BORDER_COLOR = FLAG_COLOR_GREEN;
 export const INPUT_TEXT_COLOR = 'black';

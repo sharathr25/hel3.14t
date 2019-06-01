@@ -34,5 +34,7 @@ export const LOADER = {
 export const SCREEN_TITLES = {
   SIGN_UP: 'Sign Up',
   OTP: 'OTP Verification',
-  MAIN: 'Hel3.14t'
+  MAIN: 'Hel3.14t',
+  LOGIN: 'Login',
+  RESET_PASSOWRD: 'Reset password'
 };

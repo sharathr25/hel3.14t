@@ -1,70 +1,43 @@
 import React, { Component } from 'react';
 import { Input, Button, Text } from 'react-native-elements';
-import { View } from 'react-native';
+import { View, Alert } from 'react-native';
 import { ScrollView } from 'react-native-gesture-handler';
 import firebase from 'react-native-firebase';
 import { SIGN_UP_SCREEN, SCREEN_TITLES } from '../constants/appConstants';
 import { styles } from '../constants/styleConstants';
-import { updateUser } from '../common/fireBaseFunctions';
 import Loader from '../components/loader';
 
-class SignUpScreen extends Component {
+class ResetPassowrdScreen extends Component {
   static navigationOptions = {
-    title: SCREEN_TITLES.SIGN_UP
+    title: SCREEN_TITLES.RESET_PASSOWRD
   };
 
   constructor() {
     super();
     this.state = {
-      name: '',
-      nameErrorMessage: '',
       mobileNumber: '',
       mobileNumberErrorMessage: '',
-      email: '',
-      emailErrorMessage: '',
       password: '',
       passwordErrorMessage: '',
       confirmPassword: '',
       confirmPasswordErrorMessage: '',
-      loaderVisible: false
+      loaderVisible: false,
     };
   }
 
-  componentWillMount() {
-    const { currentUser } = firebase.auth();
-    // const { navigation } = this.props;
-    // if (currentUser) navigation.navigate('Main', { currentUser });
-    if (currentUser) firebase.auth().signOut();
-  }
-
-  checkFields = () => {
+  checkMobileNumberField = () => {
     let valid = false;
+    const { mobileNumber, password, confirmPassword } = this.state;
     const phoneno = /^\d{10}$/;
-    const emailRegex = /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/;
-    const {
-      name, email, mobileNumber, password, confirmPassword
-    } = this.state;
-    if (name.length === 0) {
-      this.setState({
-        nameErrorMessage: SIGN_UP_SCREEN.ERRORS.EMPTY_NAME_ERROR
-      });
-    } else if (email.length === 0) {
-      this.setState({
-        emailErrorMessage: SIGN_UP_SCREEN.ERRORS.EMPTY_EMAIL_ERROR
-      });
-    } else if (!email.match(emailRegex)) {
-      this.setState({
-        emailErrorMessage: SIGN_UP_SCREEN.ERRORS.INVALID_EMAIL_ERROR
-      });
-    } else if (mobileNumber.length === 0) {
+    if (mobileNumber.length === 0) {
       this.setState({
         mobileNumberErrorMessage:
-          SIGN_UP_SCREEN.ERRORS.EMPTY_MOBILE_NUMBER_ERROR
+        SIGN_UP_SCREEN.ERRORS.EMPTY_MOBILE_NUMBER_ERROR
       });
     } else if (!mobileNumber.match(phoneno)) {
       this.setState({
         mobileNumberErrorMessage:
-          SIGN_UP_SCREEN.ERRORS.INVALID_MOBILE_NUMBER_ERROR
+        SIGN_UP_SCREEN.ERRORS.INVALID_MOBILE_NUMBER_ERROR
       });
     } else if (password.length === 0) {
       this.setState({
@@ -79,19 +52,13 @@ class SignUpScreen extends Component {
         confirmPasswordErrorMessage:
           SIGN_UP_SCREEN.ERRORS.PASSWORD_MISMATCH_ERROR
       });
-    } else {
-      valid = true;
-    }
+    } else valid = true;
     return valid;
-  };
+  }
 
-  handleSignUp = async () => {
-    if (this.checkFields()) {
-      const user = firebase.auth().currentUser;
-      if (user) firebase.auth().signOut();
-      const {
-        mobileNumber, name, email, password
-      } = this.state;
+  handleLogin = async () => {
+    if (this.checkMobileNumberField()) {
+      const { mobileNumber, password } = this.state;
       try {
         this.setState({ loaderVisible: true });
         await firebase.auth().signInWithPhoneNumber(`+91${mobileNumber}`);
@@ -99,10 +66,9 @@ class SignUpScreen extends Component {
         const { navigation } = this.props;
         if (currentUser) {
           console.log(currentUser);
-          await updateUser(currentUser, email, password, name);
-          await firebase.database().ref(`/users/+91${mobileNumber}`).set({ email });
-          console.log('user updated in sign up');
           this.setState({ loaderVisible: false });
+          await currentUser.updatePassword(password);
+          Alert.alert('Password updated succesfully');
           navigation.navigate('Main', {
             currentUser: firebase.auth().currentUser
           });
@@ -111,55 +77,27 @@ class SignUpScreen extends Component {
           this.setState({ loaderVisible: false });
           navigation.navigate('OTP', {
             userDetails: {
-              mobileNumber, name, email, password
+              mobileNumber,
+              password
             }
           });
         }
       } catch (error) {
-        this.setState({ loaderVisible: false });
         console.log(error);
       }
     }
-  };
+  }
 
   render() {
     const {
-      nameErrorMessage,
+      mobileNumberErrorMessage,
       passwordErrorMessage,
       confirmPasswordErrorMessage,
-      emailErrorMessage,
-      mobileNumberErrorMessage,
-      loaderVisible
+      loaderVisible,
     } = this.state;
     return (
       <ScrollView>
-        <View style={{ alignItems: 'center', justifyContent: 'center' }}>
-          <Input
-            placeholder="Name"
-            inputContainerStyle={styles.inputContainerStyle}
-            inputStyle={styles.inputStyle}
-            containerStyle={{ margin: 10 }}
-            onChangeText={value => this.setState({ name: value, nameErrorMessage: '' })
-            }
-          />
-          {nameErrorMessage.length !== 0 && (
-            <Text style={styles.errorMessage}>
-              {nameErrorMessage}
-            </Text>
-          )}
-          <Input
-            placeholder="Email"
-            inputContainerStyle={styles.inputContainerStyle}
-            inputStyle={styles.inputStyle}
-            containerStyle={{ margin: 10 }}
-            onChangeText={value => this.setState({ email: value, emailErrorMessage: '' })
-            }
-          />
-          {emailErrorMessage.length !== 0 && (
-            <Text style={styles.errorMessage}>
-              {emailErrorMessage}
-            </Text>
-          )}
+        <View style={{ flex: 1, alignItems: 'center' }}>
           <Input
             placeholder="Mobile Number"
             inputContainerStyle={styles.inputContainerStyle}
@@ -208,9 +146,9 @@ class SignUpScreen extends Component {
             </Text>
           )}
           <Button
-            title="Sign Up"
+            title="Update Password"
             buttonStyle={styles.button}
-            onPress={this.handleSignUp}
+            onPress={this.handleLogin}
           />
         </View>
         <Loader loaderVisible={loaderVisible} />
@@ -219,4 +157,4 @@ class SignUpScreen extends Component {
   }
 }
 
-export default SignUpScreen;
+export default ResetPassowrdScreen;

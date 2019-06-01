@@ -1,7 +1,11 @@
 export const updateUser = async (user, email, password, name) => {
-  await user.updateEmail(email);
-  await user.updatePassword(password);
-  await user.updateProfile({ displayName: name });
+  try {
+    await user.updateEmail(email);
+    await user.updatePassword(password);
+    await user.updateProfile({ displayName: name });
+  } catch (err) {
+    console.log(err);
+  }
 };
 
 export const fun = () => 0;
