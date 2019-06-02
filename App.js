@@ -20,7 +20,7 @@ import LoginScreen from './screens/loginScreen';
 import ResetPassword from './screens/resetPassword';
 
 // constants
-import { THEME_COLOR } from './constants/styleConstants';
+import { THEME_COLOR, FLAG_COLOR_BLUE } from './constants/styleConstants';
 
 const MainNavigator = createStackNavigator(
   {
@@ -40,7 +40,8 @@ const MainNavigator = createStackNavigator(
       },
       headerTintColor: '#fff',
       headerTitleStyle: {
-        fontWeight: 'bold'
+        fontWeight: 'bold',
+        color: FLAG_COLOR_BLUE
       },
     },
   }

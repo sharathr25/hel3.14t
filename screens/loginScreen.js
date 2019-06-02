@@ -3,7 +3,7 @@ import { Input, Button, Text } from 'react-native-elements';
 import { View, Alert } from 'react-native';
 import firebase from 'react-native-firebase';
 import { LOGIN_SCREEN, SCREEN_TITLES } from '../constants/appConstants';
-import { styles } from '../constants/styleConstants';
+import { styles, FLAG_COLOR_ORANGE, FLAG_COLOR_BLUE } from '../constants/styleConstants';
 import Loader from '../components/loader';
 
 class LoginScreen extends Component {
@@ -145,16 +145,17 @@ class LoginScreen extends Component {
         )}
         <Button
           title="Login"
+          titleStyle={{ color: FLAG_COLOR_BLUE }}
           buttonStyle={styles.button}
           onPress={this.handleLogin}
         />
-        <View style={{ flexDirection: 'row', margin: 10 }}>
-          <Text style={{ padding: 10 }}>New user?</Text>
-          <Button title="Sign up" onPress={this.handleSignUp} />
+        <View style={{ flexDirection: 'row' }}>
+          <Text style={{ paddingTop: 12, color: FLAG_COLOR_BLUE }}>New user?</Text>
+          <Button titleStyle={{ color: FLAG_COLOR_ORANGE }} type="clear" title="Sign up" onPress={this.handleSignUp} />
         </View>
         <View style={{ flexDirection: 'row' }}>
-          <Text style={{ padding: 10 }}>Forgot password?</Text>
-          <Button title="Reset password" onPress={this.handleResetPassword} />
+          <Text style={{ paddingTop: 12, color: FLAG_COLOR_BLUE }}>Forgot password?</Text>
+          <Button titleStyle={{ color: FLAG_COLOR_ORANGE }} type="clear" title="Reset password" onPress={this.handleResetPassword} />
         </View>
         <Loader loaderVisible={loaderVisible} />
       </View>
