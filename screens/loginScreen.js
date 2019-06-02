@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { Input, Button, Text } from 'react-native-elements';
 import { View, Alert } from 'react-native';
 import firebase from 'react-native-firebase';
-import { SIGN_UP_SCREEN, SCREEN_TITLES } from '../constants/appConstants';
+import { LOGIN_SCREEN, SCREEN_TITLES } from '../constants/appConstants';
 import { styles } from '../constants/styleConstants';
 import Loader from '../components/loader';
 
@@ -38,19 +38,19 @@ class LoginScreen extends Component {
     } = this.state;
     if (userName.length === 0) {
       this.setState({
-        userNameErrorMessage: SIGN_UP_SCREEN.ERRORS.EMPTY_EMAIL_ERROR
+        userNameErrorMessage: LOGIN_SCREEN.ERRORS.EMPTY_USERNAME_ERROR
       });
     } else if (!(userName.match(emailRegex) || userName.match(phoneNoRegex))) {
       this.setState({
-        userNameErrorMessage: SIGN_UP_SCREEN.ERRORS.INVALID_EMAIL_ERROR
+        userNameErrorMessage: LOGIN_SCREEN.ERRORS.INVALID_USERNAME_ERROR
       });
     } else if (password.length === 0) {
       this.setState({
-        passwordErrorMessage: SIGN_UP_SCREEN.ERRORS.EMPTY_PASSWORD_ERROR
+        passwordErrorMessage: LOGIN_SCREEN.ERRORS.EMPTY_PASSWORD_ERROR
       });
     } else if (password.length < 6) {
       this.setState({
-        passwordErrorMessage: SIGN_UP_SCREEN.ERRORS.INVALID_PASSWORD_ERROR
+        passwordErrorMessage: LOGIN_SCREEN.ERRORS.INVALID_PASSWORD_ERROR
       });
     } else {
       valid = true;

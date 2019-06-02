@@ -7,9 +7,18 @@ export const SIGN_UP_SCREEN = {
     EMPTY_CONFIRM_PASSWORD_ERROR: 'Confirm password should not be empty',
     INVALID_EMAIL_ERROR: 'Email should be valid',
     INVALID_MOBILE_NUMBER_ERROR: 'Mobile number invalid',
-    INVALID_PASSWORD_ERROR: 'Password number invalid',
+    INVALID_PASSWORD_ERROR: 'Password invalid',
     PASSWORD_MISMATCH_ERROR: 'Password mismatch'
   }
+};
+
+export const LOGIN_SCREEN = {
+  ERRORS: {
+    EMPTY_USERNAME_ERROR: 'Username should not be empty',
+    INVALID_USERNAME_ERROR: 'Username invalid',
+    EMPTY_PASSWORD_ERROR: 'Password should not be empty',
+    INVALID_PASSWORD_ERROR: 'Password should be greater than 6 characters'
+  },
 };
 
 export const OTP_SCREEN = {
