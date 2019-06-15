@@ -3,6 +3,8 @@ package com.haisaa;
 import android.app.Application;
 
 import com.facebook.react.ReactApplication;
+import com.horcrux.svg.SvgPackage;
+import com.airbnb.android.react.maps.MapsPackage;
 import com.react.rnspinkit.RNSpinkitPackage;
 import com.swmansion.gesturehandler.react.RNGestureHandlerPackage;
 import io.invertase.firebase.RNFirebasePackage;
@@ -28,6 +30,8 @@ public class MainApplication extends Application implements ReactApplication {
     protected List<ReactPackage> getPackages() {
       return Arrays.<ReactPackage>asList(
           new MainReactPackage(),
+            new SvgPackage(),
+            new MapsPackage(),
             new RNSpinkitPackage(),
             new RNGestureHandlerPackage(),
             new RNFirebasePackage(),

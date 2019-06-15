@@ -9,10 +9,10 @@
 // packages
 import React, { Component } from 'react';
 import { createStackNavigator, createAppContainer } from 'react-navigation';
-import { Alert } from 'react-native';
+// import { Alert } from 'react-native';
 
 // screens
-import firebase from 'react-native-firebase';
+// import firebase from 'react-native-firebase';
 import SignUpScreen from './screens/signUpScreen';
 import OTPVerification from './screens/OTPVerification';
 import MainScreen from './screens/mainScreen';
@@ -31,7 +31,7 @@ const MainNavigator = createStackNavigator(
     ResetPassword: { screen: ResetPassword }
   },
   {
-    initialRouteName: 'Login',
+    initialRouteName: 'Main',
     defaultNavigationOptions: {
       headerStyle: {
         backgroundColor: THEME_COLOR,
@@ -56,13 +56,13 @@ class App extends Component {
     };
   }
 
-  componentWillMount() {
-    const { currentUser } = firebase.auth();
-    if (currentUser) {
-      firebase.auth().signOut();
-      Alert.alert('loged out');
-    }
-  }
+  // componentWillMount() {
+  //   const { currentUser } = firebase.auth();
+  //   if (currentUser) {
+  //     firebase.auth().signOut();
+  //     Alert.alert('loged out');
+  //   }
+  // }
 
   render() {
     return <AppContainer />;
