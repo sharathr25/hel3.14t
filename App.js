@@ -9,6 +9,7 @@
 // packages
 import React, { Component } from 'react';
 import { createStackNavigator, createAppContainer } from 'react-navigation';
+import LinearGradient from 'react-native-linear-gradient';
 // import { Alert } from 'react-native';
 
 // screens
@@ -20,7 +21,7 @@ import LoginScreen from './screens/loginScreen';
 import ResetPassword from './screens/resetPassword';
 
 // constants
-import { THEME_COLOR, FLAG_COLOR_BLUE } from './constants/styleConstants';
+import { THEME_COLOR, FLAG_COLOR_BLUE, COLOR_1, COLOR_2, FLAG_COLOR_WHITE } from './constants/styleConstants';
 
 const MainNavigator = createStackNavigator(
   {
@@ -31,17 +32,24 @@ const MainNavigator = createStackNavigator(
     ResetPassword: { screen: ResetPassword }
   },
   {
-    initialRouteName: 'Main',
+    initialRouteName: 'Login',
     defaultNavigationOptions: {
+      headerBackground: (
+        <LinearGradient
+          colors={[COLOR_1, COLOR_2]}
+          style={{ flex: 1 }}
+          start={{x: 0, y: 0}}
+          end={{x: 1, y: 0}}
+    />
+      ),
       headerStyle: {
-        backgroundColor: THEME_COLOR,
         shadowOpacity: 0,
         elevation: 0,
       },
       headerTintColor: '#fff',
       headerTitleStyle: {
         fontWeight: 'bold',
-        color: FLAG_COLOR_BLUE
+        color: FLAG_COLOR_WHITE
       },
     },
   }

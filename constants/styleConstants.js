@@ -5,8 +5,12 @@ export const FLAG_COLOR_WHITE = '#FFFFFF';
 export const FLAG_COLOR_GREEN = '#138808';
 export const FLAG_COLOR_BLUE = '#000080';
 
+export const COLOR_1 = '#ff7e5f';
+export const COLOR_2 = '#ff9966';
+
 export const THEME_COLOR = FLAG_COLOR_ORANGE;
 
+export const BLACK = "#000000";
 
 export const INPUT_BORDER_COLOR = FLAG_COLOR_ORANGE;
 export const INPUT_TEXT_COLOR = 'black';
