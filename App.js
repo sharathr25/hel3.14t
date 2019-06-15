@@ -9,10 +9,10 @@
 // packages
 import React, { Component } from 'react';
 import { createStackNavigator, createAppContainer } from 'react-navigation';
-import { Alert } from 'react-native';
+// import { Alert } from 'react-native';
 
 // screens
-import firebase from 'react-native-firebase';
+// import firebase from 'react-native-firebase';
 import SignUpScreen from './screens/signUpScreen';
 import OTPVerification from './screens/OTPVerification';
 import MainScreen from './screens/mainScreen';
@@ -20,7 +20,7 @@ import LoginScreen from './screens/loginScreen';
 import ResetPassword from './screens/resetPassword';
 
 // constants
-import { THEME_COLOR } from './constants/styleConstants';
+import { THEME_COLOR, FLAG_COLOR_BLUE } from './constants/styleConstants';
 
 const MainNavigator = createStackNavigator(
   {
@@ -31,7 +31,7 @@ const MainNavigator = createStackNavigator(
     ResetPassword: { screen: ResetPassword }
   },
   {
-    initialRouteName: 'Login',
+    initialRouteName: 'Main',
     defaultNavigationOptions: {
       headerStyle: {
         backgroundColor: THEME_COLOR,
@@ -40,7 +40,8 @@ const MainNavigator = createStackNavigator(
       },
       headerTintColor: '#fff',
       headerTitleStyle: {
-        fontWeight: 'bold'
+        fontWeight: 'bold',
+        color: FLAG_COLOR_BLUE
       },
     },
   }
@@ -55,13 +56,13 @@ class App extends Component {
     };
   }
 
-  componentWillMount() {
-    const { currentUser } = firebase.auth();
-    if (currentUser) {
-      firebase.auth().signOut();
-      Alert.alert('loged out');
-    }
-  }
+  // componentWillMount() {
+  //   const { currentUser } = firebase.auth();
+  //   if (currentUser) {
+  //     firebase.auth().signOut();
+  //     Alert.alert('loged out');
+  //   }
+  // }
 
   render() {
     return <AppContainer />;

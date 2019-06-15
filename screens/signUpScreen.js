@@ -133,7 +133,12 @@ class SignUpScreen extends Component {
     } = this.state;
     return (
       <ScrollView>
-        <View style={{ alignItems: 'center', justifyContent: 'center' }}>
+        <View style={{
+          alignItems: 'center',
+          justifyContent: 'center',
+          margin: 10
+        }}
+        >
           <Input
             placeholder="Name"
             inputContainerStyle={styles.inputContainerStyle}

@@ -4,12 +4,12 @@ import { View, Alert } from 'react-native';
 import { ScrollView } from 'react-native-gesture-handler';
 import firebase from 'react-native-firebase';
 import { SIGN_UP_SCREEN, SCREEN_TITLES } from '../constants/appConstants';
-import { styles } from '../constants/styleConstants';
+import { styles, FLAG_COLOR_ORANGE } from '../constants/styleConstants';
 import Loader from '../components/loader';
 
 class ResetPassowrdScreen extends Component {
   static navigationOptions = {
-    title: SCREEN_TITLES.RESET_PASSOWRD
+    title: SCREEN_TITLES.RESET_PASSOWRD,
   };
 
   constructor() {
@@ -147,7 +147,7 @@ class ResetPassowrdScreen extends Component {
           )}
           <Button
             title="Update Password"
-            buttonStyle={styles.button}
+            buttonStyle={{ backgroundColor: FLAG_COLOR_ORANGE }}
             onPress={this.handleLogin}
           />
         </View>
