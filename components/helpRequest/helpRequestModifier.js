@@ -4,12 +4,13 @@ import Icon from "react-native-vector-icons/FontAwesome";
 import {
   FLAG_COLOR_GREEN,
   FLAG_COLOR_WHITE,
-  BLACK
-} from "../constants/styleConstants";
+  BLACK,
+  FLAG_COLOR_ORANGE
+} from "../../constants/styleConstants";
 
 class HelpRequestModifier extends Component {
   render() {
-    const { pushUps, handlePush, handlePull } = this.props;
+    const { handlePush, handlePull } = this.props;
     return (
       <View
         style={{
@@ -22,11 +23,8 @@ class HelpRequestModifier extends Component {
         <TouchableOpacity style={styles.text} onPress={handlePush}>
           <Icon name="angle-double-up" color={FLAG_COLOR_GREEN} size={30} />
         </TouchableOpacity>
-        <View style={styles.text}>
-          <Text style={{ color: BLACK, fontSize: 20 }}>{pushUps}</Text>
-        </View>
         <TouchableOpacity style={styles.text} onPress={handlePull}>
-          <Icon name="angle-double-down" color={FLAG_COLOR_GREEN} size={30} />
+          <Icon name="angle-double-down" color={FLAG_COLOR_ORANGE} size={30} />
         </TouchableOpacity>
       </View>
     );

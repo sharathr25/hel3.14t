@@ -2,16 +2,11 @@ import React, { Component } from "react";
 import { Text, StyleSheet, View } from "react-native";
 import Icon from "react-native-vector-icons/FontAwesome";
 import SvgUri from "react-native-svg-uri";
-import { BLACK } from "../constants/styleConstants";
+import { BLACK, COLOR_1 } from "../../constants/styleConstants";
 
-const person = require("../__assets__/user.svg");
+const person = require("../../__assets__/user.svg");
 
 class HelpDescription extends Component {
-  constructor() {
-    super();
-    this.state = {};
-  }
-
   render() {
     const { data } = this.props;
     const { description, noPeople, title, distance } = data;
@@ -19,7 +14,7 @@ class HelpDescription extends Component {
       <View style={{ margin: 5, marginTop: 0, padding: 5 }}>
         <View style={{ flex: 1, flexDirection: "row" }}>
           <Text style={{ flex: 3.5 }}>
-              <Text style={{ fontWeight: "bold", fontSize: 20 }}>{title}</Text>
+              <Text style={{ fontWeight: "bold", fontSize: 20, color: COLOR_1 }}>{title}</Text>
             </Text>
           <View
             style={{

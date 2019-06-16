@@ -3,8 +3,9 @@ import { View, Alert } from "react-native";
 import firebase from "react-native-firebase";
 import HelpDescription from "./helpDescription";
 import HelpRequestModifier from "./helpRequestModifier";
-import Time from "./time";
+import Time from "../time";
 import HelpRequestHandler from "./helpRequestHandler";
+import ProgressBar from '../progressBar';
 
 class HelpRequest extends Component {
   constructor(props) {
@@ -15,9 +16,15 @@ class HelpRequest extends Component {
     this.helps = firebase.database().ref("/helps");
     this.helpRequest = this.helps.child(this.key);
     this.usersPushed = this.helpRequest.child("usersPushed");
-    this.pushedUpQuery = this.usersPushed.orderByValue(this.uid).equalTo(this.uid).limitToFirst(1);
+    this.pushedUpQuery = this.usersPushed
+      .orderByValue(this.uid)
+      .equalTo(this.uid)
+      .limitToFirst(1);
     this.usersPulled = this.helpRequest.child("usersPulled");
-    this.pulledUpQuery = this.usersPushed.orderByValue(this.uid).equalTo(this.uid).limitToFirst(1);
+    this.pulledUpQuery = this.usersPushed
+      .orderByValue(this.uid)
+      .equalTo(this.uid)
+      .limitToFirst(1);
     this.state = {
       pushUps: data.pushUps,
       pullUps: data.pullUps,
@@ -27,19 +34,18 @@ class HelpRequest extends Component {
   }
 
   componentDidMount() {
-    this.helpRequest
-      .on("child_changed", data => {
-        if (data.key === "pushUps" || data.key === "pullUps") {
-          if(data.key === "pushUps")this.setState({ pushUps: data.val() });
-          if(data.key === "pullUps")this.setState({ pullUps: data.val() });
-        }
-      });
+    this.helpRequest.on("child_changed", data => {
+      if (data.key === "pushUps" || data.key === "pullUps") {
+        if (data.key === "pushUps") this.setState({ pushUps: data.val() });
+        if (data.key === "pullUps") this.setState({ pullUps: data.val() });
+      }
+    });
     this.setPushUpStatus();
     this.setPullUpStatus();
   }
 
   updateHelpRequest = type => {
-    const { pushUps,pullUps } = this.state;
+    const { pushUps, pullUps } = this.state;
     const { uid } = this;
     if (type === "push") {
       this.helpRequest.update({ pushUps: pushUps + 1 });
@@ -91,7 +97,7 @@ class HelpRequest extends Component {
   render() {
     const { data } = this.props;
     const { description, noPeople, title, distance, timeStamp } = data;
-    const { pushUps } = this.state;
+    const { pushUps, pullUps } = this.state;
     return (
       <View
         style={{
@@ -117,8 +123,10 @@ class HelpRequest extends Component {
               distance
             }}
           />
+          <ProgressBar pushUps={pushUps} pullUps={pullUps}/>
           <HelpRequestModifier
             pushUps={pushUps}
+            pullUps={pullUps}
             handlePush={() => this.handlePush()}
             handlePull={() => this.handlePull()}
           />

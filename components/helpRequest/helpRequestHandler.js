@@ -4,7 +4,8 @@ import Icon from "react-native-vector-icons/FontAwesome";
 import {
   FLAG_COLOR_GREEN,
   FLAG_COLOR_WHITE,
-} from '../constants/styleConstants';
+  FLAG_COLOR_BLUE,
+} from '../../constants/styleConstants';
 
 class HelpRequestHandler extends Component {
   render() {
@@ -21,7 +22,7 @@ class HelpRequestHandler extends Component {
           <Text style={{ fontSize: 18, marginLeft: 3 }}>Help</Text>
         </TouchableOpacity>
         <TouchableOpacity style={styles.text}>
-          <Icon name="share-alt-square" color={FLAG_COLOR_GREEN} size={30} />
+          <Icon name="share-alt-square" color={FLAG_COLOR_BLUE} size={30} />
         </TouchableOpacity>
       </View>
     );
