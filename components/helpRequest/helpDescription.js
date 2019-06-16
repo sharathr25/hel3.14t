@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import { Text, StyleSheet, View } from "react-native";
 import Icon from "react-native-vector-icons/FontAwesome";
-import SvgUri from "react-native-svg-uri";
+import HelpRequestPeopleCount from "./helpRequestPeopleCount";
 import { BLACK, COLOR_1 } from "../../constants/styleConstants";
 
 const person = require("../../__assets__/user.svg");
@@ -11,39 +11,23 @@ class HelpDescription extends Component {
     const { data } = this.props;
     const { description, noPeople, title, distance } = data;
     return (
-      <View style={{ margin: 5, marginTop: 0, padding: 5 }}>
-        <View style={{ flex: 1, flexDirection: "row" }}>
+      <View style={styles.descriptionContainer}>
+        <View style={styles.titleContainer}>
           <Text style={{ flex: 3.5 }}>
-              <Text style={{ fontWeight: "bold", fontSize: 20, color: COLOR_1 }}>{title}</Text>
-            </Text>
-          <View
-            style={{
-              flex: 1,
-              flexDirection: "row",
-              alignItems: "baseline",
-              justifyContent: "space-evenly"
-            }}
-          >
+            <Text style={styles.title}>{title}</Text>
+          </Text>
+          <View style={styles.distanceContainer}>
             <Icon name="map-marker" size={15} color="red" />
-            <Text style={{ color: BLACK, fontSize: 12 }}>{`${distance.toFixed(
-              1
-            )} KM`}</Text>
+            <Text style={styles.distanceText}>{`${distance.toFixed(1)} KM`}</Text>
           </View>
         </View>
-        <View style={{ flex: 1, flexDirection: "row", marginTop: 5 }}>
-          <Text style={styles.text}>Number of people required</Text>
-          <SvgUri
-            source={person}
-            width="15"
-            height="15"
-            style={{ margin: 2, marginRight: 0 }}
-          />
-          <Text>{noPeople}</Text>
+        <View style={{ marginTop: 10, marginBottom: 10 }}>
+          <Text style={styles.descriptionTitle}>Description</Text>
+          <Text style={styles.description}>
+            {`"${description}...${description}...${description} ${description}"`}
+          </Text>
         </View>
-        <View style={{ marginTop: 10 }}>
-          <Text style={{ color: BLACK }}>Description</Text>
-          <Text>{`${description}...${description}...${description} ${description}`}</Text>
-        </View>
+        <HelpRequestPeopleCount noPeople={noPeople} />
       </View>
     );
   }
@@ -52,7 +36,39 @@ class HelpDescription extends Component {
 export default HelpDescription;
 
 const styles = StyleSheet.create({
+  descriptionContainer: {
+    margin: 5,
+    marginTop: 0,
+    padding: 5
+  },
+  titleContainer: {
+    flex: 1,
+    flexDirection: "row"
+  },
+  title: {
+    fontWeight: "bold",
+    fontSize: 20,
+    color: COLOR_1
+  },
+  distanceContainer: {
+    flex: 1,
+    flexDirection: "row",
+    alignItems: "baseline",
+    justifyContent: "space-evenly"
+  },
+  distanceText: {
+    color: BLACK,
+    fontSize: 12
+  },
+  descriptionTitle: {
+    color: "black",
+    fontWeight: "bold"
+  },
   text: {
     color: BLACK
+  },
+  description: {
+    color: BLACK,
+    fontStyle: "italic"
   }
 });

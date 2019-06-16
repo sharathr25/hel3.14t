@@ -1,48 +1,49 @@
-import React, { Component } from 'react';
+import React, { Component } from "react";
+import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
+import Icon from "react-native-vector-icons/FontAwesome";
 import {
-  View, Text, StyleSheet, TouchableOpacity
-} from 'react-native';
-import { FLAG_COLOR_GREEN, FLAG_COLOR_WHITE } from '../../constants/styleConstants';
+  FLAG_COLOR_GREEN,
+  FLAG_COLOR_WHITE,
+  BLACK,
+  FLAG_COLOR_ORANGE
+} from "../../constants/styleConstants";
 
-class HelpRequestFooter extends Component {
-  constructor() {
-    super();
-    this.state = {
-    };
-  }
-
+class HelpRequestModifier extends Component {
   render() {
-    const { pushUps, handlePush } = this.props;
+    const { handlePush, handlePull } = this.props;
     return (
-      <View style={{
-        flex: 1,
-        flexDirection: 'row',
-        justifyContent: 'space-evenly',
-        position: 'relative',
-      }}
+      <View
+        style={{
+          flex: 1,
+          flexDirection: "row",
+          justifyContent: "space-evenly",
+          position: "relative"
+        }}
       >
         <TouchableOpacity style={styles.text} onPress={handlePush}>
-          <Text style={styles.text1}>{pushUps}</Text>
-          <Text style={{ fontSize: 18, marginLeft: 3 }}>Push</Text>
+          <Icon name="angle-double-up" color={FLAG_COLOR_GREEN} size={30} />
         </TouchableOpacity>
-        <View style={styles.text}>
-          <Text style={{ fontSize: 18, marginLeft: 3 }}>Share</Text>
-        </View>
-        <View style={styles.text}>
-          <Text style={{ fontSize: 18, marginLeft: 3 }}>Help</Text>
-        </View>
+        <TouchableOpacity style={styles.text} onPress={handlePull}>
+          <Icon name="angle-double-down" color={FLAG_COLOR_ORANGE} size={30} />
+        </TouchableOpacity>
+        <TouchableOpacity style={styles.text}>
+          <Text style={{ fontSize: 20, marginLeft: 3 }}>Help</Text>
+        </TouchableOpacity>
+        <TouchableOpacity style={styles.text}>
+          <Icon name="share-alt" size={30} />
+        </TouchableOpacity>
       </View>
     );
   }
 }
 
-export default HelpRequestFooter;
+export default HelpRequestModifier;
 
 const styles = StyleSheet.create({
-  text: {
-    flex: 1,
-    flexDirection: 'row',
-    justifyContent: 'center',
+  pushPull: {
+    flex: 2,
+    flexDirection: "row",
+    justifyContent: "center",
     borderWidth: 1,
     borderColor: FLAG_COLOR_GREEN,
     backgroundColor: FLAG_COLOR_WHITE,
@@ -50,11 +51,13 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     padding: 5
   },
-  text1: {
-    fontSize: 12,
-    color: FLAG_COLOR_WHITE,
-    backgroundColor: FLAG_COLOR_GREEN,
-    padding: 5,
-    borderRadius: 5
-  },
+  text: {
+    flex: 1,
+    flexDirection: "row",
+    justifyContent: "center",
+    backgroundColor: FLAG_COLOR_WHITE,
+    margin: 3,
+    borderRadius: 5,
+    padding: 5
+  }
 });
