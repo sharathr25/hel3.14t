@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import {
   View, Text, StyleSheet, TouchableOpacity
 } from 'react-native';
-import { FLAG_COLOR_GREEN, FLAG_COLOR_WHITE } from '../constants/styleConstants';
+import { FLAG_COLOR_GREEN, FLAG_COLOR_WHITE } from '../../constants/styleConstants';
 
 class HelpRequestFooter extends Component {
   constructor() {

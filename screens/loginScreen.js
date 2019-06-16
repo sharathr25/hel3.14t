@@ -24,9 +24,9 @@ class LoginScreen extends Component {
 
   componentWillMount() {
     const { currentUser } = firebase.auth();
-    // const { navigation } = this.props;
-    // if (currentUser) navigation.navigate('Main', { currentUser });
-    if (currentUser) firebase.auth().signOut();
+    const { navigation } = this.props;
+    if (currentUser) navigation.navigate('Main', { currentUser });
+    // if (currentUser) firebase.auth().signOut();
   }
 
   checkUserNameAndPasswordFields = () => {

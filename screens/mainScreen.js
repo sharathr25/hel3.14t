@@ -5,7 +5,7 @@ import React, { Component } from 'react';
 import firebase from 'react-native-firebase';
 import { ScrollView } from 'react-native-gesture-handler';
 import { SCREEN_TITLES } from '../constants/appConstants';
-import HelpRequest from '../components/helpRequest';
+import HelpRequest from '../components/helpRequest/helpRequest';
 import { getDistanceFromLatLonInKm } from '../utils';
 
 class MainScreen extends Component {
@@ -54,10 +54,8 @@ class MainScreen extends Component {
             return helpRequest.distance > dist;
           });
           if(index === -1 ){
-            console.log([ ...helpRequests,newObj  ]);
             this.setState({ helpRequests: [ ...helpRequests, newObj  ] });
           } else {
-            console.log([...helpRequests.slice(0,index),newObj,...helpRequests.slice(index)]);
             this.setState({ helpRequests: [ ...helpRequests.slice(0,index), newObj, ...helpRequests.slice(index) ] })
           }
         }
