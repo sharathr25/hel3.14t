@@ -2,9 +2,8 @@ import React, { Component } from "react";
 import { View, Alert } from "react-native";
 import firebase from "react-native-firebase";
 import HelpDescription from "./helpDescription";
-import HelpRequestModifier from "./helpRequestModifier";
+import HelpRequestModifier from "./helpRequestFooter";
 import Time from "../time";
-import HelpRequestHandler from "./helpRequestHandler";
 import ProgressBar from '../progressBar';
 
 class HelpRequest extends Component {
@@ -130,7 +129,6 @@ class HelpRequest extends Component {
             handlePush={() => this.handlePush()}
             handlePull={() => this.handlePull()}
           />
-          <HelpRequestHandler />
           <Time time={timeStamp} />
         </View>
       </View>
