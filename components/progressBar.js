@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import {
   View, Text, StyleSheet
 } from 'react-native';
-import { FLAG_COLOR_GREEN, FLAG_COLOR_ORANGE, FLAG_COLOR_BLUE } from '../constants/styleConstants';
+import { FLAG_COLOR_GREEN, FLAG_COLOR_ORANGE } from '../constants/styleConstants';
 
 class ProgressBar extends Component {
   getInPercenage = (value, total) => {
@@ -42,7 +42,7 @@ const styles = StyleSheet.create({
       color: 'white', flex:1, fontSize: 15, padding: 2
     },
     progressBar_left: {
-        backgroundColor: FLAG_COLOR_BLUE,
+        backgroundColor: FLAG_COLOR_GREEN,
         alignItems: 'center',
         opacity: 0.7
     },
