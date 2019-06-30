@@ -3,17 +3,16 @@ import { Text } from 'react-native-elements';
 import { View, StyleSheet, Dimensions } from "react-native";
 import { TabView, SceneMap, TabBar } from "react-native-tab-view";
 import HelpRequestFeed from "../components/helpRequest/helpRequestFeed";
+import HelpingQueueFeed from "../components/helpingQueue/helpingQueueFeed";
 import { SCREEN_TITLES } from "../constants/appConstants";
 import { COLOR_1 } from "../constants/styleConstants";
 
 const FirstRoute = () => <HelpRequestFeed />;
 
-const SecondRoute = () => (
-  <View style={[styles.scene]} ><Text>Helps going on</Text></View>
-);
+const SecondRoute = () => <HelpingQueueFeed/>
 
 const ThirdRoute = () => (
-  <View style={[styles.scene]} ><Text>Top Helpers</Text></View>
+  <View style={[styles.scene]} ><Text>Helps Requested</Text></View>
 );
 
 class MainScreen extends Component {
@@ -28,7 +27,7 @@ class MainScreen extends Component {
       routes: [
         { key: "first", title: "HELPPLZ" },
         { key: "second", title: "HELPING" },
-        { key: "third", title: "TOP" }
+        { key: "third", title: "REQUESTED" }
       ]
     };
   }

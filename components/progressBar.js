@@ -6,6 +6,8 @@ import { FLAG_COLOR_GREEN, FLAG_COLOR_ORANGE } from '../constants/styleConstants
 
 class ProgressBar extends Component {
   getInPercenage = (value, total) => {
+    if(value === 0 && total === 0) return 50;
+    if(value === 0) return 0;
     const percentage = (value/total)*100;
     return Math.round(percentage);
   }

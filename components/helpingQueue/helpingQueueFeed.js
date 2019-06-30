@@ -3,11 +3,11 @@
 import React, { Component } from "react";
 import firebase from "react-native-firebase";
 import { ScrollView } from "react-native-gesture-handler";
-import HelpRequest from "./helpRequest";
+import HelpRequest from "../helpRequest/helpRequest";
 import { getDistanceFromLatLonInKm } from "../../utils";
 import Loader from "../loader";
 
-class HelpRequestFeed extends Component {
+class HelpingQueueFeed extends Component {
   constructor(props) {
     super(props);
     // const { navigation } = this.props;
@@ -33,7 +33,7 @@ class HelpRequestFeed extends Component {
       });
       firebase
         .database()
-        .ref("/helps")
+        .ref("/helping")
         .on("child_added", data => {
           const { helpRequests, latitude, longitude } = this.state;
           const currentLatitude = latitude || position.coords.latitude;
@@ -67,9 +67,6 @@ class HelpRequestFeed extends Component {
             }
           }
         });
-        firebase.database().ref('/helps').on('child_moved', (data) => {
-          console.log(data.val());
-        });
     });
     navigator.geolocation.watchPosition(position => {
       this.setState({
@@ -93,10 +90,9 @@ class HelpRequestFeed extends Component {
   };
 
   render() {
-    console.log(this.state.helpRequests.length);
     return (
       <>
-        {/* <Loader loaderVisible={!this.state.helpRequests.length !== 0} /> */}
+        <Loader loaderVisible={this.state.helpRequests.length !== 0} />
         <ScrollView>
           {this.getHelpRequests()}
         </ScrollView>
@@ -105,4 +101,4 @@ class HelpRequestFeed extends Component {
   }
 }
 
-export default HelpRequestFeed;
+export default HelpingQueueFeed;

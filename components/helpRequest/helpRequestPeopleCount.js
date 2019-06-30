@@ -7,7 +7,7 @@ import {
 
 class HelpRequestPeopleCount extends Component {
   render() {
-    const { noPeople } = this.props;
+    const { noPeople, noPeopleRequested } = this.props;
     return (
         <View style={[styles.flexBox, styles.progressBar]}>
         <View style={[styles.progressBar_left, { flex: 50 }]}>
@@ -17,7 +17,7 @@ class HelpRequestPeopleCount extends Component {
         </View>
         <View style={[styles.progressBar_right, { flex: 50 }]}>
           <Text style={styles.progressBarTextRight}>
-            People Accepted <Text style={{fontWeight: 'bold'}}>0</Text>
+            People Accepted <Text style={{fontWeight: 'bold'}}>{noPeopleRequested}</Text>
           </Text>
         </View>
       </View>

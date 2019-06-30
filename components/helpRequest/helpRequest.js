@@ -15,6 +15,9 @@ class HelpRequest extends Component {
     this.helps = firebase.database().ref("/helps");
     this.helpRequest = this.helps.child(this.key);
     this.usersPushed = this.helpRequest.child("usersPushed");
+    this.usersRequested = this.helpRequest.child("usersRequested");
+    this.usersAccepted= this.helpRequest.child("usersAccepted");
+    this.noPeopleRequested = this.helpRequest.child("noPeopleRequested");
     this.pushedUpQuery = this.usersPushed
       .orderByValue(this.uid)
       .equalTo(this.uid)
@@ -24,23 +27,38 @@ class HelpRequest extends Component {
       .orderByValue(this.uid)
       .equalTo(this.uid)
       .limitToFirst(1);
+    this.helpedUpQuery = this.usersAccepted
+    .orderByValue(this.uid)
+    .equalTo(this.uid)
+    .limitToFirst(1);
     this.state = {
       pushUps: data.pushUps,
       pullUps: data.pullUps,
-      usersPushed: false,
-      usersPulled: false
+      noPeople: data.noPeople,
+      noPeopleRequested: data.noPeopleRequested,
+      userPushed: false,
+      userPulled: false,
+      userHelping: false,
+      disableHelp: false
     };
   }
 
   componentDidMount() {
     this.helpRequest.on("child_changed", data => {
-      if (data.key === "pushUps" || data.key === "pullUps") {
+      if (data.key === "pushUps" || data.key === "pullUps" || data.key === "noPeopleRequested") {
         if (data.key === "pushUps") this.setState({ pushUps: data.val() });
         if (data.key === "pullUps") this.setState({ pullUps: data.val() });
+        if (data.key === "noPeopleRequested") {
+          this.setState( { noPeopleRequested: data.val() })
+          if( data.val() === this.state.noPeople ){
+            this.setState({ disableHelp : true });
+          }
+        }
       }
     });
     this.setPushUpStatus();
     this.setPullUpStatus();
+    this.setHelpButtonStatus();
   }
 
   updateHelpRequest = type => {
@@ -62,7 +80,7 @@ class HelpRequest extends Component {
   setPushUpStatus = () => {
     this.pushedUpQuery.once("value", data => {
       if (data.val()) {
-        this.setState({ usersPushed: true });
+        this.setState({ userPushed: true });
       }
     });
   };
@@ -70,13 +88,33 @@ class HelpRequest extends Component {
   setPullUpStatus = () => {
     this.pulledUpQuery.once("value", data => {
       if (data.val()) {
-        this.setState({ usersPulled: true });
+        this.setState({ userPulled: true });
       }
     });
   };
 
+  setHelpButtonStatus = () => {
+    const { noPeople } = this.state;
+    this.noPeopleRequested.once("value", data => {
+      if(data.val() === noPeople){
+        this.helpRequest.update({ helpingStartedAt: new Date().getTime()});
+        this.setState({ disableHelp : true });
+        this.helpRequest.once('value', (data) => {
+          firebase.database().ref('/helping').push(data.val(),() => {
+            this.helpRequest.remove();
+          });
+        });
+      }
+    });
+    this.helpedUpQuery.once("value", data => {
+      if(data.val()){
+        this.setState({disableHelp: true })
+      }
+    })
+  }
+
   handlePush = () => {
-    if (!this.state.usersPushed) {
+    if (!this.state.userPushed) {
       this.updateHelpRequest("push");
       this.setPushUpStatus();
     } else {
@@ -85,7 +123,7 @@ class HelpRequest extends Component {
   };
 
   handlePull = () => {
-    if (!this.state.usersPulled) {
+    if (!this.state.userPulled) {
       this.updateHelpRequest("pull");
       this.setPullUpStatus();
     } else {
@@ -93,10 +131,26 @@ class HelpRequest extends Component {
     }
   };
 
+  handleHelp = () => {
+    console.log("help");
+    //TODO: we have send help requested user a notification. If he accepts then only we will allow this guy to help
+    const { noPeopleRequested, disableHelp } = this.state;
+    if(disableHelp){
+      Alert.alert("u already helping");
+      return;
+    }
+    const { uid } = this;
+    console.log();
+    this.helpRequest.update({ noPeopleRequested: noPeopleRequested + 1});
+    this.usersAccepted.push(uid).catch((err) => {
+      console.log(err);
+    });
+  }
+
   render() {
     const { data } = this.props;
-    const { description, noPeople, title, distance, timeStamp } = data;
-    const { pushUps, pullUps } = this.state;
+    const { description, title, distance, timeStamp } = data;
+    const { pushUps, pullUps, noPeople, noPeopleRequested } = this.state;
     return (
       <View
         style={{
@@ -119,7 +173,8 @@ class HelpRequest extends Component {
               title,
               description,
               noPeople,
-              distance
+              distance,
+              noPeopleRequested
             }}
           />
           <ProgressBar pushUps={pushUps} pullUps={pullUps}/>
@@ -128,6 +183,7 @@ class HelpRequest extends Component {
             pullUps={pullUps}
             handlePush={() => this.handlePush()}
             handlePull={() => this.handlePull()}
+            handleHelp={() => this.handleHelp()}
           />
           <Time time={timeStamp} />
         </View>

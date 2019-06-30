@@ -4,12 +4,10 @@ import Icon from "react-native-vector-icons/FontAwesome";
 import HelpRequestPeopleCount from "./helpRequestPeopleCount";
 import { BLACK, COLOR_1 } from "../../constants/styleConstants";
 
-const person = require("../../__assets__/user.svg");
-
 class HelpDescription extends Component {
   render() {
     const { data } = this.props;
-    const { description, noPeople, title, distance } = data;
+    const { description, noPeople, title, distance, noPeopleRequested } = data;
     return (
       <View style={styles.descriptionContainer}>
         <View style={styles.titleContainer}>
@@ -27,7 +25,7 @@ class HelpDescription extends Component {
             {`"${description}...${description}...${description} ${description}"`}
           </Text>
         </View>
-        <HelpRequestPeopleCount noPeople={noPeople} />
+        <HelpRequestPeopleCount noPeople={noPeople} noPeopleRequested={noPeopleRequested}/>
       </View>
     );
   }
