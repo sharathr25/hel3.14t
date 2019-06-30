@@ -10,7 +10,7 @@ import {
 
 class HelpRequestModifier extends Component {
   render() {
-    const { handlePush, handlePull } = this.props;
+    const { handlePush, handlePull,handleHelp } = this.props;
     return (
       <View
         style={{
@@ -26,7 +26,7 @@ class HelpRequestModifier extends Component {
         <TouchableOpacity style={styles.text} onPress={handlePull}>
           <Icon name="angle-double-down" color={FLAG_COLOR_ORANGE} size={30} />
         </TouchableOpacity>
-        <TouchableOpacity style={styles.text}>
+        <TouchableOpacity style={styles.text} onPress={handleHelp}>
           <Text style={{ fontSize: 20, marginLeft: 3 }}>Help</Text>
         </TouchableOpacity>
         <TouchableOpacity style={styles.text}>
