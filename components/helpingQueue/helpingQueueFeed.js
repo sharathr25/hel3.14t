@@ -92,7 +92,7 @@ class HelpingQueueFeed extends Component {
   render() {
     return (
       <>
-        <Loader loaderVisible={this.state.helpRequests.length !== 0} />
+        {/* <Loader loaderVisible={this.state.helpRequests.length !== 0} /> */}
         <ScrollView>
           {this.getHelpRequests()}
         </ScrollView>

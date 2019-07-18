@@ -21,7 +21,7 @@ import LoginScreen from './screens/loginScreen';
 import ResetPassword from './screens/resetPassword';
 
 // constants
-import { THEME_COLOR, FLAG_COLOR_BLUE, COLOR_1, COLOR_2, FLAG_COLOR_WHITE } from './constants/styleConstants';
+import { THEME_COLOR, FLAG_COLOR_BLUE, COLOR_1, COLOR_2, FLAG_COLOR_WHITE, FLAG_COLOR_ORANGE } from './constants/styleConstants';
 
 const MainNavigator = createStackNavigator(
   {
@@ -34,17 +34,10 @@ const MainNavigator = createStackNavigator(
   {
     initialRouteName: 'Login',
     defaultNavigationOptions: {
-      headerBackground: (
-        <LinearGradient
-          colors={[COLOR_1, COLOR_2]}
-          style={{ flex: 1 }}
-          start={{x: 0, y: 0}}
-          end={{x: 1, y: 0}}
-    />
-      ),
       headerStyle: {
         shadowOpacity: 0,
         elevation: 0,
+        backgroundColor: FLAG_COLOR_ORANGE
       },
       headerTintColor: '#fff',
       headerTitleStyle: {
@@ -58,20 +51,6 @@ const MainNavigator = createStackNavigator(
 const AppContainer = createAppContainer(MainNavigator);
 
 class App extends Component {
-  constructor() {
-    super();
-    this.state = {
-    };
-  }
-
-  // componentWillMount() {
-  //   const { currentUser } = firebase.auth();
-  //   if (currentUser) {
-  //     firebase.auth().signOut();
-  //     Alert.alert('loged out');
-  //   }
-  // }
-
   render() {
     return <AppContainer />;
   }
