@@ -14,6 +14,8 @@ import InputComponent from '../components/inputComponent';
 import Loader from '../components/inlineLoader';
 import { getAge } from '../utils';
 
+import Crashes from 'mobile-center-crashes';
+
 class SignUpScreen extends Component {
   static navigationOptions = {
     title: SCREEN_TITLES.SIGN_UP
@@ -100,6 +102,7 @@ class SignUpScreen extends Component {
       } catch (error) {
         this.setState({ loaderVisible: false });
         console.log(error);
+        Crashes.generateTestCrash()
       }
     }
   };
