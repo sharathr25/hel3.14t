@@ -8,7 +8,7 @@ export const SIGN_UP_SCREEN = {
     INVALID_EMAIL_ERROR: 'Email should be valid',
     INVALID_MOBILE_NUMBER_ERROR: 'Mobile number invalid',
     INVALID_PASSWORD_ERROR: 'Password invalid',
-    PASSWORD_MISMATCH_ERROR: 'Password mismatch'
+    PASSWORD_MISMATCH_ERROR: 'Password mismatch',
   }
 };
 

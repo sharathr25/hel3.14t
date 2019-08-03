@@ -3,7 +3,7 @@ import { Input, Button, Text } from 'react-native-elements';
 import { View } from 'react-native';
 import firebase from 'react-native-firebase';
 import { styles } from '../constants/styleConstants';
-import { updateUser } from '../common/fireBaseFunctions';
+// import { updateUser } from '../common/fireBaseFunctions';
 import { OTP_SCREEN, SCREEN_TITLES } from '../constants/appConstants';
 import Loader from '../components/loader';
 
