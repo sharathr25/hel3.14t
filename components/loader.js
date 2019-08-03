@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import {
   View, Text, Modal
 } from 'react-native';
-import Spinner from 'react-native-spinkit';
 import { LOADER } from '../constants/appConstants';
 
 class Loader extends Component {
@@ -24,11 +23,6 @@ class Loader extends Component {
           flex: 1, alignItems: 'center', justifyContent: 'center', backgroundColor: 'rgba(0,0,0,0.9)'
         }}
         >
-          <View style={{ margin: 10 }}>
-            <Spinner color="orange" size={30} type="9CubeGrid" />
-            <Spinner color="white" size={30} type="9CubeGrid" />
-            <Spinner color="green" size={30} type="9CubeGrid" />
-          </View>
           <Text style={{ color: 'white', fontSize: 20 }}>{LOADER.TITLE}</Text>
         </View>
       </Modal>
