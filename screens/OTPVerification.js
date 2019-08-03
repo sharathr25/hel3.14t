@@ -3,10 +3,7 @@ import { Input, Button, Text } from 'react-native-elements';
 import { View } from 'react-native';
 import firebase from 'react-native-firebase';
 import { styles } from '../constants/styleConstants';
-// import { updateUser } from '../common/fireBaseFunctions';
 import { OTP_SCREEN, SCREEN_TITLES } from '../constants/appConstants';
-import Loader from '../components/loader';
-
 class OTPVerification extends Component {
   static navigationOptions = {
     title: SCREEN_TITLES.OTP
@@ -84,7 +81,6 @@ class OTPVerification extends Component {
     const { otpConfimationErrorMessage, error, loaderVisible } = this.state;
     return (
       <View style={{ flex: 1, alignItems: 'center' }}>
-        <Loader loaderVisible={loaderVisible} />
         <Text style={{ margin: 10, fontWeight: 'bold' }}>
           {OTP_SCREEN.REMINDER}
         </Text>

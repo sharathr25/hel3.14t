@@ -5,7 +5,6 @@ import { ScrollView } from 'react-native-gesture-handler';
 import firebase from 'react-native-firebase';
 import { SIGN_UP_SCREEN, SCREEN_TITLES } from '../constants/appConstants';
 import { styles, FLAG_COLOR_ORANGE } from '../constants/styleConstants';
-import Loader from '../components/loader';
 
 class ResetPassowrdScreen extends Component {
   static navigationOptions = {
@@ -151,7 +150,6 @@ class ResetPassowrdScreen extends Component {
             onPress={this.handleLogin}
           />
         </View>
-        <Loader loaderVisible={loaderVisible} />
       </ScrollView>
     );
   }

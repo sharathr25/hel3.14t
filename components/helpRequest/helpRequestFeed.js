@@ -5,7 +5,6 @@ import firebase from "react-native-firebase";
 import { ScrollView } from "react-native-gesture-handler";
 import HelpRequest from "./helpRequest";
 import { getDistanceFromLatLonInKm } from "../../utils";
-import Loader from "../loader";
 
 class HelpRequestFeed extends Component {
   constructor(props) {
@@ -96,7 +95,6 @@ class HelpRequestFeed extends Component {
     console.log(this.state.helpRequests.length);
     return (
       <>
-        {/* <Loader loaderVisible={!this.state.helpRequests.length !== 0} /> */}
         <ScrollView>
           {this.getHelpRequests()}
         </ScrollView>
