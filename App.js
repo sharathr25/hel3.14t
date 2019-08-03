@@ -21,7 +21,7 @@ import LoginScreen from './screens/loginScreen';
 import ResetPassword from './screens/resetPassword';
 
 // constants
-import { THEME_COLOR, FLAG_COLOR_BLUE, COLOR_1, COLOR_2, FLAG_COLOR_WHITE, FLAG_COLOR_ORANGE } from './constants/styleConstants';
+import { FLAG_COLOR_WHITE, FLAG_COLOR_ORANGE } from './constants/styleConstants';
 
 const MainNavigator = createStackNavigator(
   {

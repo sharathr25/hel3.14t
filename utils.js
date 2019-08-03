@@ -12,5 +12,9 @@ export const getDistanceFromLatLonInKm = (lat1, lon1, lat2, lon2) => {
 
 const deg2rad = deg => deg * (Math.PI / 180);
 
-const a = 10;
-export default a;
+export const getAge = (dob) => {
+  const birthday = new Date(dob);
+  const ageDifMs = Date.now() - birthday.getTime();
+  const ageDate = new Date(ageDifMs); // miliseconds from epoch
+  return Math.abs(ageDate.getUTCFullYear() - 1970);
+}

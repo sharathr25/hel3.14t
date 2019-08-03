@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { Input, Button } from 'react-native-elements';
 import { View, Alert } from 'react-native';
+import fireBase from 'react-native-firebase';
 import { SCREEN_TITLES } from '../constants/appConstants';
 import { styles, FLAG_COLOR_WHITE } from '../constants/styleConstants';
 import { getEmail, loginWithEmailAndPassword} from '../fireBase/auth/login';
@@ -23,6 +24,15 @@ class LoginScreen extends Component {
       password: '',
       passwordErrorMessage: '',
     };
+  }
+
+  componentDidMount() {
+    const { currentUser } = fireBase.auth();
+    if(currentUser){
+      //TODO : later we have to navigate the user to Main screen if he is loged in already for testing we r logging hime out
+      // this.props.navigation.navigate("Main"); 
+      fireBase.auth().signOut();
+    }
   }
 
   checkUserNameAndPasswordFields = () => {
@@ -101,8 +111,7 @@ class LoginScreen extends Component {
           inputContainerStyle={styles.inputContainerStyle}
           inputStyle={styles.inputStyle}
           secureTextEntry
-          onChangeText={value => this.setState({ password: value, passwordErrorMessage: '' })
-            }
+          onChangeText={value => this.setState({ password: value, passwordErrorMessage: '' })}
         />
         {passwordErrorMessage.length !== 0 && <ErrorMessage errorMessage={passwordErrorMessage} />}
         <Button
