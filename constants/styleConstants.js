@@ -38,6 +38,7 @@ export const styles = StyleSheet.create({
     width: 100
   },
   errorMessage: {
-    color: ERROR_MESSAGE_TEXT_COLOR
+    color: ERROR_MESSAGE_TEXT_COLOR,
+    padding: 5
   }
 });
