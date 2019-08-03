@@ -9,11 +9,9 @@
 // packages
 import React, { Component } from 'react';
 import { createStackNavigator, createAppContainer } from 'react-navigation';
-import LinearGradient from 'react-native-linear-gradient';
-// import { Alert } from 'react-native';
+
 
 // screens
-// import firebase from 'react-native-firebase';
 import SignUpScreen from './screens/signUpScreen';
 import OTPVerification from './screens/OTPVerification';
 import MainScreen from './screens/mainScreen';
