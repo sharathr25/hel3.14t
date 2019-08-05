@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Input, Button } from 'react-native-elements';
+import { Button } from 'react-native-elements';
 import { View, Alert } from 'react-native';
 import fireBase from 'react-native-firebase';
 import { SCREEN_TITLES } from '../constants/appConstants';
@@ -8,6 +8,7 @@ import { getEmail, loginWithEmailAndPassword} from '../fireBase/auth/login';
 import { checkUserNameAndPasswordFields, regex } from '../utils/index';
 import ErrorMessage from '../components/errorMessage';
 import ScreenRedirecter from '../components/screenRedirecter';
+import InputComponent from '../components/inputComponent';
 
 const emailRegex = regex.email;
 
@@ -96,22 +97,16 @@ class LoginScreen extends Component {
     const { passwordErrorMessage, userNameErrorMessage } = this.state;
     return (
       <View style={{ alignItems: 'center', justifyContent: 'center' }}>
-        <Input
-          placeholder="Email or Mobile Number"
-          inputContainerStyle={styles.inputContainerStyle}
-          inputStyle={styles.inputStyle}
-          containerStyle={{ margin: 10 }}
-          onChangeText={value => this.setState({ userName: value, userNameErrorMessage: '' })
-          }
+        <InputComponent 
+          placeholder="Email or Mobile Number" 
+          secureTextEntry={false} 
+          updateParentState={value => this.setState({ userName: value, userNameErrorMessage: '' })} 
         />
         {userNameErrorMessage.length !== 0 && <ErrorMessage errorMessage={userNameErrorMessage} />}
-        <Input
-          placeholder="Password"
-          containerStyle={{ margin: 10 }}
-          inputContainerStyle={styles.inputContainerStyle}
-          inputStyle={styles.inputStyle}
-          secureTextEntry
-          onChangeText={value => this.setState({ password: value, passwordErrorMessage: '' })}
+        <InputComponent 
+          placeholder="Password" 
+          secureTextEntry={true} 
+          updateParentState={value => this.setState({ password: value, passwordErrorMessage: '' })} 
         />
         {passwordErrorMessage.length !== 0 && <ErrorMessage errorMessage={passwordErrorMessage} />}
         <Button

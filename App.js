@@ -13,7 +13,6 @@ import { createStackNavigator, createAppContainer } from 'react-navigation';
 
 // screens
 import SignUpScreen from './screens/signUpScreen';
-import OTPVerification from './screens/OTPVerification';
 import MainScreen from './screens/mainScreen';
 import LoginScreen from './screens/loginScreen';
 import ResetPassword from './screens/resetPassword';
@@ -24,7 +23,6 @@ import { FLAG_COLOR_WHITE, FLAG_COLOR_ORANGE } from './constants/styleConstants'
 const MainNavigator = createStackNavigator(
   {
     SignUp: { screen: SignUpScreen },
-    OTP: { screen: OTPVerification },
     Main: { screen: MainScreen },
     Login: { screen: LoginScreen },
     ResetPassword: { screen: ResetPassword }

@@ -21,6 +21,13 @@ export const LOGIN_SCREEN = {
   },
 };
 
+export const ERRORS = {
+  EMPTY_USERNAME_ERROR: 'Username should not be empty',
+  INVALID_USERNAME_ERROR: 'Username invalid',
+  EMPTY_PASSWORD_ERROR: 'Password should not be empty',
+  INVALID_PASSWORD_ERROR: 'Password should be greater than 6 characters'
+}
+
 export const OTP_SCREEN = {
   REMINDER: 'We have sent an OTP to your mobile number. please enter to verify',
   ERRORS: {
