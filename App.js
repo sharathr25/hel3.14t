@@ -1,11 +1,3 @@
-/**
- * Sample React Native App
- * https://github.com/facebook/react-native
- *
- * @format
- * @flow
- */
-
 // packages
 import React, { Component } from 'react';
 import { createStackNavigator, createAppContainer } from 'react-navigation';
@@ -16,6 +8,7 @@ import SignUpScreen from './screens/signUpScreen';
 import MainScreen from './screens/mainScreen';
 import LoginScreen from './screens/loginScreen';
 import ResetPassword from './screens/resetPassword';
+import TermsAndConditionsScreen from './screens/termsAndConditions';
 
 // constants
 import { FLAG_COLOR_WHITE, FLAG_COLOR_ORANGE } from './constants/styleConstants';
@@ -25,7 +18,8 @@ const MainNavigator = createStackNavigator(
     SignUp: { screen: SignUpScreen },
     Main: { screen: MainScreen },
     Login: { screen: LoginScreen },
-    ResetPassword: { screen: ResetPassword }
+    ResetPassword: { screen: ResetPassword },
+    TermsAndConditions: { screen: TermsAndConditionsScreen}
   },
   {
     initialRouteName: 'Login',

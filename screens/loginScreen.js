@@ -9,6 +9,7 @@ import { checkUserNameAndPasswordFields, regex } from '../utils/index';
 import ErrorMessage from '../components/errorMessage';
 import ScreenRedirecter from '../components/screenRedirecter';
 import InputComponent from '../components/inputComponent';
+import Loader from '../components/inlineLoader';
 
 const emailRegex = regex.email;
 
@@ -24,6 +25,7 @@ class LoginScreen extends Component {
       userNameErrorMessage: '',
       password: '',
       passwordErrorMessage: '',
+      loaderVisible: false
     };
   }
 
@@ -74,6 +76,7 @@ class LoginScreen extends Component {
 
   handleLogin = async () => {
     const { userName, password} = this.state;
+    this.setState({loaderVisible: true});
     if (this.checkUserNameAndPasswordFields()) {
       if (userName.match(emailRegex)) {
         await this.loginWithEmail(userName, password);
@@ -81,6 +84,7 @@ class LoginScreen extends Component {
         await this.loginWithMobileNumber(userName, password);
       }
     }
+    this.setState({loaderVisible: false});
   }
 
   handleSignUp = () => {
@@ -94,7 +98,7 @@ class LoginScreen extends Component {
   }
 
   render() {
-    const { passwordErrorMessage, userNameErrorMessage } = this.state;
+    const { passwordErrorMessage, userNameErrorMessage, loaderVisible } = this.state;
     return (
       <View style={{ alignItems: 'center', justifyContent: 'center' }}>
         <InputComponent 
@@ -109,12 +113,13 @@ class LoginScreen extends Component {
           updateParentState={value => this.setState({ password: value, passwordErrorMessage: '' })} 
         />
         {passwordErrorMessage.length !== 0 && <ErrorMessage errorMessage={passwordErrorMessage} />}
-        <Button
+        {!loaderVisible && <Button
           title="Login"
           titleStyle={{ color: FLAG_COLOR_WHITE }}
           buttonStyle={styles.button}
           onPress={this.handleLogin}
-        />
+        />}
+        {loaderVisible && <Loader title="Please Wait..."/>}
         <ScreenRedirecter title="New user?" buttonText="Sign up" handleRedirection={this.handleSignUp}/>
         <ScreenRedirecter title="Forgot password?" buttonText="Reset Password" handleRedirection={this.handleResetPassword}/>
       </View>
