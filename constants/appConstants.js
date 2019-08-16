@@ -52,5 +52,6 @@ export const SCREEN_TITLES = {
   OTP: 'OTP Verification',
   MAIN: 'Hel3.14t',
   LOGIN: 'Login',
-  RESET_PASSOWRD: 'Reset password'
+  RESET_PASSOWRD: 'Reset password',
+  TERMS_AND_CONDITIONS: 'Terms And Conditions'
 };

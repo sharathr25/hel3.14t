@@ -57,6 +57,11 @@ class SignUpScreen extends Component {
     });
   }
 
+  handleTermsAndConditions = () => {
+    const { navigation } = this.props;
+    navigation.navigate('TermsAndConditions', { currentUser: firebase.auth().currentUser });
+  }
+
   checkFields = () => {
     let valid = false;
     const { name, email, mobileNumber, password, confirmPassword } = this.state;
@@ -203,11 +208,12 @@ class SignUpScreen extends Component {
             title="check this to accept terms and conditions" 
             checked={termsAndConditionChecked} 
             onPress={() => this.setState({termsAndConditionChecked: ! termsAndConditionChecked})} />
+          {<Button title="Terms And Conditions" buttonStyle={{backgroundColor: FLAG_COLOR_ORANGE,width: 200, marginBottom: 5}} onPress={this.handleTermsAndConditions} />}
           
           {/* Sign Up button */}
-          <Button title="Sign Up" buttonStyle={styles.button} onPress={this.handleSignUp} />
+          {!loaderVisible && <Button title="Sign Up" buttonStyle={styles.button} onPress={this.handleSignUp} />}
+          { loaderVisible && <Loader title="Please wait..." message="we will auto verify OTP and log you in" />}
         </View>
-        { loaderVisible && <Loader />}
       </ScrollView>
     );
   }
