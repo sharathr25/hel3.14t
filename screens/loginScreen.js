@@ -34,8 +34,8 @@ class LoginScreen extends Component {
     const { currentUser } = fireBase.auth();
     if(currentUser){
       //TODO : later we have to navigate the user to Main screen if he is loged in already for testing we r logging hime out
-      // this.props.navigation.navigate("Main"); 
-      fireBase.auth().signOut();
+       this.props.navigation.navigate("Main"); 
+      //fireBase.auth().signOut();
     }
   }
 

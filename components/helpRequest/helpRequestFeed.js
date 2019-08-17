@@ -8,29 +8,25 @@ import Geolocation from 'react-native-geolocation-service';
 class HelpRequestFeed extends Component {
   constructor(props) {
     super(props);
-    // const { navigation } = this.props;
-    // const {
-    //   displayName, email, phoneNumber, uid
-    // } = navigation.state.params.currentUser;
     this.state = {
-      // name: displayName,
-      // mobileNumber: phoneNumber,
-      // email,
-      // uid,
-      helpRequests: [],
-      latitude: null,
-      longitude: null
+      helpRequests: []
     };
   }
 
   componentDidMount() {
-    firebase.database().ref('/helps').on('child_moved', (data) => {
+    const {db} = this.props;
+    firebase.database().ref(`${db}`).on('child_moved', (data) => {
       console.log(data.val());
     });
-    firebase.database().ref("/helps").on("child_added", data => {
+    firebase.database().ref(`${db}`).on("child_added", data => {
       const { helpRequests } = this.state;
       const newObj = {...data.val(),key: data.key}
-          this.setState({ helpRequests: [...helpRequests, newObj] });
+      this.setState({ helpRequests: [...helpRequests, newObj] });
+    });
+    firebase.database().ref(`/${db}`).on("child_removed", data => {
+      const { helpRequests } = this.state;
+      const newHelpRequests = helpRequests.filter((helpRequest)=>helpRequest.key !== data.key);
+      this.setState({ helpRequests: newHelpRequests });
     });
   }
 
@@ -42,19 +38,23 @@ class HelpRequestFeed extends Component {
 
   getHelpRequests = () => {
     const { helpRequests } = this.state;
-    return helpRequests.map(helpRequest => (
-      <HelpRequest data={helpRequest} key={helpRequest.key} />
-    ));
+    const { db } = this.props;
+    if (db!=="helps"){
+      return helpRequests.map(helpRequest => (
+        <HelpRequest data={helpRequest} key={helpRequest.key} disableFooter={false}/>
+      ));
+    } else {
+      return helpRequests.map(helpRequest => (
+        <HelpRequest data={helpRequest} key={helpRequest.key} disableFooter={true} />
+      ));
+    }
   };
 
   render() {
-    console.log(this.state.helpRequests.length);
     return (
-      <>
-        <ScrollView>
-          {this.getHelpRequests()}
-        </ScrollView>
-      </>
+      <ScrollView>
+        {this.getHelpRequests()}
+      </ScrollView>
     );
   }
 }

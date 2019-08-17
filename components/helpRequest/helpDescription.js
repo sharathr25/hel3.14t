@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import { Text, StyleSheet, View } from "react-native";
 import Icon from "react-native-vector-icons/FontAwesome";
 import HelpRequestPeopleCount from "./helpRequestPeopleCount";
-import { BLACK, COLOR_1 } from "../../constants/styleConstants";
+import { BLACK, COLOR_1, FLAG_COLOR_ORANGE } from "../../constants/styleConstants";
 
 class HelpDescription extends Component {
   render() {
@@ -46,7 +46,7 @@ const styles = StyleSheet.create({
   title: {
     fontWeight: "bold",
     fontSize: 20,
-    color: COLOR_1
+    color: FLAG_COLOR_ORANGE
   },
   distanceContainer: {
     flex: 1,
