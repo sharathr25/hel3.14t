@@ -3,13 +3,11 @@ import { Text } from 'react-native-elements';
 import { View, StyleSheet, Dimensions } from "react-native";
 import { TabView, SceneMap, TabBar } from "react-native-tab-view";
 import HelpRequestFeed from "../components/helpRequest/helpRequestFeed";
-import HelpingQueueFeed from "../components/helpingQueue/helpingQueueFeed";
 import { SCREEN_TITLES } from "../constants/appConstants";
 import { FLAG_COLOR_ORANGE } from "../constants/styleConstants";
+const FirstRoute = () => <HelpRequestFeed db="helps" />;
 
-const FirstRoute = () => <HelpRequestFeed />;
-
-const SecondRoute = () => <HelpingQueueFeed/>;
+const SecondRoute = () => <HelpRequestFeed db="helping" />;
 
 const ThirdRoute = () => (
   <View style={[styles.scene]} ><Text>route 3</Text></View>

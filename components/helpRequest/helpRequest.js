@@ -18,19 +18,10 @@ class HelpRequest extends Component {
     this.usersRequested = this.helpRequest.child("usersRequested");
     this.usersAccepted= this.helpRequest.child("usersAccepted");
     this.noPeopleRequested = this.helpRequest.child("noPeopleRequested");
-    this.pushedUpQuery = this.usersPushed
-      .orderByValue(this.uid)
-      .equalTo(this.uid)
-      .limitToFirst(1);
     this.usersPulled = this.helpRequest.child("usersPulled");
-    this.pulledUpQuery = this.usersPushed
-      .orderByValue(this.uid)
-      .equalTo(this.uid)
-      .limitToFirst(1);
-    this.helpedUpQuery = this.usersAccepted
-    .orderByValue(this.uid)
-    .equalTo(this.uid)
-    .limitToFirst(1);
+    this.pushedUpQuery = this.usersPushed.orderByValue(this.uid).equalTo(this.uid).limitToFirst(1);
+    this.pulledUpQuery = this.usersPulled.orderByValue(this.uid).equalTo(this.uid).limitToFirst(1);
+    this.helpedUpQuery = this.usersAccepted.orderByValue(this.uid).equalTo(this.uid).limitToFirst(1);
     this.state = {
       pushUps: data.pushUps,
       pullUps: data.pullUps,
@@ -45,14 +36,10 @@ class HelpRequest extends Component {
 
   componentDidMount() {
     this.helpRequest.on("child_changed", data => {
-      if (data.key === "pushUps" || data.key === "pullUps" || data.key === "noPeopleRequested") {
-        if (data.key === "pushUps") this.setState({ pushUps: data.val() });
-        if (data.key === "pullUps") this.setState({ pullUps: data.val() });
-        if (data.key === "noPeopleRequested") {
-          this.setState( { noPeopleRequested: data.val() })
-          if( data.val() === this.state.noPeople ){
-            this.setState({ disableHelp : true });
-          }
+      this.setState( { [data.key]: data.val() })
+      if (data.key === "noPeopleRequested") {
+        if( data.val() === this.state.noPeople ){
+          this.setState({ disableHelp : true });
         }
       }
     });
@@ -61,17 +48,11 @@ class HelpRequest extends Component {
     this.setHelpButtonStatus();
   }
 
-  updateHelpRequest = type => {
-    const { pushUps, pullUps } = this.state;
+  updateHelpRequest = (key,value,userDb) => {
     const { uid } = this;
-    if (type === "push") {
-      this.helpRequest.update({ pushUps: pushUps + 1 });
-      this.usersPushed.push(uid).catch(err => {
-        console.log(err);
-      });
-    } else {
-      this.helpRequest.update({ pullUps: pullUps + 1 });
-      this.usersPulled.push(uid).catch(err => {
+    this.helpRequest.update({ [key]: value });
+    if(userDb){
+      userDb.push(uid).catch(err => {
         console.log(err);
       });
     }
@@ -97,7 +78,7 @@ class HelpRequest extends Component {
     const { noPeople } = this.state;
     this.noPeopleRequested.once("value", data => {
       if(data.val() === noPeople){
-        this.helpRequest.update({ helpingStartedAt: new Date().getTime()});
+        this.updateHelpRequest("helpingStartedAt",new Date().getTime(),null);
         this.setState({ disableHelp : true });
         this.helpRequest.once('value', (data) => {
           firebase.database().ref('/helping').push(data.val(),() => {
@@ -114,8 +95,9 @@ class HelpRequest extends Component {
   }
 
   handlePush = () => {
-    if (!this.state.userPushed) {
-      this.updateHelpRequest("push");
+    const { pushUps,userPushed } = this.state;
+    if (!userPushed) {
+      this.updateHelpRequest("pushUps", pushUps+1 ,this.usersPushed);
       this.setPushUpStatus();
     } else {
       Alert.alert("u already pushed");
@@ -123,8 +105,9 @@ class HelpRequest extends Component {
   };
 
   handlePull = () => {
-    if (!this.state.userPulled) {
-      this.updateHelpRequest("pull");
+    const { pullUps,userPulled } = this.state;
+    if (!userPulled) {
+      this.updateHelpRequest("pullUps", pullUps+1, this.usersPulled);
       this.setPullUpStatus();
     } else {
       Alert.alert("u already pulled");
@@ -132,19 +115,14 @@ class HelpRequest extends Component {
   };
 
   handleHelp = () => {
-    console.log("help");
     //TODO: we have send help requested user a notification. If he accepts then only we will allow this guy to help
-    const { noPeopleRequested, disableHelp } = this.state;
-    if(disableHelp){
+    const { noPeopleRequested,disableHelp } = this.state;
+    if(!disableHelp){
+      this.updateHelpRequest("noPeopleRequested",noPeopleRequested+1, this.usersAccepted);
+      this.setHelpButtonStatus();
+    } else {
       Alert.alert("u already helping");
-      return;
     }
-    const { uid } = this;
-    console.log();
-    this.helpRequest.update({ noPeopleRequested: noPeopleRequested + 1});
-    this.usersAccepted.push(uid).catch((err) => {
-      console.log(err);
-    });
   }
 
   render() {
@@ -178,13 +156,13 @@ class HelpRequest extends Component {
             }}
           />
           <ProgressBar pushUps={pushUps} pullUps={pullUps}/>
-          <HelpRequestModifier
+          {this.props.disableFooter && <HelpRequestModifier
             pushUps={pushUps}
             pullUps={pullUps}
             handlePush={() => this.handlePush()}
             handlePull={() => this.handlePull()}
             handleHelp={() => this.handleHelp()}
-          />
+          />}
           <Time time={timeStamp} />
         </View>
       </View>

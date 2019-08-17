@@ -3,6 +3,7 @@ import { View, Text, StyleSheet } from "react-native";
 import {
   COLOR_1,
   FLAG_COLOR_WHITE,
+  FLAG_COLOR_BLUE,
 } from "../../constants/styleConstants";
 
 class HelpRequestPeopleCount extends Component {
@@ -45,13 +46,13 @@ const styles = StyleSheet.create({
         padding: 2
       },
       progressBarTextRight: {
-        color: COLOR_1,
+        color: FLAG_COLOR_BLUE,
         flex: 1,
         fontSize: 15,
         padding: 2
       },
       progressBar_left: {
-        backgroundColor: COLOR_1,
+        backgroundColor: FLAG_COLOR_BLUE,
         alignItems: "center"
       },
       progressBar_right: {
