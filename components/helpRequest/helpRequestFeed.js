@@ -1,10 +1,9 @@
-/* eslint-disable react/no-array-index-key */
-/* eslint-disable no-undef */
 import React, { Component } from "react";
 import firebase from "react-native-firebase";
 import { ScrollView } from "react-native-gesture-handler";
 import HelpRequest from "./helpRequest";
 import { getDistanceFromLatLonInKm } from "../../utils";
+import Geolocation from 'react-native-geolocation-service';
 
 class HelpRequestFeed extends Component {
   constructor(props) {
@@ -25,56 +24,13 @@ class HelpRequestFeed extends Component {
   }
 
   componentDidMount() {
-    navigator.geolocation.getCurrentPosition(position => {
-      this.setState({
-        latitude: position.coords.latitude,
-        longitude: position.coords.longitude,
-      });
-      firebase
-        .database()
-        .ref("/helps")
-        .on("child_added", data => {
-          const { helpRequests, latitude, longitude } = this.state;
-          const currentLatitude = latitude || position.coords.latitude;
-          const currentLongitude = longitude || position.coords.longitude;
-          const lat1 = currentLatitude;
-          const lon1 = currentLongitude;
-          const lat2 = data.val().latitude;
-          const lon2 = data.val().longitude;
-          const dist = getDistanceFromLatLonInKm(lat1, lon1, lat2, lon2);
-          if (dist < 100) { // need to change this distance
-            const newObj = {
-              ...data.val(),
-              userLatitude: lat1,
-              userLongitude: lon1,
-              distance: dist,
-              key: data.key
-            };
-            const index = helpRequests.findIndex(helpRequest => {
-              return helpRequest.distance > dist;
-            });
-            if (index === -1) {
-              this.setState({ helpRequests: [...helpRequests, newObj] });
-            } else {
-              this.setState({
-                helpRequests: [
-                  ...helpRequests.slice(0, index),
-                  newObj,
-                  ...helpRequests.slice(index)
-                ]
-              });
-            }
-          }
-        });
-        firebase.database().ref('/helps').on('child_moved', (data) => {
-          console.log(data.val());
-        });
+    firebase.database().ref('/helps').on('child_moved', (data) => {
+      console.log(data.val());
     });
-    navigator.geolocation.watchPosition(position => {
-      this.setState({
-        latitude: position.coords.latitude,
-        longitude: position.coords.longitude
-      });
+    firebase.database().ref("/helps").on("child_added", data => {
+      const { helpRequests } = this.state;
+      const newObj = {...data.val(),key: data.key}
+          this.setState({ helpRequests: [...helpRequests, newObj] });
     });
   }
 

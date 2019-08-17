@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { Button } from 'react-native-elements';
-import { View, Alert } from 'react-native';
+import { View, Alert,Text } from 'react-native';
 import fireBase from 'react-native-firebase';
 import { SCREEN_TITLES } from '../constants/appConstants';
 import { styles, FLAG_COLOR_WHITE } from '../constants/styleConstants';
@@ -10,6 +10,7 @@ import ErrorMessage from '../components/errorMessage';
 import ScreenRedirecter from '../components/screenRedirecter';
 import InputComponent from '../components/inputComponent';
 import Loader from '../components/inlineLoader';
+import Context from '../context';
 
 const emailRegex = regex.email;
 

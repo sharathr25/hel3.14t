@@ -13,6 +13,7 @@ import TermsAndConditionsScreen from './screens/termsAndConditions';
 // constants
 import { FLAG_COLOR_WHITE, FLAG_COLOR_ORANGE } from './constants/styleConstants';
 
+import Context from './context';
 const MainNavigator = createStackNavigator(
   {
     SignUp: { screen: SignUpScreen },
@@ -42,7 +43,11 @@ const AppContainer = createAppContainer(MainNavigator);
 
 class App extends Component {
   render() {
-    return <AppContainer />;
+    return (
+      <Context.Provider value="sharath">
+        <AppContainer />
+      </Context.Provider>
+    );
   }
 }
 

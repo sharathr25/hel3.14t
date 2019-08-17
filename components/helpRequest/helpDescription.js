@@ -7,7 +7,7 @@ import { BLACK, COLOR_1 } from "../../constants/styleConstants";
 class HelpDescription extends Component {
   render() {
     const { data } = this.props;
-    const { description, noPeople, title, distance, noPeopleRequested } = data;
+    const { description, noPeople, title, distance=10, noPeopleRequested } = data;
     return (
       <View style={styles.descriptionContainer}>
         <View style={styles.titleContainer}>

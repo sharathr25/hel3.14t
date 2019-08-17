@@ -5,11 +5,11 @@ import { TabView, SceneMap, TabBar } from "react-native-tab-view";
 import HelpRequestFeed from "../components/helpRequest/helpRequestFeed";
 import HelpingQueueFeed from "../components/helpingQueue/helpingQueueFeed";
 import { SCREEN_TITLES } from "../constants/appConstants";
-import { COLOR_1, FLAG_COLOR_ORANGE } from "../constants/styleConstants";
+import { FLAG_COLOR_ORANGE } from "../constants/styleConstants";
 
-const FirstRoute = () => <Text>route 1</Text>;
+const FirstRoute = () => <HelpRequestFeed />;
 
-const SecondRoute = () => <Text>route 2</Text>
+const SecondRoute = () => <HelpingQueueFeed/>;
 
 const ThirdRoute = () => (
   <View style={[styles.scene]} ><Text>route 3</Text></View>
