@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import { Text, Button, Input } from "react-native-elements";
 import Icon from "react-native-vector-icons/FontAwesome";
 import firebase from 'react-native-firebase';
-import { View, TouchableOpacity, Modal, Picker, StyleSheet } from "react-native";
+import { View, TouchableOpacity, Modal, Picker, StyleSheet,Alert,PermissionsAndroid } from "react-native";
 import { FLAG_COLOR_WHITE, FLAG_COLOR_ORANGE } from "../../constants/styleConstants";
 import InputComponent from "../inputComponent";
 import geolocation from 'react-native-geolocation-service';
@@ -22,13 +22,15 @@ class HelpRequestForm extends Component {
     };
   }
 
-  componentDidMount() {
+  async componentDidMount() {
+    await PermissionsAndroid.request(PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION);
     geolocation.getCurrentPosition(
       (position) => {
           this.setState({
             latitude:position.coords.latitude,
             longitude:position.coords.longitude,
-            locationProviderAvailable: true
+            locationProviderAvailable: true,
+            locationErrorMessage:""
           });
       },
       (error) => {
@@ -57,7 +59,11 @@ class HelpRequestForm extends Component {
 
   requestHelp = () => {
     this.setState({ formVisible: !this.state.formVisible });
-    const { title, description, noPeople, longitude, latitude } = this.state;
+    const { title, description, noPeople, longitude, latitude, locationProviderAvailable, locationErrorMessage } = this.state;
+    if(locationProviderAvailable === false && latitude===null && longitude===null){
+      Alert.alert(locationErrorMessage?locationErrorMessage:"location error");
+      return;
+    }
     const data = {
       title: title,
       description,
