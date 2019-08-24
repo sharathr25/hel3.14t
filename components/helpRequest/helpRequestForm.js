@@ -2,10 +2,10 @@ import React, { Component } from "react";
 import { Text, Button, Input } from "react-native-elements";
 import Icon from "react-native-vector-icons/FontAwesome";
 import firebase from 'react-native-firebase';
-import { View, TouchableOpacity, Modal, Picker, StyleSheet,Alert,PermissionsAndroid } from "react-native";
+import { View, TouchableOpacity, Modal, Picker, StyleSheet,Alert } from "react-native";
 import { FLAG_COLOR_WHITE, FLAG_COLOR_ORANGE } from "../../constants/styleConstants";
 import InputComponent from "../inputComponent";
-import geolocation from 'react-native-geolocation-service';
+import Context from '../../context';
 
 class HelpRequestForm extends Component {
   constructor() {
@@ -22,46 +22,17 @@ class HelpRequestForm extends Component {
     };
   }
 
-  async componentDidMount() {
-    await PermissionsAndroid.request(PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION);
-    geolocation.getCurrentPosition(
-      (position) => {
-          this.setState({
-            latitude:position.coords.latitude,
-            longitude:position.coords.longitude,
-            locationProviderAvailable: true,
-            locationErrorMessage:""
-          });
-      },
-      (error) => {
-          // See error code charts below.
-          console.log(error.code, error.message);
-          let locationErrorMessage;
-          switch(error.code){
-            case 1:locationErrorMessage="Location permission is not granted";break;
-            case 2:locationErrorMessage="Location provider not available";break;
-            case 3:locationErrorMessage="Location request timed out";break;
-            case 4:locationErrorMessage="Google play service is not installed or has an older version";break;
-            case 5:locationErrorMessage="Location service is not enabled or location mode is not appropriate for the current request";break;
-          }
-          this.setState({
-            locationErrorMessage,
-            locationProviderAvailable: false
-          });
-      },
-      { enableHighAccuracy: true, timeout: 15000, maximumAge: 10000 }
-    );
-  }
-
   handleAddHelpRequest = () => {
     this.setState({ formVisible: !this.state.formVisible });
   };
 
   requestHelp = () => {
     this.setState({ formVisible: !this.state.formVisible });
-    const { title, description, noPeople, longitude, latitude, locationProviderAvailable, locationErrorMessage } = this.state;
+    const { title, description, noPeople } = this.state;
+    const { longitude, latitude, locationProviderAvailable, locationErrorMessage,getPosition } = this.context;
     if(locationProviderAvailable === false && latitude===null && longitude===null){
       Alert.alert(locationErrorMessage?locationErrorMessage:"location error");
+      getPosition();
       return;
     }
     const data = {
@@ -154,6 +125,7 @@ class HelpRequestForm extends Component {
   }
 }
 
+HelpRequestForm.contextType = Context;
 export default HelpRequestForm;
 
 const styles = StyleSheet.create({

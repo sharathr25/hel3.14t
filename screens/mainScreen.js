@@ -32,6 +32,12 @@ class MainScreen extends Component {
     };
   }
 
+  // handleLogOut = () => {
+  //   const { navigation } = this.props;
+  //   firebase.auth().signOut();
+  //   navigation.navigate("Login", {});
+  // };
+ 
   render() {
     return (
       <TabView
