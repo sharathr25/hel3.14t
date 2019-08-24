@@ -5,7 +5,9 @@ import { TabView, SceneMap, TabBar } from "react-native-tab-view";
 import HelpRequestFeed from "../components/helpRequest/helpRequestFeed";
 import { SCREEN_TITLES } from "../constants/appConstants";
 import { FLAG_COLOR_ORANGE } from "../constants/styleConstants";
-const FirstRoute = () => <HelpRequestFeed db="helps" />;
+import HelpRequestForm from "../components/helpRequest/helpRequestForm";
+
+const FirstRoute = () => <View style={{flex:1}}><HelpRequestFeed db="helps" /><HelpRequestForm /></View>;
 
 const SecondRoute = () => <HelpRequestFeed db="helping" />;
 

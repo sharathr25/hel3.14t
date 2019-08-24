@@ -2,29 +2,55 @@ import React, { Component } from "react";
 import { Text, Button, Input } from "react-native-elements";
 import Icon from "react-native-vector-icons/FontAwesome";
 import firebase from 'react-native-firebase';
-import { View, TouchableOpacity, Modal, Picker } from "react-native";
-import { FLAG_COLOR_ORANGE } from "../constants/styleConstants";
+import { View, TouchableOpacity, Modal, Picker, StyleSheet,Alert,PermissionsAndroid } from "react-native";
+import { FLAG_COLOR_WHITE, FLAG_COLOR_ORANGE } from "../../constants/styleConstants";
+import InputComponent from "../inputComponent";
+import geolocation from 'react-native-geolocation-service';
 
 class HelpRequestForm extends Component {
   constructor() {
     super();
     this.state = {
       formVisible: false,
-      noPeopleRequired: 1,
+      noPeople: 1,
       title: "",
       description: "",
       latitude: null,
-      longitude: null
+      longitude: null,
+      locationProviderAvailable: false,
+      locationErrorMessage:""
     };
   }
 
-  componentDidMount() {
-    navigator.geolocation.getCurrentPosition(position => {
-      this.setState({
-        latitude: position.coords.latitude,
-        longitude: position.coords.longitude
-      });
-    });
+  async componentDidMount() {
+    await PermissionsAndroid.request(PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION);
+    geolocation.getCurrentPosition(
+      (position) => {
+          this.setState({
+            latitude:position.coords.latitude,
+            longitude:position.coords.longitude,
+            locationProviderAvailable: true,
+            locationErrorMessage:""
+          });
+      },
+      (error) => {
+          // See error code charts below.
+          console.log(error.code, error.message);
+          let locationErrorMessage;
+          switch(error.code){
+            case 1:locationErrorMessage="Location permission is not granted";break;
+            case 2:locationErrorMessage="Location provider not available";break;
+            case 3:locationErrorMessage="Location request timed out";break;
+            case 4:locationErrorMessage="Google play service is not installed or has an older version";break;
+            case 5:locationErrorMessage="Location service is not enabled or location mode is not appropriate for the current request";break;
+          }
+          this.setState({
+            locationErrorMessage,
+            locationProviderAvailable: false
+          });
+      },
+      { enableHighAccuracy: true, timeout: 15000, maximumAge: 10000 }
+    );
   }
 
   handleAddHelpRequest = () => {
@@ -33,7 +59,11 @@ class HelpRequestForm extends Component {
 
   requestHelp = () => {
     this.setState({ formVisible: !this.state.formVisible });
-    const { title, description, noPeopleRequired, longitude, latitude } = this.state;
+    const { title, description, noPeople, longitude, latitude, locationProviderAvailable, locationErrorMessage } = this.state;
+    if(locationProviderAvailable === false && latitude===null && longitude===null){
+      Alert.alert(locationErrorMessage?locationErrorMessage:"location error");
+      return;
+    }
     const data = {
       title: title,
       description,
@@ -41,7 +71,7 @@ class HelpRequestForm extends Component {
       longitude,
       mobileNo: "+919886739068",
       name: "sharath",
-      noPeopleRequired: parseInt(noPeopleRequired),
+      noPeople: parseInt(noPeople),
       timeStamp: new Date().getTime(),
       pushUps: 0,
       pullUps: 0,
@@ -61,57 +91,37 @@ class HelpRequestForm extends Component {
       <TouchableOpacity
         activeOpacity={0.7}
         onPress={this.handleAddHelpRequest}
-        style={styles.TouchableOpacityStyle}
+        style={styles.touchableOpacityStyle}
       >
-        <Icon name="plus-circle" size={50} color={COLOR_1} />
+        <Icon name="plus-circle" size={50} color={FLAG_COLOR_ORANGE} />
       </TouchableOpacity>
       <Modal
         animationType="none"
         transparent
         visible={this.state.formVisible}
       >
-        <View style={{flex: 1, justifyContent: "center", alignItems: "center", backgroundColor: "rgba(0,0,0,0.9)", flexDirection: "row" }}>
-            <View
-              colors={[COLOR_1, COLOR_2]}
-              style={{ flex: 1, padding: 10, margin: 10, backgroundColor:FLAG_COLOR_ORANGE }}
-            >
-              <Input
-                inputStyle={styles.inputStyle}
-                inputContainerStyle={styles.inputContainerStyle}
+        <View style={styles.modalOuterContaner}>
+            <View style={styles.modalInnerContainer}>
+              <InputComponent 
                 placeholder="Title"
-                onChangeText={value => this.setState({ title: value })}
+                secureTextEntry={false}
+                updateParentState={value => this.setState({ title: value })}
               />
               <Input
-                inputStyle={styles.inputStyle}
-                inputContainerStyle={styles.inputContainerStyle}
+                inputContainerStyle={styles.descriptionContainerStyle}
                 multiline={true}
                 numberOfLines={4}
                 placeholder="Description"
                 onChangeText={value => this.setState({ description: value })}
               />
               <View
-                style={{
-                  flexDirection: "row",
-                  margin: 10,
-                  justifyContent: "flex-start"
-                }}
+                style={styles.pickerContainerStyle}
               >
-                <Text style={{ color: "white", fontSize: 20 }}>
-                  No of People Required
-                </Text>
+                <Text style={{fontSize: 20, paddingTop:5 }}> No of People Required: </Text>
                 <Picker
                   selectedValue={this.state.noPeopleRequired}
-                  style={{
-                    height: 40,
-                    width: 80,
-                    marginLeft: 5,
-                    backgroundColor: "white",
-                    color: "black",
-                    borderRadius: 5
-                  }}
-                  onValueChange={itemValue =>
-                    this.setState({ noPeopleRequired: itemValue })
-                  }
+                  style={styles.pickerStyle}
+                  onValueChange={itemValue => this.setState({ noPeople: itemValue }) }
                 >
                   <Picker.Item label="1" value="1" />
                   <Picker.Item label="2" value="2" />
@@ -123,13 +133,8 @@ class HelpRequestForm extends Component {
               </View>
               <Button
                 title="Requset Help"
-                type="outline"
-                containerStyle={{
-                  borderColor: COLOR_1,
-                  margin: 5,
-                  backgroundColor: "white"
-                }}
-                titleStyle={{ color: COLOR_1 }}
+                buttonStyle={{ margin: 5, backgroundColor: FLAG_COLOR_ORANGE, width: 200}}
+                titleStyle={{ color: FLAG_COLOR_WHITE }}
                 onPress={this.requestHelp}
               />
               <Button
@@ -138,12 +143,8 @@ class HelpRequestForm extends Component {
                 onPress={() =>
                   this.setState({ formVisible: !this.state.formVisible })
                 }
-                containerStyle={{
-                  borderColor: COLOR_1,
-                  margin: 5,
-                  backgroundColor: "white"
-                }}
-                titleStyle={{ color: COLOR_1 }}
+                buttonStyle={{ margin: 5, backgroundColor: FLAG_COLOR_ORANGE, width: 200}}
+                titleStyle={{ color: FLAG_COLOR_WHITE }}
               />
             </View>
           </View>
@@ -154,3 +155,50 @@ class HelpRequestForm extends Component {
 }
 
 export default HelpRequestForm;
+
+const styles = StyleSheet.create({
+  modalOuterContaner: {
+    flex: 1, 
+    justifyContent: "center", 
+    alignItems: "center", 
+    backgroundColor: "rgba(0,0,0,0.9)", 
+    flexDirection: "row" 
+  },
+  modalInnerContainer: {
+    flex: 1, 
+    padding: 10, 
+    margin: 10, 
+    backgroundColor:FLAG_COLOR_WHITE,
+    justifyContent: "center",
+    alignItems: "center"
+  },
+  touchableOpacityStyle: {
+    position: 'absolute',
+    width: 44,
+    height: 44,
+    alignItems: 'center',
+    justifyContent: 'center',
+    right: 30,
+    bottom: 30,
+    backgroundColor: FLAG_COLOR_WHITE,
+    borderRadius: 22
+  },
+  descriptionContainerStyle:{
+    borderWidth: 1,
+    borderColor: FLAG_COLOR_ORANGE
+  },
+  pickerStyle:{
+    height: 40,
+    width: 80,
+    marginLeft: 5,
+    color: "black",
+    borderRadius: 5
+  },
+  pickerContainerStyle:{
+    flexDirection: "row",
+    margin: 10,
+    justifyContent: "flex-start",
+    borderColor: FLAG_COLOR_ORANGE,
+    borderWidth: 1 
+  }
+});

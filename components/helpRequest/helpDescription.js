@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import { Text, StyleSheet, View } from "react-native";
 import Icon from "react-native-vector-icons/FontAwesome";
 import HelpRequestPeopleCount from "./helpRequestPeopleCount";
-import { BLACK, COLOR_1, FLAG_COLOR_ORANGE } from "../../constants/styleConstants";
+import { BLACK, FLAG_COLOR_ORANGE } from "../../constants/styleConstants";
 
 class HelpDescription extends Component {
   render() {
@@ -21,9 +21,7 @@ class HelpDescription extends Component {
         </View>
         <View style={{ marginTop: 10, marginBottom: 10 }}>
           <Text style={styles.descriptionTitle}>Description</Text>
-          <Text style={styles.description}>
-            {`"${description}...${description}...${description} ${description}"`}
-          </Text>
+          <Text style={styles.description}>{description}</Text>
         </View>
         <HelpRequestPeopleCount noPeople={noPeople} noPeopleRequested={noPeopleRequested}/>
       </View>
