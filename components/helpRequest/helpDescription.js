@@ -7,7 +7,7 @@ import { BLACK, FLAG_COLOR_ORANGE } from "../../constants/styleConstants";
 class HelpDescription extends Component {
   render() {
     const { data } = this.props;
-    const { description, noPeople, title, distance=10, noPeopleRequested } = data;
+    const { description, noPeople, title, distance, noPeopleRequested } = data;
     return (
       <View style={styles.descriptionContainer}>
         <View style={styles.titleContainer}>
