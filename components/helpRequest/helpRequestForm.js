@@ -47,7 +47,8 @@ class HelpRequestForm extends Component {
       pushUps: 0,
       pullUps: 0,
       noPeopleRequested: 0,
-      noPeopleAccepted: 0
+      noPeopleAccepted: 0,
+      status: 'REQUESTED'
     };
     firebase
       .database()
