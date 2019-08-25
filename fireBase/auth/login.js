@@ -3,7 +3,7 @@ import firebase from 'react-native-firebase';
 
 export const getEmail = async (mobileNumber) => {
     try {
-      const data = await firebase.database().ref(`/users/+91${mobileNumber}`).once('value');
+      const data = await firebase.database().ref(`/mapping/+91${mobileNumber}`).once('value');
       const email = data.val() && data.val().email;
       return email;
     } catch (error) {

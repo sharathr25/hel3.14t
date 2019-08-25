@@ -74,17 +74,22 @@ class HelpRequestFeed extends Component {
   getHelpRequests = () => {
     const { db } = this.props;
     const { referenceToOldestKey,lastKey } = this.state;
-    this.setState({ isLoading: true})
     firebase.database().ref(`${db}`).orderByKey().limitToLast(1).once("value", data => {
+      if(data.val()===null)return;
       if(lastKey !== Object.keys(data.val())[0]);{
         this.setState({lastKey:Object.keys(data.val())[0]});
       }
     });
     if(lastKey !== "" && referenceToOldestKey!=="" && referenceToOldestKey=== lastKey){
-      this.setState({isLoading:false});
       return;//return if we are last key in firebase
-    }if(referenceToOldestKey === ""){
+    }
+    this.setState({ isLoading: true})
+    if(referenceToOldestKey === ""){
       firebase.database().ref(`${db}`).orderByKey().limitToFirst(FIREBASE_FETCH_LIMIT).once("value", data => {
+        if(data.val()===null){
+          this.setState({ isLoading: false });
+          return;
+        }
         const keys = Object.keys(data.val()).sort().reverse();
         this.setHelpRequests(keys, data.val())
       }).catch(err => {console.log(err);this.setState({isLoading: false})});
