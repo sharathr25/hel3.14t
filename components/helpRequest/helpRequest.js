@@ -83,6 +83,8 @@ class HelpRequest extends Component {
         this.helpRequest.once('value', (data) => {
           firebase.database().ref('/helping').push(data.val(),() => {
             this.helpRequest.remove();
+            //TODO: need to set status:ONGOING rather than removing
+            //TODO: need to remove this help request in 'Your requested'
           });
         });
       }

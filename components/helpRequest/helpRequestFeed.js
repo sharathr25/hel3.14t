@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import firebase from "react-native-firebase";
-import { FlatList } from 'react-native';
+import { FlatList,Alert } from 'react-native';
 import HelpRequest from "./helpRequest";
 import Context from "../../context";
 import { getDistanceFromLatLonInKm } from '../../utils';
@@ -22,7 +22,7 @@ class HelpRequestFeed extends Component {
     this.state = {
       helpRequests: [],
       helpRequestsSortedByDistance:[],
-      referenceToOldestEndKey: "",
+      referenceToOldestKey: "",
       isLoading: false,
       lastKey:"",
     };
@@ -33,13 +33,18 @@ class HelpRequestFeed extends Component {
     const results = keys.map((key) => {
       return {...data[key],key}
     });
+    const { locationProviderAvailable, locationErrorMessage, getLocation } = this.context;
+    if(!locationProviderAvailable){
+      Alert.alert(locationErrorMessage.length===0?'location not availabe':locationErrorMessage);
+      return;
+    }
     helpRequests = helpRequests.length >= HELPREQUEST_FEED_LIMIT ? helpRequests.splice(-HELPREQUEST_FEED_REMOVE_LIMIT) : helpRequests;
     const newHelpRequests = this.getHelpRequestsByDistance([...results,...helpRequests]);
     const helpRequestsSortedByDistance = sortByDistance(newHelpRequests);
     this.setState({ 
       helpRequests: newHelpRequests,
       helpRequestsSortedByDistance: helpRequestsSortedByDistance, 
-      referenceToOldestEndKey: keys[0], 
+      referenceToOldestKey: keys[0], 
       referenceToOldestStartKey: keys[keys.length - 1],
       isLoading: false });
   }
@@ -68,20 +73,23 @@ class HelpRequestFeed extends Component {
 
   getHelpRequests = () => {
     const { db } = this.props;
-    const { referenceToOldestEndKey } = this.state;
-    const { locationProviderAvailable, locationErrorMessage, getLocation } = this.context;
-    if(!locationProviderAvailable){
-      Alert.alert(locationErrorMessage);
-      return;
-    }
+    const { referenceToOldestKey,lastKey } = this.state;
     this.setState({ isLoading: true})
-    if(referenceToOldestEndKey === ""){
+    firebase.database().ref(`${db}`).orderByKey().limitToLast(1).once("value", data => {
+      if(lastKey !== Object.keys(data.val())[0]);{
+        this.setState({lastKey:Object.keys(data.val())[0]});
+      }
+    });
+    if(lastKey !== "" && referenceToOldestKey!=="" && referenceToOldestKey=== lastKey){
+      this.setState({isLoading:false});
+      return;//return if we are last key in firebase
+    }if(referenceToOldestKey === ""){
       firebase.database().ref(`${db}`).orderByKey().limitToFirst(FIREBASE_FETCH_LIMIT).once("value", data => {
         const keys = Object.keys(data.val()).sort().reverse();
         this.setHelpRequests(keys, data.val())
       }).catch(err => {console.log(err);this.setState({isLoading: false})});
     } else {
-      firebase.database().ref(`${db}`).orderByKey().startAt(referenceToOldestEndKey).limitToFirst(FIREBASE_FETCH_LIMIT+1).once("value", data => {
+      firebase.database().ref(`${db}`).orderByKey().startAt(referenceToOldestKey).limitToFirst(FIREBASE_FETCH_LIMIT+1).once("value", data => {
         const keys = Object.keys(data.val()).sort().slice(1).reverse();
         this.setHelpRequests(keys, data.val())
       }).catch(err => {console.log(err);this.setState({isLoading: false})});
@@ -111,16 +119,14 @@ class HelpRequestFeed extends Component {
   render() {
     const { isLoading } = this.state;
     return (
-      <>
-        <FlatList
-          data={this.state.helpRequestsSortedByDistance}
-          renderItem={this.getHelpRequest}
-          keyExtractor={(item, index) => index.toString()}
-          onScroll={this.onScroll}
-          refreshing={isLoading}
-          onRefresh={this.getHelpRequests}
-        />
-      </>
+      <FlatList
+        data={this.state.helpRequestsSortedByDistance}
+        renderItem={this.getHelpRequest}
+        keyExtractor={(item, index) => index.toString()}
+        onScroll={this.onScroll}
+        refreshing={isLoading}
+        onRefresh={this.getHelpRequests}
+      />
     );
   }
 }
