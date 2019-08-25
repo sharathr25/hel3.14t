@@ -35,9 +35,6 @@ class HelpRequestFeed extends Component {
     });
     helpRequests = helpRequests.length >= HELPREQUEST_FEED_LIMIT ? helpRequests.splice(-HELPREQUEST_FEED_REMOVE_LIMIT) : helpRequests;
     const newHelpRequests = this.getHelpRequestsByDistance([...results,...helpRequests]);
-    newHelpRequests.map((a,index) => {
-      console.log(index,a.key);
-    });
     const helpRequestsSortedByDistance = sortByDistance(newHelpRequests);
     this.setState({ 
       helpRequests: newHelpRequests,
@@ -72,7 +69,11 @@ class HelpRequestFeed extends Component {
   getHelpRequests = () => {
     const { db } = this.props;
     const { referenceToOldestEndKey } = this.state;
-    if(this.state.isLoading)return;
+    const { locationProviderAvailable, locationErrorMessage, getLocation } = this.context;
+    if(!locationProviderAvailable){
+      Alert.alert(locationErrorMessage);
+      return;
+    }
     this.setState({ isLoading: true})
     if(referenceToOldestEndKey === ""){
       firebase.database().ref(`${db}`).orderByKey().limitToFirst(FIREBASE_FETCH_LIMIT).once("value", data => {
