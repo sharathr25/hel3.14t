@@ -3,11 +3,42 @@ import { Text, StyleSheet, View } from "react-native";
 import Icon from "react-native-vector-icons/FontAwesome";
 import HelpRequestPeopleCount from "./helpRequestPeopleCount";
 import { BLACK, FLAG_COLOR_ORANGE } from "../../constants/styleConstants";
+import { getUser } from "../../fireBase/database";
+import ProfileLetter from '../profileLetter';
 
 class HelpDescription extends Component {
+  constructor(){
+    super();
+    this.state = {
+      users : []
+    }
+  }
+
+  getHelpers = () => {
+    const { data } = this.props;
+    const { users } = this.state;
+    const { noPeople } = data;
+    const letters = [];
+    for(let i=0;i<noPeople;i++){
+      const letter = i<users.length ? users[i].name.charAt(0) : " ";
+      letters.push(letter)
+    }
+    return letters.map((letter, index)=>{
+      return <ProfileLetter letter={letter} key={index} />
+    });
+  }
+
+  componentDidMount(){
+    this.props.getUsersHelping.on('child_added', data => {
+    const user = getUser(data.val());
+    user.then((data) => {
+      this.setState({users: [...this.state.users, data.val()]})
+    }).catch(err => console.log(err));
+    },(err)=>console.log(err));
+  }
   render() {
     const { data } = this.props;
-    const { description, noPeople, title, distance, noPeopleRequested } = data;
+    const { description, noPeople, title, distance, noPeopleRequested,status } = data;
     return (
       <View style={styles.descriptionContainer}>
         <View style={styles.titleContainer}>
@@ -24,6 +55,11 @@ class HelpDescription extends Component {
           <Text style={styles.description}>{description}</Text>
         </View>
         <HelpRequestPeopleCount noPeople={noPeople} noPeopleRequested={noPeopleRequested}/>
+        <Text>People who are helping</Text>
+        <View style={{flex:1, flexDirection: 'row'}}>
+          {this.getHelpers()}
+        </View>
+        <Text>{status}</Text>
       </View>
     );
   }

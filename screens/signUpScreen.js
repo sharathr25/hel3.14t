@@ -49,7 +49,7 @@ class SignUpScreen extends Component {
         const { currentUser } = await firebase.auth();
         const { navigation } = this.props;
         await updateUser(currentUser, email, password, name);
-        await addUserDetailsToDb(mobileNumber, email, name, gender, dob);
+        await addUserDetailsToDb(currentUser.uid,mobileNumber, email, name, gender, dob);
         Alert.alert('verification complete');
         this.setState({ loaderVisible: false});
         navigation.navigate('Main', { currentUser: firebase.auth().currentUser });

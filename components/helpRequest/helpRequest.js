@@ -16,6 +16,7 @@ class HelpRequest extends Component {
     this.helpRequest = this.helps.child(this.key);
     this.usersPushed = this.helpRequest.child("usersPushed");
     this.usersRequested = this.helpRequest.child("usersRequested");
+    this.status = this.helpRequest.child('status')
     this.usersAccepted= this.helpRequest.child("usersAccepted");
     this.noPeopleRequested = this.helpRequest.child("noPeopleRequested");
     this.usersPulled = this.helpRequest.child("usersPulled");
@@ -27,6 +28,7 @@ class HelpRequest extends Component {
       pullUps: data.pullUps,
       noPeople: data.noPeople,
       noPeopleRequested: data.noPeopleRequested,
+      status: data.status,
       userPushed: false,
       userPulled: false,
       userHelping: false,
@@ -46,6 +48,10 @@ class HelpRequest extends Component {
     this.setPushUpStatus();
     this.setPullUpStatus();
     this.setHelpButtonStatus();
+  }
+
+  componentWillUnmount(){
+    this.helpRequest.off();
   }
 
   updateHelpRequest = (key,value,userDb) => {
@@ -79,14 +85,15 @@ class HelpRequest extends Component {
     this.noPeopleRequested.once("value", data => {
       if(data.val() === noPeople){
         this.updateHelpRequest("helpingStartedAt",new Date().getTime(),null);
+        this.updateHelpRequest("status","ON_GOING",null);
         this.setState({ disableHelp : true });
-        this.helpRequest.once('value', (data) => {
-          firebase.database().ref('/helping').push(data.val(),() => {
-            this.helpRequest.remove();
-            //TODO: need to set status:ONGOING rather than removing
-            //TODO: need to remove this help request in 'Your requested'
-          });
-        });
+        // this.helpRequest.once('value', (data) => {
+        //   firebase.database().ref('/helping').push(data.val(),() => {
+        //     this.helpRequest.remove();
+        //     //TODO: need to set status:ONGOING rather than removing
+        //     //TODO: need to remove this help request in 'Your requested'
+        //   });
+        // });
       }
     });
     this.helpedUpQuery.once("value", data => {
@@ -130,7 +137,7 @@ class HelpRequest extends Component {
   render() {
     const { data } = this.props;
     const { description, title, distance, timeStamp } = data;
-    const { pushUps, pullUps, noPeople, noPeopleRequested } = this.state;
+    const { pushUps, pullUps, noPeople, noPeopleRequested,status } = this.state;
     return (
       <View
         style={{
@@ -154,8 +161,10 @@ class HelpRequest extends Component {
               description,
               noPeople,
               distance,
-              noPeopleRequested
+              noPeopleRequested,
+              status
             }}
+            getUsersHelping={this.usersAccepted}
           />
           <ProgressBar pushUps={pushUps} pullUps={pullUps}/>
           {this.props.disableFooter && <HelpRequestModifier
