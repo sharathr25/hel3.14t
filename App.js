@@ -1,8 +1,9 @@
 // packages
 import React, { Component } from 'react';
-import { createStackNavigator, createAppContainer } from 'react-navigation';
+import { createStackNavigator, createAppContainer, createDrawerNavigator, createBottomTabNavigator } from 'react-navigation';
 import geolocation from 'react-native-geolocation-service';
-import { PermissionsAndroid, Alert } from "react-native";
+import { PermissionsAndroid, Alert,View,Text } from "react-native";
+import Icon from "react-native-vector-icons/FontAwesome";
 
 // screens
 import SignUpScreen from './screens/signUpScreen';
@@ -10,36 +11,78 @@ import MainScreen from './screens/mainScreen';
 import LoginScreen from './screens/loginScreen';
 import ResetPassword from './screens/resetPassword';
 import TermsAndConditionsScreen from './screens/termsAndConditions';
+import PreferencesScreen from './screens/preferencesScreen';
+import MyAccountScreen from './screens/myAccountScreen';
+import MyHelpRequestsScreen from './screens/myHelpRequestsScreen';
+import HelpedScreen from './screens/helpedScreen';
+
+import MainNavigator from './navigators/mainStackNavigator';
+
+import HelpRequestFeed from "./components/helpRequest/helpRequestFeed";
+import HelpRequestForm from "./components/helpRequest/helpRequestForm";
 
 // constants
 import { FLAG_COLOR_WHITE, FLAG_COLOR_ORANGE } from './constants/styleConstants';
 
 import Context from './context';
 
-const MainNavigator = createStackNavigator(
-  {
-    SignUp: { screen: SignUpScreen },
-    Main: { screen: MainScreen },
-    Login: { screen: LoginScreen },
-    ResetPassword: { screen: ResetPassword },
-    TermsAndConditions: { screen: TermsAndConditionsScreen}
-  },
-  {
-    initialRouteName: 'Login',
-    defaultNavigationOptions: {
-      headerStyle: {
-        shadowOpacity: 0,
-        elevation: 0,
-        backgroundColor: FLAG_COLOR_ORANGE
-      },
-      headerTintColor: '#fff',
-      headerTitleStyle: {
-        fontWeight: 'bold',
-        color: FLAG_COLOR_WHITE
-      },
-    },
+
+const FirstRoute = () => <View style={{flex:1}}><HelpRequestFeed db="helps" /><HelpRequestForm /></View>;
+
+const SecondRoute = () => <HelpRequestFeed db="helping" />;
+
+const ThirdRoute = () => <View style={{flex:1}} ><Text>route 3</Text></View>
+
+const BottomTabNavigator = createBottomTabNavigator({
+  HELP:{screen:FirstRoute},
+  HELPED:{screen:SecondRoute},
+  HELPERS:{screen:ThirdRoute}
+},{
+  initialRouteName:'HELP',
+});
+
+const DrawerNavigator = createDrawerNavigator({
+  Main: {screen:BottomTabNavigator},
+  'My Account':{screen:MyAccountScreen},
+  Preferences:{screen:PreferencesScreen},
+  'My Help Requests': {screen:MyHelpRequestsScreen},
+  'Helped':{screen:HelpedScreen},
+},{
+  initialRouteName:'Main',
+  navigationOptions:({ navigation }) => {
+    const { routeName } = navigation.state.routes[navigation.state.index];
+    return { headerTitle : routeName}
   }
-);
+});
+
+// const MainNavigator = createStackNavigator(
+//   {
+//     SignUp: { screen: SignUpScreen },
+//     Main: {screen:DrawerNavigator},
+//     Login: { screen: LoginScreen },
+//     ResetPassword: { screen: ResetPassword },
+//     TermsAndConditions: { screen: TermsAndConditionsScreen}
+//   },
+//   {
+//     initialRouteName: 'Login',
+//     defaultNavigationOptions:({navigation}) => {
+//       return {
+//           headerLeft:<Icon name="navicon" size={25} color={FLAG_COLOR_WHITE} style={{paddingLeft:10}} onPress={navigation.openDrawer}/>,
+//           headerStyle: {
+//             shadowOpacity: 0,
+//             elevation: 0,
+//             backgroundColor: FLAG_COLOR_ORANGE
+//           },
+//           headerTintColor: '#fff',
+//           headerTitleStyle: {
+//             fontWeight: 'bold',
+//             color: FLAG_COLOR_WHITE
+//           }
+//         }
+//       }
+//     },
+// );
+
 
 const AppContainer = createAppContainer(MainNavigator);
 
