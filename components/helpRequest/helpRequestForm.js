@@ -10,9 +10,10 @@ import Context from '../../context';
 class HelpRequestForm extends Component {
   constructor() {
     super();
+    this.uid = firebase.auth().currentUser.uid;
     this.state = {
       formVisible: false,
-      noPeople: 1,
+      noPeopleRequired: 1,
       title: "",
       description: "",
       latitude: null,
@@ -28,7 +29,7 @@ class HelpRequestForm extends Component {
 
   requestHelp = () => {
     this.setState({ formVisible: !this.state.formVisible });
-    const { title, description, noPeople } = this.state;
+    const { title, description, noPeopleRequired } = this.state;
     const { longitude, latitude, locationProviderAvailable, locationErrorMessage,getPosition } = this.context;
     if(locationProviderAvailable === false && latitude===null && longitude===null){
       Alert.alert(locationErrorMessage?locationErrorMessage:"location error");
@@ -42,7 +43,7 @@ class HelpRequestForm extends Component {
       longitude,
       mobileNo: "+919886739068",
       name: "sharath",
-      noPeople: parseInt(noPeople),
+      noPeopleRequired: parseInt(noPeopleRequired),
       timeStamp: new Date().getTime(),
       pushUps: 0,
       pullUps: 0,
@@ -50,10 +51,16 @@ class HelpRequestForm extends Component {
       noPeopleAccepted: 0,
       status: 'REQUESTED'
     };
-    firebase
+    const key = firebase
       .database()
       .ref("/helps")
       .push(data, () => {
+        console.log(`HELP REQUEST CREATED and data inserted to Firebase`);
+      }).key;
+      firebase
+      .database()
+      .ref('users').child(this.uid).child('helpsRequested')
+      .push(key, () => {
         console.log(`HELP REQUEST CREATED and data inserted to Firebase`);
       });
   };
@@ -93,7 +100,7 @@ class HelpRequestForm extends Component {
                 <Picker
                   selectedValue={this.state.noPeopleRequired}
                   style={styles.pickerStyle}
-                  onValueChange={itemValue => this.setState({ noPeople: itemValue }) }
+                  onValueChange={itemValue => this.setState({ noPeopleRequired: itemValue }) }
                 >
                   <Picker.Item label="1" value="1" />
                   <Picker.Item label="2" value="2" />
