@@ -18,3 +18,12 @@ export const getUser = async (uid) => {
     Alert.alert(error.toString());
   }
 }
+
+export const updateHelpRequest = (db,key,value,userDb,uid) => {
+  db.update({ [key]: value });
+  if(userDb){
+    userDb.push(uid).catch(err => {
+      console.log(err);
+    });
+  }
+};
