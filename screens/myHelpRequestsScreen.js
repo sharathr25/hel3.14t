@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { FlatList } from 'react-native';
 import firebase from 'react-native-firebase';
-import HelpRequest from '../components/helpRequest/helpRequest';
+import HelpRequestRequestedUsers from '../components/helpRequest/helpRequestUserRequested';
 
 class MyHelpRequestsScreen extends Component {
     static navigationOptions = {
@@ -11,8 +11,7 @@ class MyHelpRequestsScreen extends Component {
     constructor(){
         super();
         this.state = {
-            helpRequests: [],
-            isLoading: true
+            helpRequests: []
         }
     }
     componentDidMount() {
@@ -24,6 +23,10 @@ class MyHelpRequestsScreen extends Component {
                 this.setState({helpRequests:[newHelprequest,...this.state.helpRequests]});
             },(err) => console.log(err));
         }, (err) => console.log(err));
+        firebase.database().ref('users').child(uid).child('helpsRequested').on('child_removed',(data) => {
+            const newnewHelprequests = this.state.helpRequests.filter((datum) => datum.key !== data.val());
+            this.setState({ helpRequests: newnewHelprequests });
+        }, (err) => console.log(err));
     }
 
     componentWillMount(){
@@ -34,7 +37,7 @@ class MyHelpRequestsScreen extends Component {
     getHelpRequest = ({item}) => {
     const helpRequest = item;
     return (
-            <HelpRequest data={helpRequest} key={helpRequest.key} disableFooter={false} type="USER" />
+            <HelpRequestRequestedUsers data={helpRequest} key={helpRequest.key} />
         );
     };
 

@@ -33,7 +33,7 @@ class HelpRequestFeed extends Component {
     const results = keys.map((key) => {
       return {...data[key],key}
     });
-    const { locationProviderAvailable, locationErrorMessage, getLocation } = this.context;
+    const { locationProviderAvailable, locationErrorMessage } = this.context;
     if(!locationProviderAvailable){
       Alert.alert(locationErrorMessage.length===0?'location not availabe':locationErrorMessage);
       return;
@@ -107,18 +107,13 @@ class HelpRequestFeed extends Component {
     firebase.database().ref(`/${db}`).on("child_removed", data => {
       const { helpRequests } = this.state;
       const newHelpRequests = helpRequests.filter((helpRequest)=>helpRequest.key !== data.key);
-      this.setState({ helpRequests: newHelpRequests });
+      this.setState({ helpRequestsWithDistance: this.getHelpRequestsByDistance(newHelpRequests) , helpRequests: newHelpRequests});
     });
   }
 
   getHelpRequest = ({item}) => {
-    const { db } = this.props;
     const helpRequest = item;
-    return (
-      db!=="helps" 
-        ? <HelpRequest data={helpRequest} key={helpRequest.key} disableFooter={false} /> 
-        : <HelpRequest data={helpRequest} key={helpRequest.key} disableFooter={true} />
-    );
+    return <HelpRequest data={helpRequest} key={helpRequest.key} disableFooter={false} /> 
   };
 
   render() {
