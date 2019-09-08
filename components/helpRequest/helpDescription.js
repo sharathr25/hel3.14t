@@ -17,9 +17,9 @@ class HelpDescription extends Component {
   getHelpers = () => {
     const { data } = this.props;
     const { users } = this.state;
-    const { noPeople } = data;
+    const { noPeopleRequired } = data;
     const letters = [];
-    for(let i=0;i<noPeople;i++){
+    for(let i=0;i<noPeopleRequired;i++){
       const letter = i<users.length ? users[i].name.charAt(0) : " ";
       letters.push(letter)
     }
@@ -36,9 +36,14 @@ class HelpDescription extends Component {
     }).catch(err => console.log(err));
     },(err)=>console.log(err));
   }
+
+  componentWillMount(){
+    this.props.getUsersHelping.off();
+  }
+
   render() {
     const { data } = this.props;
-    const { description, noPeople, title, distance, noPeopleRequested,status } = data;
+    const { description, noPeopleRequired, title, distance, noPeopleRequested,status } = data;
     return (
       <View style={styles.descriptionContainer}>
         <View style={styles.titleContainer}>
@@ -54,7 +59,7 @@ class HelpDescription extends Component {
           <Text style={styles.descriptionTitle}>Description</Text>
           <Text style={styles.description}>{description}</Text>
         </View>
-        <HelpRequestPeopleCount noPeople={noPeople} noPeopleRequested={noPeopleRequested}/>
+        <HelpRequestPeopleCount noPeopleRequired={noPeopleRequired} noPeopleRequested={noPeopleRequested}/>
         <Text>People who are helping</Text>
         <View style={{flex:1, flexDirection: 'row'}}>
           {this.getHelpers()}
