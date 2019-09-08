@@ -32,7 +32,6 @@ class HelpDescription extends Component {
     this.props.getUsersHelping.on('child_added', data => {
     const user = getUser(data.val());
     user.then((data) => {
-      console.log(data);
       this.setState({users: [...this.state.users, data.val()]})
     }).catch(err => console.log(err));
     },(err)=>console.log(err));
