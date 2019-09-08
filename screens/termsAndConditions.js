@@ -10,7 +10,7 @@ class TermsAndConditionsScreen extends Component {
     };
 
     handleBackButton = () => {
-        this.props.navigation.navigate('Main');
+        this.props.navigation.navigate('SignUp');
     }
 
     render() {
