@@ -10,7 +10,6 @@ import ErrorMessage from '../components/errorMessage';
 import ScreenRedirecter from '../components/screenRedirecter';
 import InputComponent from '../components/inputComponent';
 import Loader from '../components/inlineLoader';
-import Context from '../context';
 
 const emailRegex = regex.email;
 

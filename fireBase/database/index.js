@@ -27,3 +27,9 @@ export const updateHelpRequest = (db,key,value,userDb,uid) => {
     });
   }
 };
+
+export const notifyUser = (uid,data) => {
+  firebase.database().ref('users').child(uid).child('notifications').push(data).catch(err => {
+    console.log(err);
+  });
+}

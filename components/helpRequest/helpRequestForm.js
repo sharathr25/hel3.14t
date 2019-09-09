@@ -37,6 +37,7 @@ class HelpRequestForm extends Component {
       return;
     }
     const data = {
+      uidOfHelpRequester: this.uid,
       title: title,
       description,
       latitude,

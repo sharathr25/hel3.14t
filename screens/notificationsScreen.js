@@ -1,0 +1,47 @@
+import React, { Component } from 'react';
+import { View, Text, FlatList, StyleSheet } from 'react-native';
+import { TouchableOpacity } from 'react-native-gesture-handler';
+import { FLAG_COLOR_ORANGE } from '../constants/styleConstants';
+
+const types = {
+    REQUEST : "Helper is willing to help you, please click to check"    
+}
+class NotificationsScreen extends Component {
+    static navigationOptions = {
+        title: 'Notifications'
+    };
+
+    getNotification = ({item}) => {
+        return (
+            <TouchableOpacity style={styles.notificationContainer} onPress={() => {this.props.navigation.navigate(item.screenToRedirect)}}>
+                <Text style={{fontSize: 20}}>{types[item.type]}</Text>
+            </TouchableOpacity>);
+    }
+    render() {
+        return (
+        <View style={{ alignItems: 'center', justifyContent: 'center' }}>
+            <FlatList
+                data={this.props.navigation.state.params.notifications}
+                renderItem={this.getNotification}
+                keyExtractor={(item, index) => index.toString()}
+            />
+        </View>
+    );
+  }
+}
+
+export default NotificationsScreen;
+
+const styles = StyleSheet.create({
+    notificationContainer: {
+        flex:1,
+        marginRight: 10,
+        marginLeft: 10,
+        marginTop: 5,
+        marginBottom: 5,
+        borderWidth: 1,
+        borderColor: FLAG_COLOR_ORANGE,
+        padding: 5,
+        borderRadius: 5
+    }
+});
