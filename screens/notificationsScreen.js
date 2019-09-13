@@ -4,16 +4,23 @@ import { TouchableOpacity } from 'react-native-gesture-handler';
 import { FLAG_COLOR_ORANGE } from '../constants/styleConstants';
 
 const types = {
-    REQUEST : "Helper is willing to help you, please click to check"    
+    REQUEST : "Helper is willing to help you, please click to check",
+    ACCEPT : "You got accepted to help, please go and help. All the best",
+    REJECT : "You got rejected"
 }
 class NotificationsScreen extends Component {
     static navigationOptions = {
         title: 'Notifications'
     };
 
+    navigateToScreen = (screenToRedirect) => {
+        if(screenToRedirect === "NONE")return;
+        this.props.navigation.navigate(screenToRedirect)
+    }
+
     getNotification = ({item}) => {
         return (
-            <TouchableOpacity style={styles.notificationContainer} onPress={() => {this.props.navigation.navigate(item.screenToRedirect)}}>
+            <TouchableOpacity style={styles.notificationContainer} onPress={() => {this.navigateToScreen(item.screenToRedirect)}}>
                 <Text style={{fontSize: 20}}>{types[item.type]}</Text>
             </TouchableOpacity>);
     }

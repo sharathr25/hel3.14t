@@ -19,6 +19,7 @@ export default class HelpButton extends Component {
         this.helpedUpQuery = this.usersAccepted.orderByValue(this.uid).equalTo(this.uid).limitToFirst(1);
         this.requestedQuery = this.usersRequested.orderByValue(this.uid).equalTo(this.uid).limitToFirst(1);
         this.rejectedQuery = this.usersRejected.orderByValue(this.uid).equalTo(this.uid).limitToFirst(1);
+        this.key = data.key;
         this.state = {
         noPeopleRequired: data.noPeopleRequired,
         noPeopleRequested: data.noPeopleRequested,
@@ -53,7 +54,8 @@ export default class HelpButton extends Component {
         const { noPeopleRequested,disableHelp, uidOfHelpRequester } = this.state;
         if(!disableHelp){
           updateHelpRequest(this.helpRequest,"noPeopleRequested",noPeopleRequested+1, this.usersRequested, this.uid);
-          notifyUser(uidOfHelpRequester,{type:"REQUEST", screenToRedirect:"My Help Requests", timeStamp: new Date()});
+          const uidOfHelper = this.uid;
+          notifyUser(uidOfHelpRequester,{type:"REQUEST", screenToRedirect:"My Help Requests", timeStamp: new Date(), uidOfHelper, idOfHelpRequest: this.key});
           this.setHelpButtonStatus();
         } else {
           Alert.alert(this.state.helpErrorMessage);

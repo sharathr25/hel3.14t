@@ -8,17 +8,34 @@ import { TouchableOpacity } from "react-native-gesture-handler";
 class Notification extends Component {
     constructor(props){
         super(props);
-        this.uid = firebase.auth().currentUser.uid;
+        this.uid = firebase.auth().currentUser ? firebase.auth().currentUser.uid : null;
         this.state = {
             notifications: []
         }
     }
 
     componentDidMount(){
-        firebase.database().ref('users').child(this.uid).child('notifications').on('child_added', data => {
-            this.setState({notifications:[{key:data.key,...data.val()},...this.state.notifications]});
-            console.log(this.state);
-        });
+        if(this.uid){
+            firebase.database().ref('users').child(this.uid).child('notifications').on('child_added', data => {
+                this.setState({notifications:[{key:data.key,...data.val()},...this.state.notifications]});
+                if(data.val().type === "REQUEST"){ 
+                    firebase.database().ref('helps').child(data.val().idOfHelpRequest).child('usersAccepted').on('child_added', user => {
+                        if(user.val() === data.val().uidOfHelper){
+                            firebase.database().ref('users').child(this.uid).child('notifications').child(data.key).remove();
+                        }
+                    });  
+                    firebase.database().ref('helps').child(data.val().idOfHelpRequest).child('usersRejected').on('child_added', user => {
+                        if(user.val() === data.val().uidOfHelper){
+                            firebase.database().ref('users').child(this.uid).child('notifications').child(data.key).remove();
+                        }
+                    });  
+                }
+            });
+            firebase.database().ref('users').child(this.uid).child('notifications').on('child_removed', data => {
+                const newNotifications = this.state.notifications.filter((datum) => datum.key !== data.key);
+                this.setState({ notifications: newNotifications});
+            });
+        }
     }
 
     handleBellIconClick = () => {
