@@ -19,7 +19,7 @@ export const getUser = async (uid) => {
   }
 }
 
-export const updateHelpRequest = (db,key,value,userDb,uid) => {
+export const updateFirebase = (db,key,value,userDb,uid) => {
   db.update({ [key]: value });
   if(userDb){
     userDb.push(uid).catch(err => {
@@ -28,8 +28,38 @@ export const updateHelpRequest = (db,key,value,userDb,uid) => {
   }
 };
 
-export const notifyUser = (uid,data) => {
-  firebase.database().ref('users').child(uid).child('notifications').push(data).catch(err => {
-    console.log(err);
-  });
+export const pushToFirebase = async (db, value) => {
+  try {
+    const snapShot = await db.push(value);
+    return snapShot;
+  } catch (error) {
+    console.log(error);
+  }
+}
+
+export const notifyUser = async (uid,data) => {
+  await pushToFirebase(firebase.database().ref('users').child(uid).child('notifications'),data);
+}
+
+export const removeFromFirebase = async (db,value) => {
+  const data = await db.orderByValue(value).equalTo(value).limitToFirst(1).once('value');
+  db.child(Object.keys(data.val())[0]).remove();
+} 
+
+export const pushToFirebaseWithURL = async (dbUrl,data) => {
+  try {
+    const snapShot = firebase.database().ref(dbUrl).push(data)
+    return snapShot.key;    
+  } catch (error) {
+    console.log(error);
+  }
+}
+
+export const getDataFromFirebase = async (dbUrl) => {
+  try {
+    const snapShot = firebase.database().ref(dbUrl).once('value');
+    return snapShot;    
+  } catch (error) {
+    console.log(error)
+  }
 }

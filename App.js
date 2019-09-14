@@ -3,6 +3,8 @@ import React, { Component } from 'react';
 import { createAppContainer } from 'react-navigation';
 import geolocation from 'react-native-geolocation-service';
 import { PermissionsAndroid, Alert } from "react-native";
+import { useScreens } from 'react-native-screens';
+useScreens();
 
 import MainNavigator from './navigators/mainStackNavigator';
 

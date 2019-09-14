@@ -38,20 +38,24 @@ class Notification extends Component {
         }
     }
 
+    componentWillUnmount() {
+        firebase.database().ref('users').child(this.uid).child('notifications').off();
+    }
+
     handleBellIconClick = () => {
         this.props.navigation.navigate('Notifications',{notifications:[...this.state.notifications]});
     }
 
     render() {
         const { notifications } = this.state;
-        return (
-            <TouchableOpacity onPress={this.handleBellIconClick} style={styles.container}>
-                <Icon name="bell" size={25} color={FLAG_COLOR_WHITE} />
-                <View style={styles.textContainer}>
-                    <Text style={styles.text}>{notifications.length}</Text>
-                </View>
-            </TouchableOpacity>
-        );
+        return notifications.length 
+                ?   <TouchableOpacity onPress={this.handleBellIconClick} style={styles.container}>
+                        <Icon name="bell" size={25} color={FLAG_COLOR_WHITE} />
+                        <View style={styles.textContainer}>
+                            <Text style={styles.text}>{notifications.length}</Text>
+                        </View>
+                    </TouchableOpacity> 
+                : null;
     }
 }
 

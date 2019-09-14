@@ -1,32 +1,11 @@
 import React, { Component } from 'react';
 import firebase from 'react-native-firebase';
 import { Text, View, Alert, TouchableOpacity, StyleSheet } from 'react-native';
-import { Button } from 'react-native-elements';
 import HelpDescription from "./helpDescription";
 import Time from "../time";
-import { updateHelpRequest, notifyUser } from '../../fireBase/database';
-import { FLAG_COLOR_GREEN, FLAG_COLOR_WHITE, FLAG_COLOR_ORANGE } from '../../constants/styleConstants';
-
-class Requester extends Component {
-  handleAccept = () => {
-    this.props.handleAccept(this.props.uid)
-  }
-
-  handleReject = () => {
-    this.props.handleReject(this.props.uid)
-  }
-
-  render(){
-   return <View style={styles.requestedUserDetailsContaner}>
-      <Text>{this.props.name}</Text>
-      <Text>{this.props.email}</Text>
-      <View style={styles.buttons}>
-        <TouchableOpacity style={styles.accept} onPress={this.handleAccept}><Text style={styles.text}>Accept</Text></TouchableOpacity>
-        <TouchableOpacity style={styles.reject} onPress={this.handleReject}><Text style={styles.text}>Reject</Text></TouchableOpacity>
-      </View>
-    </View>
-  }
-}
+import { updateFirebase, notifyUser, pushToFirebase, removeFromFirebase, getDataFromFirebase } from '../../fireBase/database';
+import { FLAG_COLOR_WHITE, FLAG_COLOR_ORANGE } from '../../constants/styleConstants';
+import Requester from '../requester';
 
 const AccetedUser = (props) => {
   return (
@@ -36,6 +15,7 @@ const AccetedUser = (props) => {
     </View>
   );
 }
+
 class HelpRequestRequestedUsers extends Component {
     constructor(props){
         super(props);
@@ -57,17 +37,17 @@ class HelpRequestRequestedUsers extends Component {
       this.helpRequest.on("child_changed", data => {
         this.setState( { [data.key]: data.val() })
       });
-      this.usersRequested.on('child_added',(data) => {
+      this.usersRequested.on('child_added',async (data) => {
         const uidOfRequestingHelper = data.val();
-        firebase.database().ref('users').child(uidOfRequestingHelper).once('value',(data) => {
-          this.setState({usersRequested : [{uidOfRequestingHelper,name:data.val().name, email:data.val().email}, ...this.state.usersRequested]});
-        });
+        const url = `users/${uidOfRequestingHelper}`;
+        const data1 = await getDataFromFirebase(url);
+        this.setState({usersRequested : [{uidOfRequestingHelper,name:data1.val().name, email:data1.val().email}, ...this.state.usersRequested]});
       },(err) => console.log(err));
-      this.usersAccepted.on('child_added',(data) => {
+      this.usersAccepted.on('child_added', async (data) => {
         const uidOfAcceptedHelper = data.val();
-        firebase.database().ref('users').child(uidOfAcceptedHelper).once('value',(data) => {
-          this.setState({usersAccepted : [{uidOfAcceptedHelper,name:data.val().name, email:data.val().email}, ...this.state.usersAccepted]});
-        });
+        const url = `users/${uidOfAcceptedHelper}`;
+        const data2 = await getDataFromFirebase(url);
+        this.setState({usersAccepted : [{uidOfAcceptedHelper,name:data2.val().name, email:data2.val().email}, ...this.state.usersAccepted]});
       },(err) => console.log(err));
       this.usersRequested.on('child_removed',(data) => {
         const uidOfRequestingHelper = data.val();
@@ -103,19 +83,14 @@ class HelpRequestRequestedUsers extends Component {
       });
     }
 
-    removeUserAsRequested = (helperUid) => {
-      this.usersRequested.orderByValue(helperUid).equalTo(helperUid).limitToFirst(1).once('value', data => {
-        this.usersRequested.child(Object.keys(data.val())[0]).remove();
-      });
-    }
-  
     handleAccept = (helperUid) => {
       const { noPeopleAccepted } = this.state;
-      this.usersAccepted.orderByValue(helperUid).equalTo(helperUid).limitToFirst(1).once('value', data => {
+      this.usersAccepted.orderByValue(helperUid).equalTo(helperUid).limitToFirst(1).once('value', async data => {
         if(!data.val()){
-          updateHelpRequest(this.helpRequest,"noPeopleAccepted",noPeopleAccepted+1, this.usersAccepted, helperUid);
-          this.removeUserAsRequested(helperUid);
-          notifyUser(helperUid,{type:"ACCEPT", screenToRedirect:"Helped", uidOfHelper:helperUid,timeStamp: new Date(), idOfHelpRequest: this.key});
+          updateFirebase(this.helpRequest,"noPeopleAccepted",noPeopleAccepted+1);
+          await pushToFirebase(this.usersAccepted,helperUid);
+          await removeFromFirebase(this.usersRequested,helperUid);
+          await notifyUser(helperUid,{type:"ACCEPT", screenToRedirect:"Helped", uidOfHelper:helperUid,timeStamp: new Date(), idOfHelpRequest: this.key});
         } else {
           Alert.alert("user already accepted");
         }
@@ -123,13 +98,11 @@ class HelpRequestRequestedUsers extends Component {
     }
   
     handleReject = (helperUid) => {
-      this.usersRejected.orderByValue(helperUid).equalTo(helperUid).limitToFirst(1).once('value', data => {
+      this.usersRejected.orderByValue(helperUid).equalTo(helperUid).limitToFirst(1).once('value', async data => {
         if(!data.val()){
-          this.usersRejected.push(helperUid).catch(err => {
-            console.log(err);
-          });
-          this.removeUserAsRequested(helperUid);
-          notifyUser(helperUid,{type:"REJECT", screenToRedirect:"NONE", uidOfHelper:helperUid,timeStamp: new Date(), idOfHelpRequest: this.key});
+          await pushToFirebase(this.usersRejected, helperUid)
+          await removeFromFirebase(this.usersRequested,helperUid);
+          await notifyUser(helperUid,{type:"REJECT", screenToRedirect:"NONE", uidOfHelper:helperUid,timeStamp: new Date(), idOfHelpRequest: this.key});
         } else {
           Alert.alert("user already rejected");
         }
@@ -178,38 +151,8 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     padding: 5
   },
-  accept:{
-    flex: 1,
-    flexDirection: "row",
-    justifyContent: "center",
-    backgroundColor: FLAG_COLOR_WHITE,
-    borderColor: FLAG_COLOR_GREEN,
-    borderWidth: 1,
-    margin: 3,
-    borderRadius: 5,
-    padding: 5
-  },
-  reject:{
-    flex: 1,
-    flexDirection: "row",
-    justifyContent: "center",
-    backgroundColor: FLAG_COLOR_WHITE,
-    borderColor: 'red',
-    borderWidth: 1,
-    margin: 3,
-    borderRadius: 5,
-    padding: 5
-  },
   text:{
     fontSize: 20
-  },
-  requestedUserDetailsContaner:{
-    flex: 1
-  },
-  buttons:{
-    flex: 1,
-    flexDirection: "row",
-    justifyContent:'space-evenly'
   }
 });
 

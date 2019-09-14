@@ -1,9 +1,8 @@
 import React, { Component } from "react";
 import { Alert, TouchableOpacity, StyleSheet, Text } from "react-native";
 import firebase from "react-native-firebase";
-import Icon from "react-native-vector-icons/FontAwesome";
-import { FLAG_COLOR_GREEN, FLAG_COLOR_WHITE, FLAG_COLOR_ORANGE } from "../constants/styleConstants";
-import { updateHelpRequest, notifyUser } from '../fireBase/database';
+import { FLAG_COLOR_WHITE, FLAG_COLOR_ORANGE } from "../constants/styleConstants";
+import { updateFirebase, notifyUser, pushToFirebase, getDataFromFirebase } from '../fireBase/database';
 
 export default class HelpButton extends Component {
     constructor(props){
@@ -36,8 +35,8 @@ export default class HelpButton extends Component {
             this.setState( { [data.key]: data.val() })
             if (data.key === "noPeopleAccepted") {
               if( data.val() === this.state.noPeopleRequired ){
-                updateHelpRequest(this.helpRequest,"helpingStartedAt",new Date().getTime(),null);
-                updateHelpRequest(this.helpRequest,"status","ON_GOING",null);
+                updateFirebase(this.helpRequest,"helpingStartedAt",new Date().getTime());
+                updateFirebase(this.helpRequest,"status","ON_GOING");
                 this.setState({ disableHelp : true, helpErrorMessage: "Helpers Filled, try helping others" }); 
                 }
             }
@@ -49,22 +48,22 @@ export default class HelpButton extends Component {
         this.helpRequest.off();
     }
   
-    handleHelp = () => {
+    handleHelp = async () => {
         //TODO: we have send help requested user a notification. If he accepts then only we will allow this guy to help
         const { noPeopleRequested,disableHelp, uidOfHelpRequester } = this.state;
         if(!disableHelp){
-          updateHelpRequest(this.helpRequest,"noPeopleRequested",noPeopleRequested+1, this.usersRequested, this.uid);
+          updateFirebase(this.helpRequest,"noPeopleRequested",noPeopleRequested+1);
+          await pushToFirebase(this.usersRequested, this.uid)
           const uidOfHelper = this.uid;
-          notifyUser(uidOfHelpRequester,{type:"REQUEST", screenToRedirect:"My Help Requests", timeStamp: new Date(), uidOfHelper, idOfHelpRequest: this.key});
+          await notifyUser(uidOfHelpRequester,{type:"REQUEST", screenToRedirect:"My Help Requests", timeStamp: new Date(), uidOfHelper, idOfHelpRequest: this.key});
           this.setHelpButtonStatus();
         } else {
           Alert.alert(this.state.helpErrorMessage);
         }
     }
   
-    setHelpButtonStatus = () => {
+    setHelpButtonStatus = async () => {
         const { noPeopleRequired } = this.state;
-
         const helpedUpQuery = this.usersAccepted.orderByValue(this.uid).equalTo(this.uid).limitToFirst(1);
         helpedUpQuery.once("value", data => {
             if(data.val()){
@@ -85,17 +84,19 @@ export default class HelpButton extends Component {
               this.setState({disableHelp: true, helpErrorMessage: "You have rejected, try help others"  })
             }
         })
-        this.noPeopleAccepted.once("value", data => {// here we need to this to 'noPeopleAccepted' later when the help request creator accepts who ever is willing to help
-          if(data.val() === noPeopleRequired){
-              this.helpRequest.child('status').once('value', data => {
-                  if(data.val() !== "ON_GOING"){
-                    updateHelpRequest(this.helpRequest,"helpingStartedAt",new Date().getTime(),null);
-                    updateHelpRequest(this.helpRequest,"status","ON_GOING",null);
-                  }
-              });
-              this.setState({ disableHelp : true , helpErrorMessage: "Helpers Filled, try helping others" });
+
+        const urlToGetNoPeopleAccepted = `helps/${this.key}/noPeopleAccepted`;
+        const data1 = await getDataFromFirebase(urlToGetNoPeopleAccepted);
+
+        if(data1.val() === noPeopleRequired){
+          const urlToGetStatus = `helps/${this.key}/status`
+          const data2 = await getDataFromFirebase(urlToGetStatus);
+          if(data2.val() !== "ON_GOING"){
+            updateFirebase(this.helpRequest,"helpingStartedAt",new Date().getTime());
+            updateFirebase(this.helpRequest,"status","ON_GOING");
           }
-        });
+          this.setState({ disableHelp : true , helpErrorMessage: "Helpers Filled, try helping others" });
+        }
       }
     
     render(){
