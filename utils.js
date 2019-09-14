@@ -18,3 +18,11 @@ export const getAge = (dob) => {
   const ageDate = new Date(ageDifMs); // miliseconds from epoch
   return Math.abs(ageDate.getUTCFullYear() - 1970);
 }
+
+
+export const sortByDistance = (helpRequests) => {
+  const sortedHelpRequests = helpRequests.sort((a,b)=>{
+    return a.distance>b.distance?1:-1
+  })
+  return sortedHelpRequests;
+}

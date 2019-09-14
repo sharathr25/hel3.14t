@@ -38,13 +38,39 @@ export const pushToFirebase = async (db, value) => {
 }
 
 export const notifyUser = async (uid,data) => {
-  await pushToFirebase(firebase.database().ref('users').child(uid).child('notifications'),data);
+  try {
+    await pushToFirebase(firebase.database().ref('users').child(uid).child('notifications'),data);
+  } catch (error) {
+    console.log(error)
+  }
 }
 
 export const removeFromFirebase = async (db,value) => {
-  const data = await db.orderByValue(value).equalTo(value).limitToFirst(1).once('value');
-  db.child(Object.keys(data.val())[0]).remove();
+  try {
+    const data = await db.orderByValue(value).equalTo(value).limitToFirst(1).once('value');
+    db.child(Object.keys(data.val())[0]).remove();      
+  } catch (error) {
+    console.log(error);
+  }
 } 
+
+export const removeFromFirebaseOrderingChild = async (dbUrl,value) => {
+  try {
+    const data = await firebase.database().ref(dbUrl).orderByChild("idOfHelpRequest").equalTo(value).limitToFirst(1).once('value');
+    console.log(dbUrl, Object.keys(data.val())[0]);
+    firebase.database().ref(dbUrl).child(Object.keys(data.val())[0]).remove();
+  } catch (error) {
+    console.log(error);
+  }
+}
+
+export const removeFromFirebaseWithURl = async (url) => {
+  try {
+    firebase.database().ref(url).remove();
+  } catch (error) {
+    console.log(error);
+  }
+}
 
 export const pushToFirebaseWithURL = async (dbUrl,data) => {
   try {
