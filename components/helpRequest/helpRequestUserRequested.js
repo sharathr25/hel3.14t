@@ -4,7 +4,7 @@ import { Text, View, Alert, TouchableOpacity, StyleSheet } from 'react-native';
 import { Button } from 'react-native-elements';
 import HelpDescription from "./helpDescription";
 import Time from "../time";
-import { updateHelpRequest } from '../../fireBase/database';
+import { updateHelpRequest, notifyUser } from '../../fireBase/database';
 import { FLAG_COLOR_GREEN, FLAG_COLOR_WHITE, FLAG_COLOR_ORANGE } from '../../constants/styleConstants';
 
 class Requester extends Component {
@@ -115,6 +115,7 @@ class HelpRequestRequestedUsers extends Component {
         if(!data.val()){
           updateHelpRequest(this.helpRequest,"noPeopleAccepted",noPeopleAccepted+1, this.usersAccepted, helperUid);
           this.removeUserAsRequested(helperUid);
+          notifyUser(helperUid,{type:"ACCEPT", screenToRedirect:"Helped", uidOfHelper:helperUid,timeStamp: new Date(), idOfHelpRequest: this.key});
         } else {
           Alert.alert("user already accepted");
         }
@@ -128,6 +129,7 @@ class HelpRequestRequestedUsers extends Component {
             console.log(err);
           });
           this.removeUserAsRequested(helperUid);
+          notifyUser(helperUid,{type:"REJECT", screenToRedirect:"NONE", uidOfHelper:helperUid,timeStamp: new Date(), idOfHelpRequest: this.key});
         } else {
           Alert.alert("user already rejected");
         }

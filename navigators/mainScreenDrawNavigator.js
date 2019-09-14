@@ -7,6 +7,7 @@ import MyHelpRequestsScreen from '../screens/myHelpRequestsScreen';
 import HelpedScreen from '../screens/helpedScreen';
 
 import BottomTabNavigator from './mainScreenBottomTabNavigator';
+import NotificationsScreen from '../screens/notificationsScreen';
 
 const DrawerNavigator = createDrawerNavigator({
     Main: {screen:BottomTabNavigator},
@@ -14,6 +15,7 @@ const DrawerNavigator = createDrawerNavigator({
     Preferences:{screen:PreferencesScreen},
     'My Help Requests': {screen:MyHelpRequestsScreen},
     'Helped':{screen:HelpedScreen},
+    'Notifications':{screen: NotificationsScreen}
   },{
     initialRouteName:'Main',
     navigationOptions:({ navigation }) => {

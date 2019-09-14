@@ -3,7 +3,7 @@ import { Alert, TouchableOpacity, StyleSheet, Text } from "react-native";
 import firebase from "react-native-firebase";
 import Icon from "react-native-vector-icons/FontAwesome";
 import { FLAG_COLOR_GREEN, FLAG_COLOR_WHITE, FLAG_COLOR_ORANGE } from "../constants/styleConstants";
-import { updateHelpRequest } from '../fireBase/database';
+import { updateHelpRequest, notifyUser } from '../fireBase/database';
 
 export default class HelpButton extends Component {
     constructor(props){
@@ -19,10 +19,12 @@ export default class HelpButton extends Component {
         this.helpedUpQuery = this.usersAccepted.orderByValue(this.uid).equalTo(this.uid).limitToFirst(1);
         this.requestedQuery = this.usersRequested.orderByValue(this.uid).equalTo(this.uid).limitToFirst(1);
         this.rejectedQuery = this.usersRejected.orderByValue(this.uid).equalTo(this.uid).limitToFirst(1);
+        this.key = data.key;
         this.state = {
         noPeopleRequired: data.noPeopleRequired,
         noPeopleRequested: data.noPeopleRequested,
         noPeopleAccepted: data.noPeopleAccepted,
+        uidOfHelpRequester: data.uidOfHelpRequester,
         userHelping: false,
         disableHelp: false,
         helpErrorMessage: ""
@@ -49,9 +51,11 @@ export default class HelpButton extends Component {
   
     handleHelp = () => {
         //TODO: we have send help requested user a notification. If he accepts then only we will allow this guy to help
-        const { noPeopleRequested,disableHelp } = this.state;
+        const { noPeopleRequested,disableHelp, uidOfHelpRequester } = this.state;
         if(!disableHelp){
           updateHelpRequest(this.helpRequest,"noPeopleRequested",noPeopleRequested+1, this.usersRequested, this.uid);
+          const uidOfHelper = this.uid;
+          notifyUser(uidOfHelpRequester,{type:"REQUEST", screenToRedirect:"My Help Requests", timeStamp: new Date(), uidOfHelper, idOfHelpRequest: this.key});
           this.setHelpButtonStatus();
         } else {
           Alert.alert(this.state.helpErrorMessage);

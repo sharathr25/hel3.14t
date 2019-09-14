@@ -1,6 +1,7 @@
 import React from 'react';
 import { createStackNavigator } from 'react-navigation';
 import Icon from "react-native-vector-icons/FontAwesome";
+import Notification from '../components/notification';
 
 // screens
 import SignUpScreen from '../screens/signUpScreen';
@@ -35,7 +36,8 @@ const MainNavigator = createStackNavigator(
             headerTitleStyle: {
               fontWeight: 'bold',
               color: FLAG_COLOR_WHITE
-            }
+            },
+            headerRight:<Notification navigation={navigation}/>
           }
         }
       },
