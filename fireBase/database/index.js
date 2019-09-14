@@ -2,7 +2,7 @@ import firebase from 'react-native-firebase';
 
 export const addUserDetailsToDb = async (uid,mobileNumber, email, name, gender, dob) => {
   try {
-    await firebase.database().ref(`/users/${uid}`).set({ mobileNumber,email, name, gender, dob });
+    await firebase.database().ref(`/users/${uid}`).set({ mobileNumber,email, name, gender, dob, xp:0 });
     await firebase.database().ref(`/mapping/+91${mobileNumber}`).set({ email, name, gender, dob });
   } catch (error) {
     console.log(error);
@@ -19,14 +19,13 @@ export const getUser = async (uid) => {
   }
 }
 
-export const updateFirebase = (db,key,value,userDb,uid) => {
+export const updateFirebase = (db,key,value) => {
   db.update({ [key]: value });
-  if(userDb){
-    userDb.push(uid).catch(err => {
-      console.log(err);
-    });
-  }
 };
+
+export const updateFirebaseWithURL = async (dbUrl, key, value) => {
+  await firebase.database().ref(dbUrl).update({[key]:value });
+}
 
 export const pushToFirebase = async (db, value) => {
   try {
