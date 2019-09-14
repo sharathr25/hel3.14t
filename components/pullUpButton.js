@@ -3,7 +3,7 @@ import { Alert, TouchableOpacity, StyleSheet, Text } from "react-native";
 import firebase from "react-native-firebase";
 import Icon from "react-native-vector-icons/AntDesign";
 import { FLAG_COLOR_GREEN, FLAG_COLOR_WHITE, FLAG_COLOR_ORANGE } from "../constants/styleConstants";
-import { updateHelpRequest } from '../fireBase/database';
+import { updateFirebase } from '../fireBase/database';
 
 export default class PullUpButton extends Component {
     constructor(props){
@@ -33,7 +33,7 @@ export default class PullUpButton extends Component {
     handlePull = () => {
       const { pullUps,userPulled } = this.state;
       if (!userPulled) {
-        updateHelpRequest(this.helpRequest,"pullUps", pullUps+1 ,this.usersPulled, this.uid);
+        updateFirebase(this.helpRequest,"pullUps", pullUps+1 ,this.usersPulled, this.uid);
         this.setPullUpStatus();
       } else {
         Alert.alert("u already pulled");

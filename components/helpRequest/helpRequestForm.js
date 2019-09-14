@@ -4,8 +4,10 @@ import Icon from "react-native-vector-icons/FontAwesome";
 import firebase from 'react-native-firebase';
 import { View, TouchableOpacity, Modal, Picker, StyleSheet,Alert } from "react-native";
 import { FLAG_COLOR_WHITE, FLAG_COLOR_ORANGE } from "../../constants/styleConstants";
-import InputComponent from "../inputComponent";
 import Context from '../../context';
+import { pushToFirebaseWithURL, getDataFromFirebase } from "../../fireBase/database";
+
+const LIMIT = 3;
 
 class HelpRequestForm extends Component {
   constructor() {
@@ -14,7 +16,6 @@ class HelpRequestForm extends Component {
     this.state = {
       formVisible: false,
       noPeopleRequired: 1,
-      title: "",
       description: "",
       latitude: null,
       longitude: null,
@@ -27,44 +28,45 @@ class HelpRequestForm extends Component {
     this.setState({ formVisible: !this.state.formVisible });
   };
 
-  requestHelp = () => {
+  requestHelp = async () => {
     this.setState({ formVisible: !this.state.formVisible });
-    const { title, description, noPeopleRequired } = this.state;
+    const { description, noPeopleRequired } = this.state;
+    if(description.length < LIMIT){
+      Alert.alert(`description should contain minimum ${LIMIT} characters`);
+      return;
+    }
     const { longitude, latitude, locationProviderAvailable, locationErrorMessage,getPosition } = this.context;
     if(locationProviderAvailable === false && latitude===null && longitude===null){
       Alert.alert(locationErrorMessage?locationErrorMessage:"location error");
       getPosition();
       return;
     }
+    let userDetails;
+    try {
+      userDetails = await getDataFromFirebase(`users/${this.uid}`);
+    } catch (error) {
+      console.log(error);
+    }
     const data = {
       uidOfHelpRequester: this.uid,
-      title: title,
       description,
       latitude,
       longitude,
-      mobileNo: "+919886739068",
-      name: "sharath",
-      noPeopleRequired: parseInt(noPeopleRequired),
+      mobileNo: `+91${userDetails.val().mobileNumber}`,
+      name: userDetails.val().mobileNumber,
       timeStamp: new Date().getTime(),
-      pushUps: 0,
-      pullUps: 0,
+      likes: 0,
+      noPeopleRequired: parseInt(noPeopleRequired),
       noPeopleRequested: 0,
       noPeopleAccepted: 0,
       status: 'REQUESTED'
     };
-    const key = firebase
-      .database()
-      .ref("/helps")
-      .push(data, () => {
-        console.log(`HELP REQUEST CREATED and data inserted to Firebase`);
-      }).key;
-      firebase
-      .database()
-      .ref('users').child(this.uid).child('helpsRequested')
-      .push(key, () => {
-        console.log(`HELP REQUEST CREATED and data inserted to Firebase`);
-      });
+    const helpsDbUrl = 'helps';
+    const userDbUrl = `users/${this.uid}/helpsRequested`
+    const key = await pushToFirebaseWithURL(helpsDbUrl,data);
+    await pushToFirebaseWithURL(userDbUrl,key);
   };
+
   render(){
     return(
     <>
@@ -79,14 +81,10 @@ class HelpRequestForm extends Component {
         animationType="none"
         transparent
         visible={this.state.formVisible}
+        onRequestClose={this.handleAddHelpRequest}
       >
         <View style={styles.modalOuterContaner}>
             <View style={styles.modalInnerContainer}>
-              <InputComponent 
-                placeholder="Title"
-                secureTextEntry={false}
-                updateParentState={value => this.setState({ title: value })}
-              />
               <Input
                 inputContainerStyle={styles.descriptionContainerStyle}
                 multiline={true}
@@ -94,6 +92,7 @@ class HelpRequestForm extends Component {
                 placeholder="Description"
                 onChangeText={value => this.setState({ description: value })}
               />
+              <Text>Description should contain minimum {LIMIT} characters</Text>
               <View
                 style={styles.pickerContainerStyle}
               >
