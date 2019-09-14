@@ -3,18 +3,11 @@ import firebase from "react-native-firebase";
 import { FlatList,Alert } from 'react-native';
 import HelpRequest from "./helpRequest";
 import Context from "../../context";
-import { getDistanceFromLatLonInKm } from '../../utils';
+import { getDistanceFromLatLonInKm, sortByDistance } from '../../utils';
 
 const FIREBASE_FETCH_LIMIT = 5;
 const HELPREQUEST_FEED_LIMIT = 50;
 const HELPREQUEST_FEED_REMOVE_LIMIT = 5;
-
-const sortByDistance = (helpRequests) => {
-  const sortedHelpRequests = helpRequests.sort((a,b)=>{
-    return a.distance>b.distance?1:-1
-  })
-  return sortedHelpRequests;
-}
 
 class HelpRequestFeed extends Component {
   constructor(props) {
@@ -106,8 +99,12 @@ class HelpRequestFeed extends Component {
     const {db} = this.props;
     firebase.database().ref(`/${db}`).on("child_removed", data => {
       const { helpRequests } = this.state;
-      const newHelpRequests = helpRequests.filter((helpRequest)=>helpRequest.key !== data.key);
-      this.setState({ helpRequestsWithDistance: this.getHelpRequestsByDistance(newHelpRequests) , helpRequests: newHelpRequests});
+      const newHelpRequests = helpRequests.filter((helpRequest)=>{
+        return helpRequest.key !== data.key
+      });
+      const helpRequestsWithDistance = this.getHelpRequestsByDistance(newHelpRequests);
+      const helpRequestsSortedByDistance = sortByDistance(helpRequestsWithDistance);
+      this.setState({ helpRequestsWithDistance , helpRequests: newHelpRequests, helpRequestsSortedByDistance});
     });
   }
 

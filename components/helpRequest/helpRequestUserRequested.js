@@ -3,9 +3,10 @@ import firebase from 'react-native-firebase';
 import { Text, View, Alert, TouchableOpacity, StyleSheet } from 'react-native';
 import HelpDescription from "./helpDescription";
 import Time from "../time";
-import { updateFirebase, notifyUser, pushToFirebase, removeFromFirebase, getDataFromFirebase } from '../../fireBase/database';
+import { updateFirebase, notifyUser, pushToFirebase, removeFromFirebase, getDataFromFirebase, pushToFirebaseWithURL } from '../../fireBase/database';
 import { FLAG_COLOR_WHITE, FLAG_COLOR_ORANGE } from '../../constants/styleConstants';
 import Requester from '../requester';
+import DoneButton from '../doneButton';
 
 const AccetedUser = (props) => {
   return (
@@ -89,6 +90,7 @@ class HelpRequestRequestedUsers extends Component {
         if(!data.val()){
           updateFirebase(this.helpRequest,"noPeopleAccepted",noPeopleAccepted+1);
           await pushToFirebase(this.usersAccepted,helperUid);
+          await pushToFirebaseWithURL(`users/${helperUid}/helping`,this.key);
           await removeFromFirebase(this.usersRequested,helperUid);
           await notifyUser(helperUid,{type:"ACCEPT", screenToRedirect:"Helped", uidOfHelper:helperUid,timeStamp: new Date(), idOfHelpRequest: this.key});
         } else {
@@ -126,7 +128,7 @@ class HelpRequestRequestedUsers extends Component {
           }
           {this.state.usersAccepted.length !== 0 && <Text>People who are helping</Text>}
           {this.getAcceptedUsers()}
-          <TouchableOpacity style={styles.doneButton} onPress={this.handleDone}><Text style={styles.text}>Done</Text></TouchableOpacity>
+          <DoneButton keyOfHelpRequest={this.key} data={data}/>
           <Time time={timeStamp} />
         </View>
     );

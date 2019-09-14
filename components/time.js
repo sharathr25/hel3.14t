@@ -21,7 +21,7 @@ class Time extends Component {
 
   getTimeDiffrence = time => {
     let timeDiffrence = "";
-    const currentTime = new Date().getTime() + 1000 * 60 * 60 * 25;
+    const currentTime = new Date().getTime();
     const inMilliSeconds = currentTime - time;
     const inSeconds = inMilliSeconds / 1000;
     const inMinutes = inSeconds / 60;

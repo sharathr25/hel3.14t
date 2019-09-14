@@ -15,7 +15,7 @@ class FirstRoute extends React.Component{
 
 class SecondRoute extends React.Component{
   render(){
-    return <View style={{flex:1}} ><Text>route 2</Text></View>;
+    return <View style={{flex:1}} ><HelpRequestFeed db="helped" /></View>;
   }
 }
 
