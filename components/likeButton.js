@@ -35,8 +35,11 @@ export default class LikeButton extends Component {
       if(this.state.isLoading)return;
       this.setState({isLoading : true});
       const { likes,userLiked } = this.state;
-      const i = userLiked ? -1 : 1;
-      updateFirebase(this.helpRequest, "likes", likes + i);
+      if(userLiked){
+        updateFirebase(this.helpRequest, "likes", likes + 1);
+      } else {
+        updateFirebase(this.helpRequest, "likes", likes - 1);
+      }     
       let key = null;
       if(!userLiked){
         const data = await pushToFirebase(this.usersLiked, this.uid);

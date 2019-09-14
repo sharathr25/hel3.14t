@@ -1,16 +1,16 @@
-import React, { Component } from "react";
+import React from "react";
 import { Text, StyleSheet, View } from "react-native";
 import Icon from "react-native-vector-icons/FontAwesome";
 import { BLACK, FLAG_COLOR_ORANGE } from "../../constants/styleConstants";
 
 const HelpDescription = (props) => {
   const { data } = props;
-  const { description, title, distance,type } = data;
+  const { description, distance,type } = data;
   return (
     <View style={styles.descriptionContainer}>
       <View style={styles.titleContainer}>
         <Text style={{ flex: 3.5 }}>
-          <Text style={styles.title}>{title}</Text>
+          <Text style={styles.title}></Text>
         </Text>
         {type !== "USER" && <View style={styles.distanceContainer}>
           <Icon name="map-marker" size={15} color="red" />

@@ -53,10 +53,18 @@ export const removeFromFirebase = async (db,value) => {
   }
 } 
 
+export const removeFromFirebaseWithUrlAndValue = async (dbUrl,value) => {
+  try {
+    const data = await firebase.database().ref(dbUrl).orderByValue(value).equalTo(value).limitToFirst(1).once('value');
+    firebase.database().ref(dbUrl).child(Object.keys(data.val())[0]).remove();      
+  } catch (error) {
+    console.log(error);
+  }
+} 
+
 export const removeFromFirebaseOrderingChild = async (dbUrl,value) => {
   try {
     const data = await firebase.database().ref(dbUrl).orderByChild("idOfHelpRequest").equalTo(value).limitToFirst(1).once('value');
-    console.log(dbUrl, Object.keys(data.val())[0]);
     firebase.database().ref(dbUrl).child(Object.keys(data.val())[0]).remove();
   } catch (error) {
     console.log(error);
