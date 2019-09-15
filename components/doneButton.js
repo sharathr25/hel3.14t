@@ -48,7 +48,7 @@ export default class DoneButton extends Component {
     pushToHelpersDbAndAddXp = async (helpers, keyOfHelpRequest) => {
         Object.keys(helpers.val()).forEach(async (key) => {
             const uidOfhelper = helpers.val()[key];
-            await pushToFirebaseWithURL(`users/${uidOfhelper}/helpsCompleted`, keyOfHelpRequest);
+            await pushToFirebaseWithURL(`users/${uidOfhelper}/helpingCompleted`, keyOfHelpRequest);
             const xp = await getDataFromFirebase(`users/${uidOfhelper}/xp`)
             await updateFirebaseWithURL(`users/${uidOfhelper}`,'xp',xp.val()+XP_INCREMENT_PER_HELP);
         });
@@ -90,7 +90,7 @@ export default class DoneButton extends Component {
 
         //pushing updated help request and getting the key so we can store them in users profile
         const keyOfHelpRequest = await pushToFirebaseWithURL('helped', data);
-        await pushToFirebaseWithURL(`users/${this.uid}/helpsCompleted`,keyOfHelpRequest);
+        await pushToFirebaseWithURL(`users/${this.uid}/helpRequetsCompleted`,keyOfHelpRequest);
 
         //Updating helpers with new key and removing old key
         const urlToGetUsersAccepted = `helps/${this.key}/usersAccepted`

@@ -40,7 +40,6 @@ class CompletedHelpRequest extends Component {
           />
           <View style={styles.buttons}>
             <LikeButton helpRequest={this.helpRequest} data={data}/>
-            <HelpButton data={data} helpRequest={this.helpRequest}/>
           </View>
           <Time time={timeStamp} />
         </View>
