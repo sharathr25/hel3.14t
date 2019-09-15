@@ -2,9 +2,10 @@ import React, { Component } from "react";
 import { Alert, TouchableOpacity, StyleSheet, Text } from "react-native";
 import firebase from "react-native-firebase";
 import { FLAG_COLOR_WHITE, FLAG_COLOR_ORANGE } from "../constants/styleConstants";
-import { updateFirebase, notifyUser, pushToFirebase,updateFirebaseWithURL, getDataFromFirebase, removeFromFirebase, removeFromFirebaseWithURl, removeFromFirebaseOrderingChild, pushToFirebaseWithURL } from '../fireBase/database';
+import { notifyUser, removeFromFirebaseWithUrlAndValue,updateFirebaseWithURL, getDataFromFirebase, removeFromFirebaseWithURl, removeFromFirebaseOrderingChild, pushToFirebaseWithURL } from '../fireBase/database';
 
 const XP_INCREMENT_PER_HELP = 10;
+
 export default class DoneButton extends Component {
     constructor(props){
         super(props);
@@ -30,50 +31,84 @@ export default class DoneButton extends Component {
     removeAndNotifyHelpers = async (helpers) => {
         Object.keys(helpers.val()).forEach(async (key) => {
             const uidOfhelper = helpers.val()[key];
-            await removeFromFirebase(firebase.database().ref(`users/${uidOfhelper}/helping`),this.key);
+            await removeFromFirebaseWithUrlAndValue(`users/${uidOfhelper}/helping`, this.key);
             await notifyUser(uidOfhelper,{type:"CLOSED", screenToRedirect:"NONE", timeStamp: new Date(), idOfHelpRequest: this.key});
             await removeFromFirebaseOrderingChild(`users/${uidOfhelper}/notifications`, this.key);
         });
     }
 
+    notifyRequesters = async (requesters) => {
+        Object.keys(requesters.val()).forEach(async (key) => {
+            const uidOfRequester = requesters.val()[key];
+            await notifyUser(uidOfRequester,{type:"CLOSED", screenToRedirect:"NONE", timeStamp: new Date(), idOfHelpRequest: this.key});
+            await removeFromFirebaseOrderingChild(`users/${uidOfRequester}/notifications`, this.key);
+        });
+    }
+
+    pushToHelpersDbAndAddXp = async (helpers, keyOfHelpRequest) => {
+        Object.keys(helpers.val()).forEach(async (key) => {
+            const uidOfhelper = helpers.val()[key];
+            await pushToFirebaseWithURL(`users/${uidOfhelper}/helpingCompleted`, keyOfHelpRequest);
+            const xp = await getDataFromFirebase(`users/${uidOfhelper}/xp`)
+            await updateFirebaseWithURL(`users/${uidOfhelper}`,'xp',xp.val()+XP_INCREMENT_PER_HELP);
+        });
+    }
+
+    removeHelpRequestFromHelpsAndRequestedUser = async () => {
+        await removeFromFirebaseWithUrlAndValue(`users/${this.uid}/helpsRequested`, this.key);
+        await removeFromFirebaseWithURl(`helps/${this.key}`);
+    }
+
     handleYes = async () => {
+        //get helpers who are accepted
         const urlToGetUsersAccepted = `helps/${this.key}/usersAccepted`
         const usersAccepted = await getDataFromFirebase(urlToGetUsersAccepted);
+        
+        //get helpers who are requested
         const urlToGetUsersRequested = `helps/${this.key}/usersRequested`
         const usersRequested = await getDataFromFirebase(urlToGetUsersRequested);
+        
+        //notify and remove this help request from helping key of helpers(users accepted and users requested)
         if(usersRequested.val()!==null){
-            await this.removeAndNotifyHelpers(usersRequested);
+            await this.notifyRequesters(usersRequested);
         }
         if(usersAccepted.val()!==null){
             await this.removeAndNotifyHelpers(usersAccepted);
         }
-        await removeFromFirebase(firebase.database().ref(`users/${this.uid}/helpsRequested`),this.key);
-        await removeFromFirebase(firebase.database().ref(`users/${this.uid}/helping`),this.key);
-        await removeFromFirebaseWithURl(`helps/${this.key}`);
+
+        //removing help request from helps queue and users helpsRequested db
+        await this.removeHelpRequestFromHelpsAndRequestedUser();
+    }
+
+    updateHelpRequestAndUsers = async () => {
+        //changing the current status of help request
+        const helpRequestUrl = `helps/${this.key}`;
+        updateFirebaseWithURL(helpRequestUrl,'status',"COMPLETED");
+
+        //getting the updated help request and pushing it to 'helped' queue
+        const data = await getDataFromFirebase(helpRequestUrl);
+
+        //pushing updated help request and getting the key so we can store them in users profile
+        const keyOfHelpRequest = await pushToFirebaseWithURL('helped', data);
+        await pushToFirebaseWithURL(`users/${this.uid}/helpRequetsCompleted`,keyOfHelpRequest);
+
+        //Updating helpers with new key and removing old key
+        const urlToGetUsersAccepted = `helps/${this.key}/usersAccepted`
+        const usersAccepted = await getDataFromFirebase(urlToGetUsersAccepted);
+        if(usersAccepted.val()!==null){
+            await this.removeAndNotifyHelpers(usersAccepted);
+            await this.pushToHelpersDbAndAddXp(usersAccepted, keyOfHelpRequest);
+        }
+
+        //removing help request from helps queue and users helpsRequested db
+        await this.removeHelpRequestFromHelpsAndRequestedUser();
     }
 
     handleDone = async () => {
         const { status } = this.state; 
         if(status==="ON_GOING") {
-            const helpRequestUrl = `helps/${this.key}`;
-            updateFirebaseWithURL(helpRequestUrl,'status',"COMPLETED");
-            const data = await getDataFromFirebase(helpRequestUrl);
-            const keyOfHelpRequest = await pushToFirebaseWithURL('helped', data);
-            const urlToGetUsersAccepted = `helps/${this.key}/usersAccepted`
-            const usersAccepted = await getDataFromFirebase(urlToGetUsersAccepted);
-            if(usersAccepted.val()!==null){
-                await this.removeAndNotifyHelpers(usersAccepted);
-            }
-            Object.keys(usersAccepted.val()).forEach(async (key) => {
-                const uidOfhelper = usersAccepted.val()[key];
-                await pushToFirebaseWithURL(`users/${uidOfhelper}/helpsCompleted`, keyOfHelpRequest);
-                const xp = await getDataFromFirebase(`users/${uidOfhelper}/xp`)
-                await updateFirebaseWithURL(`users/${uidOfhelper}`,'xp',xp.val()+XP_INCREMENT_PER_HELP);
-            });
-            await removeFromFirebase(firebase.database().ref(`users/${this.uid}/helpsRequested`),this.key);
-            await pushToFirebaseWithURL(`users/${this.uid}/helpsCompleted`,keyOfHelpRequest);
-            await removeFromFirebaseWithURl(`helps/${this.key}`);
-        } else if(status==="REQUESTED") {
+            await this.updateHelpRequestAndUsers();
+            } else if(status==="REQUESTED") {
             Alert.alert(
                 'Help request in still not filled with helpers',
                 'Do you really want to close this help request?',

@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import firebase from "react-native-firebase";
 import { FlatList,Alert } from 'react-native';
 import HelpRequest from "./helpRequest";
+import CompletedHelpRequest from './completedHelpRequest';
 import Context from "../../context";
 import { getDistanceFromLatLonInKm, sortByDistance } from '../../utils';
 
@@ -88,6 +89,10 @@ class HelpRequestFeed extends Component {
       }).catch(err => {console.log(err);this.setState({isLoading: false})});
     } else {
       firebase.database().ref(`${db}`).orderByKey().startAt(referenceToOldestKey).limitToFirst(FIREBASE_FETCH_LIMIT+1).once("value", data => {
+        if(data.val()===null){
+          this.setState({ isLoading: false });
+          return;
+        }
         const keys = Object.keys(data.val()).sort().slice(1).reverse();
         this.setHelpRequests(keys, data.val())
       }).catch(err => {console.log(err);this.setState({isLoading: false})});
@@ -105,12 +110,16 @@ class HelpRequestFeed extends Component {
       const helpRequestsWithDistance = this.getHelpRequestsByDistance(newHelpRequests);
       const helpRequestsSortedByDistance = sortByDistance(helpRequestsWithDistance);
       this.setState({ helpRequestsWithDistance , helpRequests: newHelpRequests, helpRequestsSortedByDistance});
+      if(newHelpRequests.length === 0){
+        this.setState({referenceToOldestKey:""})
+      }
     });
   }
 
   getHelpRequest = ({item}) => {
     const helpRequest = item;
-    return <HelpRequest data={helpRequest} key={helpRequest.key} disableFooter={false} /> 
+    const {db} = this.props;
+    return db==="helped" ?<CompletedHelpRequest data={helpRequest} key={helpRequest.key} /> :<HelpRequest data={helpRequest} key={helpRequest.key} /> 
   };
 
   render() {
