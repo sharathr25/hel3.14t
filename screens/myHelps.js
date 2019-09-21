@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
-import { View, Text } from 'react-native';
+import { View, Text, StyleSheet } from 'react-native';
 import MyHelpRequestsScreen from './myHelpRequestsScreen';
 import { ScrollView } from 'react-native-gesture-handler';
+import { FONT_FAMILY, FLAG_COLOR_ORANGE } from '../constants/styleConstants';
 
 
 const MyHelpRequests = () => {
@@ -25,19 +26,19 @@ class HelpsScreen extends Component {
         return (
         <ScrollView>
             <View>
-                <Text style={{fontSize: 20}}>Your requested helps</Text>
+                <Text style={styles.header}>Your requested helps</Text>
                 <MyHelpRequests />
             </View>
             <View>
-               <Text style={{fontSize: 20}}>Currently helping</Text>
+               <Text style={styles.header}>Currently helping</Text>
                <IAmHelping />
             </View>
             <View>
-               <Text style={{fontSize: 20}}>Your requested helps completed</Text>
+               <Text style={styles.header}>Your requested helps completed</Text>
                <MyHelpRequestsCompleted />
             </View>
             <View>
-               <Text style={{fontSize: 20}}>Helps which you have done already</Text>
+               <Text style={styles.header}>Helps which you have done already</Text>
                <IAmHelpingCompleted />
             </View>
         </ScrollView>
@@ -46,3 +47,11 @@ class HelpsScreen extends Component {
 }
 
 export default HelpsScreen;
+
+const styles = StyleSheet.create({
+    header:{
+        fontFamily:FONT_FAMILY,
+        fontSize:20,
+        textAlign:'center'
+    }
+});

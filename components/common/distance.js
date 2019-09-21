@@ -22,12 +22,13 @@ const styles = StyleSheet.create({
 distanceContainer: {
     flex: 1,
     flexDirection: "row",
-    alignItems: 'baseline',
+    justifyContent:'flex-end',
     },
     distanceText: {
     color: BLACK,
     fontSize: 12,
-    marginLeft: 5,
+    paddingRight:5,
+    paddingLeft:5,
     fontFamily: FONT_FAMILY
     },
 });
