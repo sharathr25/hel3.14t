@@ -5,6 +5,9 @@ import HelpRequestRequestedUsers from '../components/helpRequest/userAsRequester
 import HelpingRequest from '../components/helpRequest/userAsHelper/helpingRequest';
 import { getDataFromFirebase } from '../fireBase/database';
 import CompletedHelpRequest from '../components/helpRequest/feed/completedHelpRequest';
+import HelpRequestCompleted from '../components/helpRequest/userAsRequester/helpRequestCompleted';
+import HelpingRequestCompleted from '../components/helpRequest/userAsHelper/helpingRequestCompleted';
+
 class MyHelpRequestsScreen extends Component {
     constructor(){
         super();
@@ -38,8 +41,8 @@ class MyHelpRequestsScreen extends Component {
         switch(this.props.db){
             case "helpsRequested":return <HelpRequestRequestedUsers data={helpRequest} key={helpRequest.key} />;
             case "helping":return <HelpingRequest data={helpRequest} key={helpRequest.key} db="helps" title="Helpers helping along with you"/>;
-            case "helpRequetsCompleted":return <HelpingRequest data={helpRequest} key={helpRequest.key} disableLike={true} db="helped" title="Helpers who helped you"/>
-            case "helpingCompleted":return <HelpingRequest data={helpRequest} key={helpRequest.key} db="helped" title="Helpers helped along with you"/>
+            case "helpRequetsCompleted":return <HelpRequestCompleted data={helpRequest} key={helpRequest.key} db="helped" title="Helpers who helped you"/>
+            case "helpingCompleted":return <HelpingRequestCompleted data={helpRequest} key={helpRequest.key} db="helped" title="Helpers helped along with you"/>
             default: return null;
         }
     };
