@@ -15,7 +15,7 @@ export const BLACK = "#000000";
 export const INPUT_BORDER_COLOR = FLAG_COLOR_ORANGE;
 export const INPUT_TEXT_COLOR = 'black';
 
-export const FONT_FAMILY = 'monospace';
+export const FONT_FAMILY = 'serif';
 export const FONT_COLOR = 'white';
 export const FONT_SIZE_HEADING = 16;
 export const FONT_SIZE_SUB_HEADING = 14;

@@ -1,8 +1,8 @@
 import React, { Component } from "react";
 import { Alert, TouchableOpacity, StyleSheet, Text } from "react-native";
 import firebase from "react-native-firebase";
-import { FLAG_COLOR_WHITE, FLAG_COLOR_ORANGE } from "../constants/styleConstants";
-import { updateFirebase, notifyUser, pushToFirebase, getDataFromFirebase } from '../fireBase/database';
+import { FLAG_COLOR_WHITE, FLAG_COLOR_ORANGE } from "../../../constants/styleConstants";
+import { updateFirebase, notifyUser, pushToFirebase, getDataFromFirebase, firebaseOnEventListner, firebaseOnEventListnerTurnOff } from '../../../fireBase/database';
 
 export default class HelpButton extends Component {
     constructor(props){
@@ -30,22 +30,24 @@ export default class HelpButton extends Component {
       }
     }
   
+    updateState = (data) => {
+      this.setState( { [data.key]: data.val() })
+        if (data.key === "noPeopleAccepted") {
+          if( data.val() === this.state.noPeopleRequired ){
+            updateFirebase(this.helpRequest,"helpingStartedAt",new Date().getTime());
+            updateFirebase(this.helpRequest,"status","ON_GOING");
+            this.setState({ disableHelp : true, helpErrorMessage: "Helpers Filled, try helping others" }); 
+          }
+      }
+    }
+
     componentDidMount() {
-        this.helpRequest.on("child_changed", data => {
-            this.setState( { [data.key]: data.val() })
-            if (data.key === "noPeopleAccepted") {
-              if( data.val() === this.state.noPeopleRequired ){
-                updateFirebase(this.helpRequest,"helpingStartedAt",new Date().getTime());
-                updateFirebase(this.helpRequest,"status","ON_GOING");
-                this.setState({ disableHelp : true, helpErrorMessage: "Helpers Filled, try helping others" }); 
-                }
-            }
-        });
+        firebaseOnEventListner(`helps/${this.key}`,"child_changed",this.updateState);
         this.setHelpButtonStatus();
     }
 
     componentWillUnmount(){
-        this.helpRequest.off();
+        firebaseOnEventListnerTurnOff(`helps/${this.key}`);
     }
   
     handleHelp = async () => {
@@ -100,10 +102,9 @@ export default class HelpButton extends Component {
       }
     
     render(){
-      const { noPeopleAccepted } = this.state;
       return (
         <TouchableOpacity style={styles.container} onPress={this.handleHelp}>
-            <Text style={styles.help}>Help</Text><Text style={styles.text}>{noPeopleAccepted}</Text>
+            <Text style={styles.help}>Help</Text>
         </TouchableOpacity>
       );
     }
@@ -118,13 +119,14 @@ const styles = StyleSheet.create({
       backgroundColor: FLAG_COLOR_WHITE,
       borderWidth: 1,
       borderColor: FLAG_COLOR_ORANGE,
-      margin: 3,
+      margin: 10,
       borderRadius: 5,
-      padding: 5
+      padding: 5,
     },
     help:{
         width: 50,
-        fontSize: 20
+        fontSize: 20,
+        color:FLAG_COLOR_ORANGE
     },
     text:{
         fontSize: 20

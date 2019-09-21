@@ -5,10 +5,10 @@ import { ScrollView } from 'react-native-gesture-handler';
 import firebase from 'react-native-firebase';
 import { SIGN_UP_SCREEN, SCREEN_TITLES } from '../constants/appConstants';
 import { FLAG_COLOR_ORANGE } from '../constants/styleConstants';
-import InputComponent from '../components/inputComponent';
-import ErrorMessage from '../components/errorMessage';
+import InputComponent from '../components/common/inputComponent';
+import ErrorMessage from '../components/common/errorMessage';
 import {regex} from '../utils/index';
-import Loader from '../components/inlineLoader';
+import Loader from '../components/common/inlineLoader';
 import { getUser } from '../fireBase/database';
 
 class ResetPassowrdScreen extends Component {

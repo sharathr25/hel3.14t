@@ -1,6 +1,6 @@
 import React from 'react';
 import { Text } from 'react-native';
-import { styles } from '../constants/styleConstants';
+import { styles } from '../../constants/styleConstants';
 
 const ErrorMessage = (props) => {
   const { errorMessage } = props;

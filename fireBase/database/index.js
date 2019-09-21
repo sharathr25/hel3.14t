@@ -90,9 +90,19 @@ export const pushToFirebaseWithURL = async (dbUrl,data) => {
 
 export const getDataFromFirebase = async (dbUrl) => {
   try {
-    const snapShot = firebase.database().ref(dbUrl).once('value');
+    const snapShot = await firebase.database().ref(dbUrl).once('value');
     return snapShot;    
   } catch (error) {
     console.log(error)
   }
+}
+
+export const firebaseOnEventListner = (dbUrl,eventType,cb) => {
+  firebase.database().ref(dbUrl).on(eventType,data => {
+    cb(data)
+  },err => console.log(err));
+} 
+
+export const firebaseOnEventListnerTurnOff = (dbUrl) => {
+  firebase.database().ref(dbUrl).off();
 }

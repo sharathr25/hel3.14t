@@ -1,10 +1,9 @@
 import React, { Component } from "react";
 import { View, StyleSheet } from "react-native";
 import firebase from "react-native-firebase";
-import HelpDescription from "./helpDescription";
-import Time from "../time";
-import HelpButton from "../helpButton";
-import LikeButton from "../likeButton";
+import HelpDescription from "../common/helpDescription";
+import Time from "../../common/time";
+import LikeButton from "../buttons/likeButton";
 
 class CompletedHelpRequest extends Component {
   constructor(props) {
@@ -38,9 +37,12 @@ class CompletedHelpRequest extends Component {
               distance
             }}
           />
-          <View style={styles.buttons}>
+          {
+            !this.props.disableLike && <View style={styles.buttons}>
             <LikeButton helpRequest={this.helpRequest} data={data}/>
-          </View>
+          </View> 
+          }
+          
           <Time time={timeStamp} />
         </View>
       </View>

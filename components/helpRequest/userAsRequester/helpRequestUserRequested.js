@@ -1,28 +1,21 @@
 import React, { Component } from 'react';
 import firebase from 'react-native-firebase';
 import { Text, View, Alert, TouchableOpacity, StyleSheet } from 'react-native';
-import HelpDescription from "./helpDescription";
-import Time from "../time";
-import { updateFirebase, notifyUser, pushToFirebase, removeFromFirebase, getDataFromFirebase, pushToFirebaseWithURL } from '../../fireBase/database';
-import { FLAG_COLOR_WHITE, FLAG_COLOR_ORANGE } from '../../constants/styleConstants';
-import Requester from '../requester';
-import DoneButton from '../doneButton';
-
-const AccetedUser = (props) => {
-  return (
-    <View>
-      <Text>{props.name}</Text>
-      <Text>{props.email}</Text>
-    </View>
-  );
-}
+import Icon from 'react-native-vector-icons/FontAwesome';
+import HelpDescription from "../common/helpDescription";
+import Time from "../../common/time";
+import { updateFirebase, notifyUser, pushToFirebase, removeFromFirebase, getDataFromFirebase, pushToFirebaseWithURL } from '../../../fireBase/database';
+import { FLAG_COLOR_WHITE, FLAG_COLOR_ORANGE, FONT_FAMILY } from '../../../constants/styleConstants';
+import Requester from './requester';
+import DoneButton from '../buttons/doneButton';
+import AccetedUser from '../common/acceptedUser';
 
 class HelpRequestRequestedUsers extends Component {
     constructor(props){
         super(props);
         const { data } = this.props;
         this.key = data.key;
-        this.helps = firebase.database().ref("/helps");
+        this.helps = firebase.database().ref('helps');
         this.helpRequest = this.helps.child(this.key);
         this.usersRequested = this.helpRequest.child("usersRequested");
         this.usersAccepted= this.helpRequest.child("usersAccepted");
@@ -42,13 +35,13 @@ class HelpRequestRequestedUsers extends Component {
         const uidOfRequestingHelper = data.val();
         const url = `users/${uidOfRequestingHelper}`;
         const data1 = await getDataFromFirebase(url);
-        this.setState({usersRequested : [{uidOfRequestingHelper,name:data1.val().name, email:data1.val().email}, ...this.state.usersRequested]});
+        this.setState({usersRequested : [{uidOfRequestingHelper,name:data1.val().name, email:data1.val().email, mobileNumber:data1.val().mobileNumber, xp:data1.val().xp}, ...this.state.usersRequested]});
       },(err) => console.log(err));
       this.usersAccepted.on('child_added', async (data) => {
         const uidOfAcceptedHelper = data.val();
         const url = `users/${uidOfAcceptedHelper}`;
         const data2 = await getDataFromFirebase(url);
-        this.setState({usersAccepted : [{uidOfAcceptedHelper,name:data2.val().name, email:data2.val().email}, ...this.state.usersAccepted]});
+        this.setState({usersAccepted : [{uidOfAcceptedHelper,name:data2.val().name, email:data2.val().email, mobileNumber:data2.val().mobileNumber, xp:data2.val().xp}, ...this.state.usersAccepted]});
       },(err) => console.log(err));
       this.usersRequested.on('child_removed',(data) => {
         const uidOfRequestingHelper = data.val();
@@ -71,16 +64,16 @@ class HelpRequestRequestedUsers extends Component {
     getRequestedUsers = () => {
       const { usersRequested } = this.state;
       return usersRequested.map((datum, key) => {
-        const {name, uidOfRequestingHelper, email} = datum;
-        return <Requester name={name} uid={uidOfRequestingHelper} email={email} key={key} handleAccept={(uid) => this.handleAccept(uid)} handleReject={(uid) => this.handleReject(uid)}/>
+        const {name, uidOfRequestingHelper, xp} = datum;
+        return <Requester name={name} uid={uidOfRequestingHelper} key={key} handleAccept={(uid) => this.handleAccept(uid)} handleReject={(uid) => this.handleReject(uid)} xp={xp} slNo={key+1}/>
       });
     }
 
     getAcceptedUsers = () => {
       const { usersAccepted } = this.state;
       return usersAccepted.map((datum, key) => {
-        const {name, uidOfAcceptedHelper, email} = datum;
-        return <AccetedUser name={name} uid={uidOfAcceptedHelper} email={email} key={key} />
+        const {name, uidOfAcceptedHelper, email, mobileNumber, xp} = datum;
+        return <AccetedUser name={name} uid={uidOfAcceptedHelper} key={key} mobileNumber={mobileNumber} xp={xp} slNo={key+1}/>
       });
     }
 
@@ -110,10 +103,6 @@ class HelpRequestRequestedUsers extends Component {
         }
       });
     }
-    handleDone = () => {
-      // TODO: remove from help requests set status Done, helpCompletedAt, move this helped queue
-      Alert.alert("need to implement this");
-    }
 
   render() {
     const { data } = this.props;
@@ -121,13 +110,28 @@ class HelpRequestRequestedUsers extends Component {
     return (
         <View style={styles.container}>
           <HelpDescription data={{ title, description, distance, type:"USER" }} />
-          {this.state.usersRequested.length !== 0 && <>
-          <Text>People Willing to help you</Text>
-          {this.getRequestedUsers()}
-          <Text>you can accept them by clicking Accept or you can reject them by clicking Reject</Text></>
-          }
-          {this.state.usersAccepted.length !== 0 && <Text>People who are helping</Text>}
-          {this.getAcceptedUsers()}
+          {this.state.usersRequested.length !== 0 && <View style={{margin: 10}}>
+          <Text style={{fontFamily: FONT_FAMILY, marginBottom: 5}}>People Willing to help you</Text>
+          <Text>you can accept them by clicking Accept or you can reject them by clicking Reject</Text>
+            <View style={styles.accpetedUserscontainer}>
+              <Icon style={{flex:1, textAlign: 'center'}} name="slack" size={20} color={FLAG_COLOR_ORANGE}/>
+              <Icon style={{flex:3, textAlign: 'center'}} name="user-circle" size={20} color={FLAG_COLOR_ORANGE}/>
+              <Icon style={{flex:1, textAlign: 'left'}} name="star" size={20} color={FLAG_COLOR_ORANGE}/>
+              <Text style={{flex:1, textAlign: 'center', color:FLAG_COLOR_ORANGE,margin: 5}}>Accept</Text>
+              <Text style={{flex:1, textAlign: 'center', color:FLAG_COLOR_ORANGE,margin: 5}}>Reject</Text>
+            </View>
+            {this.getRequestedUsers()}
+          </View>}
+          {this.state.usersAccepted.length !== 0 && <View style={{margin: 10}}>
+          <Text style={{fontFamily: FONT_FAMILY, marginBottom: 5}}>People who are helping</Text>
+            <View style={styles.accpetedUserscontainer}>
+              <Icon style={{flex:1, textAlign: 'center'}} name="slack" size={20} color={FLAG_COLOR_ORANGE}/>
+              <Icon style={{flex:4, textAlign: 'center'}} name="user-circle" size={20} color={FLAG_COLOR_ORANGE}/>
+              <Icon style={{flex:1, textAlign: 'left'}} name="star" size={20} color={FLAG_COLOR_ORANGE}/>
+              <Icon style={{flex:2, textAlign: 'center'}} name="mobile-phone" size={25} color={FLAG_COLOR_ORANGE}/>
+            </View>
+            {this.getAcceptedUsers()}
+          </View>}
           <DoneButton keyOfHelpRequest={this.key} data={data}/>
           <Time time={timeStamp} />
         </View>
@@ -139,8 +143,10 @@ export default HelpRequestRequestedUsers;
 
 const styles = StyleSheet.create({
   container:{
-    margin: 5,
-    backgroundColor:"#f6f6f6"
+    margin: 10,
+    backgroundColor:"#f6f6f6",
+    elevation: 5,
+    borderRadius: 5
   },
   doneButton: {
     flex: 1,
@@ -155,6 +161,17 @@ const styles = StyleSheet.create({
   },
   text:{
     fontSize: 20
+  },
+  acceptedUsersContainer: {
+    flex: 1
+  },
+  accpetedUserscontainer:{
+    flex: 1,
+      flexDirection: 'row',
+      justifyContent:'space-evenly',
+      alignItems: 'center',
+      borderColor:FLAG_COLOR_ORANGE,
+      borderBottomWidth: 1
   }
 });
 

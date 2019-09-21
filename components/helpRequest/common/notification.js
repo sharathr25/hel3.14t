@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import { Text, View, StyleSheet } from "react-native";
 import firebase from 'react-native-firebase';
 import Icon from "react-native-vector-icons/Entypo";
-import { FLAG_COLOR_WHITE } from "../constants/styleConstants";
+import { FLAG_COLOR_WHITE } from "../../../constants/styleConstants";
 import { TouchableOpacity } from "react-native-gesture-handler";
 
 class Notification extends Component {

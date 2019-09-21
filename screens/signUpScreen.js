@@ -8,10 +8,10 @@ import { styles, FLAG_COLOR_ORANGE } from '../constants/styleConstants';
 import { updateUser } from '../fireBase/auth/signUp';
 import { addUserDetailsToDb } from '../fireBase/database';
 import {regex} from '../utils/index';
-import ErrorMessage from '../components/errorMessage';
-import DateComponent from '../components/dateComponent';
-import InputComponent from '../components/inputComponent';
-import Loader from '../components/inlineLoader';
+import ErrorMessage from '../components/common/errorMessage';
+import DateComponent from '../components/common/dateComponent';
+import InputComponent from '../components/common/inputComponent';
+import Loader from '../components/common/inlineLoader';
 import { getAge } from '../utils';
 
 class SignUpScreen extends Component {

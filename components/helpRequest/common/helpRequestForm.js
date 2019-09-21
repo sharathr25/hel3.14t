@@ -3,9 +3,9 @@ import { Text, Button, Input } from "react-native-elements";
 import Icon from "react-native-vector-icons/FontAwesome";
 import firebase from 'react-native-firebase';
 import { View, TouchableOpacity, Modal, Picker, StyleSheet,Alert } from "react-native";
-import { FLAG_COLOR_WHITE, FLAG_COLOR_ORANGE } from "../../constants/styleConstants";
-import Context from '../../context';
-import { pushToFirebaseWithURL, getDataFromFirebase } from "../../fireBase/database";
+import { FLAG_COLOR_WHITE, FLAG_COLOR_ORANGE } from "../../../constants/styleConstants";
+import Context from '../../../context';
+import { pushToFirebaseWithURL, getDataFromFirebase } from "../../../fireBase/database";
 
 const LIMIT = 3;
 

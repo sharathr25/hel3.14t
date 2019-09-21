@@ -1,7 +1,7 @@
 import React from 'react';
 import { createStackNavigator } from 'react-navigation';
 import Icon from "react-native-vector-icons/FontAwesome";
-import Notification from '../components/notification';
+import Notification from '../components/helpRequest/common/notification';
 
 // screens
 import SignUpScreen from '../screens/signUpScreen';

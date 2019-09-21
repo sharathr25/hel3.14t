@@ -1,13 +1,11 @@
 import React, { Component } from 'react';
-import { FlatList } from 'react-native';
+import { FlatList,Text } from 'react-native';
 import firebase from 'react-native-firebase';
-import HelpRequestRequestedUsers from '../components/helpRequest/helpRequestUserRequested';
-
+import HelpRequestRequestedUsers from '../components/helpRequest/userAsRequester/helpRequestUserRequested';
+import HelpingRequest from '../components/helpRequest/userAsHelper/helpingRequest';
+import { getDataFromFirebase } from '../fireBase/database';
+import CompletedHelpRequest from '../components/helpRequest/feed/completedHelpRequest';
 class MyHelpRequestsScreen extends Component {
-    static navigationOptions = {
-        title: 'My Help Requests'
-    };
-
     constructor(){
         super();
         this.state = {
@@ -16,14 +14,15 @@ class MyHelpRequestsScreen extends Component {
     }
     componentDidMount() {
         const uid = firebase.auth().currentUser.uid;
-        firebase.database().ref('users').child(uid).child('helpsRequested').on('child_added',(data) => {
+        firebase.database().ref('users').child(uid).child(this.props.db).on('child_added',(data) => {
             const key = data.val();
-            firebase.database().ref('helps').child(key).once('value',(data) => {
+            const dbTogetHelps = (this.props.db === "helpingCompleted" || this.props.db === "helpRequetsCompleted") ? "helped" : "helps"
+            firebase.database().ref(dbTogetHelps).child(key).once('value',(data) => {
                 const newHelprequest = {...data.val(), key:key, distance:0};
                 this.setState({helpRequests:[newHelprequest,...this.state.helpRequests]});
             },(err) => console.log(err));
         }, (err) => console.log(err));
-        firebase.database().ref('users').child(uid).child('helpsRequested').on('child_removed',(data) => {
+        firebase.database().ref('users').child(uid).child(this.props.db).on('child_removed',(data) => {
             const newnewHelprequests = this.state.helpRequests.filter((datum) => datum.key !== data.val());
             this.setState({ helpRequests: newnewHelprequests });
         }, (err) => console.log(err));
@@ -31,14 +30,18 @@ class MyHelpRequestsScreen extends Component {
 
     componentWillMount(){
         const uid = firebase.auth().currentUser.uid;
-        firebase.database().ref('users').child(uid).child('helpsRequested').off();
+        firebase.database().ref('users').child(uid).child(this.props.db).off();
     }
 
     getHelpRequest = ({item}) => {
-    const helpRequest = item;
-    return (
-            <HelpRequestRequestedUsers data={helpRequest} key={helpRequest.key} />
-        );
+        const helpRequest = item;
+        switch(this.props.db){
+            case "helpsRequested":return <HelpRequestRequestedUsers data={helpRequest} key={helpRequest.key} />;
+            case "helping":return <HelpingRequest data={helpRequest} key={helpRequest.key} db="helps" title="Helpers helping along with you"/>;
+            case "helpRequetsCompleted":return <HelpingRequest data={helpRequest} key={helpRequest.key} disableLike={true} db="helped" title="Helpers who helped you"/>
+            case "helpingCompleted":return <HelpingRequest data={helpRequest} key={helpRequest.key} db="helped" title="Helpers helped along with you"/>
+            default: return null;
+        }
     };
 
     render() {

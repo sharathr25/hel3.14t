@@ -1,8 +1,18 @@
 import React, { Component } from "react";
 import { Alert, TouchableOpacity, StyleSheet, Text } from "react-native";
 import firebase from "react-native-firebase";
-import { FLAG_COLOR_WHITE, FLAG_COLOR_ORANGE } from "../constants/styleConstants";
-import { notifyUser, removeFromFirebaseWithUrlAndValue,updateFirebaseWithURL, getDataFromFirebase, removeFromFirebaseWithURl, removeFromFirebaseOrderingChild, pushToFirebaseWithURL } from '../fireBase/database';
+import { FLAG_COLOR_WHITE, FLAG_COLOR_ORANGE } from "../../../constants/styleConstants";
+import { 
+    notifyUser, 
+    removeFromFirebaseWithUrlAndValue,
+    updateFirebaseWithURL, 
+    getDataFromFirebase, 
+    removeFromFirebaseWithURl, 
+    removeFromFirebaseOrderingChild, 
+    pushToFirebaseWithURL, 
+    firebaseOnEventListner, 
+    firebaseOnEventListnerTurnOff 
+} from '../../../fireBase/database';
 
 const XP_INCREMENT_PER_HELP = 10;
 
@@ -18,14 +28,16 @@ export default class DoneButton extends Component {
         }
     }
 
+    updateState = (data) => {
+        this.setState( { [data.key]: data.val() })
+    }
+
     componentDidMount() {
-        this.helpRequest.on("child_changed", data => {
-            this.setState( { [data.key]: data.val() })
-        });
+        firebaseOnEventListner(`helps/${this.key}`,"child_changed",this.updateState);
     }
 
     componentWillUnmount(){
-        this.helpRequest.off();
+        firebaseOnEventListnerTurnOff(`helps/${this.key}`);
     }
 
     removeAndNotifyHelpers = async (helpers) => {
@@ -142,13 +154,14 @@ const styles = StyleSheet.create({
       backgroundColor: FLAG_COLOR_WHITE,
       borderWidth: 1,
       borderColor: FLAG_COLOR_ORANGE,
-      margin: 3,
+      margin: 10,
       borderRadius: 5,
       padding: 5
     },
     done:{
         width: 50,
-        fontSize: 20
+        fontSize: 20,
+        color:FLAG_COLOR_ORANGE
     },
     text:{
         fontSize: 20

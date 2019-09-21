@@ -2,8 +2,8 @@ import React, { Component } from "react";
 import { TouchableOpacity, StyleSheet, Text , ActivityIndicator} from "react-native";
 import firebase from "react-native-firebase";
 import Icon from "react-native-vector-icons/AntDesign";
-import { FLAG_COLOR_WHITE, FLAG_COLOR_ORANGE } from "../constants/styleConstants";
-import { updateFirebase, pushToFirebase } from '../fireBase/database';
+import { FLAG_COLOR_WHITE, FLAG_COLOR_ORANGE } from "../../../constants/styleConstants";
+import { updateFirebase, pushToFirebase, removeFromFirebaseWithURl, firebaseOnEventListner, firebaseOnEventListnerTurnOff } from '../../../fireBase/database';
 
 export default class LikeButton extends Component {
     constructor(props){
@@ -12,6 +12,7 @@ export default class LikeButton extends Component {
       this.uid = firebase.auth().currentUser.uid;
       this.helpRequest = this.props.helpRequest;
       this.usersLiked = this.helpRequest.child("usersLiked");
+      this.key = data.key;
       this.state = {
         likes: data.likes,
         userLiked: false,
@@ -20,47 +21,41 @@ export default class LikeButton extends Component {
       }
     }
   
+    updateState = (data) => {
+      this.setState( { [data.key]: data.val() })
+    }
+
     componentDidMount() {
-      this.helpRequest.on("child_changed", data => {
-        this.setState( { [data.key]: data.val() })
-      });
+      firebaseOnEventListner(`helped/${this.key}`,"child_changed",this.updateState);
       this.setLikeStatus();
     }
-    
+
     componentWillUnmount(){
-        this.helpRequest.off();
+      firebaseOnEventListnerTurnOff(`helped/${this.key}`);
     }
 
     handleLike = async () => {
       if(this.state.isLoading)return;
       this.setState({isLoading : true});
-      const { likes,userLiked } = this.state;
-      if(userLiked){
+      const { likes,userLiked,likedUserKey } = this.state;
+      if(!userLiked){
         updateFirebase(this.helpRequest, "likes", likes + 1);
+        await pushToFirebase(this.usersLiked, this.uid);
       } else {
         updateFirebase(this.helpRequest, "likes", likes - 1);
+        await removeFromFirebaseWithURl(`helped/${this.key}/usersLiked/${likedUserKey}`);
       }     
-      let key = null;
-      if(!userLiked){
-        const data = await pushToFirebase(this.usersLiked, this.uid);
-        key = data.key;
-      }
-      this.setLikeStatus(key);
+      this.setLikeStatus();
       this.setState({ isLoading : false });
     }
   
-    setLikeStatus = (key) => {
-      if(!this.state.userLiked){
-      this.usersLiked.orderByValue(this.uid).equalTo(this.uid).limitToFirst(1).once("value", data => {
-          if (data.val()) {
-              this.setState({ userLiked: true });
-          }
-        });
+    setLikeStatus = async () => {
+      const data = await firebase.database().ref(`helped/${this.key}/usersLiked`).orderByValue(this.uid).equalTo(this.uid).limitToFirst(1).once("value");
+      if(data.val()){
+        this.setState({ userLiked: true, likedUserKey: Object.keys(data.val())[0]});
       } else {
-        this.usersLiked.child(this.state.likedUserKey).remove();
-        this.setState({ userLiked: false });
+        this.setState({ userLiked: false, likedUserKey: null});
       }
-      this.setState({likedUserKey: key ? key : null});
     };
     
     render(){

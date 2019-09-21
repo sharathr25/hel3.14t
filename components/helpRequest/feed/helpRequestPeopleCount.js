@@ -4,7 +4,7 @@ import {
   COLOR_1,
   FLAG_COLOR_WHITE,
   FLAG_COLOR_BLUE,
-} from "../../constants/styleConstants";
+} from "../../../constants/styleConstants";
 
 class HelpRequestPeopleCount extends Component {
   render() {

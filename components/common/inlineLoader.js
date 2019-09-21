@@ -1,6 +1,6 @@
 import React from 'react';
 import { ActivityIndicator, View, Text } from 'react-native';
-import { FLAG_COLOR_ORANGE, FLAG_COLOR_WHITE } from '../constants/styleConstants';
+import { FLAG_COLOR_ORANGE, FLAG_COLOR_WHITE } from '../../constants/styleConstants';
 
 const Loader = (props) => {
     return (

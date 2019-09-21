@@ -6,7 +6,7 @@ import {
   FLAG_COLOR_WHITE,
   BLACK,
   FLAG_COLOR_ORANGE
-} from "../../constants/styleConstants";
+} from "../../../constants/styleConstants";
 
 class HelpRequestModifier extends Component {
   render() {

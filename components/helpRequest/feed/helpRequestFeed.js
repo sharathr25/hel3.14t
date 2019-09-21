@@ -1,14 +1,20 @@
 import React, { Component } from "react";
 import firebase from "react-native-firebase";
-import { FlatList,Alert } from 'react-native';
+import { FlatList,Alert,LayoutAnimation,Platform,UIManager } from 'react-native';
 import HelpRequest from "./helpRequest";
 import CompletedHelpRequest from './completedHelpRequest';
-import Context from "../../context";
-import { getDistanceFromLatLonInKm, sortByDistance } from '../../utils';
+import Context from "../../../context";
+import { getDistanceFromLatLonInKm, sortByDistance } from '../../../utils';
 
 const FIREBASE_FETCH_LIMIT = 5;
 const HELPREQUEST_FEED_LIMIT = 50;
 const HELPREQUEST_FEED_REMOVE_LIMIT = 5;
+
+if (Platform.OS === 'android') {
+  if (UIManager.setLayoutAnimationEnabledExperimental) {
+    UIManager.setLayoutAnimationEnabledExperimental(true);
+  }
+}
 
 class HelpRequestFeed extends Component {
   constructor(props) {
@@ -124,6 +130,7 @@ class HelpRequestFeed extends Component {
 
   render() {
     const { isLoading } = this.state;
+    LayoutAnimation.easeInEaseOut(()=>Alert.alert("new helpre"));
     return (
       <FlatList
         data={this.state.helpRequestsSortedByDistance}
