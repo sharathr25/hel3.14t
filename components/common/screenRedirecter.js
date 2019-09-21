@@ -1,7 +1,7 @@
 import React from 'react';
 import { View, Text } from 'react-native';
 import { Button } from 'react-native-elements';
-import { BLACK, FLAG_COLOR_ORANGE } from '../constants/styleConstants';
+import { BLACK, FLAG_COLOR_ORANGE } from '../../constants/styleConstants';
 
 const ScreenRedirecter = (props) => {
     const { title , buttonText, handleRedirection } = props;

@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import { Text, View } from "react-native";
 import Icon from "react-native-vector-icons/FontAwesome";
-import { FLAG_COLOR_GREEN } from "../constants/styleConstants";
+import { FLAG_COLOR_GREEN, FONT_FAMILY } from "../../constants/styleConstants";
 
 // const clockIcon = require('../__assets__/clock.svg');
 
@@ -61,7 +61,7 @@ class Time extends Component {
     return (
       <View style={{ margin: 5, marginTop: 0, flexDirection: "row", flex:1, alignItems: 'center', justifyContent: 'flex-start' }}>
         <Icon name="clock-o" size={15} color={FLAG_COLOR_GREEN} />
-        <Text style={{ marginLeft: 3}}>{this.getTimeDiffrence(time)}</Text>
+        <Text style={{ marginLeft: 3, fontFamily: FONT_FAMILY}}>{this.getTimeDiffrence(time)}</Text>
       </View>
     );
   }

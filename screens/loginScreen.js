@@ -6,10 +6,10 @@ import { SCREEN_TITLES } from '../constants/appConstants';
 import { styles, FLAG_COLOR_WHITE } from '../constants/styleConstants';
 import { getEmail, loginWithEmailAndPassword} from '../fireBase/auth/login';
 import { checkUserNameAndPasswordFields, regex } from '../utils/index';
-import ErrorMessage from '../components/errorMessage';
-import ScreenRedirecter from '../components/screenRedirecter';
-import InputComponent from '../components/inputComponent';
-import Loader from '../components/inlineLoader';
+import ErrorMessage from '../components/common/errorMessage';
+import ScreenRedirecter from '../components/common/screenRedirecter';
+import InputComponent from '../components/common/inputComponent';
+import Loader from '../components/common/inlineLoader';
 
 const emailRegex = regex.email;
 

@@ -3,8 +3,8 @@ import React from 'react';
 import { createBottomTabNavigator } from 'react-navigation';
 import { View, Text } from 'react-native'
 
-import HelpRequestFeed from "../components/helpRequest/helpRequestFeed";
-import HelpRequestForm from "../components/helpRequest/helpRequestForm";
+import HelpRequestFeed from "../components/helpRequest/feed/helpRequestFeed";
+import HelpRequestForm from "../components/helpRequest/common/helpRequestForm";
 import { FLAG_COLOR_ORANGE, FLAG_COLOR_WHITE } from '../constants/styleConstants';
 
 class FirstRoute extends React.Component{

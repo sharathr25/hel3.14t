@@ -4,7 +4,7 @@ import { createDrawerNavigator } from 'react-navigation';
 import PreferencesScreen from '../screens/preferencesScreen';
 import MyAccountScreen from '../screens/myAccountScreen';
 import MyHelpRequestsScreen from '../screens/myHelpRequestsScreen';
-import HelpedScreen from '../screens/helpedScreen';
+import HelpsScreen from '../screens/myHelps';
 
 import BottomTabNavigator from './mainScreenBottomTabNavigator';
 import NotificationsScreen from '../screens/notificationsScreen';
@@ -13,8 +13,7 @@ const DrawerNavigator = createDrawerNavigator({
     Main: {screen:BottomTabNavigator},
     'My Account':{screen:MyAccountScreen},
     Preferences:{screen:PreferencesScreen},
-    'My Help Requests': {screen:MyHelpRequestsScreen},
-    'Helped':{screen:HelpedScreen},
+    'Your Helps': {screen:HelpsScreen},
     'Notifications':{screen: NotificationsScreen}
   },{
     initialRouteName:'Main',

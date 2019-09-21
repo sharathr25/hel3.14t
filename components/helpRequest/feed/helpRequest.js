@@ -1,10 +1,12 @@
 import React, { Component } from "react";
-import { View, StyleSheet } from "react-native";
+import { View, StyleSheet, Text } from "react-native";
 import firebase from "react-native-firebase";
-import HelpDescription from "./helpDescription";
-import Time from "../time";
-import HelpButton from "../helpButton";
-import LikeButton from "../likeButton";
+import HelpDescription from "../common/helpDescription";
+import Time from "../../common/time";
+import HelpButton from "../buttons/helpButton";
+import { firebaseOnEventListner, firebaseOnEventListnerTurnOff } from "../../../fireBase/database";
+import NoOfHelpers from './noOfHelpers';
+import Distance from '../../common/distance';
 
 class HelpRequest extends Component {
   constructor(props) {
@@ -19,6 +21,7 @@ class HelpRequest extends Component {
       pullUps: data.pullUps,
       noPeopleRequested: data.noPeopleRequested,
       noPeopleAccepted: data.noPeopleAccepted,
+      noPeopleRequired:data.noPeopleRequired,
       status: data.status,
       userPushed: false,
       userPulled: false,
@@ -28,34 +31,34 @@ class HelpRequest extends Component {
     };
   }
 
+  updateState = (data) => {
+    this.setState( { [data.key]: data.val() })
+  }
+  
   componentDidMount() {
-    this.helpRequest.on("child_changed", data => {
-      this.setState( { [data.key]: data.val() })
-    });
+    firebaseOnEventListner(`helps/${this.key}`,"child_changed",this.updateState)
   }
   
   componentWillUnmount(){
-      this.helpRequest.off();
+    firebaseOnEventListnerTurnOff(`helps/${this.key}`)
   }
 
   render() {
     const { data } = this.props;
-    const { description, title, distance, timeStamp } = data;
+    const { description, distance, timeStamp } = data;
+    const { noPeopleAccepted, noPeopleRequired} = this.state;
     return (
       <View style={styles.outerContanier}>
         <View style={styles.innerContaner}>
-          <HelpDescription
-            data={{
-              title,
-              description,
-              distance
-            }}
+          <HelpDescription data={{ description }}
           />
+          <NoOfHelpers noPeopleAccepted={noPeopleAccepted} noPeopleRequired={noPeopleRequired} />
           <View style={styles.buttons}>
-            {/* <LikeButton helpRequest={this.helpRequest} data={data}/> */}
             <HelpButton data={data} helpRequest={this.helpRequest}/>
           </View>
-          <Time time={timeStamp} />
+          <View style={styles.timeAndDistance}>
+            <Time time={timeStamp} /><Distance distance={distance} />
+          </View>
         </View>
       </View>
     );
@@ -66,20 +69,24 @@ export default HelpRequest;
 
 const styles = StyleSheet.create({
   outerContanier: {
-    margin: 10,
-    padding: 10,
+    margin:10,
     borderRadius: 5,
-    flexDirection: "row"
+    flexDirection: "row",
+    elevation: 5
   },
   innerContaner: {
     flex: 5,
     backgroundColor: "#F5F5F5",
     borderRadius: 5,
-    margin: 5
   },
   buttons:{
     flex: 1,
     flexDirection: "row",
     justifyContent:'space-evenly'
+  },
+  timeAndDistance:{
+    flex: 1,
+    flexDirection: 'row',
+    justifyContent: 'space-between'
   }
 });

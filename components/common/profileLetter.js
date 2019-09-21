@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import {
   Text, View, StyleSheet
 } from 'react-native';
-import { FLAG_COLOR_ORANGE, FLAG_COLOR_WHITE } from '../constants/styleConstants';
+import { FLAG_COLOR_ORANGE, FLAG_COLOR_WHITE } from '../../constants/styleConstants';
 
 class ProfileLetter extends Component {
   render() {
@@ -27,9 +27,7 @@ const styles = StyleSheet.create({
   textContainer: {
     backgroundColor: FLAG_COLOR_ORANGE,
     borderRadius: 20,
-    marginTop: 10,
-    marginRight: 5,
-    width: 40,
-    height: 40,
+    width: 30,
+    height: 30,
   }
 });

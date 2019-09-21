@@ -1,6 +1,6 @@
 import React from 'react';
 import { Input } from 'react-native-elements';
-import { styles } from '../constants/styleConstants';
+import { styles } from '../../constants/styleConstants';
 
 const InputComponent = (props) => {
     return (
