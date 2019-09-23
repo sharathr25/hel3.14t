@@ -13,6 +13,7 @@ import DrawerNavigator from './mainScreenDrawNavigator';
 
 // constants
 import { FLAG_COLOR_WHITE, FLAG_COLOR_ORANGE } from '../constants/styleConstants';
+import CommentsScreen from '../screens/commentsScreen';
 
 const MainNavigator = createStackNavigator(
     {
@@ -20,7 +21,8 @@ const MainNavigator = createStackNavigator(
       Main: {screen:DrawerNavigator},
       Login: { screen: LoginScreen },
       ResetPassword: { screen: ResetPassword },
-      TermsAndConditions: { screen: TermsAndConditionsScreen}
+      TermsAndConditions: { screen: TermsAndConditionsScreen},
+      comments: {screen: CommentsScreen}
     },
     {
       initialRouteName: 'Login',

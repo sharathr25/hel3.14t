@@ -61,7 +61,7 @@ class Time extends Component {
     return (
       <View style={{ margin: 5, marginTop: 0, flexDirection: "row", flex:1, alignItems: 'center', justifyContent: 'flex-start' }}>
         <Icon name="clock-o" size={15} color={FLAG_COLOR_GREEN} />
-        <Text style={{ marginLeft: 3, fontFamily: FONT_FAMILY}}>{this.getTimeDiffrence(time)}</Text>
+        <Text style={{ marginLeft: 3, fontFamily: FONT_FAMILY}}>{this.getTimeDiffrence(time)===" ago" ? "just now" : this.getTimeDiffrence(time)}</Text>
       </View>
     );
   }

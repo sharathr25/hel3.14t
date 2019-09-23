@@ -3,7 +3,6 @@ import { createDrawerNavigator } from 'react-navigation';
 // screens
 import PreferencesScreen from '../screens/preferencesScreen';
 import MyAccountScreen from '../screens/myAccountScreen';
-import MyHelpRequestsScreen from '../screens/myHelpRequestsScreen';
 import HelpsScreen from '../screens/myHelps';
 
 import BottomTabNavigator from './mainScreenBottomTabNavigator';
