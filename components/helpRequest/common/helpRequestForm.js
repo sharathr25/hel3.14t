@@ -56,6 +56,7 @@ class HelpRequestForm extends Component {
       name: userDetails.val().mobileNumber,
       timeStamp: new Date().getTime(),
       likes: 0,
+      commentsCount:0,
       noPeopleRequired: parseInt(noPeopleRequired),
       noPeopleRequested: 0,
       noPeopleAccepted: 0,

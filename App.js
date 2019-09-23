@@ -75,7 +75,7 @@ class App extends Component {
   render() {
     const { latitude, longitude, locationErrorMessage, locationProviderAvailable } = this.state;
     return (
-      <Context.Provider value={{latitude, longitude, locationErrorMessage, locationProviderAvailable,getPosition:this.getPosition}}>
+      <Context.Provider value={{latitude, longitude, locationErrorMessage, locationProviderAvailable,getPosition:this.getPosition, navigation:this.props.navigation}}>
         <AppContainer />
       </Context.Provider>
     );
