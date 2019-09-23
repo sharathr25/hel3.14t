@@ -4,7 +4,7 @@ import firebase from "react-native-firebase";
 import { FLAG_COLOR_WHITE, FLAG_COLOR_ORANGE } from "../../../constants/styleConstants";
 import { updateFirebase, notifyUser, pushToFirebase, getDataFromFirebase, firebaseOnEventListner, firebaseOnEventListnerTurnOff } from '../../../fireBase/database';
 
-export default class HelpButton extends Component {
+export default class ReferButton extends Component {
     constructor(props){
         super(props);
         const {data } = this.props;
@@ -103,8 +103,8 @@ export default class HelpButton extends Component {
     
     render(){
       return (
-        <TouchableOpacity style={styles.container} onPress={this.handleHelp}>
-            <Text style={styles.help}>Help</Text>
+        <TouchableOpacity style={styles.container}>
+            <Text style={styles.help}>Refer</Text>
         </TouchableOpacity>
       );
     }

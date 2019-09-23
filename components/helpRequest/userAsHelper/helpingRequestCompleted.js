@@ -36,6 +36,7 @@ class HelpingRequestCompleted extends Component {
   
   componentWillUnmount(){
       this.helpRequest.off();
+      this.helpRequest.child('usersAccepted').off();
   }
 
 getHelpers = () => {

@@ -85,7 +85,7 @@ class HelpRequestRequestedUsers extends Component {
           await pushToFirebase(this.usersAccepted,helperUid);
           await pushToFirebaseWithURL(`users/${helperUid}/helping`,this.key);
           await removeFromFirebase(this.usersRequested,helperUid);
-          await notifyUser(helperUid,{type:"ACCEPT", screenToRedirect:"Helped", uidOfHelper:helperUid,timeStamp: new Date(), idOfHelpRequest: this.key});
+          await notifyUser(helperUid,{type:"ACCEPT", screenToRedirect:"Helped", uidOfHelper:helperUid,timeStamp: new Date().getTime(), idOfHelpRequest: this.key});
         } else {
           Alert.alert("user already accepted");
         }
@@ -97,7 +97,7 @@ class HelpRequestRequestedUsers extends Component {
         if(!data.val()){
           await pushToFirebase(this.usersRejected, helperUid)
           await removeFromFirebase(this.usersRequested,helperUid);
-          await notifyUser(helperUid,{type:"REJECT", screenToRedirect:"NONE", uidOfHelper:helperUid,timeStamp: new Date(), idOfHelpRequest: this.key});
+          await notifyUser(helperUid,{type:"REJECT", screenToRedirect:"NONE", uidOfHelper:helperUid,timeStamp: new Date().getTime(), idOfHelpRequest: this.key});
         } else {
           Alert.alert("user already rejected");
         }

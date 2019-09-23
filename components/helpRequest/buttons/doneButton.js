@@ -44,7 +44,7 @@ export default class DoneButton extends Component {
         Object.keys(helpers.val()).forEach(async (key) => {
             const uidOfhelper = helpers.val()[key];
             await removeFromFirebaseWithUrlAndValue(`users/${uidOfhelper}/helping`, this.key);
-            await notifyUser(uidOfhelper,{type:"CLOSED", screenToRedirect:"NONE", timeStamp: new Date(), idOfHelpRequest: this.key});
+            await notifyUser(uidOfhelper,{type:"CLOSED", screenToRedirect:"NONE", timeStamp: new Date().getTime(), idOfHelpRequest: this.key});
             await removeFromFirebaseOrderingChild(`users/${uidOfhelper}/notifications`, this.key);
         });
     }
@@ -52,7 +52,7 @@ export default class DoneButton extends Component {
     notifyRequesters = async (requesters) => {
         Object.keys(requesters.val()).forEach(async (key) => {
             const uidOfRequester = requesters.val()[key];
-            await notifyUser(uidOfRequester,{type:"CLOSED", screenToRedirect:"NONE", timeStamp: new Date(), idOfHelpRequest: this.key});
+            await notifyUser(uidOfRequester,{type:"CLOSED", screenToRedirect:"NONE", timeStamp: new Date().getTime(), idOfHelpRequest: this.key});
             await removeFromFirebaseOrderingChild(`users/${uidOfRequester}/notifications`, this.key);
         });
     }

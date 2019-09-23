@@ -4,6 +4,7 @@ import firebase from "react-native-firebase";
 import HelpDescription from "../common/helpDescription";
 import Time from "../../common/time";
 import HelpButton from "../buttons/helpButton";
+import ReferButton from "../buttons/referButton";
 import { firebaseOnEventListner, firebaseOnEventListnerTurnOff } from "../../../fireBase/database";
 import NoOfHelpers from './noOfHelpers';
 import Distance from '../../common/distance';
@@ -55,6 +56,7 @@ class HelpRequest extends Component {
           <NoOfHelpers noPeopleAccepted={noPeopleAccepted} noPeopleRequired={noPeopleRequired} />
           <View style={styles.buttons}>
             <HelpButton data={data} helpRequest={this.helpRequest}/>
+            <ReferButton data={data} helpRequest={this.helpRequest}/>
           </View>
           <View style={styles.timeAndDistance}>
             <Time time={timeStamp} /><Distance distance={distance} />
@@ -76,7 +78,7 @@ const styles = StyleSheet.create({
   },
   innerContaner: {
     flex: 5,
-    backgroundColor: "#F5F5F5",
+    backgroundColor: "#F6F6F6",
     borderRadius: 5,
   },
   buttons:{

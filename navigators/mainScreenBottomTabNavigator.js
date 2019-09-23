@@ -25,11 +25,11 @@ class ThirdRoute extends React.Component{
   }
 }
 const BottomTabNavigator = createBottomTabNavigator({
-    HELP:{screen:FirstRoute},
-    HELPED:{screen:SecondRoute},
-    HELPERS:{screen:ThirdRoute}
+    Help:{screen:FirstRoute},
+    Helped:{screen:SecondRoute},
+    Helpers:{screen:ThirdRoute}
   },{
-    initialRouteName:'HELP',
+    initialRouteName:'Help',
     tabBarOptions:{
       activeTintColor: FLAG_COLOR_WHITE,
       activeBackgroundColor: FLAG_COLOR_ORANGE,

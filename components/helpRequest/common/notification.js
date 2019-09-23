@@ -1,9 +1,10 @@
 import React, { Component } from "react";
 import { Text, View, StyleSheet } from "react-native";
 import firebase from 'react-native-firebase';
-import Icon from "react-native-vector-icons/Entypo";
-import { FLAG_COLOR_WHITE } from "../../../constants/styleConstants";
+import Icon from "react-native-vector-icons/AntDesign";
+import { FLAG_COLOR_WHITE, FLAG_COLOR_ORANGE } from "../../../constants/styleConstants";
 import { TouchableOpacity } from "react-native-gesture-handler";
+import { getDataFromFirebase } from "../../../fireBase/database";
 
 class Notification extends Component {
     constructor(props){
@@ -50,7 +51,7 @@ class Notification extends Component {
         const { notifications } = this.state;
         return notifications.length 
                 ?   <TouchableOpacity onPress={this.handleBellIconClick} style={styles.container}>
-                        <Icon name="bell" size={25} color={FLAG_COLOR_WHITE} />
+                        <Icon name="bells" size={25} color={FLAG_COLOR_ORANGE} />
                         <View style={styles.textContainer}>
                             <Text style={styles.text}>{notifications.length}</Text>
                         </View>
@@ -77,7 +78,7 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         position: 'relative',
         top: 5,
-        right: 15
+        right: 10
     },
     text:{
         fontSize: 10,
