@@ -8,6 +8,7 @@ import SignUpScreen from '../screens/signUpScreen';
 import LoginScreen from '../screens/loginScreen';
 import TermsAndConditionsScreen from '../screens/termsAndConditions';
 import ResetPassword from '../screens/resetPassword';
+import NotificationsScreen from '../screens/notificationsScreen';
 
 import DrawerNavigator from './mainScreenDrawNavigator';
 
@@ -22,22 +23,23 @@ const MainNavigator = createStackNavigator(
       Login: { screen: LoginScreen },
       ResetPassword: { screen: ResetPassword },
       TermsAndConditions: { screen: TermsAndConditionsScreen},
-      comments: {screen: CommentsScreen}
+      comments: {screen: CommentsScreen},
+    Notifications:{screen: NotificationsScreen}
     },
     {
       initialRouteName: 'Login',
       defaultNavigationOptions:({navigation}) => {
         return {
-            headerLeft:<Icon name="navicon" size={25} color={FLAG_COLOR_WHITE} style={{paddingLeft:10}} onPress={navigation.openDrawer}/>,
+            headerLeft:<Icon name="navicon" size={25} color={FLAG_COLOR_ORANGE} style={{paddingLeft:10}} onPress={navigation.openDrawer}/>,
             headerStyle: {
               shadowOpacity: 0,
               elevation: 0,
-              backgroundColor: FLAG_COLOR_ORANGE
+              backgroundColor: FLAG_COLOR_WHITE
             },
-            headerTintColor: '#fff',
+            headerTintColor: FLAG_COLOR_ORANGE,
             headerTitleStyle: {
               fontWeight: 'bold',
-              color: FLAG_COLOR_WHITE
+              color: FLAG_COLOR_ORANGE
             },
             headerRight:<Notification navigation={navigation}/>
           }

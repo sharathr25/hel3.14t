@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import { Text, Button, Input } from "react-native-elements";
-import Icon from "react-native-vector-icons/FontAwesome";
+import Icon from "react-native-vector-icons/Feather";
 import firebase from 'react-native-firebase';
 import { View, TouchableOpacity, Modal, Picker, StyleSheet,Alert } from "react-native";
 import { FLAG_COLOR_WHITE, FLAG_COLOR_ORANGE } from "../../../constants/styleConstants";
@@ -76,7 +76,7 @@ class HelpRequestForm extends Component {
         onPress={this.handleAddHelpRequest}
         style={styles.touchableOpacityStyle}
       >
-        <Icon name="plus-circle" size={50} color={FLAG_COLOR_ORANGE} />
+        <Icon name="plus" size={40} color={FLAG_COLOR_WHITE} />
       </TouchableOpacity>
       <Modal
         animationType="none"
@@ -161,8 +161,8 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     right: 30,
     bottom: 30,
-    backgroundColor: FLAG_COLOR_WHITE,
-    borderRadius: 22
+    backgroundColor: FLAG_COLOR_ORANGE,
+    borderRadius: 15
   },
   descriptionContainerStyle:{
     borderWidth: 1,

@@ -28,24 +28,18 @@ class CompletedHelpRequest extends Component {
 
   render() {
     const { data } = this.props;
-    const { description, title, distance, timeStamp } = data;
+    const { description, timeStamp } = data;
     return (
       <View style={styles.outerContanier}>
         <View style={styles.innerContaner}>
-          <HelpDescription
-            data={{
-              description,
-              distance
-            }}
-          />
+          <HelpDescription data={{description}} />
           {
-            !this.props.disableLike && <View style={styles.buttons}>
-            <LikeButton helpRequest={this.helpRequest} data={data}/>
-            <CommentButton helpRequest={this.helpRequest} data={data}/>
-          </View> 
+            !this.props.disableLike && 
+            <View style={styles.buttons}>
+              <LikeButton helpRequest={this.helpRequest} data={data}/>
+              <CommentButton helpRequest={this.helpRequest} data={data}/>
+            </View> 
           }
-          
-          <Time time={timeStamp} />
         </View>
       </View>
     );
@@ -57,15 +51,14 @@ export default CompletedHelpRequest;
 const styles = StyleSheet.create({
   outerContanier: {
     margin: 10,
-    padding: 10,
     borderRadius: 5,
-    flexDirection: "row"
+    flexDirection: "row",
+    elevation: 5
   },
   innerContaner: {
     flex: 5,
-    backgroundColor: "#F5F5F5",
+    backgroundColor: "#F6F6F6",
     borderRadius: 5,
-    margin: 5
   },
   buttons:{
     flex: 1,

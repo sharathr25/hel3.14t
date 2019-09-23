@@ -31,7 +31,7 @@ class MyHelpRequestsScreen extends Component {
         }, (err) => console.log(err));
     }
 
-    componentWillMount(){
+    componentWillUnmount(){
         const uid = firebase.auth().currentUser.uid;
         firebase.database().ref('users').child(uid).child(this.props.db).off();
     }

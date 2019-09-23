@@ -7,18 +7,21 @@ import HelpsScreen from '../screens/myHelps';
 
 import BottomTabNavigator from './mainScreenBottomTabNavigator';
 import NotificationsScreen from '../screens/notificationsScreen';
+import { FLAG_COLOR_ORANGE } from '../constants/styleConstants';
 
 const DrawerNavigator = createDrawerNavigator({
     Main: {screen:BottomTabNavigator},
     'My Account':{screen:MyAccountScreen},
     Preferences:{screen:PreferencesScreen},
     'Your Helps': {screen:HelpsScreen},
-    'Notifications':{screen: NotificationsScreen}
   },{
     initialRouteName:'Main',
     navigationOptions:({ navigation }) => {
       const { routeName } = navigation.state.routes[navigation.state.index];
       return { headerTitle : routeName}
+    },
+    contentOptions:{
+      activeTintColor:FLAG_COLOR_ORANGE
     }
   });
 
