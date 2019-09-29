@@ -6,6 +6,7 @@ import { getUser } from "../../../fireBase/database";
 import AccetedUser from "../common/acceptedUser";
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { FLAG_COLOR_ORANGE } from "../../../constants/styleConstants";
+import PostButton from '../buttons/postButton';
 
 class HelpRequestCompleted extends Component {
   constructor(props) {
@@ -63,6 +64,7 @@ getHelpers = () => {
                 <Icon style={{flex:2, textAlign: 'center'}} name="mobile-phone" size={25} color={FLAG_COLOR_ORANGE}/>
               </View>
             <View>{this.getHelpers()}</View>
+            <PostButton keyOfHelpRequest={this.key} />
             </View>
           }
           

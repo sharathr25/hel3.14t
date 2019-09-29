@@ -1,10 +1,11 @@
 import React, { Component } from "react";
-import { View, StyleSheet } from "react-native";
+import { View, StyleSheet,Image } from "react-native";
 import firebase from "react-native-firebase";
 import HelpDescription from "../common/helpDescription";
 import Time from "../../common/time";
 import LikeButton from "../buttons/likeButton";
 import CommentButton from '../buttons/commentButton';
+import { firebaseOnEventListner, firebaseOnEventListnerTurnOff } from "../../../fireBase/database";
 
 class CompletedHelpRequest extends Component {
   constructor(props) {
@@ -14,25 +15,44 @@ class CompletedHelpRequest extends Component {
     this.uid = firebase.auth().currentUser.uid;
     this.helps = firebase.database().ref("/helped");
     this.helpRequest = this.helps.child(this.key);
+    this.state = {
+      images:[]
+    }
+  }
+
+  addToImages = async (data) => {
+    const imageUri = await firebase.storage().ref(`images/${data.val().image}`).getDownloadURL();
+    this.setState({images: [...this.state.images,{key:data.key,imageUri:imageUri}]});
+  }
+
+  removeFromImages = async (data) => {
+    console.log(data);
   }
 
   componentDidMount() {
-    this.helpRequest.on("child_changed", data => {
-      this.setState( { [data.key]: data.val() })
-    });
+    firebaseOnEventListner(`helped/${this.key}/posts`,"child_added",this.addToImages);
+    firebaseOnEventListner(`helped/${this.key}/posts`,"child_removed",this.removeFromImages);
   }
   
   componentWillUnmount(){
-      this.helpRequest.off();
+    firebaseOnEventListnerTurnOff(`helped/${this.key}/posts`);
+  }
+
+  getImages = () => {
+    return this.state.images.map((image,index) => {
+      return <Image source={{uri:image.imageUri}} style={{minWidth: 200,
+        height: 200}} key={index} />
+    });
   }
 
   render() {
     const { data } = this.props;
-    const { description, timeStamp } = data;
+    const { description } = data;
     return (
       <View style={styles.outerContanier}>
         <View style={styles.innerContaner}>
           <HelpDescription data={{description}} />
+          {this.state.images.length !== 0 && this.getImages()}
           {
             !this.props.disableLike && 
             <View style={styles.buttons}>
