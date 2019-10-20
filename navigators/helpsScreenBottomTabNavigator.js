@@ -19,6 +19,7 @@ const MyHelpRequestsCompleted = () => {
 const IAmHelpingCompleted = () => {
     return <MyHelpRequestsScreen db="helpingCompleted" />
 }
+
 const BottomTabNavigator = createBottomTabNavigator({
     Requested:{screen:MyHelpRequests},
     Completed:{screen:MyHelpRequestsCompleted},

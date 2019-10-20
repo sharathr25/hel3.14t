@@ -113,7 +113,6 @@ class HelpRequestRequestedUsers extends Component {
           <HelpDescription data={{ description }} />
           {this.state.usersRequested.length !== 0 && <View style={{margin: 10}}>
           <Text style={{fontFamily: FONT_FAMILY, marginBottom: 5}}>People Willing to help you</Text>
-          <Text>you can accept them by clicking Accept or you can reject them by clicking Reject</Text>
             {this.getRequestedUsers()}
           </View>}
           {this.state.usersAccepted.length !== 0 && <View style={{margin: 10}}>

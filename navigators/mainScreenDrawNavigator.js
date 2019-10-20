@@ -6,7 +6,6 @@ import MyAccountScreen from '../screens/myAccountScreen';
 import HelpsScreen from './helpsScreenBottomTabNavigator';
 
 import BottomTabNavigator from './mainScreenBottomTabNavigator';
-import NotificationsScreen from '../screens/notificationsScreen';
 import { FLAG_COLOR_ORANGE } from '../constants/styleConstants';
 
 const DrawerNavigator = createDrawerNavigator({

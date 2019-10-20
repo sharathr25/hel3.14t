@@ -5,7 +5,7 @@ import BoxText from '../../common/boxText';
 
 const AccetedUser = (props) => {
     return (
-      <View style={{ flex:1, flexDirection:'row'}}>
+      <View style={{ flex:1, flexDirection:'row', alignItems:'center'}}>
           <View style={{margin: 5}}>
             <ProfileLetter letter={`${props.name.substring(0,1)}`}/>
           </View>

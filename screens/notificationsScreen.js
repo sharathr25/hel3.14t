@@ -12,7 +12,8 @@ const types = {
 }
 class NotificationsScreen extends Component {
     static navigationOptions = {
-        title: 'Notifications'
+        title: 'Notifications',
+        headerLeft: null
     };
 
     navigateToScreen = (screenToRedirect) => {

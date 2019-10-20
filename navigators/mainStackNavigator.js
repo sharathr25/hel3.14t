@@ -15,6 +15,7 @@ import DrawerNavigator from './mainScreenDrawNavigator';
 // constants
 import { FLAG_COLOR_WHITE, FLAG_COLOR_ORANGE } from '../constants/styleConstants';
 import CommentsScreen from '../screens/commentsScreen';
+import { TouchableOpacity } from 'react-native-gesture-handler';
 
 const MainNavigator = createStackNavigator(
     {
@@ -24,13 +25,13 @@ const MainNavigator = createStackNavigator(
       ResetPassword: { screen: ResetPassword },
       TermsAndConditions: { screen: TermsAndConditionsScreen},
       comments: {screen: CommentsScreen},
-    Notifications:{screen: NotificationsScreen}
+      Notifications:{screen: NotificationsScreen}
     },
     {
       initialRouteName: 'Login',
       defaultNavigationOptions:({navigation}) => {
         return {
-            headerLeft:<Icon name="navicon" size={25} color={FLAG_COLOR_ORANGE} style={{paddingLeft:10}} onPress={navigation.openDrawer}/>,
+            headerLeft:<TouchableOpacity><Icon name="navicon" size={25} color={FLAG_COLOR_ORANGE} style={{paddingLeft:15}} onPress={navigation.openDrawer}/></TouchableOpacity>,
             headerStyle: {
               shadowOpacity: 0,
               elevation: 0,

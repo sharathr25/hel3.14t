@@ -1,10 +1,8 @@
 import React, { Component } from 'react';
-import { FlatList,Text } from 'react-native';
+import { FlatList } from 'react-native';
 import firebase from 'react-native-firebase';
 import HelpRequestRequestedUsers from '../components/helpRequest/userAsRequester/helpRequestUserRequested';
 import HelpingRequest from '../components/helpRequest/userAsHelper/helpingRequest';
-import { getDataFromFirebase } from '../fireBase/database';
-import CompletedHelpRequest from '../components/helpRequest/feed/completedHelpRequest';
 import HelpRequestCompleted from '../components/helpRequest/userAsRequester/helpRequestCompleted';
 import HelpingRequestCompleted from '../components/helpRequest/userAsHelper/helpingRequestCompleted';
 
