@@ -3,10 +3,9 @@ import { createDrawerNavigator } from 'react-navigation';
 // screens
 import PreferencesScreen from '../screens/preferencesScreen';
 import MyAccountScreen from '../screens/myAccountScreen';
-import HelpsScreen from '../screens/myHelps';
+import HelpsScreen from './helpsScreenBottomTabNavigator';
 
 import BottomTabNavigator from './mainScreenBottomTabNavigator';
-import NotificationsScreen from '../screens/notificationsScreen';
 import { FLAG_COLOR_ORANGE } from '../constants/styleConstants';
 
 const DrawerNavigator = createDrawerNavigator({

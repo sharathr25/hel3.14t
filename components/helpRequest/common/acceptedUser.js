@@ -1,18 +1,22 @@
-import React, { Component } from 'react';
+import React from 'react';
 import { Text, View, StyleSheet } from 'react-native';
 import ProfileLetter from '../../common/profileLetter';
-import { FLAG_COLOR_ORANGE } from '../../../constants/styleConstants';
+import BoxText from '../../common/boxText';
+
 const AccetedUser = (props) => {
     return (
-      <View style={styles.container}>
-        <Text style={[styles.item,{flex:1}]}>{props.slNo}</Text>
-        <View style={{flex:4, flexDirection:'row', justifyContent: 'flex-start', alignItems: 'center'}}>
-          <View style={{alignItems:'center'}}><ProfileLetter letter={`${props.name.substring(0,1)}`}/></View>
-          <Text style={{textAlign:'left', paddingLeft: 5}}>{props.name}</Text>
+      <View style={{ flex:1, flexDirection:'row', alignItems:'center'}}>
+          <View style={{margin: 5}}>
+            <ProfileLetter letter={`${props.name.substring(0,1)}`}/>
+          </View>
+          <View style={{ marginLeft: 5, flex:1}}>
+            <Text>{props.name}</Text>
+            <View style={{ flex:1, flexDirection:'row', justifyContent:'flex-start'}}>
+              <BoxText leftText="XP" rightText={props.xp} />
+              {props.mobileNumber ? <BoxText leftText="Ph No" rightText={props.mobileNumber} />:null}
+            </View>
+          </View>
         </View>
-        <Text style={[styles.item],{flex:1}}>{props.xp}</Text>
-        <Text style={[styles.item,{flex:2}]}>{props.mobileNumber}</Text>
-      </View>
     );
   }
 

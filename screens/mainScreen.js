@@ -1,7 +1,6 @@
 import React, { Component } from "react";
 import { Text } from 'react-native-elements';
-import { View, StyleSheet, Dimensions } from "react-native";
-import { SCREEN_TITLES } from "../constants/appConstants";
+import { View, StyleSheet } from "react-native";
 import { createBottomTabNavigator } from 'react-navigation';
 import HelpRequestFeed from "../components/helpRequest/helpRequestFeed";
 import HelpRequestForm from "../components/helpRequest/helpRequestForm";
@@ -21,16 +20,6 @@ const BottomTabNavigator = createBottomTabNavigator({
   initialRouteName:'first'
 })
 class MainScreen extends Component {
-  // static navigationOptions = {
-  //   title: SCREEN_TITLES.MAIN
-  // };
-
-  // handleLogOut = () => {
-  //   const { navigation } = this.props;
-  //   firebase.auth().signOut();
-  //   navigation.navigate("Login", {});
-  // };
- 
   render() {
     return (
       <BottomTabNavigator />

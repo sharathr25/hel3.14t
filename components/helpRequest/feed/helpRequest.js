@@ -8,6 +8,7 @@ import ReferButton from "../buttons/referButton";
 import { firebaseOnEventListner, firebaseOnEventListnerTurnOff } from "../../../fireBase/database";
 import NoOfHelpers from './noOfHelpers';
 import Distance from '../../common/distance';
+import Card from "../../common/card";
 
 class HelpRequest extends Component {
   constructor(props) {
@@ -49,8 +50,7 @@ class HelpRequest extends Component {
     const { description, distance, timeStamp } = data;
     const { noPeopleAccepted, noPeopleRequired} = this.state;
     return (
-      <View style={styles.outerContanier}>
-        <View style={styles.innerContaner}>
+      <Card>
           <HelpDescription data={{ description }}
           />
           <NoOfHelpers noPeopleAccepted={noPeopleAccepted} noPeopleRequired={noPeopleRequired} />
@@ -61,8 +61,7 @@ class HelpRequest extends Component {
           <View style={styles.timeAndDistance}>
             <Time time={timeStamp} /><Distance distance={distance} />
           </View>
-        </View>
-      </View>
+      </Card>
     );
   }
 }
@@ -75,11 +74,6 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     flexDirection: "row",
     elevation: 5
-  },
-  innerContaner: {
-    flex: 5,
-    backgroundColor: "#F6F6F6",
-    borderRadius: 5,
   },
   buttons:{
     flex: 1,

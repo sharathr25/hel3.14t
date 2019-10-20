@@ -122,6 +122,10 @@ class HelpRequestFeed extends Component {
     });
   }
 
+  componentWillUnmount(){
+    firebase.database().ref(`/${db}`).off();
+  }
+
   getHelpRequest = ({item}) => {
     const helpRequest = item;
     const {db} = this.props;

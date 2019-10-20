@@ -1,35 +1,32 @@
 // packages
 import React from 'react';
 import { createBottomTabNavigator } from 'react-navigation';
-import { View, Text } from 'react-native'
-
-import HelpRequestFeed from "../components/helpRequest/feed/helpRequestFeed";
-import HelpRequestForm from "../components/helpRequest/common/helpRequestForm";
 import { FLAG_COLOR_ORANGE, FLAG_COLOR_WHITE } from '../constants/styleConstants';
+import MyHelpRequestsScreen from '../screens/myHelpRequestsScreen';
 
-class FirstRoute extends React.Component{
-  render(){
-    return <View style={{flex:1}}><HelpRequestFeed db="helps" /><HelpRequestForm /></View>;
-  }
+const MyHelpRequests = () => {
+    return <MyHelpRequestsScreen db="helpsRequested" />
 }
 
-// class SecondRoute extends React.Component{
-//   render(){
-//     return <View style={{flex:1}} ><HelpRequestFeed db="helped" /></View>;
-//   }
-// }
-
-class ThirdRoute extends React.Component{
-  render(){
-    return <View style={{flex:1}} ><Text>route 3</Text></View>;
-  }
+const IAmHelping = () => {
+    return <MyHelpRequestsScreen db="helping" />
 }
+
+const MyHelpRequestsCompleted = () => {
+    return <MyHelpRequestsScreen db="helpRequetsCompleted" />
+}
+
+const IAmHelpingCompleted = () => {
+    return <MyHelpRequestsScreen db="helpingCompleted" />
+}
+
 const BottomTabNavigator = createBottomTabNavigator({
-    Help:{screen:FirstRoute},
-    // Helped:{screen:SecondRoute}, disabling 'Helped' feed for now
-    Helpers:{screen:ThirdRoute}
+    Requested:{screen:MyHelpRequests},
+    Completed:{screen:MyHelpRequestsCompleted},
+    Helping:{screen:IAmHelping},
+    Helped:{screen:IAmHelpingCompleted},
   },{
-    initialRouteName:'Help',
+    initialRouteName:'Requested',
     tabBarOptions:{
       activeTintColor: FLAG_COLOR_WHITE,
       activeBackgroundColor: FLAG_COLOR_ORANGE,

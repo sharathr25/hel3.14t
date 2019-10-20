@@ -9,6 +9,7 @@ import { FLAG_COLOR_WHITE, FLAG_COLOR_ORANGE, FONT_FAMILY } from '../../../const
 import Requester from './requester';
 import DoneButton from '../buttons/doneButton';
 import AccetedUser from '../common/acceptedUser';
+import Card from '../../common/card';
 
 class HelpRequestRequestedUsers extends Component {
     constructor(props){
@@ -106,35 +107,21 @@ class HelpRequestRequestedUsers extends Component {
 
   render() {
     const { data } = this.props;
-    const { description, title, distance, timeStamp } = data;
+    const { description, timeStamp } = data;
     return (
-        <View style={styles.container}>
-          <HelpDescription data={{ title, description, distance, type:"USER" }} />
+        <Card>
+          <HelpDescription data={{ description }} />
           {this.state.usersRequested.length !== 0 && <View style={{margin: 10}}>
           <Text style={{fontFamily: FONT_FAMILY, marginBottom: 5}}>People Willing to help you</Text>
-          <Text>you can accept them by clicking Accept or you can reject them by clicking Reject</Text>
-            <View style={styles.accpetedUserscontainer}>
-              <Icon style={{flex:1, textAlign: 'center'}} name="slack" size={20} color={FLAG_COLOR_ORANGE}/>
-              <Icon style={{flex:3, textAlign: 'center'}} name="user-circle" size={20} color={FLAG_COLOR_ORANGE}/>
-              <Icon style={{flex:1, textAlign: 'left'}} name="star" size={20} color={FLAG_COLOR_ORANGE}/>
-              <Text style={{flex:1, textAlign: 'center', color:FLAG_COLOR_ORANGE,margin: 5}}>Accept</Text>
-              <Text style={{flex:1, textAlign: 'center', color:FLAG_COLOR_ORANGE,margin: 5}}>Reject</Text>
-            </View>
             {this.getRequestedUsers()}
           </View>}
           {this.state.usersAccepted.length !== 0 && <View style={{margin: 10}}>
           <Text style={{fontFamily: FONT_FAMILY, marginBottom: 5}}>People who are helping</Text>
-            <View style={styles.accpetedUserscontainer}>
-              <Icon style={{flex:1, textAlign: 'center'}} name="slack" size={20} color={FLAG_COLOR_ORANGE}/>
-              <Icon style={{flex:4, textAlign: 'center'}} name="user-circle" size={20} color={FLAG_COLOR_ORANGE}/>
-              <Icon style={{flex:1, textAlign: 'left'}} name="star" size={20} color={FLAG_COLOR_ORANGE}/>
-              <Icon style={{flex:2, textAlign: 'center'}} name="mobile-phone" size={25} color={FLAG_COLOR_ORANGE}/>
-            </View>
             {this.getAcceptedUsers()}
           </View>}
           <DoneButton keyOfHelpRequest={this.key} data={data}/>
           <Time time={timeStamp} />
-        </View>
+        </Card>
     );
   }
 }
@@ -142,12 +129,6 @@ class HelpRequestRequestedUsers extends Component {
 export default HelpRequestRequestedUsers;
 
 const styles = StyleSheet.create({
-  container:{
-    margin: 10,
-    backgroundColor:"#f6f6f6",
-    elevation: 5,
-    borderRadius: 5
-  },
   doneButton: {
     flex: 1,
     flexDirection: "row",

@@ -3,6 +3,7 @@ package com.haisaa;
 import android.app.Application;
 
 import com.facebook.react.ReactApplication;
+import com.imagepicker.ImagePickerPackage;
 import com.swmansion.rnscreens.RNScreensPackage;
 import com.agontuk.RNFusedLocation.RNFusedLocationPackage;
 import com.swmansion.reanimated.ReanimatedPackage;
@@ -16,6 +17,7 @@ import com.facebook.react.ReactPackage;
 import com.facebook.react.shell.MainReactPackage;
 import com.facebook.soloader.SoLoader;
 import io.invertase.firebase.database.RNFirebaseDatabasePackage;
+import io.invertase.firebase.storage.RNFirebaseStoragePackage;
 
 import java.util.Arrays;
 import java.util.List;
@@ -32,6 +34,7 @@ public class MainApplication extends Application implements ReactApplication {
     protected List<ReactPackage> getPackages() {
       return Arrays.<ReactPackage>asList(
           new MainReactPackage(),
+            new ImagePickerPackage(),
             new RNScreensPackage(),
             new RNFusedLocationPackage(),
             new ReanimatedPackage(),
@@ -40,7 +43,8 @@ public class MainApplication extends Application implements ReactApplication {
             new RNGestureHandlerPackage(),
             new RNFirebasePackage(),
             new RNFirebaseAuthPackage(),
-            new RNFirebaseDatabasePackage()
+            new RNFirebaseDatabasePackage(),
+            new RNFirebaseStoragePackage()
       );
     }
 
