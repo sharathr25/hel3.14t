@@ -6,6 +6,7 @@ import Time from "../../common/time";
 import LikeButton from "../buttons/likeButton";
 import CommentButton from '../buttons/commentButton';
 import { firebaseOnEventListner, firebaseOnEventListnerTurnOff } from "../../../fireBase/database";
+import Card from "../../common/card";
 
 class CompletedHelpRequest extends Component {
   constructor(props) {
@@ -49,7 +50,7 @@ class CompletedHelpRequest extends Component {
     const { data } = this.props;
     const { description } = data;
     return (
-      <View style={styles.outerContanier}>
+      <Card>
         <View style={styles.innerContaner}>
           <HelpDescription data={{description}} />
           {this.state.images.length !== 0 && this.getImages()}
@@ -61,7 +62,7 @@ class CompletedHelpRequest extends Component {
             </View> 
           }
         </View>
-      </View>
+      </Card>
     );
   }
 }

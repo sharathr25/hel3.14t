@@ -6,6 +6,7 @@ import { getUser } from "../../../fireBase/database";
 import AccetedUser from "../common/acceptedUser";
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { FLAG_COLOR_ORANGE } from "../../../constants/styleConstants";
+import Card from '../../common/card';
 
 class HelpingRequestCompleted extends Component {
   constructor(props) {
@@ -42,8 +43,8 @@ class HelpingRequestCompleted extends Component {
 getHelpers = () => {
     const { helpers } = this.state;
     return helpers.map((datum, key) => {
-        const {name, uidOfHelper, email, mobileNumber, xp} = datum;
-        return <AccetedUser name={name} uid={uidOfHelper} email="" key={key} mobileNumber="-" xp={xp} slNo={key+1} />
+        const {name, uidOfHelper, xp} = datum;
+        return <AccetedUser name={name} uid={uidOfHelper} email="" key={key} mobileNumber="" xp={xp} />
     });
 }
 
@@ -52,22 +53,15 @@ getHelpers = () => {
     const { data,title } = this.props;
     const { description } = data;
     return (
-      <View style={styles.outerContanier}>
+      <Card>
           <HelpDescription data={{description}}/>
           {this.state.helpers.length !== 0 && 
-            <View style={{margin: 10}}>
-            <Text>{title}</Text>
-              <View style={styles.helpingUserscontainer}>
-                <Icon style={{flex:1, textAlign: 'center'}} name="slack" size={20} color={FLAG_COLOR_ORANGE}/>
-                <Icon style={{flex:4, textAlign: 'center'}} name="user-circle" size={20} color={FLAG_COLOR_ORANGE}/>
-                <Icon style={{flex:1, textAlign: 'left'}} name="star" size={20} color={FLAG_COLOR_ORANGE}/>
-                <Icon style={{flex:2, textAlign: 'center'}} name="mobile-phone" size={25} color={FLAG_COLOR_ORANGE}/>
-              </View>
-            <View>{this.getHelpers()}</View>
+            <View style={{marginLeft: 10, marginBottom:10}}>
+              <Text>{title}</Text>
+              <View>{this.getHelpers()}</View>
             </View>
           }
-          
-      </View>
+      </Card>
     );
   }
 }
