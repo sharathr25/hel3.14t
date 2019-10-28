@@ -1,6 +1,6 @@
 import React from "react";
 import { Text, StyleSheet, View } from "react-native";
-import { BLACK, FLAG_COLOR_ORANGE, FONT_FAMILY } from "../../../constants/styleConstants";
+import { BLACK, FONT_FAMILY } from "../../../constants/styleConstants";
 
 const HelpDescription = (props) => {
   const { data } = props;

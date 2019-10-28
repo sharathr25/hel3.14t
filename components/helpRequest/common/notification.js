@@ -4,7 +4,6 @@ import firebase from 'react-native-firebase';
 import Icon from "react-native-vector-icons/AntDesign";
 import { FLAG_COLOR_WHITE, FLAG_COLOR_ORANGE } from "../../../constants/styleConstants";
 import { TouchableOpacity } from "react-native-gesture-handler";
-import { getDataFromFirebase } from "../../../fireBase/database";
 
 class Notification extends Component {
     constructor(props){

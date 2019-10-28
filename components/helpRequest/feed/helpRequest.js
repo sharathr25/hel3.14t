@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { View, StyleSheet, Text } from "react-native";
+import { View, StyleSheet } from "react-native";
 import firebase from "react-native-firebase";
 import HelpDescription from "../common/helpDescription";
 import Time from "../../common/time";
