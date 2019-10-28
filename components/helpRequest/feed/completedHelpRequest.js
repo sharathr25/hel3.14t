@@ -2,7 +2,6 @@ import React, { Component } from "react";
 import { View, StyleSheet,Image } from "react-native";
 import firebase from "react-native-firebase";
 import HelpDescription from "../common/helpDescription";
-import Time from "../../common/time";
 import LikeButton from "../buttons/likeButton";
 import CommentButton from '../buttons/commentButton';
 import { firebaseOnEventListner, firebaseOnEventListnerTurnOff } from "../../../fireBase/database";

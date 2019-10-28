@@ -5,6 +5,7 @@ import HelpRequest from "./helpRequest";
 import CompletedHelpRequest from './completedHelpRequest';
 import Context from "../../../context";
 import { getDistanceFromLatLonInKm, sortByDistance } from '../../../utils';
+import { firebaseOnEventListner, firebaseOnEventListnerTurnOff } from "../../../fireBase/database";
 
 const FIREBASE_FETCH_LIMIT = 5;
 const HELPREQUEST_FEED_LIMIT = 50;
@@ -105,11 +106,8 @@ class HelpRequestFeed extends Component {
     }
   }
 
-  componentDidMount() {
-    this.getHelpRequests();
-    const {db} = this.props;
-    firebase.database().ref(`/${db}`).on("child_removed", data => {
-      const { helpRequests } = this.state;
+  removeFromHelpRequests = (data) => {
+    const { helpRequests } = this.state;
       const newHelpRequests = helpRequests.filter((helpRequest)=>{
         return helpRequest.key !== data.key
       });
@@ -118,12 +116,17 @@ class HelpRequestFeed extends Component {
       this.setState({ helpRequestsWithDistance , helpRequests: newHelpRequests, helpRequestsSortedByDistance});
       if(newHelpRequests.length === 0){
         this.setState({referenceToOldestKey:""})
-      }
-    });
+    }
+  }
+
+  componentDidMount() {
+    this.getHelpRequests();
+    const {db} = this.props;
+    firebaseOnEventListner(`/${db}`,'child_removed', this.removeFromHelpRequests);
   }
 
   componentWillUnmount(){
-    firebase.database().ref(`/${db}`).off();
+    firebaseOnEventListnerTurnOff(`/${db}`);
   }
 
   getHelpRequest = ({item}) => {

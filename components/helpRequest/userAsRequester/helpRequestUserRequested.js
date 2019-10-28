@@ -1,10 +1,9 @@
 import React, { Component } from 'react';
 import firebase from 'react-native-firebase';
-import { Text, View, Alert, TouchableOpacity, StyleSheet } from 'react-native';
-import Icon from 'react-native-vector-icons/FontAwesome';
+import { Text, View, Alert, StyleSheet } from 'react-native';
 import HelpDescription from "../common/helpDescription";
 import Time from "../../common/time";
-import { updateFirebase, notifyUser, pushToFirebase, removeFromFirebase, getDataFromFirebase, pushToFirebaseWithURL } from '../../../fireBase/database';
+import { updateFirebase, notifyUser, removeFromFirebase, getDataFromFirebase, pushToFirebaseWithURL, firebaseOnEventListner, firebaseOnEventListnerTurnOff } from '../../../fireBase/database';
 import { FLAG_COLOR_WHITE, FLAG_COLOR_ORANGE, FONT_FAMILY } from '../../../constants/styleConstants';
 import Requester from './requester';
 import DoneButton from '../buttons/doneButton';
@@ -28,38 +27,49 @@ class HelpRequestRequestedUsers extends Component {
         }
     }
 
+    updateState = (data) => {
+      this.setState( { [data.key]: data.val() })
+    }
+
+    addToUsersAccepted = async (data) => {
+      const uidOfAcceptedHelper = data.val();
+      const url = `users/${uidOfAcceptedHelper}`;
+      const data2 = await getDataFromFirebase(url);
+      this.setState({usersAccepted : [{uidOfAcceptedHelper,name:data2.val().name, email:data2.val().email, mobileNumber:data2.val().mobileNumber, xp:data2.val().xp}, ...this.state.usersAccepted]});
+    }
+
+    removeFromUsersAccepted = async (data) => {
+      const uidOfAcceptedHelper = data.val();
+      const newUsersAccepted = this.state.usersAccepted.filter((datum) => datum.uidOfAcceptedHelper !== uidOfAcceptedHelper);
+      this.setState({usersAccepted: newUsersAccepted});
+    }
+
+    addToUsersRequested = async (data) => {
+      const uidOfRequestingHelper = data.val();
+      const url = `users/${uidOfRequestingHelper}`;
+      const data1 = await getDataFromFirebase(url);
+      this.setState({usersRequested : [{uidOfRequestingHelper,name:data1.val().name, email:data1.val().email, mobileNumber:data1.val().mobileNumber, xp:data1.val().xp}, ...this.state.usersRequested]});
+    }
+
+    removeFromUsersRequested = async (data) => {
+      const uidOfRequestingHelper = data.val();
+      const newUsersRequested = this.state.usersRequested.filter((datum) => datum.uidOfRequestingHelper !== uidOfRequestingHelper);
+      this.setState({usersRequested: newUsersRequested});
+    }
+
+
     componentDidMount(){
-      this.helpRequest.on("child_changed", data => {
-        this.setState( { [data.key]: data.val() })
-      });
-      this.usersRequested.on('child_added',async (data) => {
-        const uidOfRequestingHelper = data.val();
-        const url = `users/${uidOfRequestingHelper}`;
-        const data1 = await getDataFromFirebase(url);
-        this.setState({usersRequested : [{uidOfRequestingHelper,name:data1.val().name, email:data1.val().email, mobileNumber:data1.val().mobileNumber, xp:data1.val().xp}, ...this.state.usersRequested]});
-      },(err) => console.log(err));
-      this.usersAccepted.on('child_added', async (data) => {
-        const uidOfAcceptedHelper = data.val();
-        const url = `users/${uidOfAcceptedHelper}`;
-        const data2 = await getDataFromFirebase(url);
-        this.setState({usersAccepted : [{uidOfAcceptedHelper,name:data2.val().name, email:data2.val().email, mobileNumber:data2.val().mobileNumber, xp:data2.val().xp}, ...this.state.usersAccepted]});
-      },(err) => console.log(err));
-      this.usersRequested.on('child_removed',(data) => {
-        const uidOfRequestingHelper = data.val();
-        const newUsersRequested = this.state.usersRequested.filter((datum) => datum.uidOfRequestingHelper !== uidOfRequestingHelper);
-        this.setState({usersRequested: newUsersRequested});
-      },(err) => console.log(err));
-      this.usersAccepted.on('child_removed',(data) => {
-        const uidOfAcceptedHelper = data.val();
-        const newUsersAccepted = this.state.usersAccepted.filter((datum) => datum.uidOfAcceptedHelper !== uidOfAcceptedHelper);
-        this.setState({usersAccepted: newUsersAccepted});
-      },(err) => console.log(err));
+      firebaseOnEventListner(`helps/${this.key}`,'child_changed', this.updateState);
+      firebaseOnEventListner(`helps/${this.key}/usersAccepted`, 'child_added', this.addToUsersAccepted);
+      firebaseOnEventListner(`helps/${this.key}/usersRequested`, 'child_added', this.addToUsersRequested);
+      firebaseOnEventListner(`helps/${this.key}/usersAccepted`, 'child_removed', this.removeFromUsersAccepted);
+      firebaseOnEventListner(`helps/${this.key}/usersRequested`, 'child_removed', this.removeFromUsersRequested);
     }
 
     componentWillUnmount(){
-      this.usersRequested.off();
-      this.usersAccepted.off();
-      this.helpRequest.off();
+      firebaseOnEventListnerTurnOff(`helps/${this.key}`);
+      firebaseOnEventListnerTurnOff(`helps/${this.key}/usersAccepted`);
+      firebaseOnEventListnerTurnOff(`helps/${this.key}/usersRequested`);
     }
 
     getRequestedUsers = () => {
@@ -83,7 +93,7 @@ class HelpRequestRequestedUsers extends Component {
       this.usersAccepted.orderByValue(helperUid).equalTo(helperUid).limitToFirst(1).once('value', async data => {
         if(!data.val()){
           updateFirebase(this.helpRequest,"noPeopleAccepted",noPeopleAccepted+1);
-          await pushToFirebase(this.usersAccepted,helperUid);
+          await pushToFirebaseWithURL(`helps/${this.key}/usersAccepted`,helperUid);
           await pushToFirebaseWithURL(`users/${helperUid}/helping`,this.key);
           await removeFromFirebase(this.usersRequested,helperUid);
           await notifyUser(helperUid,{type:"ACCEPT", screenToRedirect:"Helped", uidOfHelper:helperUid,timeStamp: new Date().getTime(), idOfHelpRequest: this.key});
@@ -96,7 +106,7 @@ class HelpRequestRequestedUsers extends Component {
     handleReject = (helperUid) => {
       this.usersRejected.orderByValue(helperUid).equalTo(helperUid).limitToFirst(1).once('value', async data => {
         if(!data.val()){
-          await pushToFirebase(this.usersRejected, helperUid)
+          await pushToFirebaseWithURL(`helps/${this.key}/usersRejected`, helperUid);
           await removeFromFirebase(this.usersRequested,helperUid);
           await notifyUser(helperUid,{type:"REJECT", screenToRedirect:"NONE", uidOfHelper:helperUid,timeStamp: new Date().getTime(), idOfHelpRequest: this.key});
         } else {
