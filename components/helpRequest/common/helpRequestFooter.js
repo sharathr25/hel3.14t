@@ -12,14 +12,7 @@ class HelpRequestModifier extends Component {
   render() {
     const { handlePush, handlePull,handleHelp } = this.props;
     return (
-      <View
-        style={{
-          flex: 1,
-          flexDirection: "row",
-          justifyContent: "space-evenly",
-          position: "relative"
-        }}
-      >
+      <View style={styles.container}>
         <TouchableOpacity style={styles.text} onPress={handlePush}>
           <Icon name="angle-double-up" color={FLAG_COLOR_GREEN} size={30} />
         </TouchableOpacity>
@@ -40,6 +33,12 @@ class HelpRequestModifier extends Component {
 export default HelpRequestModifier;
 
 const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    flexDirection: "row",
+    justifyContent: "space-evenly",
+    position: "relative"
+  },
   pushPull: {
     flex: 2,
     flexDirection: "row",

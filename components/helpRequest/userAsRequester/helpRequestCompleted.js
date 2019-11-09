@@ -16,8 +16,8 @@ class HelpRequestCompleted extends Component {
     this.key = data.key;
     this.uid = firebase.auth().currentUser.uid;
     this.state = {
-        helpers:[],
-        showHelpRequests: false
+      helpers:[],
+      showHelpRequests: false
     }
   }
 
@@ -34,8 +34,8 @@ class HelpRequestCompleted extends Component {
   }
 
   componentDidMount() {
-    firebaseOnEventListner(`${this.props.db}/${this.key}`,'child_changed', updateState);
-    firebaseOnEventListnerTurnOff(`${this.props}/${this.key}/usersAccepted`,addToHelpers);
+    firebaseOnEventListner(`${this.props.db}/${this.key}`,'child_changed', this.updateState);
+    firebaseOnEventListner(`${this.props.db}/${this.key}/usersAccepted`,'child_added',this.addToHelpers);
   }
   
   componentWillUnmount(){

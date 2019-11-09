@@ -71,28 +71,28 @@ export default class LikeButton extends Component {
   }
 
 
-  const styles = StyleSheet.create({
-    container: {
-      flex: 1,
-      flexDirection: "row",
-      justifyContent: "center",
-      backgroundColor: FLAG_COLOR_WHITE,
-      borderWidth: 1,
-      borderColor: FLAG_COLOR_ORANGE,
-      margin: 3,
-      borderRadius: 5,
-      padding: 10
-    },
-    likeIconActive:{
-    },
-    likeIconInactive:{
-    },
-    textActive:{
-        fontSize: 15,
-        color: FLAG_COLOR_ORANGE
-    },
-    textInactive:{
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    flexDirection: "row",
+    justifyContent: "center",
+    backgroundColor: FLAG_COLOR_WHITE,
+    borderWidth: 1,
+    borderColor: FLAG_COLOR_ORANGE,
+    margin: 3,
+    borderRadius: 5,
+    padding: 10
+  },
+  likeIconActive:{
+  },
+  likeIconInactive:{
+  },
+  textActive:{
       fontSize: 15,
-      color: FLAG_COLOR_WHITE
+      color: FLAG_COLOR_ORANGE
+  },
+  textInactive:{
+    fontSize: 15,
+    color: FLAG_COLOR_WHITE
   }
   });

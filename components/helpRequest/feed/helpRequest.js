@@ -51,16 +51,15 @@ class HelpRequest extends Component {
     const { noPeopleAccepted, noPeopleRequired} = this.state;
     return (
       <Card>
-          <HelpDescription data={{ description }}
-          />
-          <NoOfHelpers noPeopleAccepted={noPeopleAccepted} noPeopleRequired={noPeopleRequired} />
-          <View style={styles.buttons}>
-            <HelpButton data={data} helpRequest={this.helpRequest}/>
-            <ReferButton data={data} helpRequest={this.helpRequest}/>
-          </View>
-          <View style={styles.timeAndDistance}>
-            <Time time={timeStamp} /><Distance distance={distance} />
-          </View>
+        <HelpDescription data={{ description }}/>
+        <NoOfHelpers noPeopleAccepted={noPeopleAccepted} noPeopleRequired={noPeopleRequired} />
+        <View style={styles.buttons}>
+          <HelpButton data={data} helpRequest={this.helpRequest}/>
+          <ReferButton data={data} helpRequest={this.helpRequest}/>
+        </View>
+        <View style={styles.timeAndDistance}>
+          <Time time={timeStamp} /><Distance distance={distance} />
+        </View>
       </Card>
     );
   }

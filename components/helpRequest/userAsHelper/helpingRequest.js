@@ -4,7 +4,6 @@ import firebase from "react-native-firebase";
 import HelpDescription from "../common/helpDescription";
 import { getUser, firebaseOnEventListner, firebaseOnEventListnerTurnOff } from "../../../fireBase/database";
 import AccetedUser from "../common/acceptedUser";
-import Icon from 'react-native-vector-icons/FontAwesome';
 import { FLAG_COLOR_ORANGE } from "../../../constants/styleConstants";
 import Card from "../../common/card";
 
@@ -15,8 +14,8 @@ class HelpingRequest extends Component {
     this.key = data.key;
     this.uid = firebase.auth().currentUser.uid;
     this.state = {
-        helpers:[],
-        showHelpRequests: false
+      helpers:[],
+      showHelpRequests: false
     }
   }
 
@@ -51,13 +50,13 @@ getHelpers = () => {
 }
 
   render() {
-
     const { data,title } = this.props;
     const { description } = data;
     return (
       <Card>
           <HelpDescription data={{description}}/>
-          {this.state.helpers.length !== 0 && 
+          {
+            this.state.helpers.length !== 0 && 
             <View style={{marginLeft: 10, marginBottom:10}}>
               <Text>{title}</Text>
               <View>{this.getHelpers()}</View>

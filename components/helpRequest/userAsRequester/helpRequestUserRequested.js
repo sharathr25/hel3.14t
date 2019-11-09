@@ -3,7 +3,7 @@ import firebase from 'react-native-firebase';
 import { Text, View, Alert, StyleSheet } from 'react-native';
 import HelpDescription from "../common/helpDescription";
 import Time from "../../common/time";
-import { updateFirebase, notifyUser, removeFromFirebase, getDataFromFirebase, pushToFirebaseWithURL, firebaseOnEventListner, firebaseOnEventListnerTurnOff } from '../../../fireBase/database';
+import { notifyUser, updateFirebaseWithURL, getDataFromFirebase, pushToFirebaseWithURL, firebaseOnEventListner, firebaseOnEventListnerTurnOff, removeFromFirebaseWithUrlAndValue } from '../../../fireBase/database';
 import { FLAG_COLOR_WHITE, FLAG_COLOR_ORANGE, FONT_FAMILY } from '../../../constants/styleConstants';
 import Requester from './requester';
 import DoneButton from '../buttons/doneButton';
@@ -88,31 +88,29 @@ class HelpRequestRequestedUsers extends Component {
       });
     }
 
-    handleAccept = (helperUid) => {
+    handleAccept = async (helperUid) => {
       const { noPeopleAccepted } = this.state;
-      this.usersAccepted.orderByValue(helperUid).equalTo(helperUid).limitToFirst(1).once('value', async data => {
+      const data = await getDataFromFirebase(`helps/${this.key}/usersAccepted/${helperUid}`);
         if(!data.val()){
-          updateFirebase(this.helpRequest,"noPeopleAccepted",noPeopleAccepted+1);
+          updateFirebaseWithURL(`helps/${this.key}`,"noPeopleAccepted",noPeopleAccepted+1);
           await pushToFirebaseWithURL(`helps/${this.key}/usersAccepted`,helperUid);
           await pushToFirebaseWithURL(`users/${helperUid}/helping`,this.key);
-          await removeFromFirebase(this.usersRequested,helperUid);
+          await removeFromFirebaseWithUrlAndValue(`helps/${this.key}/usersRequested`, helperUid);
           await notifyUser(helperUid,{type:"ACCEPT", screenToRedirect:"Helped", uidOfHelper:helperUid,timeStamp: new Date().getTime(), idOfHelpRequest: this.key});
         } else {
           Alert.alert("user already accepted");
         }
-      });
     }
   
-    handleReject = (helperUid) => {
-      this.usersRejected.orderByValue(helperUid).equalTo(helperUid).limitToFirst(1).once('value', async data => {
-        if(!data.val()){
-          await pushToFirebaseWithURL(`helps/${this.key}/usersRejected`, helperUid);
-          await removeFromFirebase(this.usersRequested,helperUid);
-          await notifyUser(helperUid,{type:"REJECT", screenToRedirect:"NONE", uidOfHelper:helperUid,timeStamp: new Date().getTime(), idOfHelpRequest: this.key});
-        } else {
-          Alert.alert("user already rejected");
-        }
-      });
+    handleReject = async (helperUid) => {
+      const data =  await getDataFromFirebase(`helps/${this.key}/usersRejected/${helperUid}`);
+      if(!data.val()){
+        await pushToFirebaseWithURL(`helps/${this.key}/usersRejected`, helperUid);
+        await removeFromFirebaseWithUrlAndValue(`helps/${this.key}/usersRequested`, helperUid);
+        await notifyUser(helperUid,{type:"REJECT", screenToRedirect:"NONE", uidOfHelper:helperUid,timeStamp: new Date().getTime(), idOfHelpRequest: this.key});
+      } else {
+        Alert.alert("user already rejected");
+      }
     }
 
   render() {

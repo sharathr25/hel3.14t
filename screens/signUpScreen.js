@@ -1,10 +1,10 @@
 import React, { Component } from 'react';
 import { Button, Text, CheckBox } from 'react-native-elements';
-import { View, Alert, Picker } from 'react-native';
+import { View, Alert,StyleSheet , TouchableOpacity} from 'react-native';
 import { ScrollView } from 'react-native-gesture-handler';
 import firebase from 'react-native-firebase';
 import { SIGN_UP_SCREEN, SCREEN_TITLES } from '../constants/appConstants';
-import { styles, FLAG_COLOR_ORANGE } from '../constants/styleConstants';
+import { styles, FLAG_COLOR_ORANGE, FLAG_COLOR_WHITE, FONT_FAMILY } from '../constants/styleConstants';
 import { updateUser } from '../fireBase/auth/signUp';
 import { addUserDetailsToDb } from '../fireBase/database';
 import {regex} from '../utils/index';
@@ -16,7 +16,8 @@ import { getAge } from '../utils';
 
 class SignUpScreen extends Component {
   static navigationOptions = {
-    title: SCREEN_TITLES.SIGN_UP
+    title: SCREEN_TITLES.SIGN_UP,
+    headerLeft: null
   };
 
   constructor() {
@@ -43,16 +44,18 @@ class SignUpScreen extends Component {
    // TODO: need to figure out how to call this asynchronous functions so the UI looks good
     firebase.auth().onAuthStateChanged(async (user) => {
       if (user) {
-        const {
-          mobileNumber, name, email, password, gender, dob
-        } = this.state;
+        const { mobileNumber, name, email, password, gender, dob } = this.state;
         const { currentUser } = await firebase.auth();
         const { navigation } = this.props;
-        await updateUser(currentUser, email, password, name);
-        await addUserDetailsToDb(currentUser.uid,mobileNumber, email, name, gender, dob);
+        try {
+          await updateUser(currentUser, email, password, name);
+          await addUserDetailsToDb(currentUser.uid,mobileNumber, email, name, gender, dob); 
+        } catch (error) {
+          console.log(error);
+        }
         Alert.alert('verification complete');
         this.setState({ loaderVisible: false});
-        navigation.navigate('Main', { currentUser: firebase.auth().currentUser });
+        navigation.navigate('Main', { currentUser: currentUser });
       }
     });
   }
@@ -110,6 +113,14 @@ class SignUpScreen extends Component {
     }
   };
 
+  handleCheckBox = (val) => {
+    this.setState({ gender: val});
+  }
+
+  getCheckBoxStyle = (val) => [formStyles.defaultCheckBoxStyle,this.state.gender === val ? formStyles.activeCheckBox : formStyles.inActiveCheckBox];
+
+  getCheckBoxTextStyle = (val) => this.state.gender === val ? formStyles.activeText : formStyles.inActiveText;
+
   render() {
     const {
       nameErrorMessage,
@@ -122,7 +133,7 @@ class SignUpScreen extends Component {
     } = this.state;
     return (
       <ScrollView>
-        <View style={{alignItems: 'center',justifyContent: 'center',margin: 10}}>
+        <View style={{display:'flex',alignItems: 'center',justifyContent: 'center',margin: 10}}>
           {/* Name */}
           <InputComponent 
             placeholder="Name" 
@@ -164,52 +175,29 @@ class SignUpScreen extends Component {
           {confirmPasswordErrorMessage.length !== 0 && <ErrorMessage errorMessage={confirmPasswordErrorMessage} />}
           
           {/* Date of Birth */}
-          <View style={
-              {
-                display:"flex", 
-                justifyContent: 'center', 
-                flexDirection:'row', 
-                borderColor: FLAG_COLOR_ORANGE,
-                borderWidth: 1.5,
-                margin: 10,
-                borderRadius: 5
-              }
-            }>
-            <Text style={{ fontSize: 20, padding: 10 }}>Date of Birth:</Text>
+          <View style={formStyles.dob}>
+            <Text style={{ fontSize: 20, padding: 10 }}>Date of Birth</Text>
             <DateComponent date={this.state.dob} updateParentState={date => this.setState({dob: date})}/>
           </View>
 
           {/* Gender */}
-          <View 
-            style={
-              {
-                display:"flex", 
-                justifyContent: 'center', 
-                flexDirection:'row', 
-                borderColor: FLAG_COLOR_ORANGE,
-                borderWidth: 1.5,
-                margin: 10,
-                borderRadius: 5
-              }
-            }
-          >
-          <Text style={{ fontSize: 20, padding: 10 }} >Gender:</Text><Picker
-            selectedValue={this.state.gender}
-            onValueChange={value => this.setState({ gender: value })}
-            style={{ width: 230 }}
-          >
-            <Picker.Item label="Male" value="male" />
-            <Picker.Item label="Female" value="female" />
-          </Picker>
+          <View style={formStyles.genderSelector}>
+            <Text style={{ fontSize: 20, padding: 10 }} >Gender</Text>
+            <TouchableOpacity onPress={() => this.handleCheckBox("male")} style={this.getCheckBoxStyle("male")}>
+              <Text style={this.getCheckBoxTextStyle("male")}>Male</Text>  
+            </TouchableOpacity>
+            <TouchableOpacity onPress={() => this.handleCheckBox("female")} style={this.getCheckBoxStyle("female")}>
+              <Text style={this.getCheckBoxTextStyle("female")}>Female</Text>  
+            </TouchableOpacity>
           </View>
 
           {/* Terms and Conditions */}
           <CheckBox 
-            title="check this to accept terms and conditions" 
+            title={<View><Text>Creating an acount means you're akay with our </Text><TouchableOpacity onPress={this.handleTermsAndConditions}><Text style={{color:'#3a8bbb'}}>Terms of Service, Privacy, Policy</Text></TouchableOpacity></View>}
             checked={termsAndConditionChecked} 
-            onPress={() => this.setState({termsAndConditionChecked: ! termsAndConditionChecked})} />
-          {<Button title="Terms And Conditions" buttonStyle={{backgroundColor: FLAG_COLOR_ORANGE,width: 200, marginBottom: 5}} onPress={this.handleTermsAndConditions} />}
-          
+            onPress={() => this.setState({termsAndConditionChecked: ! termsAndConditionChecked})} 
+            checkedColor={FLAG_COLOR_ORANGE}
+          />
           {/* Sign Up button */}
           {!loaderVisible && <Button title="Sign Up" buttonStyle={styles.button} onPress={this.handleSignUp} />}
           { loaderVisible && <Loader title="Please wait..." message="we will auto verify OTP and log you in" />}
@@ -220,3 +208,48 @@ class SignUpScreen extends Component {
 }
 
 export default SignUpScreen;
+
+const formStyles = StyleSheet.create({
+  genderSelector:{
+    display:'flex',
+    flexDirection:'row',
+    justifyContent: 'space-between',
+    alignItems: 'center'
+  },
+  activeCheckBox: {
+    backgroundColor: FLAG_COLOR_ORANGE,
+    borderColor: FLAG_COLOR_ORANGE,
+  },
+  defaultCheckBoxStyle: {
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderWidth: 1,
+    padding: 5,
+    margin: 5,
+    borderRadius: 5
+  },
+  inActiveCheckBox: {
+    backgroundColor: FLAG_COLOR_WHITE,
+    borderColor: FLAG_COLOR_ORANGE,
+  },
+  activeText: {
+    color: FLAG_COLOR_WHITE,
+    fontSize:15,
+    fontFamily: FONT_FAMILY
+  },
+  inActiveText: {
+    color: FLAG_COLOR_ORANGE,
+    fontSize:15,
+    fontFamily:FONT_FAMILY
+  },
+  dob:{
+    display:"flex", 
+    justifyContent: 'center', 
+    flexDirection:'row', 
+    borderColor: FLAG_COLOR_ORANGE,
+    borderWidth: 1.5,
+    margin: 10,
+    borderRadius: 5
+  }
+});
