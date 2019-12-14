@@ -1,9 +1,8 @@
 import React, { Component } from "react";
-import { TouchableOpacity, StyleSheet, Text , ActivityIndicator} from "react-native";
-import firebase from "react-native-firebase";
+import { TouchableOpacity, StyleSheet, Text } from "react-native";
 import Icon from "react-native-vector-icons/FontAwesome5";
 import { FLAG_COLOR_WHITE, FLAG_COLOR_ORANGE } from "../../../constants/styleConstants";
-import { updateFirebase, pushToFirebase, removeFromFirebaseWithURl, firebaseOnEventListner, firebaseOnEventListnerTurnOff } from '../../../fireBase/database';
+import { firebaseOnEventListner, firebaseOnEventListnerTurnOff } from '../../../fireBase/database';
 import { withNavigation } from 'react-navigation';
 class CommentButton extends Component {
     constructor(props){

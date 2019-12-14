@@ -4,8 +4,6 @@ import firebase from "react-native-firebase";
 import HelpDescription from "../common/helpDescription";
 import { getUser, firebaseOnEventListner, firebaseOnEventListnerTurnOff } from "../../../fireBase/database";
 import AccetedUser from "../common/acceptedUser";
-import Icon from 'react-native-vector-icons/FontAwesome';
-import { FLAG_COLOR_ORANGE } from "../../../constants/styleConstants";
 import Card from "../../common/card";
 
 class HelpingRequest extends Component {
@@ -58,7 +56,7 @@ getHelpers = () => {
       <Card>
           <HelpDescription data={{description}}/>
           {this.state.helpers.length !== 0 && 
-            <View style={{marginLeft: 10, marginBottom:10}}>
+            <View style={styles.container}>
               <Text>{title}</Text>
               <View>{this.getHelpers()}</View>
             </View>
@@ -71,12 +69,7 @@ getHelpers = () => {
 export default HelpingRequest;
 
 const styles = StyleSheet.create({
-  helpingUserscontainer:{
-    flex: 1,
-      flexDirection: 'row',
-      justifyContent:'space-evenly',
-      alignItems: 'center',
-      borderColor:FLAG_COLOR_ORANGE,
-      borderBottomWidth: 1
+  container:{
+    marginLeft: 10, marginBottom:10
   }
 });

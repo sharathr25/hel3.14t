@@ -3,15 +3,13 @@ import { TouchableOpacity, StyleSheet, Text , ActivityIndicator} from "react-nat
 import firebase from "react-native-firebase";
 import Icon from "react-native-vector-icons/AntDesign";
 import { FLAG_COLOR_WHITE, FLAG_COLOR_ORANGE } from "../../../constants/styleConstants";
-import { updateFirebase, pushToFirebase, removeFromFirebaseWithURl, firebaseOnEventListner, firebaseOnEventListnerTurnOff } from '../../../fireBase/database';
+import { updateFirebase, removeFromFirebaseWithURl, firebaseOnEventListner, firebaseOnEventListnerTurnOff, pushToFirebaseWithURL, updateFirebaseWithURL } from '../../../fireBase/database';
 
 export default class LikeButton extends Component {
     constructor(props){
       super(props);
       const {data } = this.props;
       this.uid = firebase.auth().currentUser.uid;
-      this.helpRequest = this.props.helpRequest;
-      this.usersLiked = this.helpRequest.child("usersLiked");
       this.key = data.key;
       this.state = {
         likes: data.likes,
@@ -39,10 +37,10 @@ export default class LikeButton extends Component {
       this.setState({isLoading : true});
       const { likes,userLiked,likedUserKey } = this.state;
       if(!userLiked){
-        updateFirebase(this.helpRequest, "likes", likes + 1);
-        await pushToFirebase(this.usersLiked, this.uid);
+        updateFirebaseWithURL(`helps/${this.key}`,"likes", likes + 1);
+        await pushToFirebaseWithURL(`helped/${this.key}/usersLiked`, this.uid)
       } else {
-        updateFirebase(this.helpRequest, "likes", likes - 1);
+        updateFirebaseWithURL(`helps/${this.key}`,"likes", likes - 1);
         await removeFromFirebaseWithURl(`helped/${this.key}/usersLiked/${likedUserKey}`);
       }     
       this.setLikeStatus();

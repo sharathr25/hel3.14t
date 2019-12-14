@@ -5,33 +5,37 @@ import HelpRequestRequestedUsers from '../components/helpRequest/userAsRequester
 import HelpingRequest from '../components/helpRequest/userAsHelper/helpingRequest';
 import HelpRequestCompleted from '../components/helpRequest/userAsRequester/helpRequestCompleted';
 import HelpingRequestCompleted from '../components/helpRequest/userAsHelper/helpingRequestCompleted';
+import { firebaseOnEventListner, getDataFromFirebase, firebaseOnEventListnerTurnOff } from '../fireBase/database';
 
 class MyHelpRequestsScreen extends Component {
     constructor(){
         super();
+        this.uid = firebase.auth().currentUser.uid;
         this.state = {
             helpRequests: []
         }
     }
+
+    addToHelpRequests = async (data) => {
+        const key = data.val();
+        const dbTogetHelps = (this.props.db === "helpingCompleted" || this.props.db === "helpRequetsCompleted") ? "helped" : "helps"
+        const tempHelpRequest = await getDataFromFirebase(`${dbTogetHelps}/${key}`);
+        const newHelprequest = {...tempHelpRequest.val(), key:key, distance:0};
+        this.setState({helpRequests:[newHelprequest,...this.state.helpRequests]});
+    }
+
+    removeFromHelpRequests = (data) => {
+        const newnewHelprequests = this.state.helpRequests.filter((datum) => datum.key !== data.val());
+        this.setState({ helpRequests: newnewHelprequests });
+    }
+
     componentDidMount() {
-        const uid = firebase.auth().currentUser.uid;
-        firebase.database().ref('users').child(uid).child(this.props.db).on('child_added',(data) => {
-            const key = data.val();
-            const dbTogetHelps = (this.props.db === "helpingCompleted" || this.props.db === "helpRequetsCompleted") ? "helped" : "helps"
-            firebase.database().ref(dbTogetHelps).child(key).once('value',(data) => {
-                const newHelprequest = {...data.val(), key:key, distance:0};
-                this.setState({helpRequests:[newHelprequest,...this.state.helpRequests]});
-            },(err) => console.log(err));
-        }, (err) => console.log(err));
-        firebase.database().ref('users').child(uid).child(this.props.db).on('child_removed',(data) => {
-            const newnewHelprequests = this.state.helpRequests.filter((datum) => datum.key !== data.val());
-            this.setState({ helpRequests: newnewHelprequests });
-        }, (err) => console.log(err));
+        firebaseOnEventListner(`users/${this.uid}/${this.props.db}`,'child_added', this.addToHelpRequests);
+        firebaseOnEventListner(`users/${this.uid}/${this.props.db}`, 'child_removed', this.removeFromHelpRequests)
     }
 
     componentWillUnmount(){
-        const uid = firebase.auth().currentUser.uid;
-        firebase.database().ref('users').child(uid).child(this.props.db).off();
+        firebaseOnEventListnerTurnOff(`users/${this.uid}/${this.props.db}`);
     }
 
     getHelpRequest = ({item}) => {

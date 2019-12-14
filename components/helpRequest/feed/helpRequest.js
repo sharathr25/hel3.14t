@@ -5,7 +5,7 @@ import HelpDescription from "../common/helpDescription";
 import Time from "../../common/time";
 import HelpButton from "../buttons/helpButton";
 import ReferButton from "../buttons/referButton";
-import { firebaseOnEventListner, firebaseOnEventListnerTurnOff } from "../../../fireBase/database";
+import { firebaseOnEventListner, firebaseOnEventListnerTurnOff, getDataFromFirebase } from "../../../fireBase/database";
 import NoOfHelpers from './noOfHelpers';
 import Distance from '../../common/distance';
 import Card from "../../common/card";
@@ -16,8 +16,6 @@ class HelpRequest extends Component {
     const { data } = this.props;
     this.key = data.key;
     this.uid = firebase.auth().currentUser.uid;
-    this.helps = firebase.database().ref("/helps");
-    this.helpRequest = this.helps.child(this.key);
     this.state = {
       pushUps: data.pushUps,
       pullUps: data.pullUps,
@@ -51,12 +49,11 @@ class HelpRequest extends Component {
     const { noPeopleAccepted, noPeopleRequired} = this.state;
     return (
       <Card>
-          <HelpDescription data={{ description }}
-          />
+          <HelpDescription data={{ description }}/>
           <NoOfHelpers noPeopleAccepted={noPeopleAccepted} noPeopleRequired={noPeopleRequired} />
           <View style={styles.buttons}>
-            <HelpButton data={data} helpRequest={this.helpRequest}/>
-            <ReferButton data={data} helpRequest={this.helpRequest}/>
+            <HelpButton data={data} />
+            <ReferButton data={data} />
           </View>
           <View style={styles.timeAndDistance}>
             <Time time={timeStamp} /><Distance distance={distance} />

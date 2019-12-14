@@ -4,8 +4,7 @@ import firebase from "react-native-firebase";
 import HelpDescription from "../common/helpDescription";
 import { getUser, firebaseOnEventListner, firebaseOnEventListnerTurnOff } from "../../../fireBase/database";
 import AccetedUser from "../common/acceptedUser";
-import Icon from 'react-native-vector-icons/FontAwesome';
-import { FLAG_COLOR_ORANGE } from "../../../constants/styleConstants";
+// import Icon from 'react-native-vector-icons/FontAwesome';
 import Card from "../../common/card";
 // import PostButton from '../buttons/postButton'; disabling POST feture for now
 
@@ -34,13 +33,13 @@ class HelpRequestCompleted extends Component {
   }
 
   componentDidMount() {
-    firebaseOnEventListner(`${this.props.db}/${this.key}`,'child_changed', updateState);
-    firebaseOnEventListnerTurnOff(`${this.props}/${this.key}/usersAccepted`,addToHelpers);
+    firebaseOnEventListner(`${this.props.db}/${this.key}`,'child_changed', this.updateState);
+    firebaseOnEventListner(`${this.props.db}/${this.key}/usersAccepted`,'child_added',this.addToHelpers);
   }
   
   componentWillUnmount(){
       firebaseOnEventListnerTurnOff(`${this.props.db}/${this.key}`);
-      firebaseOnEventListnerTurnOff(`${this.props.db}/${this.key}`);
+      firebaseOnEventListnerTurnOff(`${this.props.db}/${this.key}/usersAccepted`);
   }
 
 getHelpers = () => {
@@ -59,7 +58,7 @@ getHelpers = () => {
       <Card>
           <HelpDescription data={{description}}/>
           {this.state.helpers.length !== 0 && 
-            <View style={{marginLeft: 10, marginBottom:10}}>
+            <View style={styles.container}>
               <Text>{title}</Text>
               {this.state.helpers.length !== 0 ? <View>{this.getHelpers()}</View> : <Text>This help request got closed without any helpers</Text>}
               {/* disbling post option for now */}
@@ -74,18 +73,7 @@ getHelpers = () => {
 export default HelpRequestCompleted;
 
 const styles = StyleSheet.create({
-  outerContanier: {
-    margin: 10,
-    borderRadius: 5,
-    backgroundColor: '#F6f6f6',
-    elevation: 5
-  },
-  helpingUserscontainer:{
-    flex: 1,
-      flexDirection: 'row',
-      justifyContent:'space-evenly',
-      alignItems: 'center',
-      borderColor:FLAG_COLOR_ORANGE,
-      borderBottomWidth: 1
+  container: {
+    marginLeft: 10, marginBottom:10
   }
 });
