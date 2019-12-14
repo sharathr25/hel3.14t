@@ -1,11 +1,10 @@
 import React, { Component } from "react";
-import firebase from "react-native-firebase";
 import { FlatList,Alert,LayoutAnimation,Platform,UIManager } from 'react-native';
 import HelpRequest from "./helpRequest";
 import CompletedHelpRequest from './completedHelpRequest';
 import Context from "../../../context";
 import { getDistanceFromLatLonInKm, sortByDistance } from '../../../utils';
-import { firebaseOnEventListner, firebaseOnEventListnerTurnOff } from "../../../fireBase/database";
+import { firebaseOnEventListner, firebaseOnEventListnerTurnOff, getFeed } from "../../../fireBase/database";
 
 const FIREBASE_FETCH_LIMIT = 5;
 const HELPREQUEST_FEED_LIMIT = 50;
@@ -72,37 +71,29 @@ class HelpRequestFeed extends Component {
     return helpRequestsWithDistance;
   }
 
-  getHelpRequests = () => {
+  getHelpRequests = async () => {
     const { db } = this.props;
     const { referenceToOldestKey,lastKey } = this.state;
-    firebase.database().ref(`${db}`).orderByKey().limitToLast(1).once("value", data => {
-      if(data.val()===null)return;
-      if(lastKey !== Object.keys(data.val())[0]);{
-        this.setState({lastKey:Object.keys(data.val())[0]});
-      }
-    });
-    if(lastKey !== "" && referenceToOldestKey!=="" && referenceToOldestKey=== lastKey){
+    const data = await getFeed(db, true, null, 1);
+    if(data.val()===null)return;
+    if(lastKey !== Object.keys(data.val())[0]){
+      this.setState({lastKey:Object.keys(data.val())[0]});
+    }
+    if(lastKey !== "" && referenceToOldestKey !== "" && referenceToOldestKey === lastKey){
       return;//return if we are last key in firebase
     }
-    this.setState({ isLoading: true})
-    if(referenceToOldestKey === ""){
-      firebase.database().ref(`${db}`).orderByKey().limitToFirst(FIREBASE_FETCH_LIMIT).once("value", data => {
-        if(data.val()===null){
-          this.setState({ isLoading: false });
-          return;
-        }
-        const keys = Object.keys(data.val()).sort().reverse();
-        this.setHelpRequests(keys, data.val())
-      }).catch(err => {console.log(err);this.setState({isLoading: false})});
-    } else {
-      firebase.database().ref(`${db}`).orderByKey().startAt(referenceToOldestKey).limitToFirst(FIREBASE_FETCH_LIMIT+1).once("value", data => {
-        if(data.val()===null){
-          this.setState({ isLoading: false });
-          return;
-        }
-        const keys = Object.keys(data.val()).sort().slice(1).reverse();
-        this.setHelpRequests(keys, data.val())
-      }).catch(err => {console.log(err);this.setState({isLoading: false})});
+    this.setState({ isLoading: true});
+    try {
+      const data = referenceToOldestKey === "" ? await getFeed(db, true, null, FIREBASE_FETCH_LIMIT) : await getFeed(db, false, referenceToOldestKey, FIREBASE_FETCH_LIMIT);;
+      if(data.val()===null){
+        this.setState({ isLoading: false });
+        return;
+      }
+      const keys = referenceToOldestKey === "" ? Object.keys(data.val()).sort().reverse() : Object.keys(data.val()).sort().slice(1).reverse();
+      this.setHelpRequests(keys, data.val())
+    } catch(err) {
+      console.log(err);
+      this.setState({isLoading: false})
     }
   }
 

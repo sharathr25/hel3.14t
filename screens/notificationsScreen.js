@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import { View, Text, FlatList, StyleSheet } from 'react-native';
 import { TouchableOpacity } from 'react-native-gesture-handler';
-import { FLAG_COLOR_ORANGE } from '../constants/styleConstants';
 import Time from '../components/common/time';
 
 const types = {

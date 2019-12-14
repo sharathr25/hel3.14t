@@ -22,7 +22,6 @@ export default class DoneButton extends Component {
         const {data} = this.props;
         this.uid = firebase.auth().currentUser.uid;
         this.key = this.props.keyOfHelpRequest;
-        this.helpRequest = firebase.database().ref('helps').child(this.key);
         this.state = {
             status : data.status
         }

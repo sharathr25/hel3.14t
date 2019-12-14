@@ -1,9 +1,8 @@
 import React, { Component } from 'react';
-import firebase from 'react-native-firebase';
 import { Text, View, Alert, StyleSheet } from 'react-native';
 import HelpDescription from "../common/helpDescription";
 import Time from "../../common/time";
-import { notifyUser, updateFirebaseWithURL, getDataFromFirebase, pushToFirebaseWithURL, firebaseOnEventListner, firebaseOnEventListnerTurnOff, removeFromFirebaseWithUrlAndValue } from '../../../fireBase/database';
+import { notifyUser, removeFromFirebase, getDataFromFirebase, pushToFirebaseWithURL, firebaseOnEventListner, firebaseOnEventListnerTurnOff, updateFirebaseWithURL, removeFromFirebaseWithUrlAndValue, getDataFromFirebaseByValue } from '../../../fireBase/database';
 import { FLAG_COLOR_WHITE, FLAG_COLOR_ORANGE, FONT_FAMILY } from '../../../constants/styleConstants';
 import Requester from './requester';
 import DoneButton from '../buttons/doneButton';
@@ -15,11 +14,6 @@ class HelpRequestRequestedUsers extends Component {
         super(props);
         const { data } = this.props;
         this.key = data.key;
-        this.helps = firebase.database().ref('helps');
-        this.helpRequest = this.helps.child(this.key);
-        this.usersRequested = this.helpRequest.child("usersRequested");
-        this.usersAccepted= this.helpRequest.child("usersAccepted");
-        this.usersRejected = this.helpRequest.child("usersRejected");
         this.state = {
           noPeopleAccepted: data.noPeopleAccepted,
           usersRequested: [],

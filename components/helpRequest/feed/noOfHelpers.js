@@ -1,18 +1,15 @@
-import React, { Component } from 'react';
+import React from 'react';
 import {
   Text, View, StyleSheet
 } from 'react-native';
 import { FLAG_COLOR_ORANGE, FLAG_COLOR_WHITE, FONT_FAMILY } from '../../../constants/styleConstants';
 
 const NoOfHelpers = props => {
-  const {
-    noPeopleAccepted,
-    noPeopleRequired
-  } = props;
+  const { noPeopleAccepted, noPeopleRequired } = props;
   return (
     <View style={styles.container}>
       <View style={styles.container}> 
-        <Text style={{fontFamily:FONT_FAMILY}}>Helpers required</Text>
+        <Text style={{ fontFamily: FONT_FAMILY }}>Helpers required</Text>
         <View style={styles.peopleRequiredContainer}>
           <Text style={styles.peopleRequiredText}>{noPeopleRequired}</Text>
         </View>
@@ -21,10 +18,10 @@ const NoOfHelpers = props => {
         <View style={styles.peopleAcceptedContainer}>
           <Text style={styles.peopleAcceptedText}>{noPeopleAccepted}</Text>
         </View>
-        <Text style={{fontFamily:FONT_FAMILY}}>Helpers accepted</Text>
+        <Text style={{ fontFamily: FONT_FAMILY }}>Helpers accepted</Text>
       </View> 
     </View>
-  )
+  );
 };
 
 export default NoOfHelpers;

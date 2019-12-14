@@ -1,21 +1,20 @@
 import React from "react";
 import { View, Text, StyleSheet } from "react-native";
-import { FLAG_COLOR_WHITE, FLAG_COLOR_BLUE } from "../../../constants/styleConstants";
+import {
+  FLAG_COLOR_WHITE,
+  FLAG_COLOR_BLUE,
+} from "../../../constants/styleConstants";
 
 const HelpRequestPeopleCount = props => {
-  const {   noPeopleRequired, noPeopleRequested } = props;
+  const { noPeopleRequired, noPeopleRequested } = props;
   return (
     <View style={[styles.flexBox, styles.progressBar]}>
-      <View style={[styles.progressBar_left, { flex: 50 }]}>
-        <Text style={styles.progressBarTextLeft}>
-          People Required <Text style={{ fontWeight: 'bold' }}>{noPeopleRequired}</Text>
-        </Text>
-      </View>
-      <View style={[styles.progressBar_right, { flex: 50 }]}>
-        <Text style={styles.progressBarTextRight}>
-          People Accepted <Text style={{ fontWeight: 'bold' }}>{noPeopleRequested}</Text>
-        </Text>
-      </View>
+        <View style={[styles.progressBar_left, {flex: 50}]}>
+          <Text style={styles.progressBarTextLeft}>People Required <Text style={{fontWeight: 'bold'}}>{noPeopleRequired}</Text></Text>
+        </View>
+        <View style={[styles.progressBar_right, { flex: 50 }]}>
+          <Text style={styles.progressBarTextRight}>People Accepted <Text style={{fontWeight: 'bold'}}>{noPeopleRequested}</Text></Text>
+        </View>
     </View>
   );
 };

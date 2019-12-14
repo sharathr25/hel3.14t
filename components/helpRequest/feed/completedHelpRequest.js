@@ -13,8 +13,6 @@ class CompletedHelpRequest extends Component {
     const { data } = this.props;
     this.key = data.key;
     this.uid = firebase.auth().currentUser.uid;
-    this.helps = firebase.database().ref("/helped");
-    this.helpRequest = this.helps.child(this.key);
     this.state = {
       images:[]
     }
@@ -56,8 +54,8 @@ class CompletedHelpRequest extends Component {
           {
             !this.props.disableLike && 
             <View style={styles.buttons}>
-              <LikeButton helpRequest={this.helpRequest} data={data}/>
-              <CommentButton helpRequest={this.helpRequest} data={data}/>
+              <LikeButton data={data}/>
+              <CommentButton data={data}/>
             </View> 
           }
         </View>
