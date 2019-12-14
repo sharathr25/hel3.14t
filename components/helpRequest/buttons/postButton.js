@@ -31,8 +31,13 @@ export default class PostButton extends Component {
         firebaseOnEventListner(`helps/${this.key}`,"child_changed",this.updateState);
     }
 
+<<<<<<< HEAD
     componentWillUnmount(){
         firebaseOnEventListnerTurnOff(`helps/${this.key}`);
+=======
+    componentWillUnmount() {
+        firebaseOnEventListnerTurnOff(`helps/${this.key}`);   
+>>>>>>> 3ace4e1cb692856743f3a9aa7a0d93df860ceef0
     }
 
     options = {
@@ -109,13 +114,17 @@ export default class PostButton extends Component {
 
     render(){
       return (
-          <>
-        { this.state.showMessageInput ? <><TextInput placeholder="Enter message..." onChangeText={(value) => {this.setState({message:value})}}/>
-        <TouchableOpacity style={styles.container} onPress={this.handleSelectImage}>
-            <Text style={styles.done}>Select Image</Text><Text style={styles.text}></Text>
-        </TouchableOpacity></>: <TouchableOpacity style={styles.container} onPress={this.handlePost}>
-            <Text style={styles.done}>Post</Text><Text style={styles.text}></Text>
-        </TouchableOpacity>}
+        <>
+            { this.state.showMessageInput 
+                ?   <>
+                        <TextInput placeholder="Enter message..." onChangeText={(value) => {this.setState({message:value})}}/>
+                        <TouchableOpacity style={styles.container} onPress={this.handleSelectImage}>
+                            <Text style={styles.done}>Select Image</Text><Text style={styles.text}></Text>
+                        </TouchableOpacity>
+                    </>
+                :   <TouchableOpacity style={styles.container} onPress={this.handlePost}>
+                        <Text style={styles.done}>Post</Text><Text style={styles.text}></Text>
+                    </TouchableOpacity>}
         </>
       );
     }

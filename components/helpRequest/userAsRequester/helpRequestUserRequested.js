@@ -84,24 +84,23 @@ class HelpRequestRequestedUsers extends Component {
 
     handleAccept = async (helperUid) => {
       const { noPeopleAccepted } = this.state;
-      const data = await getDataFromFirebaseByValue(`helps/${this.key}/usersAccepted`, helperUid);
-      if(!data.val()){
-        updateFirebaseWithURL(`helps/${this.key}`, "noPeopleAccepted", noPeopleAccepted+1);
-        await pushToFirebaseWithURL(`helps/${this.key}/usersAccepted`,helperUid);
-        await pushToFirebaseWithURL(`users/${helperUid}/helping`,this.key);
-        // await removeFromFirebase(this.usersRequested,helperUid);
-        await removeFromFirebaseWithUrlAndValue(`helps/${this.key}/usersAccepted`, helperUid);
-        await notifyUser(helperUid,{type:"ACCEPT", screenToRedirect:"Helped", uidOfHelper:helperUid,timeStamp: new Date().getTime(), idOfHelpRequest: this.key});
-      } else {
-        Alert.alert("user already accepted");
-      }
+      const data = await getDataFromFirebase(`helps/${this.key}/usersAccepted/${helperUid}`);
+        if(!data.val()){
+          updateFirebaseWithURL(`helps/${this.key}`,"noPeopleAccepted",noPeopleAccepted+1);
+          await pushToFirebaseWithURL(`helps/${this.key}/usersAccepted`,helperUid);
+          await pushToFirebaseWithURL(`users/${helperUid}/helping`,this.key);
+          await removeFromFirebaseWithUrlAndValue(`helps/${this.key}/usersRequested`, helperUid);
+          await notifyUser(helperUid,{type:"ACCEPT", screenToRedirect:"Helped", uidOfHelper:helperUid,timeStamp: new Date().getTime(), idOfHelpRequest: this.key});
+        } else {
+          Alert.alert("user already accepted");
+        }
     }
   
-    handleReject = (helperUid) => {
-      const data = await getDataFromFirebaseByValue(`helps/${this.key}/usersRejected`, helperUid);
+    handleReject = async (helperUid) => {
+      const data =  await getDataFromFirebase(`helps/${this.key}/usersRejected/${helperUid}`);
       if(!data.val()){
         await pushToFirebaseWithURL(`helps/${this.key}/usersRejected`, helperUid);
-        await removeFromFirebase(this.usersRequested,helperUid);
+        await removeFromFirebaseWithUrlAndValue(`helps/${this.key}/usersRequested`, helperUid);
         await notifyUser(helperUid,{type:"REJECT", screenToRedirect:"NONE", uidOfHelper:helperUid,timeStamp: new Date().getTime(), idOfHelpRequest: this.key});
       } else {
         Alert.alert("user already rejected");

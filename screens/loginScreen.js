@@ -15,7 +15,8 @@ const emailRegex = regex.email;
 
 class LoginScreen extends Component {
   static navigationOptions = {
-    title: SCREEN_TITLES.LOGIN
+    title: SCREEN_TITLES.LOGIN,
+    headerLeft: null
   };
 
   constructor() {

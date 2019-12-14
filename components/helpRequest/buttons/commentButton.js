@@ -4,10 +4,11 @@ import Icon from "react-native-vector-icons/FontAwesome5";
 import { FLAG_COLOR_WHITE, FLAG_COLOR_ORANGE } from "../../../constants/styleConstants";
 import { firebaseOnEventListner, firebaseOnEventListnerTurnOff } from '../../../fireBase/database';
 import { withNavigation } from 'react-navigation';
+
 class CommentButton extends Component {
     constructor(props){
       super(props);
-      const {data } = this.props;
+      const { data } = this.props;
       this.helpRequest = this.props.helpRequest;
       this.key = data.key;
       this.state = {

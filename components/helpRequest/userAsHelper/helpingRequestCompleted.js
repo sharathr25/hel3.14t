@@ -15,8 +15,8 @@ class HelpingRequestCompleted extends Component {
     this.key = data.key;
     this.uid = firebase.auth().currentUser.uid;
     this.state = {
-        helpers:[],
-        showHelpRequests: false
+      helpers:[],
+      showHelpRequests: false
     }
   }
 
@@ -51,13 +51,13 @@ getHelpers = () => {
 }
 
   render() {
-
     const { data,title } = this.props;
     const { description } = data;
     return (
       <Card>
           <HelpDescription data={{description}}/>
-          {this.state.helpers.length !== 0 && 
+          {
+            this.state.helpers.length !== 0 && 
             <View style={{marginLeft: 10, marginBottom:10}}>
               <Text>{title}</Text>
               <View>{this.getHelpers()}</View>

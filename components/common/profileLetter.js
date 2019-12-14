@@ -1,21 +1,19 @@
-import React, { Component } from 'react';
+import React from 'react';
 import {
   Text, View, StyleSheet
 } from 'react-native';
 import { FLAG_COLOR_ORANGE, FLAG_COLOR_WHITE } from '../../constants/styleConstants';
 
-class ProfileLetter extends Component {
-  render() {
-    const { letter } = this.props;
-    return (
-      <View style={styles.textContainer}>
-        <View style={styles.textWrapper}>
-          <Text style={styles.text}>{letter}</Text>
-        </View>
+const ProfileLetter = props => {
+  const { letter } = props;
+  return (
+    <View style={styles.textContainer}>
+      <View style={styles.textWrapper}>
+        <Text style={styles.text}>{letter}</Text>
       </View>
-    );
-  }
-}
+    </View>
+  );
+};
 
 export default ProfileLetter;
 
