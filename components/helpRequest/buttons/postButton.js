@@ -31,13 +31,8 @@ export default class PostButton extends Component {
         firebaseOnEventListner(`helps/${this.key}`,"child_changed",this.updateState);
     }
 
-<<<<<<< HEAD
-    componentWillUnmount(){
-        firebaseOnEventListnerTurnOff(`helps/${this.key}`);
-=======
     componentWillUnmount() {
         firebaseOnEventListnerTurnOff(`helps/${this.key}`);   
->>>>>>> 3ace4e1cb692856743f3a9aa7a0d93df860ceef0
     }
 
     options = {
