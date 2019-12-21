@@ -13,7 +13,7 @@ class HelpRequestCompleted extends Component {
     super(props);
     const { data } = this.props;
     this.key = data.key;
-    this.uid = firebase.auth().currentUser.uid;
+    this.uid = firebase.auth().currentUser && firebase.auth().currentUser.uid;
     this.state = {
       helpers:[],
       showHelpRequests: false

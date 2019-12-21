@@ -8,7 +8,7 @@ import { TouchableOpacity } from "react-native-gesture-handler";
 class Notification extends Component {
     constructor(props){
         super(props);
-        this.uid = firebase.auth().currentUser ? firebase.auth().currentUser.uid : null;
+        this.uid = firebase.auth().currentUser ? firebase.auth().currentUser && firebase.auth().currentUser.uid : null;
         this.state = {
             notifications: []
         }

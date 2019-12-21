@@ -8,24 +8,17 @@ import SignUpScreen from '../screens/signUpScreen';
 import LoginScreen from '../screens/loginScreen';
 import TermsAndConditionsScreen from '../screens/termsAndConditions';
 import ResetPassword from '../screens/resetPassword';
-import NotificationsScreen from '../screens/notificationsScreen';
-
-import DrawerNavigator from './mainScreenDrawNavigator';
 
 // constants
 import { FLAG_COLOR_WHITE, FLAG_COLOR_ORANGE } from '../constants/styleConstants';
-import CommentsScreen from '../screens/commentsScreen';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 
-const MainNavigator = createStackNavigator(
+const MainNavigatorWithoutUser = createStackNavigator(
     {
       SignUp: { screen: SignUpScreen },
-      Main: {screen:DrawerNavigator},
       Login: { screen: LoginScreen },
       ResetPassword: { screen: ResetPassword },
       TermsAndConditions: { screen: TermsAndConditionsScreen},
-      comments: {screen: CommentsScreen},
-      Notifications:{screen: NotificationsScreen}
     },
     {
       initialRouteName: 'Login',
@@ -48,4 +41,4 @@ const MainNavigator = createStackNavigator(
       },
   );
 
-  export default MainNavigator
+  export default MainNavigatorWithoutUser;

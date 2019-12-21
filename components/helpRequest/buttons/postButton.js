@@ -13,7 +13,7 @@ import {
 export default class PostButton extends Component {
     constructor(props){
         super(props);
-        this.uid = firebase.auth().currentUser.uid;
+        this.uid = firebase.auth().currentUser && firebase.auth().currentUser.uid;
         this.key = this.props.keyOfHelpRequest;
         this.state = {
             imgSource:"",

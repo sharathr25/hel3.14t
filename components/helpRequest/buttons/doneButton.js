@@ -20,7 +20,7 @@ export default class DoneButton extends Component {
     constructor(props){
         super(props);
         const {data} = this.props;
-        this.uid = firebase.auth().currentUser && firebase.auth().currentUser.uid;
+        this.uid = firebase.auth().currentUser && firebase.auth().currentUser && firebase.auth().currentUser.uid;
         this.key = this.props.keyOfHelpRequest;
         this.state = {
             status : data.status

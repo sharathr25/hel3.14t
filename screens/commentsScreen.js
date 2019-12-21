@@ -15,7 +15,7 @@ class CommentsScreen extends Component {
 
     constructor(props){
         super(props);
-        this.uid = firebase.auth().currentUser.uid;
+        this.uid = firebase.auth().currentUser && firebase.auth().currentUser.uid;
         this.state = {
             comments : [],
             comment:"",
