@@ -1,10 +1,10 @@
 // packages
-import React, { Component } from 'react';
+import React, { useEffect, useState } from 'react';
 import { createAppContainer } from 'react-navigation';
 import geolocation from 'react-native-geolocation-service';
-import { PermissionsAndroid, Alert } from "react-native";
+import { PermissionsAndroid, Alert, Text } from "react-native";
 import { useScreens } from 'react-native-screens';
-import firebase from 'react-native-firebase';
+import { useAuth } from './auth';
 useScreens();
 
 import MainNavigator from './navigators/mainStackNavigator';
@@ -13,25 +13,20 @@ import Context from './context';
 
 const AppContainer = createAppContainer(MainNavigator);
 
-class App extends Component {
-  constructor(){
-    super();
-    this.state = {
-      latitude: null,
-      longitude: null,
-      locationProviderAvailable: false,
-      locationErrorMessage:"",
-      currentUser: null
-    }
-  }
+function App(props) {
+  const { initializing, user } = useAuth()
+  const [latitude, setLattitude] = useState(null);
+  const [longitude, setLongitude] = useState(null);
+  const [locationProviderAvailable, setLocationProviderAvailable] = useState(false);
+  const [locationErrorMessage, setLocationErrorMessage] = useState('');
 
   setLocation = (position) => {
-    this.setState({
-      latitude:position.coords.latitude,
-      longitude:position.coords.longitude,
-      locationProviderAvailable: true,
-      locationErrorMessage:""
-    });
+    const { coords } = position;
+    const { latitude, longitude } = coords;
+    setLattitude(latitude);
+    setLongitude(longitude);
+    setLocationProviderAvailable(true);
+    setLocationErrorMessage('');
   }
 
   setLocationError = (error) => {
@@ -45,49 +40,43 @@ class App extends Component {
       case 4:locationErrorMessage="Google play service is not installed or has an older version";break;
       case 5:locationErrorMessage="Location service is not enabled or location mode is not appropriate for the current request";break;
     }
-    this.setState({
-      locationErrorMessage,
-      locationProviderAvailable: false
-    });
+
+    setLocationErrorMessage(locationErrorMessage);
+    setLocationProviderAvailable(false);
   }
 
   watchPosition = () => {
     geolocation.watchPosition(
-      (position) => this.setLocation(position),
-      (error) => this.setLocationError(error),
+      (position) => setLocation(position),
+      (error) => setLocationError(error),
       { enableHighAccuracy: true, timeout: 15000, maximumAge: 10000 }
     );
   }
 
   getPosition = () => {
     geolocation.getCurrentPosition(
-      (position) => this.setLocation(position),
-      (error) => {this.setLocationError(error)},
+      (position) => setLocation(position),
+      (error) => setLocationError(error),
       { enableHighAccuracy: true, timeout: 15000, maximumAge: 10000 }
     );
   }
 
-  componentDidMount() {
-    PermissionsAndroid.request(PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION)
-      .then(() => this.getPosition())
-      .catch((err)=>Alert.alert("GPS can't be accessed"));
-    this.watchPosition();
-    firebase.auth().onAuthStateChanged((user) => {
-      if (user && !this.state.currentUser) {
-        console.log(user);
-        this.setState({ currentUser: user });
-      }
-    });
+
+  if (initializing) {
+    return <Text>Loading</Text>
   }
 
-  render() {
-    const { latitude, longitude, locationErrorMessage, locationProviderAvailable, currentUser } = this.state;
-    return (
-      <Context.Provider value={{latitude, longitude, locationErrorMessage, locationProviderAvailable,getPosition:this.getPosition, navigation:this.props.navigation, currentUser}}>
-        <AppContainer />
-      </Context.Provider>
-    );
-  }
+  useEffect(() => {
+    PermissionsAndroid.request(PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION)
+      .then(() => getPosition())
+      .catch((err)=>Alert.alert("GPS can't be accessed"));
+    watchPosition();
+  }, []);
+
+  return (
+    <Context.Provider value={{latitude, longitude, locationErrorMessage, locationProviderAvailable,getPosition:getPosition, navigation:props.navigation, currentUser:user}}>
+      <AppContainer />
+    </Context.Provider>)
 }
 
 export default App;

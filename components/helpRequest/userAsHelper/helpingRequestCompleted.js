@@ -4,7 +4,6 @@ import firebase from "react-native-firebase";
 import HelpDescription from "../common/helpDescription";
 import { getUser, firebaseOnEventListner, firebaseOnEventListnerTurnOff } from "../../../fireBase/database";
 import AccetedUser from "../common/acceptedUser";
-import Icon from 'react-native-vector-icons/FontAwesome';
 import { FLAG_COLOR_ORANGE } from "../../../constants/styleConstants";
 import Card from '../../common/card';
 
