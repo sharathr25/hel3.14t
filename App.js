@@ -4,6 +4,7 @@ import { createAppContainer } from 'react-navigation';
 import geolocation from 'react-native-geolocation-service';
 import { PermissionsAndroid, Alert } from "react-native";
 import { useScreens } from 'react-native-screens';
+import firebase from 'react-native-firebase';
 useScreens();
 
 import MainNavigator from './navigators/mainStackNavigator';
@@ -19,7 +20,8 @@ class App extends Component {
       latitude: null,
       longitude: null,
       locationProviderAvailable: false,
-      locationErrorMessage:""
+      locationErrorMessage:"",
+      currentUser: null
     }
   }
 
@@ -70,12 +72,18 @@ class App extends Component {
       .then(() => this.getPosition())
       .catch((err)=>Alert.alert("GPS can't be accessed"));
     this.watchPosition();
+    firebase.auth().onAuthStateChanged((user) => {
+      if (user && !this.state.currentUser) {
+        console.log(user);
+        this.setState({ currentUser: user });
+      }
+    });
   }
 
   render() {
-    const { latitude, longitude, locationErrorMessage, locationProviderAvailable } = this.state;
+    const { latitude, longitude, locationErrorMessage, locationProviderAvailable, currentUser } = this.state;
     return (
-      <Context.Provider value={{latitude, longitude, locationErrorMessage, locationProviderAvailable,getPosition:this.getPosition, navigation:this.props.navigation}}>
+      <Context.Provider value={{latitude, longitude, locationErrorMessage, locationProviderAvailable,getPosition:this.getPosition, navigation:this.props.navigation, currentUser}}>
         <AppContainer />
       </Context.Provider>
     );

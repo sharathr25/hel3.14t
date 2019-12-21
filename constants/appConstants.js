@@ -55,3 +55,10 @@ export const SCREEN_TITLES = {
   RESET_PASSOWRD: 'Reset password',
   TERMS_AND_CONDITIONS: 'Terms And Conditions'
 };
+
+export const NOTIFICATION_TYPES = {
+  REQUEST : "Helper is willing to help you, please click to check",
+  ACCEPT : "You got accepted to help, please go and help. All the best",
+  REJECT : "You got rejected",
+  CLOSED : "Request got closed" 
+}
