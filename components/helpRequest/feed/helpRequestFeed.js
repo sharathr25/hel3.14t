@@ -10,7 +10,6 @@ if (Platform.OS === 'android') {
 }
 
 const HelpRequestFeed = (props) => {
-  console.log(props.feedItems);
   const contextValues = useContext(Context);
 
   gethelpRequestsSortedByDistance = (feedItems) => {

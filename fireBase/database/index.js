@@ -87,7 +87,7 @@ export const removeFromFirebaseWithURl = async (url) => {
 
 export const pushToFirebaseWithURL = async (dbUrl,data) => {
   try {
-    const snapShot = firebase.database().ref(dbUrl).push(data)
+    const snapShot = await firebase.database().ref(dbUrl).push(data)
     return snapShot.key;    
   } catch (error) {
     console.log(error);
