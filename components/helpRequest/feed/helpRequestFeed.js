@@ -1,14 +1,7 @@
-import React, { Component } from "react";
-import { FlatList,Alert,LayoutAnimation,Platform,UIManager } from 'react-native';
-import HelpRequest from "./helpRequest";
-import CompletedHelpRequest from './completedHelpRequest';
+import React, { useContext } from "react";
+import { FlatList,Platform,UIManager } from 'react-native';
 import Context from "../../../context";
 import { getDistanceFromLatLonInKm, sortByDistance } from '../../../utils';
-import { firebaseOnEventListner, firebaseOnEventListnerTurnOff, getFeed } from "../../../fireBase/database";
-
-const FIREBASE_FETCH_LIMIT = 5;
-const HELPREQUEST_FEED_LIMIT = 50;
-const HELPREQUEST_FEED_REMOVE_LIMIT = 5;
 
 if (Platform.OS === 'android') {
   if (UIManager.setLayoutAnimationEnabledExperimental) {
@@ -16,41 +9,18 @@ if (Platform.OS === 'android') {
   }
 }
 
-class HelpRequestFeed extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      helpRequests: [],
-      helpRequestsSortedByDistance:[],
-      referenceToOldestKey: "",
-      isLoading: false,
-      lastKey:"",
-    };
-  }
+const HelpRequestFeed = (props) => {
+  console.log(props.feedItems);
+  const contextValues = useContext(Context);
 
-  setHelpRequests = (keys,data) => {
-    let { helpRequests } = this.state;
-    const results = keys.map((key) => {
-      return {...data[key],key}
-    });
-    const { locationProviderAvailable, locationErrorMessage } = this.context;
-    if(!locationProviderAvailable){
-      Alert.alert(locationErrorMessage.length===0?'location not availabe':locationErrorMessage);
-      return;
-    }
-    helpRequests = helpRequests.length >= HELPREQUEST_FEED_LIMIT ? helpRequests.splice(-HELPREQUEST_FEED_REMOVE_LIMIT) : helpRequests;
-    const newHelpRequests = this.getHelpRequestsByDistance([...results,...helpRequests]);
+  gethelpRequestsSortedByDistance = (feedItems) => {
+    const newHelpRequests = getHelpRequestsByDistance(feedItems);
     const helpRequestsSortedByDistance = sortByDistance(newHelpRequests);
-    this.setState({ 
-      helpRequests: newHelpRequests,
-      helpRequestsSortedByDistance: helpRequestsSortedByDistance, 
-      referenceToOldestKey: keys[0], 
-      referenceToOldestStartKey: keys[keys.length - 1],
-      isLoading: false });
+    return helpRequestsSortedByDistance;
   }
 
   getHelpRequestsByDistance = (helpRequests) => {
-    const {latitude, locationProviderAvailable, longitude} = this.context;
+    const {latitude, locationProviderAvailable, longitude} = contextValues;
     if(!locationProviderAvailable) return helpRequests;
     helpRequestsWithDistance = helpRequests.map((helpRequest) => {
       const currentLatitude = latitude
@@ -71,76 +41,26 @@ class HelpRequestFeed extends Component {
     return helpRequestsWithDistance;
   }
 
-  getHelpRequests = async () => {
-    const { db } = this.props;
-    const { referenceToOldestKey,lastKey } = this.state;
-    const data = await getFeed(db, true, null, 1);
-    if(data.val()===null)return;
-    if(lastKey !== Object.keys(data.val())[0]){
-      this.setState({lastKey:Object.keys(data.val())[0]});
-    }
-    if(lastKey !== "" && referenceToOldestKey !== "" && referenceToOldestKey === lastKey){
-      return;//return if we are last key in firebase
-    }
-    this.setState({ isLoading: true});
-    try {
-      const data = referenceToOldestKey === "" ? await getFeed(db, true, null, FIREBASE_FETCH_LIMIT) : await getFeed(db, false, referenceToOldestKey, FIREBASE_FETCH_LIMIT);;
-      if(data.val()===null){
-        this.setState({ isLoading: false });
-        return;
-      }
-      const keys = referenceToOldestKey === "" ? Object.keys(data.val()).sort().reverse() : Object.keys(data.val()).sort().slice(1).reverse();
-      this.setHelpRequests(keys, data.val())
-    } catch(err) {
-      console.log(err);
-      this.setState({isLoading: false})
-    }
-  }
-
-  removeFromHelpRequests = (data) => {
-    const { helpRequests } = this.state;
-      const newHelpRequests = helpRequests.filter((helpRequest)=>{
-        return helpRequest.key !== data.key
-      });
-      const helpRequestsWithDistance = this.getHelpRequestsByDistance(newHelpRequests);
-      const helpRequestsSortedByDistance = sortByDistance(helpRequestsWithDistance);
-      this.setState({ helpRequestsWithDistance , helpRequests: newHelpRequests, helpRequestsSortedByDistance});
-      if(newHelpRequests.length === 0){
-        this.setState({referenceToOldestKey:""})
-    }
-  }
-
-  componentDidMount() {
-    this.getHelpRequests();
-    const {db} = this.props;
-    firebaseOnEventListner(`/${db}`,'child_removed', this.removeFromHelpRequests);
-  }
-
-  componentWillUnmount(){
-    firebaseOnEventListnerTurnOff(`/${db}`);
+  getHelpRequests = () => {
+    const { feedItems } = props;
+    if(feedItems.length === 0) return;
+    setHelpRequestsWithDistance(feedItems);
   }
 
   getHelpRequest = ({item}) => {
-    const helpRequest = item;
-    const {db} = this.props;
-    return db==="helped" ?<CompletedHelpRequest data={helpRequest} key={helpRequest.key} /> :<HelpRequest data={helpRequest} key={helpRequest.key} /> 
-  };
-
-  render() {
-    const { isLoading } = this.state;
-    LayoutAnimation.easeInEaseOut(()=>Alert.alert("new helpre"));
-    return (
-      <FlatList
-        data={this.state.helpRequestsSortedByDistance}
-        renderItem={this.getHelpRequest}
-        keyExtractor={(item, index) => index.toString()}
-        onScroll={this.onScroll}
-        refreshing={isLoading}
-        onRefresh={this.getHelpRequests}
-      />
-    );
+    const {ChildComponent} = props;
+    return <ChildComponent data={item} key={item.key} />
   }
+
+  return (
+    <FlatList
+        data={gethelpRequestsSortedByDistance(props.feedItems)}
+        renderItem={getHelpRequest}
+        keyExtractor={(item, index) => index.toString()}
+        refreshing={props.isLoading}
+        onRefresh={props.getFeedItems}
+      />
+  );
 }
 
-HelpRequestFeed.contextType = Context;
 export default HelpRequestFeed;
