@@ -1,5 +1,5 @@
 // packages
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { createAppContainer } from 'react-navigation';
 import geolocation from 'react-native-geolocation-service';
 import { PermissionsAndroid, Alert, Text } from "react-native";
@@ -7,14 +7,16 @@ import { useScreens } from 'react-native-screens';
 import { useAuth } from './auth';
 useScreens();
 
-import MainNavigator from './navigators/mainStackNavigator';
+import mainStackNavigatorWithUser from './navigators/mainStackNavigatorWithUser';
+import mainStackNavigatorWithoutUser from './navigators/mainStackNavigatorWithoutUser';
 
 import Context from './context';
 
-const AppContainer = createAppContainer(MainNavigator);
+const AppContainerWithUser = createAppContainer(mainStackNavigatorWithUser);
+const AppContainerWithoutUser = createAppContainer(mainStackNavigatorWithoutUser);
 
 function App(props) {
-  const { initializing, user } = useAuth()
+  const { initializing, user } = useAuth();
   const [latitude, setLattitude] = useState(null);
   const [longitude, setLongitude] = useState(null);
   const [locationProviderAvailable, setLocationProviderAvailable] = useState(false);
@@ -61,22 +63,24 @@ function App(props) {
     );
   }
 
+  PermissionsAndroid.request(PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION)
+    .then(() => getPosition())
+    .catch((err)=>Alert.alert("GPS can't be accessed"));
+  watchPosition();
 
   if (initializing) {
     return <Text>Loading</Text>
   }
 
-  useEffect(() => {
-    PermissionsAndroid.request(PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION)
-      .then(() => getPosition())
-      .catch((err)=>Alert.alert("GPS can't be accessed"));
-    watchPosition();
-  }, []);
+  if(user) {
+    return (
+      <Context.Provider value={{latitude, longitude, locationErrorMessage, locationProviderAvailable,getPosition:getPosition, navigation:props.navigation, currentUser:user}}>
+        <AppContainerWithUser />
+      </Context.Provider>
+    );
+  }
 
-  return (
-    <Context.Provider value={{latitude, longitude, locationErrorMessage, locationProviderAvailable,getPosition:getPosition, navigation:props.navigation, currentUser:user}}>
-      <AppContainer />
-    </Context.Provider>)
+  return <AppContainerWithoutUser /> 
 }
 
 export default App;

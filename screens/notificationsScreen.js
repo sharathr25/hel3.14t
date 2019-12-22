@@ -5,7 +5,7 @@ import { getDataFromFirebase, firebaseOnEventListner, firebaseOnEventListnerTurn
 import NotificationItem from '../components/common/NotificationItem';
 import Context from '../context';
 
-const uid = firebase.auth().currentUser &&  firebase.auth().currentUser.uid;
+const uid = firebase.auth().currentUser &&  firebase.auth().currentUser && firebase.auth().currentUser.uid;
 
 function useNotifications() {
     const [notifications, setNotifications] = useState([]);

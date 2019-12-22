@@ -1,4 +1,4 @@
-import React, { useContext, useState, useEffect} from 'react';
+import React, { useState } from 'react';
 import { Button } from 'react-native-elements';
 import { View, Alert } from 'react-native';
 import { SCREEN_TITLES } from '../constants/appConstants';
@@ -9,7 +9,6 @@ import ErrorMessage from '../components/common/errorMessage';
 import ScreenRedirecter from '../components/common/screenRedirecter';
 import InputComponent from '../components/common/inputComponent';
 import Loader from '../components/common/inlineLoader';
-import Context from '../context';
 
 const emailRegex = regex.email;
 
@@ -19,16 +18,6 @@ const LoginScreen = (props) => {
   const [password, setPassword] = useState('');
   const [passwordErrorMessage, setPasswordErrorMessage] = useState('');
   const [loaderVisible, setLoaderVisible] = useState(false);
-  const contextValues = useContext(Context);
-  const {currentUser} = contextValues;
-
-  useEffect(() => {
-    const { currentUser } = contextValues;
-    if(currentUser){
-       props.navigation.replace("Main");
-      //fireBase.auth().signOut();
-    }
-  },[currentUser]);
 
   handleSignUp = () => {
     const { navigation } = props;

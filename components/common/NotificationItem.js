@@ -7,7 +7,7 @@ import { NOTIFICATION_TYPES } from '../../constants/appConstants';
 import { removeFromFirebaseWithURl } from '../../fireBase/database';
 import Time from './time';
 
-const uid = firebase.auth().currentUser && firebase.auth().currentUser.uid;
+const uid = firebase.auth().currentUser && firebase.auth().currentUser && firebase.auth().currentUser.uid;
 
 const removeFromNotfications = (key) => {
     removeFromFirebaseWithURl(`users/${uid}/notifications/${key}`);

@@ -12,7 +12,7 @@ const LIMIT = 3;
 class HelpRequestForm extends Component {
   constructor() {
     super();
-    this.uid = firebase.auth().currentUser.uid;
+    this.uid = firebase.auth().currentUser && firebase.auth().currentUser && firebase.auth().currentUser.uid;
     this.state = {
       formVisible: false,
       noPeopleRequired: 1,

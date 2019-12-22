@@ -4,26 +4,15 @@ import { createBottomTabNavigator } from 'react-navigation';
 import { View, Text } from 'react-native'
 
 import HelpRequestFeed from "../components/helpRequest/feed/helpRequestFeed";
+import Feed from '../components/helpRequest/feed/Feed';
 import HelpRequestForm from "../components/helpRequest/common/helpRequestForm";
 import { FLAG_COLOR_ORANGE, FLAG_COLOR_WHITE } from '../constants/styleConstants';
+import HelpRequest from '../components/helpRequest/feed/helpRequest';
 
-class FirstRoute extends React.Component{
-  render(){
-    return <View style={{flex:1}}><HelpRequestFeed db="helps" /><HelpRequestForm /></View>;
-  }
-}
+const FirstRoute = () => <View style={{flex: 1}}><Feed db="helps" FeedWrapper={HelpRequestFeed} FeedItem={HelpRequest} /><HelpRequestForm /></View>;
 
-// class SecondRoute extends React.Component{
-//   render(){
-//     return <View style={{flex:1}} ><HelpRequestFeed db="helped" /></View>;
-//   }
-// }
+const ThirdRoute = () => <View style={{flex:1}} ><Text>route 3</Text></View>;
 
-class ThirdRoute extends React.Component{
-  render(){
-    return <View style={{flex:1}} ><Text>route 3</Text></View>;
-  }
-}
 const BottomTabNavigator = createBottomTabNavigator({
     Help:{screen:FirstRoute},
     // Helped:{screen:SecondRoute}, disabling 'Helped' feed for now
