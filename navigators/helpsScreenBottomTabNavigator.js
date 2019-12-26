@@ -3,14 +3,14 @@ import React from 'react';
 import { createBottomTabNavigator } from 'react-navigation';
 import { FLAG_COLOR_ORANGE, FLAG_COLOR_WHITE } from '../constants/styleConstants';
 import MyHelpRequestsScreen from '../screens/myHelpRequestsScreen';
-import { HELPS_REQUESTED_DB } from '../constants/appConstants';
+import { HELPS_REQUESTED_DB, HELPS_COMPLETED_DB } from '../constants/appConstants';
 
 const MyHelpRequests = () => {
     return <MyHelpRequestsScreen db={HELPS_REQUESTED_DB} />
 }
 
 const MyHelpRequestsCompleted = () => {
-    return <MyHelpRequestsScreen db="helpRequetsCompleted" />
+    return <MyHelpRequestsScreen db={HELPS_COMPLETED_DB} />
 }
 
 const BottomTabNavigator = createBottomTabNavigator({

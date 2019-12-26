@@ -4,7 +4,7 @@ import HelpDescription from "../common/helpDescription";
 import Time from "../../common/time";
 import HelpButton from "../buttons/helpButton";
 import ReferButton from "../buttons/referButton";
-import { firebaseOnEventListner, firebaseOnEventListnerTurnOff, updateFirebaseWithURL } from "../../../fireBase/database";
+import { firebaseOnEventListner, firebaseOnEventListnerTurnOff } from "../../../fireBase/database";
 import NoOfHelpers from './noOfHelpers';
 import Distance from '../../common/distance';
 import Card from "../../common/card";
@@ -29,19 +29,14 @@ const HelpRequest = (props) => {
   updateState = (data) => {
     if(Object.keys(state).includes(data.key)){
       setState( { ...state,[data.key]: data.val() })
-      if(data.key === 'noPeopleAccepted'){
-        if(noPeopleRequired === data.val()){
-          updateFirebaseWithURL(`${HELPS_REQUESTED_DB}/${key}`,'status','ON_GOING');
-        }
-      }
     }
   }
 
   useEffect(() => {
     firebaseOnEventListner(`${HELPS_REQUESTED_DB}/${key}`,"child_changed",updateState);
-    return (() => {
-      firebaseOnEventListnerTurnOff(`${HELPS_REQUESTED_DB}/${key}`)
-    });
+    // return (() => {
+    //   firebaseOnEventListnerTurnOff(`${HELPS_REQUESTED_DB}/${key}`)
+    // });
   });
 
   return (

@@ -10,14 +10,18 @@ const AccetedUser = (props) => {
   const [mobileNumber, setMobileNumber] = useState('');
 
   useEffect(() => {
+    let isSubscribed = true;
     const {uidOfAcceptedHelper} = props;
     const url = `users/${uidOfAcceptedHelper}`;
     getDataFromFirebase(url).then((dataOfAcceptedHelper) => {
       const { name, xp, mobileNumber} = dataOfAcceptedHelper.val();
-      setMobileNumber(mobileNumber);
-      setname(name);
-      setXp(xp);
+      if(isSubscribed) {
+        setMobileNumber(mobileNumber);
+        setname(name);
+        setXp(xp);
+      }
     });
+    return () => isSubscribed=false;
   }, []);
 
     return (

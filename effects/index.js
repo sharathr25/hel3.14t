@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { firebaseOnEventListner, firebaseOnEventListnerTurnOff } from './database';
+import { firebaseOnEventListner, firebaseOnEventListnerTurnOff } from '../fireBase/database';
 
 export function useQueue(db) {
     const [items, setItems] = useState([]);

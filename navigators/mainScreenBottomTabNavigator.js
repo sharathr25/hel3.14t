@@ -12,7 +12,7 @@ import { HELPS_REQUESTED_DB } from '../constants/appConstants';
 
 const FirstRoute = () => <View style={{flex: 1}}><Feed db={HELPS_REQUESTED_DB} FeedWrapper={HelpRequestFeed} FeedItem={HelpRequest} /><HelpRequestForm /></View>;
 
-const ThirdRoute = () => <View style={{flex:1}} ><Text>route 3</Text></View>;
+const ThirdRoute = () => <View style={{flex:1}} ><Text>Helpers</Text></View>;
 
 const BottomTabNavigator = createBottomTabNavigator({
     Help:{screen:FirstRoute},

@@ -1,6 +1,6 @@
 import React, { useContext, useState, useEffect } from 'react';
 import { FlatList } from 'react-native';
-import HelpRequestRequestedUsers from '../components/helpRequest/userAsRequester/helpRequestUserRequested';
+import HelpRequest from '../components/helpRequest/user/helpRequest';
 import { firebaseOnEventListner, getDataFromFirebase, firebaseOnEventListnerTurnOff } from '../fireBase/database';
 import Context from '../context';
 
@@ -29,7 +29,7 @@ const MyHelpRequestsScreen = (props) => {
         setHelpRequests(prevState => prevState.filter((datum) => datum.key !== data.val()));
     }
 
-    getHelpRequest = ({item}) => <HelpRequestRequestedUsers data={item} key={item.key} />
+    getHelpRequest = ({item}) => <HelpRequest data={item} key={item.key} db={db} />
     
     return (
         <FlatList

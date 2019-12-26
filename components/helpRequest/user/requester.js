@@ -12,10 +12,13 @@ const Requester = props => {
   const [xp, setXp] = useState(0);
 
   const handleAccept = async () => {
-    const {uidOfRequestingHelper, keyOfHelpRequest, noPeopleAccepted} = props;
+    const {uidOfRequestingHelper, keyOfHelpRequest, noPeopleAccepted, noPeopleRequired} = props;
     const data = await getDataFromFirebase(`${HELPS_REQUESTED_DB}/${keyOfHelpRequest}/usersAccepted/${uidOfRequestingHelper}`);
       if(!data.val()){
-        updateFirebaseWithURL(`${HELPS_REQUESTED_DB}/${keyOfHelpRequest}`,"noPeopleAccepted",noPeopleAccepted+1);
+        await updateFirebaseWithURL(`${HELPS_REQUESTED_DB}/${keyOfHelpRequest}`,"noPeopleAccepted",noPeopleAccepted+1);
+        if(noPeopleRequired === noPeopleAccepted+1){
+          updateFirebaseWithURL(`${HELPS_REQUESTED_DB}/${keyOfHelpRequest}`,"status","ON_GOING");
+        }
         await pushToFirebaseWithURL(`${HELPS_REQUESTED_DB}/${keyOfHelpRequest}/usersAccepted`,uidOfRequestingHelper);
         await removeFromFirebaseWithUrlAndValue(`${HELPS_REQUESTED_DB}/${keyOfHelpRequest}/usersRequested`, uidOfRequestingHelper);
         await notifyUser(uidOfRequestingHelper,{type:"ACCEPT", screenToRedirect:"Helped", uidOfHelper:uidOfRequestingHelper,timeStamp: new Date().getTime(), idOfHelpRequest: keyOfHelpRequest});
@@ -37,13 +40,17 @@ const Requester = props => {
   };
 
   useEffect(() => {
+    let isSubscribed = true;
     const { uidOfRequestingHelper } = props;
     const url = `users/${uidOfRequestingHelper}`;
     getDataFromFirebase(url).then((dataOfRequestingHelper) => {
       const {name, xp} = dataOfRequestingHelper.val();
-      setname(name);
-      setXp(xp);
+      if(isSubscribed){
+        setname(name);
+        setXp(xp);
+      }
     });
+    return () => isSubscribed = false;
   }, []);
 
   return (
