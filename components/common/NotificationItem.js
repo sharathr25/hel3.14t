@@ -14,6 +14,7 @@ const removeFromNotfications = (key) => {
 }
 
 const NotificationItem = (props) => {
+    console.log(props);
     const { item } = props;
     return (
         <View style={styles.notificationContainer}>

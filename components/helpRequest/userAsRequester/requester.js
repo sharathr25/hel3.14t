@@ -1,28 +1,60 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Text, View, TouchableOpacity, StyleSheet } from 'react-native';
 import { FLAG_COLOR_GREEN } from '../../../constants/styleConstants';
 import ProfileLetter from '../../common/profileLetter';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import BoxText from '../../common/boxText';
+import {getDataFromFirebase, updateFirebaseWithURL, removeFromFirebaseWithUrlAndValue, notifyUser, pushToFirebaseWithURL} from '../../../fireBase/database';
+import { HELPS_REQUESTED_DB } from '../../../constants/appConstants';
 
 const Requester = props => {
-  const handleAccept = () => {
-    props.handleAccept(props.uid);
+  const [name, setname] = useState('');
+  const [xp, setXp] = useState(0);
+
+  const handleAccept = async () => {
+    const {uidOfRequestingHelper, keyOfHelpRequest, noPeopleAccepted} = props;
+    const data = await getDataFromFirebase(`${HELPS_REQUESTED_DB}/${keyOfHelpRequest}/usersAccepted/${uidOfRequestingHelper}`);
+      if(!data.val()){
+        updateFirebaseWithURL(`${HELPS_REQUESTED_DB}/${keyOfHelpRequest}`,"noPeopleAccepted",noPeopleAccepted+1);
+        await pushToFirebaseWithURL(`${HELPS_REQUESTED_DB}/${keyOfHelpRequest}/usersAccepted`,uidOfRequestingHelper);
+        await removeFromFirebaseWithUrlAndValue(`${HELPS_REQUESTED_DB}/${keyOfHelpRequest}/usersRequested`, uidOfRequestingHelper);
+        await notifyUser(uidOfRequestingHelper,{type:"ACCEPT", screenToRedirect:"Helped", uidOfHelper:uidOfRequestingHelper,timeStamp: new Date().getTime(), idOfHelpRequest: keyOfHelpRequest});
+      } else {
+        Alert.alert("user already accepted");
+      }
   };
 
-  const handleReject = () => {
-    props.handleReject(props.uid);
+  const handleReject = async () => {
+    const { uidOfRequestingHelper , keyOfHelpRequest} = props;
+    const data =  await getDataFromFirebase(`${HELPS_REQUESTED_DB}/${keyOfHelpRequest}/usersRejected/${uidOfRequestingHelper}`);
+    if(!data.val()){
+      await pushToFirebaseWithURL(`${HELPS_REQUESTED_DB}/${keyOfHelpRequest}/usersRejected`, uidOfRequestingHelper);
+      await removeFromFirebaseWithUrlAndValue(`${HELPS_REQUESTED_DB}/${keyOfHelpRequest}/usersRequested`, uidOfRequestingHelper);
+      await notifyUser(uidOfRequestingHelper,{type:"REJECT", screenToRedirect:"NONE", uidOfHelper:uidOfRequestingHelper,timeStamp: new Date().getTime(), idOfHelpRequest: keyOfHelpRequest});
+    } else {
+      Alert.alert("user already rejected");
+    }
   };
+
+  useEffect(() => {
+    const { uidOfRequestingHelper } = props;
+    const url = `users/${uidOfRequestingHelper}`;
+    getDataFromFirebase(url).then((dataOfRequestingHelper) => {
+      const {name, xp} = dataOfRequestingHelper.val();
+      setname(name);
+      setXp(xp);
+    });
+  }, []);
 
   return (
     <View>
       <View style={{ flex:1, flexDirection:'row'}}>
         <View style={{margin: 5}}>
-          <ProfileLetter letter={`${props.name.substring(0,1)}`}/>
+          <ProfileLetter letter={`${name.substring(0,1)}`}/>
         </View>
         <View style={{ marginLeft: 5}}>
-          <Text>{props.name}</Text>
-          <BoxText leftText="XP" rightText={props.xp}></BoxText>
+          <Text>{name}</Text>
+          <BoxText leftText="XP" rightText={xp}></BoxText>
         </View>
         <View style={{ flex:1, flexDirection:'row'}}>
           <TouchableOpacity style={styles.accept} onPress={handleAccept}>

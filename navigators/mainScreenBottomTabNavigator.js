@@ -8,8 +8,9 @@ import Feed from '../components/helpRequest/feed/Feed';
 import HelpRequestForm from "../components/helpRequest/common/helpRequestForm";
 import { FLAG_COLOR_ORANGE, FLAG_COLOR_WHITE } from '../constants/styleConstants';
 import HelpRequest from '../components/helpRequest/feed/helpRequest';
+import { HELPS_REQUESTED_DB } from '../constants/appConstants';
 
-const FirstRoute = () => <View style={{flex: 1}}><Feed db="helps" FeedWrapper={HelpRequestFeed} FeedItem={HelpRequest} /><HelpRequestForm /></View>;
+const FirstRoute = () => <View style={{flex: 1}}><Feed db={HELPS_REQUESTED_DB} FeedWrapper={HelpRequestFeed} FeedItem={HelpRequest} /><HelpRequestForm /></View>;
 
 const ThirdRoute = () => <View style={{flex:1}} ><Text>route 3</Text></View>;
 

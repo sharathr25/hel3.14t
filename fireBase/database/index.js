@@ -118,6 +118,12 @@ export const firebaseOnEventListner = (dbUrl,eventType,cb) => {
   },err => console.log(err));
 } 
 
+export const firebaseOnEventListnerWithUrlAndType = (dbUrl, eventType) => {
+  return firebase.database().ref(dbUrl).on(eventType, data => {
+    return data;
+  })
+}
+
 export const firebaseOnEventListnerTurnOff = (dbUrl) => {
   firebase.database().ref(dbUrl).off();
 }

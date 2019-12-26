@@ -13,6 +13,7 @@ import {
     firebaseOnEventListner, 
     firebaseOnEventListnerTurnOff 
 } from '../../../fireBase/database';
+import { HELPS_REQUESTED_DB, HELPS_COMPLETED_DB } from "../../../constants/appConstants";
 
 const XP_INCREMENT_PER_HELP = 10;
 
@@ -32,17 +33,16 @@ export default class DoneButton extends Component {
     }
 
     componentDidMount() {
-        firebaseOnEventListner(`helps/${this.key}`,"child_changed",this.updateState);
+        firebaseOnEventListner(`${HELPS_REQUESTED_DB}/${this.key}`,"child_changed",this.updateState);
     }
 
     componentWillUnmount(){
-        firebaseOnEventListnerTurnOff(`helps/${this.key}`);
+        firebaseOnEventListnerTurnOff(`${HELPS_REQUESTED_DB}/${this.key}`);
     }
 
     removeAndNotifyHelpers = async (helpers) => {
         Object.keys(helpers.val()).forEach(async (key) => {
             const uidOfhelper = helpers.val()[key];
-            await removeFromFirebaseWithUrlAndValue(`users/${uidOfhelper}/helping`, this.key);
             await notifyUser(uidOfhelper,{type:"CLOSED", screenToRedirect:"NONE", timeStamp: new Date().getTime(), idOfHelpRequest: this.key});
             await removeFromFirebaseOrderingChild(`users/${uidOfhelper}/notifications`, this.key);
         });
@@ -59,7 +59,7 @@ export default class DoneButton extends Component {
     pushToHelpersDbAndAddXp = async (helpers, keyOfHelpRequest) => {
         Object.keys(helpers.val()).forEach(async (key) => {
             const uidOfhelper = helpers.val()[key];
-            await pushToFirebaseWithURL(`users/${uidOfhelper}/helpingCompleted`, keyOfHelpRequest);
+            await pushToFirebaseWithURL(`users/${uidOfhelper}/${HELPS_COMPLETED_DB}`, keyOfHelpRequest);
             const xp = await getDataFromFirebase(`users/${uidOfhelper}/xp`)
             await updateFirebaseWithURL(`users/${uidOfhelper}`,'xp',xp.val()+XP_INCREMENT_PER_HELP);
         });
@@ -67,7 +67,7 @@ export default class DoneButton extends Component {
 
     removeHelpRequestFromHelpsAndRequestedUser = async () => {
         await removeFromFirebaseWithUrlAndValue(`users/${this.uid}/helpsRequested`, this.key);
-        await removeFromFirebaseWithURl(`helps/${this.key}`);
+        await removeFromFirebaseWithURl(`${HELPS_REQUESTED_DB}/${this.key}`);
     }
 
     handleYes = async () => {
@@ -93,18 +93,18 @@ export default class DoneButton extends Component {
 
     updateHelpRequestAndUsers = async () => {
         //changing the current status of help request
-        const helpRequestUrl = `helps/${this.key}`;
+        const helpRequestUrl = `${HELPS_REQUESTED_DB}/${this.key}`;
         updateFirebaseWithURL(helpRequestUrl,'status',"COMPLETED");
 
         //getting the updated help request and pushing it to 'helped' queue
         const data = await getDataFromFirebase(helpRequestUrl);
 
         //pushing updated help request and getting the key so we can store them in users profile
-        const keyOfHelpRequest = await pushToFirebaseWithURL('helped', data);
-        await pushToFirebaseWithURL(`users/${this.uid}/helpRequetsCompleted`,keyOfHelpRequest);
+        const keyOfHelpRequest = await pushToFirebaseWithURL(HELPS_COMPLETED_DB, data);
+        await pushToFirebaseWithURL(`users/${this.uid}/${HELPS_COMPLETED_DB}`,keyOfHelpRequest);
 
         //Updating helpers with new key and removing old key
-        const urlToGetUsersAccepted = `helps/${this.key}/usersAccepted`
+        const urlToGetUsersAccepted = `${HELPS_REQUESTED_DB}/${this.key}/usersAccepted`
         const usersAccepted = await getDataFromFirebase(urlToGetUsersAccepted);
         if(usersAccepted.val()!==null){
             await this.removeAndNotifyHelpers(usersAccepted);

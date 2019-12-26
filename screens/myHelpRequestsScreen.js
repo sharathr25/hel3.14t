@@ -1,63 +1,43 @@
-import React, { Component } from 'react';
+import React, { useContext, useState, useEffect } from 'react';
 import { FlatList } from 'react-native';
-import firebase from 'react-native-firebase';
 import HelpRequestRequestedUsers from '../components/helpRequest/userAsRequester/helpRequestUserRequested';
-import HelpingRequest from '../components/helpRequest/userAsHelper/helpingRequest';
-import HelpRequestCompleted from '../components/helpRequest/userAsRequester/helpRequestCompleted';
-import HelpingRequestCompleted from '../components/helpRequest/userAsHelper/helpingRequestCompleted';
 import { firebaseOnEventListner, getDataFromFirebase, firebaseOnEventListnerTurnOff } from '../fireBase/database';
+import Context from '../context';
 
-class MyHelpRequestsScreen extends Component {
-    constructor(){
-        super();
-        this.uid = firebase.auth().currentUser && firebase.auth().currentUser.uid;
-        this.state = {
-            helpRequests: []
-        }
-    }
+const MyHelpRequestsScreen = (props) => {
+    const [helpRequests, setHelpRequests] = useState([]);
+    const contextValues = useContext(Context);
+    const { currentUser } = contextValues;
+    const { uid } = currentUser;
+    const { db } = props;
+
+    useEffect(() => {
+        firebaseOnEventListner(`users/${uid}/${db}`,'child_added', addToHelpRequests);
+        firebaseOnEventListner(`users/${uid}/${db}`, 'child_removed', removeFromHelpRequests);
+        return () => firebaseOnEventListnerTurnOff(`users/${uid}/${db}`)
+    },[]);
 
     addToHelpRequests = async (data) => {
         const key = data.val();
-        const dbTogetHelps = (this.props.db === "helpingCompleted" || this.props.db === "helpRequetsCompleted") ? "helped" : "helps"
+        const dbTogetHelps = props.db;
         const tempHelpRequest = await getDataFromFirebase(`${dbTogetHelps}/${key}`);
         const newHelprequest = {...tempHelpRequest.val(), key:key, distance:0};
-        this.setState({helpRequests:[newHelprequest,...this.state.helpRequests]});
+        setHelpRequests(prevState => [newHelprequest,...prevState]);
     }
 
     removeFromHelpRequests = (data) => {
-        const newnewHelprequests = this.state.helpRequests.filter((datum) => datum.key !== data.val());
-        this.setState({ helpRequests: newnewHelprequests });
+        setHelpRequests(prevState => prevState.filter((datum) => datum.key !== data.val()));
     }
 
-    componentDidMount() {
-        firebaseOnEventListner(`users/${this.uid}/${this.props.db}`,'child_added', this.addToHelpRequests);
-        firebaseOnEventListner(`users/${this.uid}/${this.props.db}`, 'child_removed', this.removeFromHelpRequests)
-    }
-
-    componentWillUnmount(){
-        firebaseOnEventListnerTurnOff(`users/${this.uid}/${this.props.db}`);
-    }
-
-    getHelpRequest = ({item}) => {
-        const helpRequest = item;
-        switch(this.props.db){
-            case "helpsRequested":return <HelpRequestRequestedUsers data={helpRequest} key={helpRequest.key} />;
-            case "helping":return <HelpingRequest data={helpRequest} key={helpRequest.key} db="helps" title="Helpers helping along with you"/>;
-            case "helpRequetsCompleted":return <HelpRequestCompleted data={helpRequest} key={helpRequest.key} db="helped" title="Helpers who helped you"/>
-            case "helpingCompleted":return <HelpingRequestCompleted data={helpRequest} key={helpRequest.key} db="helped" title="Helpers helped along with you"/>
-            default: return null;
-        }
-    };
-
-    render() {
-        return (
-            <FlatList
-                data={this.state.helpRequests}
-                renderItem={this.getHelpRequest}
-                keyExtractor={(item, index) => index.toString()}
-            />
-        );
-    }
+    getHelpRequest = ({item}) => <HelpRequestRequestedUsers data={item} key={item.key} />
+    
+    return (
+        <FlatList
+            data={helpRequests}
+            renderItem={getHelpRequest}
+            keyExtractor={(item, index) => index.toString()}
+            listKey={`db`}
+        />
+    );
 }
-
 export default MyHelpRequestsScreen;

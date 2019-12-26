@@ -62,3 +62,6 @@ export const NOTIFICATION_TYPES = {
   REJECT : "You got rejected",
   CLOSED : "Request got closed" 
 }
+
+export const HELPS_REQUESTED_DB = 'helpsRequested';
+export const HELPS_COMPLETED_DB = 'helpsCompleted';

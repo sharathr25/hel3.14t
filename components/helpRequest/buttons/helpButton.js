@@ -5,6 +5,7 @@ import { notifyUser, updateFirebaseWithURL, pushToFirebaseWithURL, getDataFromFi
 import Context from "../../../context";
 import Loader from '../../common/inlineLoader';
 import Button from "../../common/button";
+import { HELPS_REQUESTED_DB } from "../../../constants/appConstants";
 
 const REQUESTED_ERROR = "You have requested please wait...";
 const ACCEPTED_ERROR = "You are already helping ...";
@@ -40,10 +41,10 @@ const HelpButton = (props) => {
   handleHelp = async () => {
     setIsLoading(true);
     const { noPeopleRequested,disableHelp, uidOfHelpRequester } = state;
-    const canTheUserHelp = await userCanHelp(`helps/${key}/usersAccepted`,ACCEPTED_ERROR,uid) && await userCanHelp(`helps/${key}/usersRequested`,REQUESTED_ERROR,uid) && await userCanHelp(`helps/${key}/usersRejected`,REJECTED_ERROR,uid);  
+    const canTheUserHelp = await userCanHelp(`${HELPS_REQUESTED_DB}/${key}/usersAccepted`,ACCEPTED_ERROR,uid) && await userCanHelp(`${HELPS_REQUESTED_DB}/${key}/usersRequested`,REQUESTED_ERROR,uid) && await userCanHelp(`${HELPS_REQUESTED_DB}/${key}/usersRejected`,REJECTED_ERROR,uid);  
     if(!disableHelp && canTheUserHelp){
-        updateFirebaseWithURL(`helps/${key}`,"noPeopleRequested", noPeopleRequested+1);
-        await pushToFirebaseWithURL(`helps/${key}/usersRequested`, uid);
+        updateFirebaseWithURL(`${HELPS_REQUESTED_DB}/${key}`,"noPeopleRequested", noPeopleRequested+1);
+        await pushToFirebaseWithURL(`${HELPS_REQUESTED_DB}/${key}/usersRequested`, uid);
         const uidOfHelper = uid;
         await notifyUser(uidOfHelpRequester,{type:"REQUEST", screenToRedirect:"My Help Requests", timeStamp: new Date().getTime(), uidOfHelper, idOfHelpRequest: key});  
       }

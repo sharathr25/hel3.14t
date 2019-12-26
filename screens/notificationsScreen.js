@@ -1,33 +1,14 @@
-import React, { useState , useEffect, useContext} from 'react';
+import React, { useContext } from 'react';
 import { View, FlatList } from 'react-native';
-import firebase from 'react-native-firebase';
-import { getDataFromFirebase, firebaseOnEventListner, firebaseOnEventListnerTurnOff } from '../fireBase/database';
 import NotificationItem from '../components/common/NotificationItem';
 import Context from '../context';
-
-const uid = firebase.auth().currentUser &&  firebase.auth().currentUser && firebase.auth().currentUser.uid;
-
-function useNotifications() {
-    const [notifications, setNotifications] = useState([]);
-
-    const addToNotifications = (data) => {
-        setNotifications(prevState => prevState.concat({key:data.key, ...data.val()}));
-    }
-    
-    const removeFromNotifications = (data) => {
-        setNotifications(prevState => prevState.filter((datum) => datum.key !== data.key));
-    }
-
-    useEffect(() => {
-        firebaseOnEventListner(`users/${uid}/notifications`,"child_added", addToNotifications);
-        firebaseOnEventListner(`users/${uid}/notifications`,"child_removed", removeFromNotifications);
-    }, [uid]);
-
-    return notifications;
-}
+import {useQueue} from '../fireBase/effects';
 
 const NotificationsScreen = () => {
-    const notifications = useNotifications();
+    const contextValues = useContext(Context);
+    const { currentUser } = contextValues;
+    const { uid } = currentUser;
+    const notifications = useQueue(`users/${uid}/notifications`);
     return (
         <View>
             <FlatList
