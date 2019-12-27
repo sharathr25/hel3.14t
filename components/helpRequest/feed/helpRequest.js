@@ -9,22 +9,21 @@ import NoOfHelpers from './noOfHelpers';
 import Distance from '../../common/distance';
 import Card from "../../common/card";
 import { HELPS_REQUESTED_DB } from "../../../constants/appConstants";
+import { useVal } from "../../../effects";
 
 const HelpRequest = (props) => {
   const { data } = props;
-  const { pushUps, pullUps, noPeopleRequested, noPeopleAccepted, noPeopleRequired, description,distance, timeStamp, key, status} = data;
+  const { noPeopleRequested, noPeopleRequired, description,distance, timeStamp, key } = data;
   const [state, setState] = useState(
     {
-      pushUps, 
-      pullUps, 
-      noPeopleRequested, 
-      noPeopleAccepted, 
+      noPeopleRequested,  
       noPeopleRequired,
-      status,
       disableHelp: false,
       helpErrorMessage: ""
     }
   );
+
+  const noPeopleAccepted = useVal(`${HELPS_REQUESTED_DB}/${key}/noPeopleAccepted`);
 
   updateState = (data) => {
     if(Object.keys(state).includes(data.key)){
@@ -32,17 +31,10 @@ const HelpRequest = (props) => {
     }
   }
 
-  useEffect(() => {
-    firebaseOnEventListner(`${HELPS_REQUESTED_DB}/${key}`,"child_changed",updateState);
-    // return (() => {
-    //   firebaseOnEventListnerTurnOff(`${HELPS_REQUESTED_DB}/${key}`)
-    // });
-  });
-
   return (
     <Card>
         <HelpDescription data={{ description }}/>
-        <NoOfHelpers noPeopleAccepted={state.noPeopleAccepted} noPeopleRequired={state.noPeopleRequired} />
+        <NoOfHelpers noPeopleAccepted={noPeopleAccepted} noPeopleRequired={state.noPeopleRequired} />
         <View style={styles.buttons}>
           <HelpButton data={data} />
           <ReferButton data={data} />

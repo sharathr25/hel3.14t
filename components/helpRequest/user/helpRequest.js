@@ -2,43 +2,42 @@ import React, { useState, useEffect } from 'react';
 import { Text, View, FlatList } from 'react-native';
 import HelpDescription from "../common/helpDescription";
 import Time from "../../common/time";
-import { firebaseOnEventListner, firebaseOnEventListnerTurnOff } from '../../../fireBase/database';
+import { getDataFromFirebase } from '../../../fireBase/database';
 import { FONT_FAMILY } from '../../../constants/styleConstants';
 import Requester from './requester';
 import DoneButton from '../buttons/doneButton';
 import AccetedUser from './acceptedUser';
 import Card from '../../common/card';
-import { useQueue } from '../../../effects';
+import { useQueue, useVal } from '../../../effects';
 
 const HelpRequest = (props) => {
-  const {data, db} = props;
-  const { key, description, timeStamp,noPeopleRequired} = data;
-  const [noPeopleAccepted, setNoPeopleAccepted] = useState(data.noPeopleAccepted);
-  const [status,setStatus] = useState(data.status);
-  const usersRequested = useQueue(`${db}/${key}/usersRequested`);
-  const usersAccepted = useQueue(`${db}/${key}/usersAccepted`);
-
-  updateState = (data) => {
-    if(data.key === 'noPeopleAccepted')setNoPeopleAccepted(data.val());
-    if(data.key === 'status')setStatus(data.val());
-  }
+  const {keyOfHelpRequest, db} = props;
+  const [description,setDescription] = useState('');
+  const [timeStamp,setTimeStamp] = useState('');
+  const [noPeopleRequired,setNoPeopleRequired] = useState('');
+  const status = useVal(`${db}/${keyOfHelpRequest}/status`);
+  const noPeopleAccepted = useVal(`${db}/${keyOfHelpRequest}/noPeopleAccepted`);
+  const usersRequested = useQueue(`${db}/${keyOfHelpRequest}/usersRequested`);
+  const usersAccepted = useQueue(`${db}/${keyOfHelpRequest}/usersAccepted`);
 
   getRequestedUser = ({item}) => {
     const { data } = item;
-    return <Requester uidOfRequestingHelper={data} keyOfHelpRequest={key} noPeopleAccepted={noPeopleAccepted} noPeopleRequired={noPeopleRequired} />
+    return <Requester uidOfRequestingHelper={data} keyOfHelpRequest={keyOfHelpRequest} noPeopleAccepted={noPeopleAccepted} noPeopleRequired={noPeopleRequired} />
   }
 
   getAcceptedUser = ({item}) => {
     const { data } = item;
-    return <AccetedUser uidOfAcceptedHelper={data} keyOfHelpRequest={key} />
+    return <AccetedUser uidOfAcceptedHelper={data} keyOfHelpRequest={keyOfHelpRequest} />
   }
 
   useEffect(() => {
-    firebaseOnEventListner(`${db}/${key}`,'child_changed', updateState);
-    return () => {
-      firebaseOnEventListnerTurnOff(`${db}/${key}`);
-    }
-  });
+    getDataFromFirebase(`${db}/${keyOfHelpRequest}`).then((data) => {
+      const { timeStamp, description, noPeopleRequired } = data.val();
+      setDescription(description);
+      setNoPeopleRequired(noPeopleRequired);
+      setTimeStamp(timeStamp);
+    });
+  }, [])
 
   getRequestedUserKey = (item, index) => {
     return "requestedusers"+item.data+index.toString()+new Date().getTime();
@@ -70,7 +69,7 @@ const HelpRequest = (props) => {
             ListHeaderComponent={usersAccepted.length ? <Text style={{fontFamily: FONT_FAMILY, marginBottom: 5}}>{status === "COMPLETED" ? "people who helped you" : "People who are helping"}</Text> : null}
         />
         </View>}
-        <DoneButton keyOfHelpRequest={key} status={status} />
+        <DoneButton keyOfHelpRequest={keyOfHelpRequest} status={status} />
         <Time time={timeStamp} />
       </Card>
   );
