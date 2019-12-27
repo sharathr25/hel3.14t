@@ -6,6 +6,7 @@ import { View, TouchableOpacity, Modal, StyleSheet,Alert } from "react-native";
 import { FLAG_COLOR_WHITE, FLAG_COLOR_ORANGE, FONT_FAMILY } from "../../../constants/styleConstants";
 import Context from '../../../context';
 import { pushToFirebaseWithURL, getDataFromFirebase } from "../../../fireBase/database";
+import { HELPS_REQUESTED_DB } from "../../../constants/appConstants";
 
 const LIMIT = 3;
 
@@ -60,8 +61,8 @@ class HelpRequestForm extends Component {
             noPeopleAccepted: 0,
             status: 'REQUESTED'
           };
-          const key = await pushToFirebaseWithURL('helps',data);
-          await pushToFirebaseWithURL(`users/${this.uid}/helpsRequested`,key);
+          const key = await pushToFirebaseWithURL(HELPS_REQUESTED_DB,data);
+          await pushToFirebaseWithURL(`users/${this.uid}/${HELPS_REQUESTED_DB}`,key);
         } catch (error) {
           console.log(error);
         }

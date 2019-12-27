@@ -1,67 +1,50 @@
-import React, { Component } from "react";
+import React, { useState, useEffect} from "react";
 import { View, StyleSheet } from "react-native";
-import firebase from "react-native-firebase";
 import HelpDescription from "../common/helpDescription";
 import Time from "../../common/time";
 import HelpButton from "../buttons/helpButton";
 import ReferButton from "../buttons/referButton";
-import { firebaseOnEventListner, firebaseOnEventListnerTurnOff, getDataFromFirebase } from "../../../fireBase/database";
+import { firebaseOnEventListner, firebaseOnEventListnerTurnOff } from "../../../fireBase/database";
 import NoOfHelpers from './noOfHelpers';
 import Distance from '../../common/distance';
 import Card from "../../common/card";
+import { HELPS_REQUESTED_DB } from "../../../constants/appConstants";
+import { useVal } from "../../../effects";
 
-class HelpRequest extends Component {
-  constructor(props) {
-    super(props);
-    const { data } = this.props;
-    this.key = data.key;
-    this.uid = firebase.auth().currentUser && firebase.auth().currentUser.uid;
-    this.state = {
-      pushUps: data.pushUps,
-      pullUps: data.pullUps,
-      noPeopleRequested: data.noPeopleRequested,
-      noPeopleAccepted: data.noPeopleAccepted,
-      noPeopleRequired:data.noPeopleRequired,
-      status: data.status,
-      userPushed: false,
-      userPulled: false,
-      userHelping: false,
+const HelpRequest = (props) => {
+  const { data } = props;
+  const { noPeopleRequested, noPeopleRequired, description,distance, timeStamp, key } = data;
+  const [state, setState] = useState(
+    {
+      noPeopleRequested,  
+      noPeopleRequired,
       disableHelp: false,
       helpErrorMessage: ""
-    };
-  }
+    }
+  );
+
+  const noPeopleAccepted = useVal(`${HELPS_REQUESTED_DB}/${key}/noPeopleAccepted`);
 
   updateState = (data) => {
-    this.setState( { [data.key]: data.val() })
-  }
-  
-  componentDidMount() {
-    firebaseOnEventListner(`helps/${this.key}`,"child_changed",this.updateState)
-  }
-  
-  componentWillUnmount(){
-    firebaseOnEventListnerTurnOff(`helps/${this.key}`)
+    if(Object.keys(state).includes(data.key)){
+      setState( { ...state,[data.key]: data.val() })
+    }
   }
 
-  render() {
-    const { data } = this.props;
-    const { description, distance, timeStamp } = data;
-    const { noPeopleAccepted, noPeopleRequired} = this.state;
-    return (
-      <Card>
-          <HelpDescription data={{ description }}/>
-          <NoOfHelpers noPeopleAccepted={noPeopleAccepted} noPeopleRequired={noPeopleRequired} />
-          <View style={styles.buttons}>
-            <HelpButton data={data} />
-            <ReferButton data={data} />
-          </View>
-          <View style={styles.timeAndDistance}>
-            <Time time={timeStamp} /><Distance distance={distance} />
-          </View>
-      </Card>
-    );
-  }
-}
+  return (
+    <Card>
+        <HelpDescription data={{ description }}/>
+        <NoOfHelpers noPeopleAccepted={noPeopleAccepted} noPeopleRequired={state.noPeopleRequired} />
+        <View style={styles.buttons}>
+          <HelpButton data={data} />
+          <ReferButton data={data} />
+        </View>
+        <View style={styles.timeAndDistance}>
+          <Time time={timeStamp} /><Distance distance={distance} />
+        </View>
+    </Card>
+  );
+} 
 
 export default HelpRequest;
 

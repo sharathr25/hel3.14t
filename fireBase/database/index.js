@@ -87,7 +87,7 @@ export const removeFromFirebaseWithURl = async (url) => {
 
 export const pushToFirebaseWithURL = async (dbUrl,data) => {
   try {
-    const snapShot = firebase.database().ref(dbUrl).push(data)
+    const snapShot = await firebase.database().ref(dbUrl).push(data)
     return snapShot.key;    
   } catch (error) {
     console.log(error);
@@ -117,6 +117,12 @@ export const firebaseOnEventListner = (dbUrl,eventType,cb) => {
     cb(data)
   },err => console.log(err));
 } 
+
+export const firebaseOnEventListnerWithUrlAndType = (dbUrl, eventType) => {
+  return firebase.database().ref(dbUrl).on(eventType, data => {
+    return data;
+  })
+}
 
 export const firebaseOnEventListnerTurnOff = (dbUrl) => {
   firebase.database().ref(dbUrl).off();
