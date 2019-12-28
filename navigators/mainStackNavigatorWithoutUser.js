@@ -1,7 +1,6 @@
 import React from 'react';
 import { createStackNavigator } from 'react-navigation';
 import Icon from "react-native-vector-icons/FontAwesome";
-import Notification from '../components/helpRequest/common/notification';
 
 // screens
 import SignUpScreen from '../screens/signUpScreen';
@@ -24,7 +23,8 @@ const MainNavigatorWithoutUser = createStackNavigator(
       initialRouteName: 'Login',
       defaultNavigationOptions:({navigation}) => {
         return {
-            headerLeft:<TouchableOpacity><Icon name="navicon" size={25} color={FLAG_COLOR_ORANGE} style={{paddingLeft:15}} onPress={navigation.openDrawer}/></TouchableOpacity>,
+            headerLeft: (<HeaderBackButton onPress={() => { navigation.goBack() }} tintColor={FLAG_COLOR_ORANGE} />),
+            headerRight: null,
             headerStyle: {
               shadowOpacity: 0,
               elevation: 0,
@@ -35,7 +35,6 @@ const MainNavigatorWithoutUser = createStackNavigator(
               fontWeight: 'bold',
               color: FLAG_COLOR_ORANGE
             },
-            headerRight:<Notification navigation={navigation}/>
           }
         }
       },
