@@ -47,6 +47,28 @@ const HelpRequest = (props) => {
     return "acceptedusers"+item.data+index.toString()+new Date().getTime();
   }
 
+  if(!status) return null;
+
+  if(status === "COMPLETED") {
+    return (
+      <Card>
+        <HelpDescription data={{ description }} />
+        {<View style={{ margin: 10 }}>
+          <Text>{status}</Text>
+        </View>}
+        {<View style={{ margin: 10 }}>
+          <FlatList
+            data={usersAccepted}
+            renderItem={getAcceptedUser}
+            keyExtractor={getAcceptedUserKey}
+            listKey={getAcceptedUserKey}
+            ListHeaderComponent={usersAccepted.length ? <Text style={{ fontFamily: FONT_FAMILY, marginBottom: 5 }}>people who helped you</Text> : null}
+          />
+        </View>}
+      </Card>
+    );
+  }
+
   return (
       <Card>
         <HelpDescription data={{ description }} />
@@ -66,7 +88,7 @@ const HelpRequest = (props) => {
             renderItem={getAcceptedUser}
             keyExtractor={getAcceptedUserKey}
             listKey={getAcceptedUserKey}
-            ListHeaderComponent={usersAccepted.length ? <Text style={{fontFamily: FONT_FAMILY, marginBottom: 5}}>{status === "COMPLETED" ? "people who helped you" : "People who are helping"}</Text> : null}
+            ListHeaderComponent={usersAccepted.length ? <Text style={{fontFamily: FONT_FAMILY, marginBottom: 5}}>People who are helping</Text> : null}
         />
         </View>}
         <DoneButton keyOfHelpRequest={keyOfHelpRequest} status={status} />

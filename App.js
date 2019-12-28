@@ -11,6 +11,7 @@ import mainStackNavigatorWithUser from './navigators/mainStackNavigatorWithUser'
 import mainStackNavigatorWithoutUser from './navigators/mainStackNavigatorWithoutUser';
 
 import Context from './context';
+import { useQueue } from './effects';
 
 const AppContainerWithUser = createAppContainer(mainStackNavigatorWithUser);
 const AppContainerWithoutUser = createAppContainer(mainStackNavigatorWithoutUser);
@@ -21,6 +22,7 @@ function App(props) {
   const [longitude, setLongitude] = useState(null);
   const [locationProviderAvailable, setLocationProviderAvailable] = useState(false);
   const [locationErrorMessage, setLocationErrorMessage] = useState('');
+  const notifications = user ? useQueue(`users/${user.uid}/notifications`) : [];
 
   setLocation = (position) => {
     const { coords } = position;
@@ -32,15 +34,14 @@ function App(props) {
   }
 
   setLocationError = (error) => {
-    // See error code charts below.
     console.log(error.code, error.message);
     let locationErrorMessage;
-    switch(error.code){
-      case 1:locationErrorMessage="Please grant permission to access location";break;
-      case 2:locationErrorMessage="Please turn on GPS";break;
-      case 3:locationErrorMessage="Location request timed out";break;
-      case 4:locationErrorMessage="Google play service is not installed or has an older version";break;
-      case 5:locationErrorMessage="Location service is not enabled or location mode is not appropriate for the current request";break;
+    switch (error.code) {
+      case 1: locationErrorMessage = "Please grant permission to access location"; break;
+      case 2: locationErrorMessage = "Please turn on GPS"; break;
+      case 3: locationErrorMessage = "Location request timed out"; break;
+      case 4: locationErrorMessage = "Google play service is not installed or has an older version"; break;
+      case 5: locationErrorMessage = "Location service is not enabled or location mode is not appropriate for the current request"; break;
     }
 
     setLocationErrorMessage(locationErrorMessage);
@@ -65,22 +66,22 @@ function App(props) {
 
   PermissionsAndroid.request(PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION)
     .then(() => getPosition())
-    .catch((err)=>Alert.alert("GPS can't be accessed"));
+    .catch((err) => Alert.alert("GPS can't be accessed"));
   watchPosition();
 
   if (initializing) {
     return <Text>Loading</Text>
   }
 
-  if(user) {
+  if (user) {
     return (
-      <Context.Provider value={{latitude, longitude, locationErrorMessage, locationProviderAvailable,getPosition:getPosition, navigation:props.navigation, currentUser:user}}>
+      <Context.Provider value={{ latitude, longitude, locationErrorMessage, locationProviderAvailable, getPosition: getPosition, navigation: props.navigation, currentUser: user, notifications }}>
         <AppContainerWithUser />
       </Context.Provider>
     );
   }
 
-  return <AppContainerWithoutUser /> 
+  return <AppContainerWithoutUser />
 }
 
 export default App;
