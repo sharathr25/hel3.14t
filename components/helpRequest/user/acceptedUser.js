@@ -6,6 +6,7 @@ import { getDataFromFirebase } from '../../../fireBase/database';
 import { useVal } from '../../../effects';
 import Icon from "react-native-vector-icons/FontAwesome";
 import Stars from '../buttons/starsButton';
+import { HELPS_COMPLETED_DB } from '../../../constants/appConstants';
 
 const AccetedUser = (props) => {
   const { uidOfAcceptedHelper, status, keyOfHelpRequest, dataOfAcceptedHelper } = props;
@@ -29,6 +30,14 @@ const AccetedUser = (props) => {
     });
     return () => isSubscribed = false;
   }, []);
+
+  useEffect(() => {
+    getDataFromFirebase(`${HELPS_COMPLETED_DB}/usersAccepted/${uidOfAcceptedHelper}`).then((data) => {
+      if(data.val()){
+        setShowStars(false);
+      }
+    })
+  }, [])
 
   if (!status) return null;
 
