@@ -1,6 +1,6 @@
 import React from 'react';
 import { createStackNavigator } from 'react-navigation';
-import Icon from "react-native-vector-icons/FontAwesome";
+import {HeaderBackButton} from 'react-navigation';
 
 // screens
 import SignUpScreen from '../screens/signUpScreen';
@@ -10,7 +10,6 @@ import ResetPassword from '../screens/resetPassword';
 
 // constants
 import { FLAG_COLOR_WHITE, FLAG_COLOR_ORANGE } from '../constants/styleConstants';
-import { TouchableOpacity } from 'react-native-gesture-handler';
 
 const MainNavigatorWithoutUser = createStackNavigator(
     {

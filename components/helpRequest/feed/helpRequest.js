@@ -4,7 +4,6 @@ import HelpDescription from "../common/helpDescription";
 import Time from "../../common/time";
 import HelpButton from "../buttons/helpButton";
 import ReferButton from "../buttons/referButton";
-import { firebaseOnEventListner, firebaseOnEventListnerTurnOff } from "../../../fireBase/database";
 import NoOfHelpers from './noOfHelpers';
 import Distance from '../../common/distance';
 import Card from "../../common/card";
@@ -13,6 +12,7 @@ import { useVal } from "../../../effects";
 
 const HelpRequest = (props) => {
   const { data } = props;
+  if(!data) return null;
   const { noPeopleRequested, noPeopleRequired, description,distance, timeStamp, key } = data;
   const [state, setState] = useState(
     {

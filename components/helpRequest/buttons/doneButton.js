@@ -24,7 +24,7 @@ const DoneButton = (props) => {
 
     removeAndNotifyHelpers = async (helpers) => {
         Object.keys(helpers.val()).forEach(async (key) => {
-            const uidOfhelper = helpers.val()[key];
+            const uidOfhelper = key;
             await notifyUser(uidOfhelper,{type:"CLOSED", screenToRedirect:"NONE", timeStamp: new Date().getTime(), idOfHelpRequest: key});
             await removeFromFirebaseOrderingChild(`users/${uidOfhelper}/notifications`, key);
         });
@@ -40,7 +40,7 @@ const DoneButton = (props) => {
 
     pushToHelpersDbAndAddXp = async (helpers, keyOfHelpRequest) => {
         Object.keys(helpers.val()).forEach(async (key) => {
-            const uidOfhelper = helpers.val()[key];
+            const uidOfhelper = key;
             await pushToFirebaseWithURL(`users/${uidOfhelper}/${HELPS_COMPLETED_DB}`, keyOfHelpRequest);
             const xp = await getDataFromFirebase(`users/${uidOfhelper}/xp`)
             await updateFirebaseWithURL(`users/${uidOfhelper}`,'xp',xp.val()+XP_INCREMENT_PER_HELP);
