@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Text, View, TouchableOpacity, StyleSheet } from 'react-native';
+import { Text, View, TouchableOpacity, StyleSheet, Alert } from 'react-native';
 import { FLAG_COLOR_GREEN } from '../../../constants/styleConstants';
 import ProfileLetter from '../../common/profileLetter';
 import Icon from 'react-native-vector-icons/FontAwesome';
@@ -19,7 +19,7 @@ const Requester = props => {
         if(noPeopleRequired === noPeopleAccepted+1){
           updateFirebaseWithURL(`${HELPS_REQUESTED_DB}/${keyOfHelpRequest}`,"status","ON_GOING");
         }
-        await pushToFirebaseWithURL(`${HELPS_REQUESTED_DB}/${keyOfHelpRequest}/usersAccepted`,uidOfRequestingHelper);
+        await updateFirebaseWithURL(`${HELPS_REQUESTED_DB}/${keyOfHelpRequest}/usersAccepted`,uidOfRequestingHelper,{stars: 0});
         await removeFromFirebaseWithUrlAndValue(`${HELPS_REQUESTED_DB}/${keyOfHelpRequest}/usersRequested`, uidOfRequestingHelper);
         await notifyUser(uidOfRequestingHelper,{type:"ACCEPT", screenToRedirect:"Helped", uidOfHelper:uidOfRequestingHelper,timeStamp: new Date().getTime(), idOfHelpRequest: keyOfHelpRequest});
       } else {

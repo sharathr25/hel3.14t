@@ -11,12 +11,12 @@ import Card from '../../common/card';
 import { useQueue, useVal } from '../../../effects';
 
 const HelpRequest = (props) => {
-  const {keyOfHelpRequest, db} = props;
+  const {keyOfHelpRequest, db, test} = props;
   const [description,setDescription] = useState('');
   const [timeStamp,setTimeStamp] = useState('');
   const [noPeopleRequired,setNoPeopleRequired] = useState('');
-  const status = useVal(`${db}/${keyOfHelpRequest}/status`);
-  const noPeopleAccepted = useVal(`${db}/${keyOfHelpRequest}/noPeopleAccepted`);
+  const status = useVal(`${db}/${keyOfHelpRequest}/status`,'');
+  const noPeopleAccepted = useVal(`${db}/${keyOfHelpRequest}/noPeopleAccepted`,0);
   const usersRequested = useQueue(`${db}/${keyOfHelpRequest}/usersRequested`);
   const usersAccepted = useQueue(`${db}/${keyOfHelpRequest}/usersAccepted`);
 
@@ -26,12 +26,13 @@ const HelpRequest = (props) => {
   }
 
   getAcceptedUser = ({item}) => {
-    const { data } = item;
-    return <AccetedUser uidOfAcceptedHelper={data} keyOfHelpRequest={keyOfHelpRequest} />
+    const { data, key } = item;
+    return <AccetedUser dataOfAcceptedHelper={data} uidOfAcceptedHelper={key} keyOfHelpRequest={keyOfHelpRequest} status={status} />
   }
 
   useEffect(() => {
     getDataFromFirebase(`${db}/${keyOfHelpRequest}`).then((data) => {
+      if(!data.val()) return;
       const { timeStamp, description, noPeopleRequired } = data.val();
       setDescription(description);
       setNoPeopleRequired(noPeopleRequired);
@@ -40,11 +41,11 @@ const HelpRequest = (props) => {
   }, [])
 
   getRequestedUserKey = (item, index) => {
-    return "requestedusers"+item.data+index.toString()+new Date().getTime();
+    return "requestedusers"+item.key+index.toString()+new Date().getTime();
   }
 
   getAcceptedUserKey = (item, index) => {
-    return "acceptedusers"+item.data+index.toString()+new Date().getTime();
+    return "acceptedusers"+item.key+index.toString()+new Date().getTime();
   }
 
   if(!status) return null;

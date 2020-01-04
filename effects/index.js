@@ -1,15 +1,24 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useReducer, useRef } from 'react';
 import { firebaseOnEventListner, firebaseOnEventListnerTurnOff } from '../fireBase/database';
 
+const queueReducer = (state, action) => {
+    const { type, payload } = action;
+    switch (type) {
+        case 'ADD': return state.concat({ key: payload.key, data: payload.val() });
+        case 'ROMOVE': return state.filter((datum) => datum.key !== payload.key);
+        default: return state;
+    }
+}
+
 export function useQueue(db) {
-    const [items, setItems] = useState([]);
+    const [items, dispatch] = useReducer(queueReducer, []);
 
     const addToItems = (data) => {
-        setItems(prevState => prevState.concat({ key: data.key, data: data.val() }));
+        dispatch({ type:'ADD', payload:data});
     }
 
     const removeFromItems = (data) => {
-        setItems(prevState => prevState.filter((datum) => datum.key !== data.key));
+        dispatch({ type:'ROMOVE', payload:data});
     }
 
     useEffect(() => {
@@ -18,18 +27,26 @@ export function useQueue(db) {
         return (() => {
             firebaseOnEventListnerTurnOff(db);
         });
-    }, [db]);
+    }, []);
 
     return items;
 }
 
-export function useVal(db) {
-    const [value, setValue] = useState(null);
+export function useVal(db, initialValue) {
+    const [value, setValue] = useState(initialValue);
+    const ref = useRef(db);
 
     useEffect(() => {
-        firebaseOnEventListner(db, 'value', (data) => setValue(data.val()));
-        return (() => firebaseOnEventListnerTurnOff(db));
-    }, [db]);
+        let isMounted = true;
+        firebaseOnEventListner(ref.current, 'value', (data) => {
+            if(data.val() !== value && isMounted) setValue(data.val()) 
+        });
+        return (() => isMounted = false);
+    });
 
+    useEffect(() => {
+        firebaseOnEventListnerTurnOff(ref.current)
+    },[ref.current])
+    
     return value;
 }

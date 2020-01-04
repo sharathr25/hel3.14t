@@ -22,7 +22,7 @@ function App(props) {
   const [longitude, setLongitude] = useState(null);
   const [locationProviderAvailable, setLocationProviderAvailable] = useState(false);
   const [locationErrorMessage, setLocationErrorMessage] = useState('');
-  const notifications = user ? useQueue(`users/${user.uid}/notifications`) : [];
+  const notifications = useQueue(`users/${user ? user.uid : ''}/notifications`);
 
   setLocation = (position) => {
     const { coords } = position;
