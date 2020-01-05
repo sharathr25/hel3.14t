@@ -35,18 +35,17 @@ export function useQueue(db) {
 export function useVal(db, initialValue) {
     const [value, setValue] = useState(initialValue);
     const ref = useRef(db);
-
     useEffect(() => {
-        let isMounted = true;
         firebaseOnEventListner(ref.current, 'value', (data) => {
-            if(data.val() !== value && isMounted) setValue(data.val()) 
+            if(data.val() !== value) {
+                setValue(data.val())
+            }
         });
-        return (() => isMounted = false);
-    });
-
-    useEffect(() => {
-        firebaseOnEventListnerTurnOff(ref.current)
-    },[ref.current])
+    
+        return(() => {
+            firebaseOnEventListnerTurnOff(ref.current)
+        })
+    }, []);
     
     return value;
 }
