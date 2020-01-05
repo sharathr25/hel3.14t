@@ -23,7 +23,7 @@ const HelpRequest = (props) => {
     }
   );
 
-  const noPeopleAccepted = useVal(`${HELPS_REQUESTED_DB}/${key}/noPeopleAccepted`);
+  const noPeopleAccepted = useVal(`${HELPS_REQUESTED_DB}/${key}/noPeopleAccepted`,0);
 
   updateState = (data) => {
     if(Object.keys(state).includes(data.key)){

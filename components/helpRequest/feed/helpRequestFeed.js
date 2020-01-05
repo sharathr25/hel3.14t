@@ -11,6 +11,7 @@ if (Platform.OS === 'android') {
 
 const HelpRequestFeed = (props) => {
   const contextValues = useContext(Context);
+  const { feedItems, isLoading, getFeedItems } = props;
 
   gethelpRequestsSortedByDistance = (feedItems) => {
     const newHelpRequests = getHelpRequestsByDistance(feedItems);
@@ -41,7 +42,6 @@ const HelpRequestFeed = (props) => {
   }
 
   getHelpRequests = () => {
-    const { feedItems } = props;
     if(feedItems.length === 0) return;
     setHelpRequestsWithDistance(feedItems);
   }
@@ -53,11 +53,11 @@ const HelpRequestFeed = (props) => {
 
   return (
     <FlatList
-        data={gethelpRequestsSortedByDistance(props.feedItems)}
+        data={gethelpRequestsSortedByDistance(feedItems)}
         renderItem={getHelpRequest}
         keyExtractor={(item, index) => index.toString()}
-        refreshing={props.isLoading}
-        onRefresh={props.getFeedItems}
+        refreshing={isLoading}
+        onRefresh={getFeedItems}
       />
   );
 }
