@@ -5,6 +5,8 @@ import geolocation from 'react-native-geolocation-service';
 import { PermissionsAndroid, Alert, Text } from "react-native";
 import { useScreens } from 'react-native-screens';
 import { useAuth } from './auth';
+import { ApolloProvider } from "react-apollo";
+import ApolloClient from "apollo-boost";
 useScreens();
 
 import mainStackNavigatorWithUser from './navigators/mainStackNavigatorWithUser';
@@ -23,6 +25,11 @@ function App(props) {
   const [locationProviderAvailable, setLocationProviderAvailable] = useState(false);
   const [locationErrorMessage, setLocationErrorMessage] = useState('');
   const notifications = useQueue(`users/${user ? user.uid : ''}/notifications`);
+  const client = new ApolloClient({
+    uri: 'http://192.168.0.109:3000/graphql',
+    name: 'react-web-client',
+    version: '1.3',
+  })
 
   setLocation = (position) => {
     const { coords } = position;
@@ -75,9 +82,11 @@ function App(props) {
 
   if (user) {
     return (
-      <Context.Provider value={{ latitude, longitude, locationErrorMessage, locationProviderAvailable, getPosition: getPosition, navigation: props.navigation, currentUser: user, notifications }}>
-        <AppContainerWithUser />
-      </Context.Provider>
+      <ApolloProvider client={client}>
+        <Context.Provider value={{ latitude, longitude, locationErrorMessage, locationProviderAvailable, getPosition: getPosition, navigation: props.navigation, currentUser: user, notifications }}>
+          <AppContainerWithUser />
+        </Context.Provider>
+      </ApolloProvider>
     );
   }
 

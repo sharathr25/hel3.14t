@@ -57,7 +57,7 @@ const HelpRequestFeed = (props) => {
         renderItem={getHelpRequest}
         keyExtractor={(item, index) => index.toString()}
         refreshing={isLoading}
-        onRefresh={getFeedItems}
+        // onRefresh={getFeedItems}
       />
   );
 }
