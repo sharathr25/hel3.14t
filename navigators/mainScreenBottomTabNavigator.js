@@ -20,8 +20,18 @@ const HELPS = gql`
       longitude,
       timeStamp,
       description,
+      usersAccepted{
+        uid,
+        name,
+        mobileNo
+      }
+      usersRequested{
+        uid,
+        name,
+        xp
+      },
       noPeopleRequired,
-      noPeopleAccepted,
+      creator
     }
   }
 `;

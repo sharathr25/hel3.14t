@@ -13,7 +13,7 @@ const LIMIT = 3;
 const HELP_REQUEST = gql`
   mutation CreateHelpRequest($uid:String!,$mobileNo:String!,$lat:Float!,$long:Float!,$desc:String!, $time:Date!, $name:String!, $noPeopleRequired:Int!){
     createHelp(data:{
-      uid:$uid,
+      creator:$uid,
       mobileNo:$mobileNo,
       name:$name,
       latitude:$long,
@@ -30,13 +30,19 @@ const HELP_REQUEST = gql`
   }
 `;
 
+UPDATE_USER = gql`
+  mutation UpdateUser($uid:String!,$key:String!,$value:Any){
+    updateUser(uid:$uid, key:$key,value:$value, type:"array", operation:"push")
+  }
+`;
+
 const noOfPeopleSelectBoxOptions = [1, 2, 3, 4, 5, 6];
 
-const Option = ({val}) => {
+const Option = ({ val }) => {
   return (
     <TouchableOpacity onPress={() => handleCheckBox(val)} style={getCheckBoxStyle(val)} key={val}>
       <Text style={getCheckBoxTextStyle(val)}>{val}</Text>
-  </TouchableOpacity>
+    </TouchableOpacity>
   );
 }
 
@@ -56,7 +62,8 @@ const HelpRequestForm = () => {
 
   const { uid, displayName, phoneNumber } = currentUser;
 
-  const [createHelp, { data }] = useMutation(HELP_REQUEST);
+  const [createHelp, { }] = useMutation(HELP_REQUEST);
+  const [updateUser, { }] = useMutation(UPDATE_USER);
 
   handleCheckBox = (val) => {
     setState({ ...state, noPeopleRequired: val, [`checkBox${val}`]: true });
@@ -91,6 +98,13 @@ const HelpRequestForm = () => {
           name: displayName,
           noPeopleRequired
         }
+      }).then(res => {
+        const { data } = res;
+        const { createHelp } = data;
+        const { _id } = createHelp;
+        updateUser({ variables: { uid, key: "createdHelpRequests", value: _id } }).then((res) => {
+          console.log(res);
+        }).catch(err => console.log(err))
       })
     }
   }

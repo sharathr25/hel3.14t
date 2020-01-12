@@ -8,37 +8,48 @@ import Requester from './requester';
 import DoneButton from '../buttons/doneButton';
 import AccetedUser from './acceptedUser';
 import Card from '../../common/card';
-import { useQueue, useVal } from '../../../effects';
+import { useQuery } from 'react-apollo';
+import gql from 'graphql-tag';
 
 const HelpRequest = (props) => {
-  const {keyOfHelpRequest, db, test} = props;
-  const [description,setDescription] = useState('');
-  const [timeStamp,setTimeStamp] = useState('');
-  const [noPeopleRequired,setNoPeopleRequired] = useState('');
-  const status = useVal(`${db}/${keyOfHelpRequest}/status`,'');
-  const noPeopleAccepted = useVal(`${db}/${keyOfHelpRequest}/noPeopleAccepted`,0);
-  const usersRequested = useQueue(`${db}/${keyOfHelpRequest}/usersRequested`);
-  const usersAccepted = useQueue(`${db}/${keyOfHelpRequest}/usersAccepted`);
+  const {keyOfHelpRequest} = props;
+
+  const QUERY = gql`
+    query {
+      help(id:"${keyOfHelpRequest}") {
+        status,
+        description,
+        usersAccepted {
+          name
+          mobileNo
+        },
+        usersRequested {
+          uid
+          name,
+          xp
+        },
+        timeStamp,
+        noPeopleRequired
+      }
+    }
+  `;
+  const {data} = useQuery(QUERY);
+
+  if(!data) return null;
+
+  const { help } = data;
+
+  const { status, usersRequested, usersAccepted, description, timeStamp, noPeopleRequired } = help;
 
   getRequestedUser = ({item}) => {
-    const { data } = item;
-    return <Requester uidOfRequestingHelper={data} keyOfHelpRequest={keyOfHelpRequest} noPeopleAccepted={noPeopleAccepted} noPeopleRequired={noPeopleRequired} />
+    const { name, xp, uid } = item;
+    return <Requester uidOfRequester={uid} name={name} xp={xp} keyOfHelpRequest={keyOfHelpRequest} usersAccepted={usersAccepted} noPeopleRequired={noPeopleRequired} />
   }
 
   getAcceptedUser = ({item}) => {
-    const { data, key } = item;
-    return <AccetedUser dataOfAcceptedHelper={data} uidOfAcceptedHelper={key} keyOfHelpRequest={keyOfHelpRequest} status={status} />
+    const { name, mobileNo } = item;
+    return <AccetedUser name={name} mobileNo={mobileNo} status={status} />
   }
-
-  useEffect(() => {
-    getDataFromFirebase(`${db}/${keyOfHelpRequest}`).then((data) => {
-      if(!data.val()) return;
-      const { timeStamp, description, noPeopleRequired } = data.val();
-      setDescription(description);
-      setNoPeopleRequired(noPeopleRequired);
-      setTimeStamp(timeStamp);
-    });
-  }, [])
 
   getRequestedUserKey = (item, index) => {
     return "requestedusers"+item.key+index.toString()+new Date().getTime();
@@ -96,6 +107,7 @@ const HelpRequest = (props) => {
         <Time time={timeStamp} />
       </Card>
   );
+  return null;
 }
 
 export default HelpRequest;

@@ -11,26 +11,12 @@ import Card from "../../common/card";
 const HelpRequest = (props) => {
   const { data } = props;
   if(!data) return null;
-  const { noPeopleRequested, noPeopleRequired, description,distance, timeStamp, key, noPeopleAccepted } = data;
-  const [state, setState] = useState(
-    {
-      noPeopleRequested,  
-      noPeopleRequired,
-      disableHelp: false,
-      helpErrorMessage: ""
-    }
-  );
-
-  updateState = (data) => {
-    if(Object.keys(state).includes(data.key)){
-      setState( { ...state,[data.key]: data.val() })
-    }
-  }
+  const { usersAccepted, description,distance, timeStamp, noPeopleRequired, creator } = data;
 
   return (
     <Card>
         <HelpDescription data={{ description }}/>
-        <NoOfHelpers noPeopleAccepted={noPeopleAccepted} noPeopleRequired={state.noPeopleRequired} />
+        <NoOfHelpers noPeopleAccepted={usersAccepted.length} noPeopleRequired={noPeopleRequired} />
         <View style={styles.buttons}>
           <HelpButton data={data} />
           <ReferButton data={data} />
