@@ -20,6 +20,7 @@ const HelpRequest = (props) => {
         status,
         description,
         usersAccepted {
+          uid
           name
           mobileNo
         },
@@ -103,7 +104,7 @@ const HelpRequest = (props) => {
             ListHeaderComponent={usersAccepted.length ? <Text style={{fontFamily: FONT_FAMILY, marginBottom: 5}}>People who are helping</Text> : null}
         />
         </View>}
-        <DoneButton keyOfHelpRequest={keyOfHelpRequest} status={status} />
+        <DoneButton keyOfHelpRequest={keyOfHelpRequest} status={status} usersAccepted={usersAccepted} />
         <Time time={timeStamp} />
       </Card>
   );

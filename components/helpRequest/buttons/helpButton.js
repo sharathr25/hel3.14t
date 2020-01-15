@@ -15,19 +15,23 @@ const REJECTED_ERROR = "You have rejected, try help others ...";
 
 const HELP_UPDATE_SCHEMA = gql`
   mutation UpdateHelp($id:String!,$key:String!,$value:Any){
-    updateHelp(id:$id,key:$key,value:$value, type:"array", operation:"push")
+    updateHelp(id:$id,key:$key,value:$value, type:"array", operation:"push"){
+      _id
+    }
   }
 `;
 
 const USER_UPDATE_SHEMA = gql`
 mutation UpdateUser($id:String!,$key:String!,$value:Any){
-  updateUser(uid:$id,key:$key,value:$value,  type:"array", operation:"push")
+  updateUser(uid:$id,key:$key,value:$value,  type:"array", operation:"push"){
+    uid
+  }
 }
 `;
 
 const HelpButton = (props) => {
   const { data } = props;
-  const { noPeopleRequired, usersAccepted, usersRequested, creator, _id } = data;
+  const { usersAccepted, usersRequested, creator, _id, usersRejected } = data;
   const contextValues = useContext(Context);
   const { currentUser } = contextValues;
   const { uid, displayName } = currentUser;
@@ -38,13 +42,15 @@ const HelpButton = (props) => {
 
   handleHelp = async () => {
     setIsLoading(true);
-    if (usersAccepted.indexOf(uid) > -1) {
+    if (usersAccepted.map((user) => user.uid).indexOf(uid) > -1) {
       Alert.alert(ACCEPTED_ERROR);
-    } else if (usersRequested.indexOf(uid) > -1) {
+    } else if (usersRequested.map((user) => user.uid).indexOf(uid) > -1) {
       Alert.alert(REQUESTED_ERROR);
+    } else if (usersRejected.map((user) => user.uid).indexOf(uid) > -1) {
+      Alert.alert(REJECTED_ERROR);
     } else {
-      updateHelp({ variables: { id: _id, key: "usersRequested", value: {uid, name:displayName, xp:0} } });
-      upadateUser({ variables: { id: uid, key: "notifications", value: "A Helper is willing to help you, please check..." } });
+      updateHelp({ variables: { id: _id, key: "usersRequested", value: { uid, name: displayName, xp: 0 } } });
+      upadateUser({ variables: { id: uid, key: "notifications", value: { message: "A Helper is willing to help you, please check..." } } });
     }
     setIsLoading(false);
   }

@@ -6,7 +6,41 @@ import { PermissionsAndroid, Alert, Text } from "react-native";
 import { useScreens } from 'react-native-screens';
 import { useAuth } from './auth';
 import { ApolloProvider } from "react-apollo";
-import ApolloClient from "apollo-boost";
+import { ApolloClient } from 'apollo-client';
+import { WebSocketLink } from 'apollo-link-ws';
+import { split, ApolloLink } from 'apollo-link';
+import { HttpLink } from 'apollo-link-http';
+import { getMainDefinition } from 'apollo-utilities';
+import { InMemoryCache } from 'apollo-cache-inmemory';
+
+// Create an http link:
+const httpLink = new HttpLink({
+  uri: 'http://192.168.0.109:4000/graphql',
+});
+
+// Create a WebSocket link:
+const wsLink = new WebSocketLink({
+  uri: `ws://192.168.0.109:4000/graphql`,
+  options: {
+    reconnect: true
+  }
+});
+
+const terminationLink = split(
+  // split based on operation type
+  ({ query }) => {
+    const definition = getMainDefinition(query);
+    return (
+      definition.kind === 'OperationDefinition' &&
+      definition.operation === 'subscription'
+    );
+  },
+  wsLink,
+  httpLink,
+);
+
+const link = ApolloLink.from([terminationLink]);
+
 useScreens();
 
 import mainStackNavigatorWithUser from './navigators/mainStackNavigatorWithUser';
@@ -25,11 +59,7 @@ function App(props) {
   const [locationProviderAvailable, setLocationProviderAvailable] = useState(false);
   const [locationErrorMessage, setLocationErrorMessage] = useState('');
   const notifications = useQueue(`users/${user ? user.uid : ''}/notifications`);
-  const client = new ApolloClient({
-    uri: 'http://192.168.0.109:3000/graphql',
-    name: 'react-web-client',
-    version: '1.3',
-  })
+  const client = new ApolloClient({link, cache: new InMemoryCache()})
 
   setLocation = (position) => {
     const { coords } = position;

@@ -18,7 +18,9 @@ const Requester = props => {
 
   const QUERY = gql`
     mutation UpdateHelp($key:String!, $value:Any, $operation:String!){
-      updateHelp(id:"${keyOfHelpRequest}", key:$key, value:$value, type:"array", operation:$operation)
+      updateHelp(id:"${keyOfHelpRequest}", key:$key, value:$value, type:"array", operation:$operation){
+        _id
+      }
     }
   `;
 
@@ -36,15 +38,8 @@ const Requester = props => {
   };
 
   const handleReject = async () => {
-    const { uidOfRequestingHelper, keyOfHelpRequest } = props;
-    const data = await getDataFromFirebase(`${HELPS_REQUESTED_DB}/${keyOfHelpRequest}/usersRejected/${uidOfRequestingHelper}`);
-    if (!data.val()) {
-      await pushToFirebaseWithURL(`${HELPS_REQUESTED_DB}/${keyOfHelpRequest}/usersRejected`, uidOfRequestingHelper);
-      await removeFromFirebaseWithUrlAndValue(`${HELPS_REQUESTED_DB}/${keyOfHelpRequest}/usersRequested`, uidOfRequestingHelper);
-      await notifyUser(uidOfRequestingHelper, { type: "REJECT", screenToRedirect: "NONE", uidOfHelper: uidOfRequestingHelper, timeStamp: new Date().getTime(), idOfHelpRequest: keyOfHelpRequest });
-    } else {
-      Alert.alert("user already rejected");
-    }
+    updateHelp({ variables: { key:"usersRejected", value: {uid: uidOfRequester}, operation:"push", type:"array"}});
+    updateHelp({ variables: { key: "usersRequested", value: { uid: uidOfRequester }, operation: "pull" } });
   };
 
   return (

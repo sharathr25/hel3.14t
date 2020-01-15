@@ -32,7 +32,9 @@ const HELP_REQUEST = gql`
 
 UPDATE_USER = gql`
   mutation UpdateUser($uid:String!,$key:String!,$value:Any){
-    updateUser(uid:$uid, key:$key,value:$value, type:"array", operation:"push")
+    updateUser(uid:$uid, key:$key,value:$value, type:"array", operation:"push"){
+      uid
+    }
   }
 `;
 
@@ -103,7 +105,6 @@ const HelpRequestForm = () => {
         const { createHelp } = data;
         const { _id } = createHelp;
         updateUser({ variables: { uid, key: "createdHelpRequests", value: _id } }).then((res) => {
-          console.log(res);
         }).catch(err => console.log(err))
       })
     }
