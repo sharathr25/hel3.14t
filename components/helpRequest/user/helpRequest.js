@@ -8,7 +8,7 @@ import Requester from './requester';
 import DoneButton from '../buttons/doneButton';
 import AccetedUser from './acceptedUser';
 import Card from '../../common/card';
-import { useQuery } from 'react-apollo';
+import { useQuery, useSubscription } from 'react-apollo';
 import gql from 'graphql-tag';
 
 const HelpRequest = (props) => {
@@ -34,7 +34,39 @@ const HelpRequest = (props) => {
       }
     }
   `;
-  const {data} = useQuery(QUERY);
+
+  const SUBSCRIPTION = gql`
+    subscription{
+      onUpdateHelp{
+        _id,
+        status,
+        usersAccepted {
+          uid
+          name
+          mobileNo
+        },
+        usersRequested {
+          uid
+          name,
+          xp
+        },
+    }
+  }
+  `;
+
+  let {data} = useQuery(QUERY);
+
+  const subscriptionData = useSubscription(SUBSCRIPTION, {shouldResubscribe:true});
+
+  let updatedData = subscriptionData && subscriptionData.data && subscriptionData.data.onUpdateHelp || null;
+
+  if(updatedData) {
+    const { _id } = updatedData;
+    if(_id === keyOfHelpRequest) {
+      data.help = {...data.help,...updatedData}
+    }
+  }
+
 
   if(!data) return null;
 

@@ -69,15 +69,23 @@ subscription {
 
 const HelpRequestFeed = (props) => {
   const contextValues = useContext(Context);
-  const {  loading, data,error, fetchMore } = useQuery(HELPS,{ variables: { offset: 0}});
+  const { loading, data, error, fetchMore } = useQuery(HELPS, { variables: { offset: 0 } });
   const [offset, setOffset] = useState(0);
 
-  // const subscriptionData = useSubscription(HELPS_SUBSCRIPITON);
+  const subscriptionData = useSubscription(HELPS_SUBSCRIPITON);
+
+  let newHelp = subscriptionData && subscriptionData.data && subscriptionData.data.onCreateHelp || null;
+
+  let helps = data ? data.helps : [];
+  if (newHelp) {
+    helps = [newHelp, ...helps];
+    newHelp = null;
+  }
 
   getHelps = () => {
     fetchMore({
       variables: {
-        offset: offset+1,
+        offset: offset + 1,
       },
       updateQuery: (prev, { fetchMoreResult }) => {
         if (!fetchMoreResult) return prev;
@@ -86,7 +94,7 @@ const HelpRequestFeed = (props) => {
         });
       }
     });
-    setOffset(offset+1);
+    setOffset(offset + 1);
   }
 
   if (loading) return <Text>loading</Text>
@@ -126,7 +134,7 @@ const HelpRequestFeed = (props) => {
 
   return (
     <FlatList
-      data={gethelpRequestsSortedByDistance(data ? data.helps : [])}
+      data={gethelpRequestsSortedByDistance(helps)}
       renderItem={getHelpRequest}
       keyExtractor={(item, index) => index.toString()}
       refreshing={false}
