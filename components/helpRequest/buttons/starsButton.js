@@ -4,15 +4,24 @@ import { FLAG_COLOR_WHITE, FLAG_COLOR_ORANGE, FLAG_COLOR_GREEN } from "../../../
 import { updateFirebaseWithURL } from "../../../fireBase/database";
 import { HELPS_COMPLETED_DB } from "../../../constants/appConstants";
 import Icon from "react-native-vector-icons/FontAwesome";
+import gql from "graphql-tag";
+import { useMutation } from "react-apollo";
+
+const UPDATE_HELP = gql`
+    mutation UpdateHelp($id:String!, $key:String!,$value:Any, $type:String!, $operation:String!){
+        updateHelp(id:$id, key:$key, value:$value, type:$type, operation:$operation){
+            _id
+        }
+    }
+`;
 
 const Stars = (props) => {
-    const { uidOfUser, stars, keyOfHelpRequest, setShowStars } = props;
+    const { uidOfUser, keyOfHelpRequest } = props;
     const [starsGivenByUser,setStarsGivenByUser] = useState(0);
+    const [updateHelp] = useMutation(UPDATE_HELP);
 
-    handleGiveStars = async () => {
-        await updateFirebaseWithURL(`users/${uidOfUser}`, 'stars', stars + starsGivenByUser);
-        await updateFirebaseWithURL(`${HELPS_COMPLETED_DB}/${keyOfHelpRequest}/usersAccepted/${uidOfUser}`,'stars',starsGivenByUser);
-        setShowStars(false);
+    handleGiveStars = () => {
+        updateHelp({variables:{id:keyOfHelpRequest, key:"usersAccepted", value:{ [uidOfUser]: {stars: starsGivenByUser} }, type:"array", operation:"update"}})
     }
 
     return (

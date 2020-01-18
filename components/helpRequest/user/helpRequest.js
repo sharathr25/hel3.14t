@@ -1,8 +1,7 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import { Text, View, FlatList } from 'react-native';
 import HelpDescription from "../common/helpDescription";
 import Time from "../../common/time";
-import { getDataFromFirebase } from '../../../fireBase/database';
 import { FONT_FAMILY } from '../../../constants/styleConstants';
 import Requester from './requester';
 import DoneButton from '../buttons/doneButton';
@@ -23,6 +22,7 @@ const HelpRequest = (props) => {
           uid
           name
           mobileNo
+          stars
         },
         usersRequested {
           uid
@@ -43,7 +43,9 @@ const HelpRequest = (props) => {
         usersAccepted {
           uid
           name
-          mobileNo
+          mobileNo,
+          xp,
+          stars
         },
         usersRequested {
           uid
@@ -67,7 +69,6 @@ const HelpRequest = (props) => {
     }
   }
 
-
   if(!data) return null;
 
   const { help } = data;
@@ -80,8 +81,8 @@ const HelpRequest = (props) => {
   }
 
   getAcceptedUser = ({item}) => {
-    const { name, mobileNo } = item;
-    return <AccetedUser name={name} mobileNo={mobileNo} status={status} />
+    const { name, mobileNo , stars, uid } = item;
+    return <AccetedUser name={name} mobileNo={mobileNo} status={status} stars={stars} keyOfHelpRequest={keyOfHelpRequest} uidOfAcceptedUser={uid} />
   }
 
   getRequestedUserKey = (item, index) => {

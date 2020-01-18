@@ -3,7 +3,7 @@ import { FlatList, Platform, UIManager, Text } from 'react-native';
 import Context from "../../../context";
 import { getDistanceFromLatLonInKm, sortByDistance } from '../../../utils';
 import gql from 'graphql-tag';
-import { useQuery, useSubscription, useLazyQuery } from 'react-apollo';
+import { useLazyQuery, useQuery } from 'react-apollo';
 import HelpRequest from "./helpRequest";
 
 if (Platform.OS === 'android') {
@@ -39,53 +39,48 @@ const HELPS = gql`
   }
 `;
 
-const HELPS_SUBSCRIPITON = gql`
-subscription {
-  onCreateHelp{
-    _id,
-    latitude,
-    longitude,
-    timeStamp,
-    description,
-    usersAccepted{
-      uid,
-      name,
-      mobileNo
-    }
-    usersRequested{
-      uid,
-      name,
-      xp
-    },
-    usersRejected {
-      uid
-    }
-    noPeopleRequired,
-    creator
-  }
-}
-`;
+// const HELPS_CREATE_SUBSCRIPITON = gql`
+// subscription {
+//   onCreateHelp{
+//     _id,
+//     latitude,
+//     longitude,
+//     timeStamp,
+//     description,
+//     usersAccepted{
+//       uid,
+//       name,
+//       mobileNo
+//     }
+//     usersRequested{
+//       uid,
+//       name,
+//       xp
+//     },
+//     usersRejected {
+//       uid
+//     }
+//     noPeopleRequired,
+//     creator
+//   }
+// }
+// `;
 
+let helps = [];
 
 const HelpRequestFeed = (props) => {
   const contextValues = useContext(Context);
-  const { loading, data, error, fetchMore } = useQuery(HELPS, { variables: { offset: 0 } });
-  const [offset, setOffset] = useState(0);
+  const { loading, data, error, fetchMore} = useQuery(HELPS, {
+    variables: {
+      offset: 0
+    },
+    fetchPolicy: "cache-and-network"
+  });
 
-  const subscriptionData = useSubscription(HELPS_SUBSCRIPITON);
-
-  let newHelp = subscriptionData && subscriptionData.data && subscriptionData.data.onCreateHelp || null;
-
-  let helps = data ? data.helps : [];
-  if (newHelp) {
-    helps = [newHelp, ...helps];
-    newHelp = null;
-  }
-
-  getHelps = () => {
+  const getHelps = () => {
     fetchMore({
       variables: {
-        offset: offset + 1,
+        offset: data.helps.length
       },
       updateQuery: (prev, { fetchMoreResult }) => {
         if (!fetchMoreResult) return prev;
@@ -93,9 +88,19 @@ const HelpRequestFeed = (props) => {
           helps: [...prev.helps, ...fetchMoreResult.helps]
         });
       }
-    });
-    setOffset(offset + 1);
+    })
   }
+
+  // const subscriptionDataForNewHelp = useSubscription(HELPS_CREATE_SUBSCRIPITON);
+
+  // let newHelp = subscriptionDataForNewHelp && subscriptionDataForNewHelp.data && subscriptionDataForNewHelp.data.onCreateHelp || null;
+
+  // if (newHelp) {
+  //   console.log(helps, "**************");
+  //   helps = [newHelp, ...helps];
+  //   console.log(helps, "______________");
+  //   newHelp = null;
+  // }
 
   if (loading) return <Text>loading</Text>
   else if (error) return <Text>Error</Text>
@@ -134,7 +139,7 @@ const HelpRequestFeed = (props) => {
 
   return (
     <FlatList
-      data={gethelpRequestsSortedByDistance(helps)}
+      data={gethelpRequestsSortedByDistance(data.helps)}
       renderItem={getHelpRequest}
       keyExtractor={(item, index) => index.toString()}
       refreshing={false}

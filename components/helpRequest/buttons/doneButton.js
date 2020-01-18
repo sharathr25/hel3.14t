@@ -44,7 +44,7 @@ const DoneButton = (props) => {
         updateHelp({ variables: { key: "status", value: "COMPLETED", type: "update", operation: "update" } });
         usersAccepted.forEach((user) => {
             const { uid } = user;
-            updateUser({ variables: { uid, value: { message: "Help completed ..." }, key: "notifications", type: "array", operation: "push" }, });
+            //updateUser({ variables: { uid, value: { message: "Help completed ..." }, key: "notifications", type: "array", operation: "push" }, });
             if(canAddXp) {
             incrementXpForUser({ variables: { uid } });
             }

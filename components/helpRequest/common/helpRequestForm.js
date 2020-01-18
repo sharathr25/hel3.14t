@@ -30,14 +30,6 @@ const HELP_REQUEST = gql`
   }
 `;
 
-UPDATE_USER = gql`
-  mutation UpdateUser($uid:String!,$key:String!,$value:Any){
-    updateUser(uid:$uid, key:$key,value:$value, type:"array", operation:"push"){
-      uid
-    }
-  }
-`;
-
 const noOfPeopleSelectBoxOptions = [1, 2, 3, 4, 5, 6];
 
 const Option = ({ val }) => {
@@ -65,7 +57,6 @@ const HelpRequestForm = () => {
   const { uid, displayName, phoneNumber } = currentUser;
 
   const [createHelp, { }] = useMutation(HELP_REQUEST);
-  const [updateUser, { }] = useMutation(UPDATE_USER);
 
   handleCheckBox = (val) => {
     setState({ ...state, noPeopleRequired: val, [`checkBox${val}`]: true });
@@ -100,13 +91,7 @@ const HelpRequestForm = () => {
           name: displayName,
           noPeopleRequired
         }
-      }).then(res => {
-        const { data } = res;
-        const { createHelp } = data;
-        const { _id } = createHelp;
-        updateUser({ variables: { uid, key: "createdHelpRequests", value: _id } }).then((res) => {
-        }).catch(err => console.log(err))
-      })
+      });
     }
   }
 

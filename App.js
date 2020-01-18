@@ -15,12 +15,12 @@ import { InMemoryCache } from 'apollo-cache-inmemory';
 
 // Create an http link:
 const httpLink = new HttpLink({
-  uri: 'http://192.168.0.109:4000/graphql',
+  uri: 'http://192.168.0.106:4000/graphql'
 });
 
 // Create a WebSocket link:
 const wsLink = new WebSocketLink({
-  uri: `ws://192.168.0.109:4000/graphql`,
+  uri: `ws://192.168.0.106:4000/graphql`,
   options: {
     reconnect: true
   }
