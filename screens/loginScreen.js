@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Button } from 'react-native-elements';
 import { View, Alert } from 'react-native';
 import { SCREEN_TITLES } from '../constants/appConstants';
@@ -9,6 +9,7 @@ import ErrorMessage from '../components/common/errorMessage';
 import ScreenRedirecter from '../components/common/screenRedirecter';
 import InputComponent from '../components/common/inputComponent';
 import Loader from '../components/common/inlineLoader';
+import { useAuth } from '../customHooks';
 
 const emailRegex = regex.email;
 
@@ -18,14 +19,20 @@ const LoginScreen = (props) => {
   const [password, setPassword] = useState('');
   const [passwordErrorMessage, setPasswordErrorMessage] = useState('');
   const [loaderVisible, setLoaderVisible] = useState(false);
+  const { user, initializing } = useAuth();
+  const { navigation } = props;
+
+  useEffect(() => {
+    if(user) {
+      navigation.navigate('Main', { currentUser: user });
+    }
+  },[initializing]);
 
   handleSignUp = () => {
-    const { navigation } = props;
     navigation.navigate('SignUp');
   }
 
   handleResetPassword = () => {
-    const { navigation } = props;
     navigation.navigate('ResetPassword');
   }
 
@@ -43,7 +50,6 @@ const LoginScreen = (props) => {
   };
 
   loginWithEmail = async (email, password) => {
-    const { navigation } = props;
     try {
       const user  = await loginWithEmailAndPassword(email,password);
       setLoaderVisible(false);

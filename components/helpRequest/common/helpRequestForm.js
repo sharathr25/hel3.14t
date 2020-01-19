@@ -6,8 +6,7 @@ import { FLAG_COLOR_WHITE, FLAG_COLOR_ORANGE, FONT_FAMILY } from "../../../const
 import gql from "graphql-tag";
 import { useMutation } from "react-apollo";
 import Button from "../../common/button";
-import { useAuth } from "../../../auth";
-import { useLocation } from "../../../effects";
+import { useAuth, useLocation } from "../../../customHooks";
 
 const LIMIT = 3;
 

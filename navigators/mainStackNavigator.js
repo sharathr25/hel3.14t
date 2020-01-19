@@ -11,15 +11,23 @@ import DrawerNavigator from './mainScreenDrawNavigator';
 // constants
 import { FLAG_COLOR_WHITE, FLAG_COLOR_ORANGE } from '../constants/styleConstants';
 import CommentsScreen from '../screens/commentsScreen';
+import SignUpScreen from '../screens/signUpScreen';
+import LoginScreen from '../screens/loginScreen';
+import ResetPassowrdScreen from '../screens/resetPassword';
+import TermsAndConditionsScreen from '../screens/termsAndConditions';
 
 const MainNavigatorWithUser = createStackNavigator(
   {
     Main: { screen: DrawerNavigator },
     comments: { screen: CommentsScreen },
-    Notifications: { screen: NotificationsScreen }
+    Notifications: { screen: NotificationsScreen },
+    SignUp: { screen: SignUpScreen },
+    Login: { screen: LoginScreen },
+    ResetPassword: { screen: ResetPassowrdScreen },
+    TermsAndConditions: { screen: TermsAndConditionsScreen },
   },
   {
-    initialRouteName: 'Main',
+    initialRouteName: 'Login',
     defaultNavigationOptions: ({ navigation }) => {
       return {
         headerLeft: <MenuIcon navigation={navigation} />,

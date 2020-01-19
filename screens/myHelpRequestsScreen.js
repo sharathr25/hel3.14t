@@ -3,7 +3,7 @@ import { FlatList, View } from 'react-native';
 import HelpRequest from '../components/helpRequest/user/helpRequest';
 import { useQuery, useSubscription } from 'react-apollo';
 import gql from 'graphql-tag';
-import { useAuth } from '../auth';
+import { useAuth } from '../customHooks';
 
 const MyHelpRequestsScreen = (props) => {
     const { user:currentUser } = useAuth();

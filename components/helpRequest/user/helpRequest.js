@@ -1,17 +1,17 @@
 import React from 'react';
 import { Text, View, FlatList } from 'react-native';
+import { useQuery, useSubscription } from 'react-apollo';
+import gql from 'graphql-tag';
 import HelpDescription from "../common/helpDescription";
 import Time from "../../common/time";
 import { FONT_FAMILY } from '../../../constants/styleConstants';
-import Requester from './requester';
 import DoneButton from '../buttons/doneButton';
-import AccetedUser from './acceptedUser';
+import Requester from './requester';
+import Accepter from './accepter';
 import Card from '../../common/card';
-import { useQuery, useSubscription } from 'react-apollo';
-import gql from 'graphql-tag';
 
 const HelpRequest = (props) => {
-  const {keyOfHelpRequest} = props;
+  const { keyOfHelpRequest } = props;
 
   const QUERY = gql`
     query {
@@ -56,46 +56,46 @@ const HelpRequest = (props) => {
   }
   `;
 
-  let {data} = useQuery(QUERY);
+  let { data } = useQuery(QUERY);
 
-  const subscriptionData = useSubscription(SUBSCRIPTION, {shouldResubscribe:true});
+  const subscriptionData = useSubscription(SUBSCRIPTION, { shouldResubscribe: true });
 
   let updatedData = subscriptionData && subscriptionData.data && subscriptionData.data.onUpdateHelp || null;
 
-  if(updatedData) {
+  if (updatedData) {
     const { _id } = updatedData;
-    if(_id === keyOfHelpRequest) {
-      data.help = {...data.help,...updatedData}
+    if (_id === keyOfHelpRequest) {
+      data.help = { ...data.help, ...updatedData }
     }
   }
 
-  if(!data) return null;
+  if (!data) return null;
 
   const { help } = data;
 
   const { status, usersRequested, usersAccepted, description, timeStamp, noPeopleRequired } = help;
 
-  getRequestedUser = ({item}) => {
+  getRequestedUser = ({ item }) => {
     const { name, xp, uid } = item;
     return <Requester uidOfRequester={uid} name={name} xp={xp} keyOfHelpRequest={keyOfHelpRequest} usersAccepted={usersAccepted} noPeopleRequired={noPeopleRequired} />
   }
 
-  getAcceptedUser = ({item}) => {
-    const { name, mobileNo , stars, uid } = item;
-    return <AccetedUser name={name} mobileNo={mobileNo} status={status} stars={stars} keyOfHelpRequest={keyOfHelpRequest} uidOfAcceptedUser={uid} />
+  getAcceptedUser = ({ item }) => {
+    const { name, mobileNo, stars, uid } = item;
+    return <Accepter name={name} mobileNo={mobileNo} status={status} stars={stars} keyOfHelpRequest={keyOfHelpRequest} uidOfAccepter={uid} />
   }
 
   getRequestedUserKey = (item, index) => {
-    return "requestedusers"+item.key+index.toString()+new Date().getTime();
+    return "requestedusers" + item.key + index.toString() + new Date().getTime();
   }
 
   getAcceptedUserKey = (item, index) => {
-    return "acceptedusers"+item.key+index.toString()+new Date().getTime();
+    return "acceptedusers" + item.key + index.toString() + new Date().getTime();
   }
 
-  if(!status) return null;
+  if (!status) return null;
 
-  if(status === "COMPLETED") {
+  if (status === "COMPLETED") {
     return (
       <Card>
         <HelpDescription data={{ description }} />
@@ -116,30 +116,30 @@ const HelpRequest = (props) => {
   }
 
   return (
-      <Card>
-        <HelpDescription data={{ description }} />
-        {<View style={{margin: 10}}>
+    <Card>
+      <HelpDescription data={{ description }} />
+      {<View style={{ margin: 10 }}>
         <Text>{status}</Text>
         <FlatList
-            data={usersRequested}
-            renderItem={getRequestedUser}
-            keyExtractor={getRequestedUserKey}
-            listKey={getRequestedUserKey}
-            ListHeaderComponent={usersRequested.lnegth ? <Text style={{fontFamily: FONT_FAMILY, marginBottom: 5}}>People Willing to help you</Text> : null}
+          data={usersRequested}
+          renderItem={getRequestedUser}
+          keyExtractor={getRequestedUserKey}
+          listKey={getRequestedUserKey}
+          ListHeaderComponent={usersRequested.lnegth ? <Text style={{ fontFamily: FONT_FAMILY, marginBottom: 5 }}>People Willing to help you</Text> : null}
         />
-        </View>}
-        {<View style={{margin: 10}}>  
+      </View>}
+      {<View style={{ margin: 10 }}>
         <FlatList
-            data={usersAccepted}
-            renderItem={getAcceptedUser}
-            keyExtractor={getAcceptedUserKey}
-            listKey={getAcceptedUserKey}
-            ListHeaderComponent={usersAccepted.length ? <Text style={{fontFamily: FONT_FAMILY, marginBottom: 5}}>People who are helping</Text> : null}
+          data={usersAccepted}
+          renderItem={getAcceptedUser}
+          keyExtractor={getAcceptedUserKey}
+          listKey={getAcceptedUserKey}
+          ListHeaderComponent={usersAccepted.length ? <Text style={{ fontFamily: FONT_FAMILY, marginBottom: 5 }}>People who are helping</Text> : null}
         />
-        </View>}
-        <DoneButton keyOfHelpRequest={keyOfHelpRequest} status={status} usersAccepted={usersAccepted} />
-        <Time time={timeStamp} />
-      </Card>
+      </View>}
+      <DoneButton keyOfHelpRequest={keyOfHelpRequest} status={status} usersAccepted={usersAccepted} />
+      <Time time={timeStamp} />
+    </Card>
   );
   return null;
 }

@@ -1,4 +1,4 @@
-export const updateUser = async (user, email, password, name, mobileNo, gender) => {
+export const updateUser = async (user, email, password, name) => {
     try {
       await user.updateEmail(email);
       await user.updatePassword(password);

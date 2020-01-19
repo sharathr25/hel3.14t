@@ -1,35 +1,28 @@
 // packages
-import React, { memo } from 'react';
+import React, { memo, useEffect } from 'react';
 import { createAppContainer } from 'react-navigation';
-import { Text } from "react-native";
-import { useAuth } from './auth';
 import { ApolloProvider } from "react-apollo";
 import ApolloClient from './apolloClient';
 import whyDidYouRender from "@welldone-software/why-did-you-render";
-import mainStackNavigatorWithUser from './navigators/mainStackNavigatorWithUser';
-import mainStackNavigatorWithoutUser from './navigators/mainStackNavigatorWithoutUser';
+import mainStackNavigator from './navigators/mainStackNavigator';
+import { PermissionsAndroid, Alert } from "react-native";
 
 whyDidYouRender(React);
 
-const AppContainerWithUser = createAppContainer(mainStackNavigatorWithUser);
-const AppContainerWithoutUser = createAppContainer(mainStackNavigatorWithoutUser);
+const AppContainer = createAppContainer(mainStackNavigator);
 
 function App() {
-  const { initializing, user } = useAuth();
+  useEffect(() => {
+    PermissionsAndroid.request(PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION)
+      .then(() => { })
+      .catch((err) => Alert.alert("GPS can't be accessed"));
+  }, []);
 
-  if (initializing) {
-    return <Text>Loading</Text>
-  }
-
-  if (user) {
-    return (
-      <ApolloProvider client={ApolloClient}>
-        <AppContainerWithUser />
-      </ApolloProvider>
-    );
-  }
-
-  return <AppContainerWithoutUser />
+  return (
+    <ApolloProvider client={ApolloClient}>
+      <AppContainer />
+    </ApolloProvider>
+  );
 }
 
 App.whyDidYouRender = true;
