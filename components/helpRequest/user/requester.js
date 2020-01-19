@@ -30,13 +30,11 @@ const Requester = props => {
       Alert.alert("You are already helping....");
     } else {
       updateHelp({ variables: { key: "usersAccepted", value: { uid: uidOfRequester, name, mobileNo: phoneNumber }, operation: "push" } });
-      updateHelp({ variables: { key: "usersRequested", value: { uid: uidOfRequester }, operation: "pull" } });
     }
   };
 
   const handleReject = async () => {
     updateHelp({ variables: { key:"usersRejected", value: {uid: uidOfRequester}, operation:"push", type:"array"}});
-    updateHelp({ variables: { key: "usersRequested", value: { uid: uidOfRequester }, operation: "pull" } });
   };
 
   return (
