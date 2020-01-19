@@ -1,12 +1,13 @@
-import React, { useState, useContext } from "react";
+import React, { useState } from "react";
 import { Text, Input } from "react-native-elements";
 import Icon from "react-native-vector-icons/Feather";
 import { View, TouchableOpacity, Modal, StyleSheet, Alert } from "react-native";
 import { FLAG_COLOR_WHITE, FLAG_COLOR_ORANGE, FONT_FAMILY } from "../../../constants/styleConstants";
-import Context from '../../../context';
 import gql from "graphql-tag";
 import { useMutation } from "react-apollo";
 import Button from "../../common/button";
+import { useAuth } from "../../../auth";
+import { useLocation } from "../../../effects";
 
 const LIMIT = 3;
 
@@ -50,9 +51,9 @@ const HelpRequestForm = () => {
     locationProviderAvailable: false,
     locationErrorMessage: "",
   });
-  const contextValue = useContext(Context);
 
-  const { currentUser } = contextValue;
+  const { user:currentUser } = useAuth();
+  const { longitude, latitude, locationProviderAvailable, locationErrorMessage } = useLocation();
 
   const { uid, displayName, phoneNumber } = currentUser;
 
@@ -72,12 +73,10 @@ const HelpRequestForm = () => {
 
   requestHelp = () => {
     const { description, noPeopleRequired } = state;
-    const { longitude, latitude, locationProviderAvailable, locationErrorMessage, getPosition } = contextValue;
     if (description.length < LIMIT) {
       Alert.alert(`description should contain minimum ${LIMIT} characters`);
     } else if (locationProviderAvailable === false && latitude === null && longitude === null) {
       Alert.alert(locationErrorMessage ? locationErrorMessage : "location error");
-      getPosition();
     } else {
       setState({ ...state, formVisible: !state.formVisible });
       createHelp({

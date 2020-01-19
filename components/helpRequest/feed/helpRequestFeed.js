@@ -5,6 +5,7 @@ import { getDistanceFromLatLonInKm, sortByDistance } from '../../../utils';
 import gql from 'graphql-tag';
 import { useLazyQuery, useQuery } from 'react-apollo';
 import HelpRequest from "./helpRequest";
+import { useLocation } from "../../../effects";
 
 if (Platform.OS === 'android') {
   if (UIManager.setLayoutAnimationEnabledExperimental) {
@@ -69,6 +70,7 @@ const HELPS = gql`
 let helps = [];
 
 const HelpRequestFeed = (props) => {
+  const { locationErrorMessage, longitude, latitude, locationProviderAvailable } = useLocation();
   const contextValues = useContext(Context);
   const { loading, data, error, fetchMore} = useQuery(HELPS, {
     variables: {
@@ -112,7 +114,7 @@ const HelpRequestFeed = (props) => {
   }
 
   getHelpRequestsByDistance = (helpRequests) => {
-    const { latitude, locationProviderAvailable, longitude } = contextValues;
+    // const { latitude, locationProviderAvailable, longitude } = contextValues;
     if (!locationProviderAvailable) return helpRequests;
     helpRequestsWithDistance = helpRequests.map((helpRequest) => {
       const currentLatitude = latitude

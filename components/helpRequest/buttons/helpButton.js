@@ -6,6 +6,7 @@ import Loader from '../../common/inlineLoader';
 import Button from "../../common/button";
 import { useMutation } from "react-apollo";
 import gql from "graphql-tag";
+import { useAuth } from "../../../auth";
 
 const REQUESTED_ERROR = "You have requested please wait...";
 const ACCEPTED_ERROR = "You are already helping ...";
@@ -22,8 +23,9 @@ const HELP_UPDATE_SCHEMA = gql`
 const HelpButton = (props) => {
   const { data } = props;
   const { usersAccepted, usersRequested, creator, _id, usersRejected } = data;
-  const contextValues = useContext(Context);
-  const { currentUser } = contextValues;
+  // const contextValues = useContext(Context);
+  // const { currentUser } = contextValues;
+  const { user: currentUser} = useAuth();
   const { uid, displayName } = currentUser;
   const [isLoading, setIsLoading] = useState(false);
   const [updateHelp, { response }] = useMutation(HELP_UPDATE_SCHEMA);

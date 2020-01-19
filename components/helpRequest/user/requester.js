@@ -1,18 +1,15 @@
-import React, { useEffect, useState, useContext } from 'react';
+import React from 'react';
 import { Text, View, TouchableOpacity, StyleSheet, Alert } from 'react-native';
 import { FLAG_COLOR_GREEN } from '../../../constants/styleConstants';
 import ProfileLetter from '../../common/profileLetter';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import BoxText from '../../common/boxText';
-import { getDataFromFirebase, updateFirebaseWithURL, removeFromFirebaseWithUrlAndValue, notifyUser, pushToFirebaseWithURL } from '../../../fireBase/database';
-import { HELPS_REQUESTED_DB } from '../../../constants/appConstants';
 import { useMutation } from 'react-apollo';
 import gql from 'graphql-tag';
-import Context from '../../../context';
+import { useAuth } from '../../../auth';
 
 const Requester = props => {
-  const contextValues = useContext(Context);
-  const { currentUser } = contextValues;
+  const { user:currentUser } = useAuth();
   const { phoneNumber } = currentUser;
   const { uidOfRequester, keyOfHelpRequest, usersAccepted, noPeopleRequired, xp, name } = props;
 

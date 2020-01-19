@@ -1,13 +1,12 @@
-import React, { useContext } from 'react';
+import React from 'react';
 import { FlatList, View } from 'react-native';
 import HelpRequest from '../components/helpRequest/user/helpRequest';
-import Context from '../context';
 import { useQuery, useSubscription } from 'react-apollo';
 import gql from 'graphql-tag';
+import { useAuth } from '../auth';
 
 const MyHelpRequestsScreen = (props) => {
-    const contextValues = useContext(Context);
-    const { currentUser } = contextValues;
+    const { user:currentUser } = useAuth();
     const { uid } = currentUser;
 
     const QUERY = gql`
@@ -32,8 +31,6 @@ const MyHelpRequestsScreen = (props) => {
     const subscriptionData = useSubscription(SUBSCRPTION);
 
     const updatedUser = subscriptionData && subscriptionData.data && subscriptionData.data.onUpdateUser || null;
-
-    console.log(updatedUser);
 
     if(!data) return null;
 

@@ -7,8 +7,9 @@ import Context from "../../context";
 
 const NotificationBellIcon = (props) => {
     const { navigation } = props;
-    const contextValues = useContext(Context);
-    const { notifications } = contextValues;
+    // const contextValues = useContext(Context);
+    // const { notifications } = contextValues;
+    const notifications = [];
     const { container, textContainer, text } = styles;
 
     handleBellIconClick = () => {
