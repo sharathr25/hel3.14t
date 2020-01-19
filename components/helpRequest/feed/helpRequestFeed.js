@@ -1,7 +1,11 @@
-import React, { useContext } from "react";
-import { FlatList,Platform,UIManager } from 'react-native';
+import React, { useContext, useEffect, useState } from "react";
+import { FlatList, Platform, UIManager, Text } from 'react-native';
 import Context from "../../../context";
 import { getDistanceFromLatLonInKm, sortByDistance } from '../../../utils';
+import gql from 'graphql-tag';
+import { useLazyQuery, useQuery } from 'react-apollo';
+import HelpRequest from "./helpRequest";
+import { useLocation } from "../../../effects";
 
 if (Platform.OS === 'android') {
   if (UIManager.setLayoutAnimationEnabledExperimental) {
@@ -9,9 +13,99 @@ if (Platform.OS === 'android') {
   }
 }
 
+const HELPS = gql`
+  query Helps($offset:Int!) {
+    helps(offset:$offset) {
+      _id,
+      latitude,
+      longitude,
+      timeStamp,
+      description,
+      usersAccepted{
+        uid,
+        name,
+        mobileNo
+      },
+      usersRequested{
+        uid,
+        name,
+        xp
+      },
+      usersRejected {
+        uid
+      },
+      noPeopleRequired,
+      creator
+    }
+  }
+`;
+
+// const HELPS_CREATE_SUBSCRIPITON = gql`
+// subscription {
+//   onCreateHelp{
+//     _id,
+//     latitude,
+//     longitude,
+//     timeStamp,
+//     description,
+//     usersAccepted{
+//       uid,
+//       name,
+//       mobileNo
+//     }
+//     usersRequested{
+//       uid,
+//       name,
+//       xp
+//     },
+//     usersRejected {
+//       uid
+//     }
+//     noPeopleRequired,
+//     creator
+//   }
+// }
+// `;
+
+let helps = [];
+
 const HelpRequestFeed = (props) => {
+  const { locationErrorMessage, longitude, latitude, locationProviderAvailable } = useLocation();
   const contextValues = useContext(Context);
-  const { feedItems, isLoading, getFeedItems } = props;
+  const { loading, data, error, fetchMore} = useQuery(HELPS, {
+    variables: {
+      offset: 0
+    },
+    fetchPolicy: "cache-and-network"
+  });
+
+  const getHelps = () => {
+    fetchMore({
+      variables: {
+        offset: data.helps.length
+      },
+      updateQuery: (prev, { fetchMoreResult }) => {
+        if (!fetchMoreResult) return prev;
+        return Object.assign({}, prev, {
+          helps: [...prev.helps, ...fetchMoreResult.helps]
+        });
+      }
+    })
+  }
+
+  // const subscriptionDataForNewHelp = useSubscription(HELPS_CREATE_SUBSCRIPITON);
+
+  // let newHelp = subscriptionDataForNewHelp && subscriptionDataForNewHelp.data && subscriptionDataForNewHelp.data.onCreateHelp || null;
+
+  // if (newHelp) {
+  //   console.log(helps, "**************");
+  //   helps = [newHelp, ...helps];
+  //   console.log(helps, "______________");
+  //   newHelp = null;
+  // }
+
+  if (loading) return <Text>loading</Text>
+  else if (error) return <Text>Error</Text>
 
   gethelpRequestsSortedByDistance = (feedItems) => {
     const newHelpRequests = getHelpRequestsByDistance(feedItems);
@@ -20,8 +114,8 @@ const HelpRequestFeed = (props) => {
   }
 
   getHelpRequestsByDistance = (helpRequests) => {
-    const {latitude, locationProviderAvailable, longitude} = contextValues;
-    if(!locationProviderAvailable) return helpRequests;
+    // const { latitude, locationProviderAvailable, longitude } = contextValues;
+    if (!locationProviderAvailable) return helpRequests;
     helpRequestsWithDistance = helpRequests.map((helpRequest) => {
       const currentLatitude = latitude
       const currentLongitude = longitude
@@ -41,24 +135,18 @@ const HelpRequestFeed = (props) => {
     return helpRequestsWithDistance;
   }
 
-  getHelpRequests = () => {
-    if(feedItems.length === 0) return;
-    setHelpRequestsWithDistance(feedItems);
-  }
-
-  getHelpRequest = ({item}) => {
-    const {ChildComponent} = props;
-    return <ChildComponent data={item} key={item.key} />
+  getHelpRequest = ({ item }) => {
+    return <HelpRequest data={item} key={item._id} />
   }
 
   return (
     <FlatList
-        data={gethelpRequestsSortedByDistance(feedItems)}
-        renderItem={getHelpRequest}
-        keyExtractor={(item, index) => index.toString()}
-        refreshing={isLoading}
-        onRefresh={getFeedItems}
-      />
+      data={gethelpRequestsSortedByDistance(data.helps)}
+      renderItem={getHelpRequest}
+      keyExtractor={(item, index) => index.toString()}
+      refreshing={false}
+      onRefresh={getHelps}
+    />
   );
 }
 

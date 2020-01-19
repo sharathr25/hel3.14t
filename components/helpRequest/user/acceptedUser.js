@@ -1,43 +1,12 @@
-import React, { useEffect, useState } from 'react';
-import { Text, View, Alert } from 'react-native';
+import React from 'react';
+import { Text, View } from 'react-native';
 import ProfileLetter from '../../common/profileLetter';
 import BoxText from '../../common/boxText';
-import { getDataFromFirebase } from '../../../fireBase/database';
-import { useVal } from '../../../effects';
-import Icon from "react-native-vector-icons/FontAwesome";
+import Icon from 'react-native-vector-icons/FontAwesome';
 import Stars from '../buttons/starsButton';
-import { HELPS_COMPLETED_DB } from '../../../constants/appConstants';
 
 const AccetedUser = (props) => {
-  const { uidOfAcceptedHelper, status, keyOfHelpRequest, dataOfAcceptedHelper } = props;
-  const { stars } = dataOfAcceptedHelper;
-  const [name, setname] = useState('');
-  const [xp, setXp] = useState(0);
-  const [mobileNumber, setMobileNumber] = useState('');
-  const [showStars,setShowStars] = useState(stars ? false : true);
-  const starsOfAcceptedHelper = useVal(`users/${uidOfAcceptedHelper}/stars`, 0);
-
-  useEffect(() => {
-    let isSubscribed = true;
-    const url = `users/${uidOfAcceptedHelper}`;
-    getDataFromFirebase(url).then((dataOfAcceptedHelper) => {
-      const { name, xp, mobileNumber } = dataOfAcceptedHelper.val();
-      if (isSubscribed) {
-        setMobileNumber(mobileNumber);
-        setname(name);
-        setXp(xp);
-      }
-    });
-    return () => isSubscribed = false;
-  }, []);
-
-  useEffect(() => {
-    getDataFromFirebase(`${HELPS_COMPLETED_DB}/usersAccepted/${uidOfAcceptedHelper}`).then((data) => {
-      if(data.val()){
-        setShowStars(false);
-      }
-    })
-  }, [])
+  const { status, name, mobileNo, xp, stars, keyOfHelpRequest, uidOfAcceptedUser } = props;
 
   if (!status) return null;
 
@@ -50,9 +19,7 @@ const AccetedUser = (props) => {
         <View style={{ marginLeft: 5, flex: 1 }}>
           <Text>{name}</Text>
           <View style={{ flex: 1, flexDirection: 'row', justifyContent: 'flex-start' }}>
-            <BoxText leftText="XP" rightText={xp} />
-            <BoxText leftText={<Icon name="star-o" size={20} />} rightText={starsOfAcceptedHelper} />
-            {showStars && <Stars uidOfUser={uidOfAcceptedHelper} stars={starsOfAcceptedHelper} keyOfHelpRequest={keyOfHelpRequest} setShowStars={setShowStars} />}
+            {stars === 0 && <Stars uidOfUser={uidOfAcceptedUser} stars={stars} keyOfHelpRequest={keyOfHelpRequest} />}
           </View>
         </View>
       </View>
@@ -68,7 +35,7 @@ const AccetedUser = (props) => {
         <Text>{name}</Text>
         <View style={{ flex: 1, flexDirection: 'row', justifyContent: 'flex-start' }}>
           <BoxText leftText="XP" rightText={xp} />
-          {mobileNumber ? <BoxText leftText="Ph No" rightText={mobileNumber} /> : null}
+          {mobileNo ? <BoxText leftText="Ph No" rightText={mobileNo.replace("+91","")} /> : null}
         </View>
       </View>
     </View>

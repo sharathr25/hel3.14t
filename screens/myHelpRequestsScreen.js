@@ -1,22 +1,54 @@
-import React, { useContext } from 'react';
+import React from 'react';
 import { FlatList, View } from 'react-native';
 import HelpRequest from '../components/helpRequest/user/helpRequest';
-import Context from '../context';
-import { useQueue } from '../effects';
+import { useQuery, useSubscription } from 'react-apollo';
+import gql from 'graphql-tag';
+import { useAuth } from '../auth';
 
 const MyHelpRequestsScreen = (props) => {
-    const contextValues = useContext(Context);
-    const { currentUser } = contextValues;
+    const { user:currentUser } = useAuth();
     const { uid } = currentUser;
-    const { db } = props;
-    const helpRequests = useQueue(`users/${uid}/${db}`);
 
-    getHelpRequest = ({ item }) => <HelpRequest keyOfHelpRequest={item.data} db={db} />
+    const QUERY = gql`
+        query {
+            user(uid:"${uid}") {
+                createdHelpRequests
+            }
+        }
+    `;
+
+    const SUBSCRPTION = gql`
+    subscription{
+        onUpdateUser{
+            uid,
+            createdHelpRequests
+        } 
+    }
+    `;
+
+    const {data} = useQuery(QUERY);
+
+    const subscriptionData = useSubscription(SUBSCRPTION);
+
+    const updatedUser = subscriptionData && subscriptionData.data && subscriptionData.data.onUpdateUser || null;
+
+    if(!data) return null;
+
+    let { user } = data;
+    
+    if(updatedUser){
+        if(updatedUser.uid === uid) {
+            user = { ...data.user, ...updatedUser}
+        }
+    }
+    let { createdHelpRequests } = user;
+
+    getHelpRequest = ({ item }) => <HelpRequest keyOfHelpRequest={item} />
 
     return (
         <View style={{flex: 1}}>
             <FlatList
-                data={helpRequests}
+                data={createdHelpRequests}
                 renderItem={getHelpRequest}
                 keyExtractor={(item, index) => item.key + index.toString()}
                 listKey={(item, index) => item.key + index.toString()}

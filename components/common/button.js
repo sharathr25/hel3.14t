@@ -25,7 +25,6 @@ const styles = StyleSheet.create({
       padding: 5,
     },
     text:{
-        width: 50,
         fontSize: 20,
         color:FLAG_COLOR_ORANGE
     },

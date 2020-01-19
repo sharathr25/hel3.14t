@@ -7,34 +7,16 @@ import ReferButton from "../buttons/referButton";
 import NoOfHelpers from './noOfHelpers';
 import Distance from '../../common/distance';
 import Card from "../../common/card";
-import { HELPS_REQUESTED_DB } from "../../../constants/appConstants";
-import { useVal } from "../../../effects";
 
 const HelpRequest = (props) => {
   const { data } = props;
   if(!data) return null;
-  const { noPeopleRequested, noPeopleRequired, description,distance, timeStamp, key } = data;
-  const [state, setState] = useState(
-    {
-      noPeopleRequested,  
-      noPeopleRequired,
-      disableHelp: false,
-      helpErrorMessage: ""
-    }
-  );
-
-  const noPeopleAccepted = useVal(`${HELPS_REQUESTED_DB}/${key}/noPeopleAccepted`,0);
-
-  updateState = (data) => {
-    if(Object.keys(state).includes(data.key)){
-      setState( { ...state,[data.key]: data.val() })
-    }
-  }
+  const { usersAccepted, description,distance, timeStamp, noPeopleRequired, creator } = data;
 
   return (
     <Card>
         <HelpDescription data={{ description }}/>
-        <NoOfHelpers noPeopleAccepted={noPeopleAccepted} noPeopleRequired={state.noPeopleRequired} />
+        <NoOfHelpers noPeopleAccepted={usersAccepted.length} noPeopleRequired={noPeopleRequired} />
         <View style={styles.buttons}>
           <HelpButton data={data} />
           <ReferButton data={data} />

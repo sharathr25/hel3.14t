@@ -1,44 +1,89 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import { Text, View, FlatList } from 'react-native';
 import HelpDescription from "../common/helpDescription";
 import Time from "../../common/time";
-import { getDataFromFirebase } from '../../../fireBase/database';
 import { FONT_FAMILY } from '../../../constants/styleConstants';
 import Requester from './requester';
 import DoneButton from '../buttons/doneButton';
 import AccetedUser from './acceptedUser';
 import Card from '../../common/card';
-import { useQueue, useVal } from '../../../effects';
+import { useQuery, useSubscription } from 'react-apollo';
+import gql from 'graphql-tag';
 
 const HelpRequest = (props) => {
-  const {keyOfHelpRequest, db, test} = props;
-  const [description,setDescription] = useState('');
-  const [timeStamp,setTimeStamp] = useState('');
-  const [noPeopleRequired,setNoPeopleRequired] = useState('');
-  const status = useVal(`${db}/${keyOfHelpRequest}/status`,'');
-  const noPeopleAccepted = useVal(`${db}/${keyOfHelpRequest}/noPeopleAccepted`,0);
-  const usersRequested = useQueue(`${db}/${keyOfHelpRequest}/usersRequested`);
-  const usersAccepted = useQueue(`${db}/${keyOfHelpRequest}/usersAccepted`);
+  const {keyOfHelpRequest} = props;
+
+  const QUERY = gql`
+    query {
+      help(id:"${keyOfHelpRequest}") {
+        status,
+        description,
+        usersAccepted {
+          uid
+          name
+          mobileNo
+          stars
+        },
+        usersRequested {
+          uid
+          name,
+          xp
+        },
+        timeStamp,
+        noPeopleRequired
+      }
+    }
+  `;
+
+  const SUBSCRIPTION = gql`
+    subscription{
+      onUpdateHelp{
+        _id,
+        status,
+        usersAccepted {
+          uid
+          name
+          mobileNo,
+          xp,
+          stars
+        },
+        usersRequested {
+          uid
+          name,
+          xp
+        },
+    }
+  }
+  `;
+
+  let {data} = useQuery(QUERY);
+
+  const subscriptionData = useSubscription(SUBSCRIPTION, {shouldResubscribe:true});
+
+  let updatedData = subscriptionData && subscriptionData.data && subscriptionData.data.onUpdateHelp || null;
+
+  if(updatedData) {
+    const { _id } = updatedData;
+    if(_id === keyOfHelpRequest) {
+      data.help = {...data.help,...updatedData}
+    }
+  }
+
+  if(!data) return null;
+
+  const { help } = data;
+
+  const { status, usersRequested, usersAccepted, description, timeStamp, noPeopleRequired } = help;
 
   getRequestedUser = ({item}) => {
-    const { data } = item;
-    return <Requester uidOfRequestingHelper={data} keyOfHelpRequest={keyOfHelpRequest} noPeopleAccepted={noPeopleAccepted} noPeopleRequired={noPeopleRequired} />
+    const { name, xp, uid } = item;
+    return <Requester uidOfRequester={uid} name={name} xp={xp} keyOfHelpRequest={keyOfHelpRequest} usersAccepted={usersAccepted} noPeopleRequired={noPeopleRequired} />
   }
 
   getAcceptedUser = ({item}) => {
-    const { data, key } = item;
-    return <AccetedUser dataOfAcceptedHelper={data} uidOfAcceptedHelper={key} keyOfHelpRequest={keyOfHelpRequest} status={status} />
+    const { name, mobileNo , stars, uid } = item;
+    return <AccetedUser name={name} mobileNo={mobileNo} status={status} stars={stars} keyOfHelpRequest={keyOfHelpRequest} uidOfAcceptedUser={uid} />
   }
-
-  useEffect(() => {
-    getDataFromFirebase(`${db}/${keyOfHelpRequest}`).then((data) => {
-      if(!data.val()) return;
-      const { timeStamp, description, noPeopleRequired } = data.val();
-      setDescription(description);
-      setNoPeopleRequired(noPeopleRequired);
-      setTimeStamp(timeStamp);
-    });
-  }, [])
 
   getRequestedUserKey = (item, index) => {
     return "requestedusers"+item.key+index.toString()+new Date().getTime();
@@ -92,10 +137,11 @@ const HelpRequest = (props) => {
             ListHeaderComponent={usersAccepted.length ? <Text style={{fontFamily: FONT_FAMILY, marginBottom: 5}}>People who are helping</Text> : null}
         />
         </View>}
-        <DoneButton keyOfHelpRequest={keyOfHelpRequest} status={status} />
+        <DoneButton keyOfHelpRequest={keyOfHelpRequest} status={status} usersAccepted={usersAccepted} />
         <Time time={timeStamp} />
       </Card>
   );
+  return null;
 }
 
 export default HelpRequest;
