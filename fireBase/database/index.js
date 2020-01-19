@@ -1,10 +1,8 @@
 import firebase from 'react-native-firebase';
 
-const FIREBASE_FETCH_LIMIT = 10;
-
 export const addUserDetailsToDb = async (uid,mobileNumber, email, name, gender, dob) => {
   try {
-    await firebase.database().ref(`/users/${uid}`).set({ mobileNumber,email, name, gender, dob, xp:0, stars:0 });
+    // await firebase.database().ref(`/users/${uid}`).set({ mobileNumber,email, name, gender, dob, xp:0, stars:0 });
     await firebase.database().ref(`/mapping/+91${mobileNumber}`).set({ email, name, gender, dob });
   } catch (error) {
     console.log(error);

@@ -1,11 +1,11 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext } from "react";
 import { FlatList, Platform, UIManager, Text } from 'react-native';
 import Context from "../../../context";
 import { getDistanceFromLatLonInKm, sortByDistance } from '../../../utils';
 import gql from 'graphql-tag';
-import { useLazyQuery, useQuery } from 'react-apollo';
+import { useQuery } from 'react-apollo';
 import HelpRequest from "./helpRequest";
-import { useLocation } from "../../../effects";
+import { useLocation } from "../../../customHooks";
 
 if (Platform.OS === 'android') {
   if (UIManager.setLayoutAnimationEnabledExperimental) {

@@ -6,7 +6,7 @@ import Loader from '../../common/inlineLoader';
 import Button from "../../common/button";
 import { useMutation } from "react-apollo";
 import gql from "graphql-tag";
-import { useAuth } from "../../../auth";
+import { useAuth } from "../../../customHooks";
 
 const REQUESTED_ERROR = "You have requested please wait...";
 const ACCEPTED_ERROR = "You are already helping ...";

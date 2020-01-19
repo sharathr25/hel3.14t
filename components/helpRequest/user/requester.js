@@ -6,7 +6,7 @@ import Icon from 'react-native-vector-icons/FontAwesome';
 import BoxText from '../../common/boxText';
 import { useMutation } from 'react-apollo';
 import gql from 'graphql-tag';
-import { useAuth } from '../../../auth';
+import { useAuth } from '../../../customHooks';
 
 const Requester = props => {
   const { user:currentUser } = useAuth();
@@ -21,7 +21,7 @@ const Requester = props => {
     }
   `;
 
-  const [updateHelp, { }] = useMutation(QUERY);
+  const [updateHelp, { loading }] = useMutation(QUERY);
 
   const handleAccept = async () => {
     if (noPeopleRequired === usersAccepted.length) {
@@ -37,11 +37,13 @@ const Requester = props => {
     updateHelp({ variables: { key:"usersRejected", value: {uid: uidOfRequester}, operation:"push", type:"array"}});
   };
 
+  const firstLetterOfName = name.substring(0, 1);
+
   return (
     <View>
       <View style={{ flex: 1, flexDirection: 'row' }}>
         <View style={{ margin: 5 }}>
-          <ProfileLetter letter={`${name.substring(0, 1)}`} />
+          <ProfileLetter letter={firstLetterOfName} />
         </View>
         <View style={{ marginLeft: 5 }}>
           <Text>{name}</Text>

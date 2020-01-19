@@ -2,7 +2,7 @@
 import { useEffect, useState } from 'react';
 import firebase from 'react-native-firebase'
 
-export const useAuth = () => {
+export default useAuth = () => {
     const [state, setState] = useState(() => { const user = firebase.auth().currentUser; return { initializing: !user, user, } })
     function onChange(user) {
       if(!state.user) {
