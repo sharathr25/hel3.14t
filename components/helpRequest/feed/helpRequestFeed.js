@@ -105,7 +105,7 @@ const HelpRequestFeed = (props) => {
   // }
 
   if (loading) return <Text>loading</Text>
-  else if (error) return <Text>Error</Text>
+  else if (error) return <Text>{error.networkError}</Text>
 
   gethelpRequestsSortedByDistance = (feedItems) => {
     const newHelpRequests = getHelpRequestsByDistance(feedItems);
