@@ -4,11 +4,12 @@ import { useQuery, useSubscription } from 'react-apollo';
 import gql from 'graphql-tag';
 import HelpDescription from "../common/helpDescription";
 import Time from "../../common/time";
-import { FONT_FAMILY } from '../../../constants/styleConstants';
+import { FONT_FAMILY, STATUS_COLOR_MAPPING } from '../../../constants/styleConstants';
 import DoneButton from '../buttons/doneButton';
 import Requester from './requester';
 import Accepter from './accepter';
 import Card from '../../common/card';
+import { STATUS_TEXT_MAPPING } from '../../../constants/appConstants';
 
 const HelpRequest = (props) => {
   const { keyOfHelpRequest } = props;
@@ -97,10 +98,10 @@ const HelpRequest = (props) => {
 
   if (status === "COMPLETED") {
     return (
-      <Card>
+      <Card borderLeftColor={STATUS_COLOR_MAPPING[status]}>
         <HelpDescription data={{ description }} />
         {<View style={{ margin: 10 }}>
-          <Text>{status}</Text>
+        <Text style={{color: STATUS_COLOR_MAPPING[status], marginLeft: 10}}>{STATUS_TEXT_MAPPING[status]}</Text>
         </View>}
         {<View style={{ margin: 10 }}>
           <FlatList
@@ -116,10 +117,10 @@ const HelpRequest = (props) => {
   }
 
   return (
-    <Card>
+    <Card borderLeftColor={STATUS_COLOR_MAPPING[status]}>
       <HelpDescription data={{ description }} />
       {<View style={{ margin: 10 }}>
-        <Text>{status}</Text>
+      <Text style={{color: STATUS_COLOR_MAPPING[status], marginLeft: 10}}>{STATUS_TEXT_MAPPING[status]}</Text>
         <FlatList
           data={usersRequested}
           renderItem={getRequestedUser}

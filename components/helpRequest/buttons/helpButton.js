@@ -1,7 +1,6 @@
-import React, { useState, useContext } from "react";
+import React from "react";
 import { Alert } from "react-native";
 import { FLAG_COLOR_WHITE, FLAG_COLOR_ORANGE } from "../../../constants/styleConstants";
-import Context from "../../../context";
 import Loader from '../../common/inlineLoader';
 import Button from "../../common/button";
 import { useMutation } from "react-apollo";
@@ -23,15 +22,11 @@ const HELP_UPDATE_SCHEMA = gql`
 const HelpButton = (props) => {
   const { data } = props;
   const { usersAccepted, usersRequested, creator, _id, usersRejected } = data;
-  // const contextValues = useContext(Context);
-  // const { currentUser } = contextValues;
   const { user: currentUser} = useAuth();
   const { uid, displayName } = currentUser;
-  const [isLoading, setIsLoading] = useState(false);
-  const [updateHelp, { response }] = useMutation(HELP_UPDATE_SCHEMA);
+  const [updateHelp, { response, loading }] = useMutation(HELP_UPDATE_SCHEMA);
 
   handleHelp = async () => {
-    setIsLoading(true);
     if (usersAccepted.map((user) => user.uid).indexOf(uid) > -1) {
       Alert.alert(ACCEPTED_ERROR);
     } else if (usersRequested.map((user) => user.uid).indexOf(uid) > -1) {
@@ -41,12 +36,9 @@ const HelpButton = (props) => {
     } else {
       updateHelp({ variables: { id: _id, key: "usersRequested", value: { uid, name: displayName, xp: 0 } } });
     }
-    setIsLoading(false);
   }
 
-  if (isLoading) return <Loader title="Please Wait..." bgColor={FLAG_COLOR_WHITE} color={FLAG_COLOR_ORANGE} />
-
-  return <Button onPress={handleHelp}>Help</Button>
+  return loading ? <Loader bgColor={FLAG_COLOR_WHITE} color={FLAG_COLOR_ORANGE} /> : <Button onPress={handleHelp}>Help</Button>
 }
 
 export default HelpButton;
