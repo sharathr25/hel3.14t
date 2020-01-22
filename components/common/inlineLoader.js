@@ -1,17 +1,37 @@
 import React from 'react';
-import { ActivityIndicator, View, Text } from 'react-native';
+import { ActivityIndicator, View, Text, StyleSheet } from 'react-native';
 import { FLAG_COLOR_ORANGE, FLAG_COLOR_WHITE } from '../../constants/styleConstants';
 
 const Loader = (props) => {
+    const { bgColor = FLAG_COLOR_ORANGE, color = FLAG_COLOR_WHITE, title, message } = props;
+    const { container, content } = styles;
     return (
-        <View style={{display:"flex", flexDirection:"row", backgroundColor:props.bgColor || FLAG_COLOR_ORANGE, padding:10, borderRadius:5, margin:10 }}>
-            <ActivityIndicator color={props.color || FLAG_COLOR_WHITE} />
-            <View style={{display:"flex", paddingLeft:5 }}>
-                {props.title && <Text style={{color: props.color || FLAG_COLOR_WHITE, fontSize:20}}>{props.title}</Text>}
-                {props.message && <Text style={{color: props.color || FLAG_COLOR_WHITE, fontSize:15}}>{props.message}</Text>}
+        <View style={{ ...container,backgroundColor: bgColor, borderColor: color}}>
+            <ActivityIndicator color={color} />
+            <View style={content}>
+                {title && <Text style={{ color: color, fontSize: 20 }}>{title}</Text>}
+                {message && <Text style={{ color: color, fontSize: 15 }}>{message}</Text>}
             </View>
         </View>
     );
 }
 
 export default Loader;
+
+const styles = StyleSheet.create({
+    container: {
+        display: "flex",
+        flexDirection: "row",
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+        padding: 10,
+        borderRadius: 5,
+        margin: 10,
+        borderWidth: 1
+    },
+    content: {
+        display: "flex", 
+        paddingLeft: 5 
+    }
+});

@@ -23,6 +23,13 @@ export const FONT_SIZE_TEXT = 12;
 
 export const ERROR_MESSAGE_TEXT_COLOR = 'red';
 
+
+export const STATUS_COLOR_MAPPING = {
+  'REQUESTED' : 'red',
+  'ON_GOING' : FLAG_COLOR_ORANGE,
+  'COMPLETED' : FLAG_COLOR_GREEN
+}
+
 export const styles = StyleSheet.create({
   inputContainerStyle: {
     borderColor: INPUT_BORDER_COLOR,

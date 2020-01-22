@@ -1,6 +1,5 @@
-import React, { useContext } from "react";
+import React from "react";
 import { FlatList, Platform, UIManager, Text } from 'react-native';
-import Context from "../../../context";
 import { getDistanceFromLatLonInKm, sortByDistance } from '../../../utils';
 import gql from 'graphql-tag';
 import { useQuery } from 'react-apollo';
@@ -21,6 +20,7 @@ const HELPS = gql`
       longitude,
       timeStamp,
       description,
+      status,
       usersAccepted{
         uid,
         name,
@@ -67,11 +67,8 @@ const HELPS = gql`
 // }
 // `;
 
-let helps = [];
-
 const HelpRequestFeed = (props) => {
-  const { locationErrorMessage, longitude, latitude, locationProviderAvailable } = useLocation();
-  const contextValues = useContext(Context);
+  const { longitude, latitude, locationProviderAvailable } = useLocation();
   const { loading, data, error, fetchMore} = useQuery(HELPS, {
     variables: {
       offset: 0
@@ -98,14 +95,11 @@ const HelpRequestFeed = (props) => {
   // let newHelp = subscriptionDataForNewHelp && subscriptionDataForNewHelp.data && subscriptionDataForNewHelp.data.onCreateHelp || null;
 
   // if (newHelp) {
-  //   console.log(helps, "**************");
   //   helps = [newHelp, ...helps];
-  //   console.log(helps, "______________");
   //   newHelp = null;
   // }
 
-  if (loading) return <Text>loading</Text>
-  else if (error) return <Text>{error.networkError}</Text>
+  if (error) return <Text>{error.networkError}</Text>
 
   gethelpRequestsSortedByDistance = (feedItems) => {
     const newHelpRequests = getHelpRequestsByDistance(feedItems);
@@ -114,25 +108,21 @@ const HelpRequestFeed = (props) => {
   }
 
   getHelpRequestsByDistance = (helpRequests) => {
-    // const { latitude, locationProviderAvailable, longitude } = contextValues;
     if (!locationProviderAvailable) return helpRequests;
-    helpRequestsWithDistance = helpRequests.map((helpRequest) => {
-      const currentLatitude = latitude
-      const currentLongitude = longitude
-      const lat1 = currentLatitude;
-      const lon1 = currentLongitude;
-      const lat2 = helpRequest.latitude;
-      const lon2 = helpRequest.longitude;
-      const dist = getDistanceFromLatLonInKm(lat1, lon1, lat2, lon2);
+    return helpRequests.map((helpRequest) => {
+      const lattitudeOfUser = latitude;
+      const longitudeOfUser = longitude;
+      const lattitudeOfHelpRequest = helpRequest.latitude;
+      const longitudeOfHelpRequest = helpRequest.longitude;
+      const dist = getDistanceFromLatLonInKm(lattitudeOfUser, longitudeOfUser,longitudeOfHelpRequest,lattitudeOfHelpRequest);
       const newObj = {
         ...helpRequest,
-        userLatitude: lat1,
-        userLongitude: lon1,
+        userLatitude: lattitudeOfUser,
+        userLongitude: longitudeOfUser,
         distance: dist
       };
       return newObj;
     });
-    return helpRequestsWithDistance;
   }
 
   getHelpRequest = ({ item }) => {
@@ -141,10 +131,10 @@ const HelpRequestFeed = (props) => {
 
   return (
     <FlatList
-      data={gethelpRequestsSortedByDistance(data.helps)}
+      data={gethelpRequestsSortedByDistance(data ? data.helps : [])}
       renderItem={getHelpRequest}
-      keyExtractor={(item, index) => index.toString()}
-      refreshing={false}
+      keyExtractor={(_, index) => index.toString()}
+      refreshing={loading}
       onRefresh={getHelps}
     />
   );

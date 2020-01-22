@@ -65,3 +65,9 @@ export const NOTIFICATION_TYPES = {
 
 export const HELPS_REQUESTED_DB = 'helpsRequested';
 export const HELPS_COMPLETED_DB = 'helpsCompleted';
+
+export const STATUS_TEXT_MAPPING = {
+  'REQUESTED' : 'Requested',
+  'ON_GOING' : 'On going',
+  'COMPLETED' : 'Completed'
+}

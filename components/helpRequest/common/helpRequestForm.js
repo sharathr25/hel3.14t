@@ -54,6 +54,8 @@ const HelpRequestForm = () => {
   const { user:currentUser } = useAuth();
   const { longitude, latitude, locationProviderAvailable, locationErrorMessage } = useLocation();
 
+  console.log(longitude,latitude);
+
   const { uid, displayName, phoneNumber } = currentUser;
 
   const [createHelp, { }] = useMutation(HELP_REQUEST);
