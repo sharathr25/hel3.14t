@@ -8,7 +8,7 @@ function Card(props) {
       {borderLeftColor && <View style={{ backgroundColor: borderLeftColor, width: 5}}>
         <Text></Text>
       </View>}
-      <View style={{display:'flex', flex:1}}>
+      <View style={{display:'flex', flex:1, padding: 10}}>
         {props.children}
       </View>
     </View>

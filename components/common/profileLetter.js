@@ -20,12 +20,19 @@ export default ProfileLetter;
 const styles = StyleSheet.create({
   text: { fontSize: 20, color: FLAG_COLOR_WHITE },
   textWrapper: {
-    position: 'absolute', top: 0, left: 0, right: 0, bottom: 0, justifyContent: 'center', alignItems: 'center'
+    position: 'absolute', 
+    top: 0, 
+    left: 0, 
+    right: 0, 
+    bottom: 0, 
+    justifyContent: 'center', 
+    alignItems: 'center',
   },
   textContainer: {
     backgroundColor: FLAG_COLOR_ORANGE,
-    borderRadius: 20,
-    width: 30,
-    height: 30,
+    borderRadius: 25,
+    width: 50,
+    height: 50,
+    margin: 5
   }
 });

@@ -11,6 +11,7 @@ import gql from "graphql-tag";
 import { useSubscription } from "react-apollo";
 import { STATUS_COLOR_MAPPING } from "../../../constants/styleConstants";
 import { STATUS_TEXT_MAPPING } from "../../../constants/appConstants";
+import Status from "../../common/status";
 
 const HELP_SUBSCRIPTION = gql`
 subscription{
@@ -44,7 +45,7 @@ const HelpRequest = (props) => {
   return (
     <Card borderLeftColor={STATUS_COLOR_MAPPING[status]}>
         <HelpDescription data={{ description }}/>
-        <Text style={{color: STATUS_COLOR_MAPPING[status], marginLeft: 10}}>{STATUS_TEXT_MAPPING[status]}</Text>
+        <Status>{status}</Status>
         <NoOfHelpers noPeopleAccepted={usersAccepted.length} noPeopleRequired={noPeopleRequired} />
         <View style={styles.buttons}>
           {status === "REQUESTED" && <HelpButton data={data} />}
@@ -60,12 +61,6 @@ const HelpRequest = (props) => {
 export default HelpRequest;
 
 const styles = StyleSheet.create({
-  outerContanier: {
-    margin:10,
-    borderRadius: 5,
-    flexDirection: "row",
-    elevation: 5
-  },
   buttons:{
     flex: 1,
     flexDirection: "row",

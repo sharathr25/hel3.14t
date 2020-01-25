@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { Text, Input } from "react-native-elements";
 import Icon from "react-native-vector-icons/Feather";
 import { View, TouchableOpacity, Modal, StyleSheet, Alert } from "react-native";
-import { FLAG_COLOR_WHITE, FLAG_COLOR_ORANGE, FONT_FAMILY } from "../../../constants/styleConstants";
+import { FLAG_COLOR_WHITE, FLAG_COLOR_ORANGE, FONT_FAMILY, RED, FLAG_COLOR_GREEN } from "../../../constants/styleConstants";
 import gql from "graphql-tag";
 import { useMutation } from "react-apollo";
 import Button from "../../common/button";
@@ -53,8 +53,6 @@ const HelpRequestForm = () => {
 
   const { user:currentUser } = useAuth();
   const { longitude, latitude, locationProviderAvailable, locationErrorMessage } = useLocation();
-
-  console.log(longitude,latitude);
 
   const { uid, displayName, phoneNumber } = currentUser;
 
@@ -124,8 +122,10 @@ const HelpRequestForm = () => {
               {noOfPeopleSelectBoxOptions.map((val) => <Option key={val} val={val} />)}
             </View>
             <View style={styles.buttons}>
-              <Button onPress={() => setState({ ...state, formVisible: !state.formVisible })}>Cancel</Button>
-              <Button onPress={requestHelp}>Requset Help</Button>
+              <Button borderColor={RED} textColor={RED}
+               onPress={() => setState({ ...state, formVisible: !state.formVisible })}>Cancel</Button>
+              <Button borderColor={FLAG_COLOR_GREEN} textColor={FLAG_COLOR_GREEN}
+               onPress={requestHelp}>Request help</Button>
             </View>
           </View>
         </View>
@@ -172,7 +172,6 @@ const styles = StyleSheet.create({
   noPeopleSelector: {
     display: 'flex',
     flexDirection: 'row',
-    justifyContent: 'space-between',
     alignItems: 'center'
   },
   activeCheckBox: {
@@ -186,8 +185,8 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     paddingTop: 5,
     paddingBottom: 5,
-    paddingLeft: 10,
-    paddingRight: 10,
+    paddingLeft: 14,
+    paddingRight: 14,
     margin: 5,
     borderRadius: 5
   },

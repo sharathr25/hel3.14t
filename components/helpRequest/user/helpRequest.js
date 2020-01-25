@@ -9,7 +9,7 @@ import DoneButton from '../buttons/doneButton';
 import Requester from './requester';
 import Accepter from './accepter';
 import Card from '../../common/card';
-import { STATUS_TEXT_MAPPING } from '../../../constants/appConstants';
+import Status from '../../common/status';
 
 const HelpRequest = (props) => {
   const { keyOfHelpRequest } = props;
@@ -28,7 +28,8 @@ const HelpRequest = (props) => {
         usersRequested {
           uid
           name,
-          xp
+          xp,
+          stars
         },
         timeStamp,
         noPeopleRequired
@@ -51,7 +52,8 @@ const HelpRequest = (props) => {
         usersRequested {
           uid
           name,
-          xp
+          xp,
+          stars
         },
     }
   }
@@ -77,8 +79,8 @@ const HelpRequest = (props) => {
   const { status, usersRequested, usersAccepted, description, timeStamp, noPeopleRequired } = help;
 
   getRequestedUser = ({ item }) => {
-    const { name, xp, uid } = item;
-    return <Requester uidOfRequester={uid} name={name} xp={xp} keyOfHelpRequest={keyOfHelpRequest} usersAccepted={usersAccepted} noPeopleRequired={noPeopleRequired} />
+    const { name, xp, uid, stars } = item;
+    return <Requester uidOfRequester={uid} name={name} xp={xp} stars={stars} keyOfHelpRequest={keyOfHelpRequest} usersAccepted={usersAccepted} noPeopleRequired={noPeopleRequired} />
   }
 
   getAcceptedUser = ({ item }) => {
@@ -100,10 +102,8 @@ const HelpRequest = (props) => {
     return (
       <Card borderLeftColor={STATUS_COLOR_MAPPING[status]}>
         <HelpDescription data={{ description }} />
-        {<View style={{ margin: 10 }}>
-        <Text style={{color: STATUS_COLOR_MAPPING[status], marginLeft: 10}}>{STATUS_TEXT_MAPPING[status]}</Text>
-        </View>}
-        {<View style={{ margin: 10 }}>
+        <Status>{status}</Status>
+        <View>
           <FlatList
             data={usersAccepted}
             renderItem={getAcceptedUser}
@@ -111,7 +111,7 @@ const HelpRequest = (props) => {
             listKey={getAcceptedUserKey}
             ListHeaderComponent={usersAccepted.length ? <Text style={{ fontFamily: FONT_FAMILY, marginBottom: 5 }}>people who helped you</Text> : null}
           />
-        </View>}
+        </View>
       </Card>
     );
   }
@@ -119,17 +119,17 @@ const HelpRequest = (props) => {
   return (
     <Card borderLeftColor={STATUS_COLOR_MAPPING[status]}>
       <HelpDescription data={{ description }} />
-      {<View style={{ margin: 10 }}>
-      <Text style={{color: STATUS_COLOR_MAPPING[status], marginLeft: 10}}>{STATUS_TEXT_MAPPING[status]}</Text>
+      <View>
+        <Status>{status}</Status>
         <FlatList
           data={usersRequested}
           renderItem={getRequestedUser}
           keyExtractor={getRequestedUserKey}
           listKey={getRequestedUserKey}
-          ListHeaderComponent={usersRequested.lnegth ? <Text style={{ fontFamily: FONT_FAMILY, marginBottom: 5 }}>People Willing to help you</Text> : null}
+          ListHeaderComponent={usersRequested.length ? <Text style={{ fontFamily: FONT_FAMILY, marginBottom: 5 }}>People Willing to help you</Text> : null}
         />
-      </View>}
-      {<View style={{ margin: 10 }}>
+      </View>
+      <View>
         <FlatList
           data={usersAccepted}
           renderItem={getAcceptedUser}
@@ -137,12 +137,11 @@ const HelpRequest = (props) => {
           listKey={getAcceptedUserKey}
           ListHeaderComponent={usersAccepted.length ? <Text style={{ fontFamily: FONT_FAMILY, marginBottom: 5 }}>People who are helping</Text> : null}
         />
-      </View>}
+      </View>
       <DoneButton keyOfHelpRequest={keyOfHelpRequest} status={status} usersAccepted={usersAccepted} />
       <Time time={timeStamp} />
     </Card>
   );
-  return null;
 }
 
 export default HelpRequest;
