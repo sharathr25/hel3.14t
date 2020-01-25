@@ -15,15 +15,12 @@ export default Time;
 
 const styles = StyleSheet.create({
   timeContainer: {
-    margin: 5,
-    marginTop: 0,
     flexDirection: "row",
     flex: 1,
     alignItems: 'center',
     justifyContent: 'flex-start'
   },
   timeText: {
-    marginLeft: 3,
     fontFamily: FONT_FAMILY
   }
 });

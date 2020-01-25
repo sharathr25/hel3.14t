@@ -5,6 +5,8 @@ export const FLAG_COLOR_WHITE = '#FFFFFF';
 export const FLAG_COLOR_GREEN = '#138808';
 export const FLAG_COLOR_BLUE = '#000080';
 
+export const RED = 'red';
+
 export const COLOR_1 = '#ff7e5f';
 export const COLOR_2 = '#ff9966';
 
@@ -25,7 +27,7 @@ export const ERROR_MESSAGE_TEXT_COLOR = 'red';
 
 
 export const STATUS_COLOR_MAPPING = {
-  'REQUESTED' : 'red',
+  'REQUESTED' : RED,
   'ON_GOING' : FLAG_COLOR_ORANGE,
   'COMPLETED' : FLAG_COLOR_GREEN
 }

@@ -34,7 +34,7 @@ const HelpButton = (props) => {
     } else if (usersRejected.map((user) => user.uid).indexOf(uid) > -1) {
       Alert.alert(REJECTED_ERROR);
     } else {
-      updateHelp({ variables: { id: _id, key: "usersRequested", value: { uid, name: displayName, xp: 0 } } });
+      updateHelp({ variables: { id: _id, key: "usersRequested", value: { uid, name: displayName, xp: 0, stars: 0 } } });
     }
   }
 

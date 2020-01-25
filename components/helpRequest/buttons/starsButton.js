@@ -1,11 +1,9 @@
 import React, { useState } from "react";
-import { TouchableOpacity, StyleSheet } from "react-native";
-import { FLAG_COLOR_WHITE, FLAG_COLOR_ORANGE, FLAG_COLOR_GREEN } from "../../../constants/styleConstants";
-import { updateFirebaseWithURL } from "../../../fireBase/database";
-import { HELPS_COMPLETED_DB } from "../../../constants/appConstants";
+import { TouchableOpacity, StyleSheet, View, Text } from "react-native";
 import Icon from "react-native-vector-icons/FontAwesome";
 import gql from "graphql-tag";
 import { useMutation } from "react-apollo";
+import { FLAG_COLOR_ORANGE, FLAG_COLOR_GREEN, RED } from "../../../constants/styleConstants";
 
 const UPDATE_HELP = gql`
     mutation UpdateHelp($id:String!, $key:String!,$value:Any, $type:String!, $operation:String!){
@@ -15,24 +13,50 @@ const UPDATE_HELP = gql`
     }
 `;
 
+const stars = [0, 1, 2, 3, 4];
+
 const Stars = (props) => {
     const { uidOfUser, keyOfHelpRequest } = props;
-    const [starsGivenByUser,setStarsGivenByUser] = useState(0);
+    const [starsGivenByUser, setStarsGivenByUser] = useState(0);
     const [updateHelp] = useMutation(UPDATE_HELP);
 
     handleGiveStars = () => {
-        updateHelp({variables:{id:keyOfHelpRequest, key:"usersAccepted", value:{ [uidOfUser]: {stars: starsGivenByUser} }, type:"array", operation:"update"}})
+        updateHelp({ variables: { id: keyOfHelpRequest, key: "usersAccepted", value: { [uidOfUser]: { stars: starsGivenByUser } }, type: "array", operation: "update" } })
     }
 
+    handleResetStars = () => {
+        setStarsGivenByUser(0);
+    }
+
+    getStars = () => {
+        return stars.map((number) => {
+            return (
+                <TouchableOpacity onPress={() => setStarsGivenByUser(number + 1)} key={number}>
+                    <Icon name={starsGivenByUser > number ? "star" : "star-o"} size={20} color={FLAG_COLOR_ORANGE} />
+                </TouchableOpacity>
+            );
+        })
+    }
+
+    const { container, check, starsStyle, text, remove,feedBack, buttons } = styles;
+
     return (
-        <>
-            <TouchableOpacity onPress={() => setStarsGivenByUser(1)}><Icon name={starsGivenByUser > 0 ? "star" : "star-o"} size={20} color={FLAG_COLOR_ORANGE} /></TouchableOpacity>
-            <TouchableOpacity onPress={() => setStarsGivenByUser(2)}><Icon name={starsGivenByUser > 1 ? "star" : "star-o"} size={20} color={FLAG_COLOR_ORANGE} /></TouchableOpacity>
-            <TouchableOpacity onPress={() => setStarsGivenByUser(3)}><Icon name={starsGivenByUser > 2 ? "star" : "star-o"} size={20} color={FLAG_COLOR_ORANGE} /></TouchableOpacity>
-            <TouchableOpacity onPress={() => setStarsGivenByUser(4)}><Icon name={starsGivenByUser > 3 ? "star" : "star-o"} size={20} color={FLAG_COLOR_ORANGE} /></TouchableOpacity>
-            <TouchableOpacity onPress={() => setStarsGivenByUser(5)}><Icon name={starsGivenByUser > 4 ? "star" : "star-o"} size={20} color={FLAG_COLOR_ORANGE} /></TouchableOpacity>
-            <TouchableOpacity onPress={handleGiveStars}><Icon name="check-square" size={22} color={FLAG_COLOR_GREEN} /></TouchableOpacity> 
-        </>
+        <View style={container}>
+            <View style={feedBack}>
+                <Text style={text}>Give feedback</Text>
+                <View style={starsStyle}>
+                    {getStars()}
+                </View>
+            </View>
+            <View style={buttons}>
+            <TouchableOpacity style={remove} onPress={handleResetStars}>
+                <Icon name="remove" size={20} color={RED} />
+            </TouchableOpacity>
+            <TouchableOpacity onPress={handleGiveStars} style={check}>
+                <Icon name="check" size={20} color={FLAG_COLOR_GREEN} />
+            </TouchableOpacity>
+            </View>
+        </View>
     )
 }
 
@@ -40,15 +64,13 @@ export default Stars;
 
 const styles = StyleSheet.create({
     container: {
-        flex: 1,
+        display: 'flex',
         flexDirection: "row",
-        justifyContent: "center",
-        backgroundColor: FLAG_COLOR_WHITE,
-        borderWidth: 1,
-        borderColor: FLAG_COLOR_ORANGE,
-        margin: 10,
-        borderRadius: 5,
-        padding: 5,
+        alignItems: 'center',
+        justifyContent: 'space-between'
+    },
+    feedBack: {
+
     },
     help: {
         width: 50,
@@ -56,6 +78,36 @@ const styles = StyleSheet.create({
         color: FLAG_COLOR_ORANGE
     },
     text: {
-        fontSize: 20
+        
+    },
+    starsStyle: {
+        display: 'flex',
+        flexDirection: "row",
+    },
+    buttons: {
+        flexDirection: 'row'
+    },
+    check: {
+        width: 40,
+        height: 40,
+        borderWidth: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+        borderColor: FLAG_COLOR_GREEN,
+        borderRadius: 20,
+        marginRight: 10,
+        marginLeft: 10
+    },
+    remove: {
+        width: 40,
+        height: 40,
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
+        borderWidth: 1,
+        borderColor: RED,
+        borderRadius: 20,
+        marginLeft: 10,
+        marginRight: 10
     }
 });

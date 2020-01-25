@@ -18,9 +18,7 @@ export default HelpDescription;
 
 const styles = StyleSheet.create({
   descriptionContainer: {
-    margin: 5,
-    marginTop: 0,
-    padding: 5
+
   },
   text: {
     color: BLACK

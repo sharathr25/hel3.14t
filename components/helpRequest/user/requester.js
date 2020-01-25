@@ -1,17 +1,16 @@
 import React from 'react';
-import { Text, View, TouchableOpacity, StyleSheet, Alert } from 'react-native';
-import { FLAG_COLOR_GREEN } from '../../../constants/styleConstants';
+import { Text, View, TouchableOpacity, StyleSheet, Alert, ActivityIndicator } from 'react-native';
+import { FLAG_COLOR_GREEN, RED } from '../../../constants/styleConstants';
 import ProfileLetter from '../../common/profileLetter';
 import Icon from 'react-native-vector-icons/FontAwesome';
-import BoxText from '../../common/boxText';
 import { useMutation } from 'react-apollo';
 import gql from 'graphql-tag';
 import { useAuth } from '../../../customHooks';
 
 const Requester = props => {
-  const { user:currentUser } = useAuth();
+  const { user: currentUser } = useAuth();
   const { phoneNumber } = currentUser;
-  const { uidOfRequester, keyOfHelpRequest, usersAccepted, noPeopleRequired, xp, name } = props;
+  const { uidOfRequester, keyOfHelpRequest, usersAccepted, noPeopleRequired, xp, name, stars } = props;
 
   const QUERY = gql`
     mutation UpdateHelp($key:String!, $value:Any, $operation:String!){
@@ -21,7 +20,8 @@ const Requester = props => {
     }
   `;
 
-  const [updateHelp, { loading }] = useMutation(QUERY);
+  const [updateHelpForAccept, { loadingForAccept }] = useMutation(QUERY);
+  const [updateHelpForReject, { loadingForReject }] = useMutation(QUERY);
 
   const handleAccept = async () => {
     if (noPeopleRequired === usersAccepted.length) {
@@ -29,36 +29,44 @@ const Requester = props => {
     } else if (usersAccepted.indexOf(uidOfRequester) > -1) {
       Alert.alert("You are already helping....");
     } else {
-      updateHelp({ variables: { key: "usersAccepted", value: { uid: uidOfRequester, name, mobileNo: phoneNumber }, operation: "push" } });
+      updateHelpForAccept({ variables: { key: "usersAccepted", value: { uid: uidOfRequester, name, mobileNo: phoneNumber }, operation: "push" } });
     }
   };
 
   const handleReject = async () => {
-    updateHelp({ variables: { key:"usersRejected", value: {uid: uidOfRequester}, operation:"push", type:"array"}});
+    updateHelpForReject({ variables: { key: "usersRejected", value: { uid: uidOfRequester }, operation: "push", type: "array" } });
   };
 
   const firstLetterOfName = name.substring(0, 1);
 
+  const { container, content, details, nameStyle, detailsText, reject, accept, buttons } = styles;
+
   return (
-    <View>
-      <View style={{ flex: 1, flexDirection: 'row' }}>
-        <View style={{ margin: 5 }}>
-          <ProfileLetter letter={firstLetterOfName} />
+    <View style={container}>
+      <View style={content}>
+      <ProfileLetter letter={firstLetterOfName} />
+        <View style={details}>
+          <Text style={nameStyle}>{name}</Text>
+          <Text style={detailsText}>{xp} XP</Text>
+          <Text style={detailsText}>{stars} Stars</Text>
+          <Text style={detailsText}></Text>
         </View>
-        <View style={{ marginLeft: 5 }}>
-          <Text>{name}</Text>
-          <BoxText leftText="XP" rightText={xp}></BoxText>
-        </View>
-        <View style={{ flex: 1, flexDirection: 'row' }}>
-          <TouchableOpacity style={styles.accept} onPress={handleAccept}>
-            <Icon name="check" size={20} color={FLAG_COLOR_GREEN} />
-            <Text style={{ color: FLAG_COLOR_GREEN }}>Accept</Text>
-          </TouchableOpacity>
-          <TouchableOpacity style={styles.reject} onPress={handleReject}>
-            <Icon name="remove" size={20} color="red" />
-            <Text style={{ color: 'red' }}>Reject</Text>
-          </TouchableOpacity>
-        </View>
+      </View>
+      <View style={buttons}>
+        <TouchableOpacity style={reject} onPress={handleReject}>
+          {
+            loadingForReject
+              ? <ActivityIndicator size={20} color={RED} />
+              : <Icon name="remove" size={20} color={RED} />
+          }
+        </TouchableOpacity>
+        <TouchableOpacity style={accept} onPress={handleAccept}>
+          {
+            loadingForAccept
+              ? <ActivityIndicator size={20} color={FLAG_COLOR_GREEN} />
+              : <Icon name="check" size={20} color={FLAG_COLOR_GREEN} />
+          }
+        </TouchableOpacity>
       </View>
     </View>
   );
@@ -67,35 +75,48 @@ const Requester = props => {
 export default Requester;
 
 const styles = StyleSheet.create({
-  text: {
-    fontSize: 15,
-    textAlign: 'center'
-  },
-  requestedUserDetailsContaner: {
+  container: {
+    display: 'flex',
     flex: 1,
     flexDirection: 'row',
-    justifyContent: 'space-evenly',
-    alignItems: 'center',
-    marginTop: 5
+    alignItems: 'center'
+  },
+  content: {
+    display: 'flex',
+    flex: 1,
+    flexDirection: 'row',
+  },
+  details: {
+    display: 'flex',
+    flexDirection: 'column',
+  },
+  nameStyle: {
+    fontSize: 18,
+    fontWeight: 'bold',
+  },
+  buttons: {
+    display: 'flex',
+    flexDirection: 'row',
   },
   accept: {
-    flex: 1,
-    flexDirection: 'row',
-    borderColor: FLAG_COLOR_GREEN,
+    width: 40,
+    height: 40,
     borderWidth: 1,
-    margin: 5,
     justifyContent: 'center',
     alignItems: 'center',
-    borderRadius: 5
+    borderColor: FLAG_COLOR_GREEN,
+    margin: 10,
+    borderRadius: 20
   },
   reject: {
-    flex: 1,
-    flexDirection: 'row',
-    borderColor: 'red',
-    borderWidth: 1,
-    margin: 5,
+    width: 40,
+    height: 40,
+    display: 'flex',
     justifyContent: 'center',
     alignItems: 'center',
-    borderRadius: 5
+    borderWidth: 1,
+    borderColor: RED,
+    margin: 10,
+    borderRadius: 20
   }
 });
