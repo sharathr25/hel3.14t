@@ -1,4 +1,5 @@
 export const updateUser = async (user, email, password, name) => {
+  console.log(user, email, password, name);
     try {
       await user.updateEmail(email);
       await user.updatePassword(password);
