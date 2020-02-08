@@ -1,19 +1,17 @@
-import React, { useContext } from "react";
+import React from "react";
 import { Text, View, StyleSheet } from "react-native";
 import Icon from "react-native-vector-icons/AntDesign";
 import { FLAG_COLOR_WHITE, FLAG_COLOR_ORANGE } from "../../constants/styleConstants";
 import { TouchableOpacity } from "react-native-gesture-handler";
-import Context from "../../context";
+import { useNotifications } from "../../customHooks";
 
 const NotificationBellIcon = (props) => {
     const { navigation } = props;
-    // const contextValues = useContext(Context);
-    // const { notifications } = contextValues;
-    const notifications = [];
+    const notifications = useNotifications();
     const { container, textContainer, text } = styles;
 
     handleBellIconClick = () => {
-        navigation.navigate('Notifications');
+        navigation.navigate('Notifications', { notifications });
     }
 
     return notifications.length
