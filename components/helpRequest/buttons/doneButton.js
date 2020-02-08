@@ -1,6 +1,5 @@
-import React, { useContext } from "react";
+import React from "react";
 import { Alert } from "react-native";
-import Context from '../../../context';
 import Button from "../../common/button";
 import gql from "graphql-tag";
 import { useMutation } from "react-apollo";
@@ -9,9 +8,6 @@ import { FLAG_COLOR_WHITE, FLAG_COLOR_ORANGE } from "../../../constants/styleCon
 
 const DoneButton = (props) => {
     const { status, keyOfHelpRequest, usersAccepted } = props;
-    // const contextValues = useContext(Context);
-    // const { currentUser } = contextValues;
-    // const { uid } = currentUser;
 
     const UPDATE_HELP_QUERY = gql`
     mutation UpdateHelp($key:String!, $value:Any, $type:String!, $operation:String!){
@@ -45,7 +41,6 @@ const DoneButton = (props) => {
         updateHelp({ variables: { key: "status", value: "COMPLETED", type: "update", operation: "update" } });
         usersAccepted.forEach((user) => {
             const { uid } = user;
-            //updateUser({ variables: { uid, value: { message: "Help completed ..." }, key: "notifications", type: "array", operation: "push" }, });
             if(canAddXp) {
             incrementXpForUser({ variables: { uid } });
             }

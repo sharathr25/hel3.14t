@@ -14,7 +14,7 @@ const DrawerNavigator = createDrawerNavigator({
     Preferences:{screen:PreferencesScreen},
     'Your Helps': {screen:HelpsScreen},
   },{
-    initialRouteName:'My Account',
+    initialRouteName:'Main',
     navigationOptions:({ navigation }) => {
       const { routeName } = navigation.state.routes[navigation.state.index];
       return { headerTitle : routeName}
