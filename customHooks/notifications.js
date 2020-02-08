@@ -29,7 +29,9 @@ const SUBSCRPTION = gql`
 `;
 
 const useNotifications = () => {
-    const { user: { uid } } = useAuth();
+    const { user } = useAuth();
+    if(!user) return [];
+    const { uid = null } = user;
     const [getNotifcations, { data: initialData }] = useLazyQuery(USER_NOTIFICATIONS_QUERY);
     let { data: subscriptionData } = useSubscription(SUBSCRPTION);
 
