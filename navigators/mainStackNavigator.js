@@ -15,9 +15,11 @@ import SignUpScreen from '../screens/signUpScreen';
 import LoginScreen from '../screens/loginScreen';
 import ResetPassowrdScreen from '../screens/resetPassword';
 import TermsAndConditionsScreen from '../screens/termsAndConditions';
+import LandingScreen from '../screens/landingScreen';
 
 const MainNavigatorWithUser = createStackNavigator(
   {
+    AppLandingScreen: { screen: LandingScreen},
     Main: { screen: DrawerNavigator },
     comments: { screen: CommentsScreen },
     Notifications: { screen: NotificationsScreen },
@@ -27,7 +29,7 @@ const MainNavigatorWithUser = createStackNavigator(
     TermsAndConditions: { screen: TermsAndConditionsScreen },
   },
   {
-    initialRouteName: 'Login',
+    initialRouteName: 'AppLandingScreen',
     defaultNavigationOptions: ({ navigation }) => {
       return {
         headerLeft: <MenuIcon navigation={navigation} />,
