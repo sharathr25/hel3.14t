@@ -71,3 +71,5 @@ export const STATUS_TEXT_MAPPING = {
   'ON_GOING' : 'On going',
   'COMPLETED' : 'Completed'
 }
+
+export const APP_TITLE = "Haisaa"

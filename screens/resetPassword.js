@@ -1,20 +1,22 @@
 import React, { Component } from 'react';
-import { Button } from 'react-native-elements';
-import { View, Alert } from 'react-native';
+import { View, Alert, StyleSheet, TouchableOpacity, Text } from 'react-native';
 import { ScrollView } from 'react-native-gesture-handler';
 import firebase from 'react-native-firebase';
-import { SIGN_UP_SCREEN, SCREEN_TITLES } from '../constants/appConstants';
-import { FLAG_COLOR_ORANGE } from '../constants/styleConstants';
+import { SIGN_UP_SCREEN, SCREEN_TITLES, APP_TITLE } from '../constants/appConstants';
+import { FLAG_COLOR_ORANGE, FLAG_COLOR_WHITE, BLACK } from '../constants/styleConstants';
 import InputComponent from '../components/common/inputComponent';
 import ErrorMessage from '../components/common/errorMessage';
-import {regex} from '../utils/index';
+import { regex } from '../utils/index';
 import Loader from '../components/common/inlineLoader';
 import { getUser } from '../fireBase/database';
+import { HeaderBackButton } from 'react-navigation';
 
 class ResetPassowrdScreen extends Component {
-  static navigationOptions = {
-    title: SCREEN_TITLES.RESET_PASSOWRD,
-  };
+  static navigationOptions = ({ navigation }) => ({
+    title: '',
+    headerLeft: (<HeaderBackButton onPress={() => { navigation.goBack() }} tintColor={FLAG_COLOR_ORANGE} />),
+    headerRight: null
+  })
 
   constructor() {
     super();
@@ -51,9 +53,9 @@ class ResetPassowrdScreen extends Component {
       const { mobileNumber, password } = this.state;
       try {
         this.setState({ loaderVisible: true });
-        const user = await getUser(mobileNumber);    
-        if(user.val() === null){
-          this.setState({loaderVisible: false});
+        const user = await getUser(mobileNumber);
+        if (user.val() === null) {
+          this.setState({ loaderVisible: false });
           Alert.alert("User not found");
         }
         await firebase.auth().signInWithPhoneNumber(`+91${mobileNumber}`);
@@ -82,35 +84,63 @@ class ResetPassowrdScreen extends Component {
     } = this.state;
     return (
       <ScrollView>
-        <View style={{ flex: 1, alignItems: 'center' }}>
-          <InputComponent 
-            placeholder="Mobile Number" 
-            secureTextEntry={false} 
-            updateParentState={value => this.setState({ mobileNumber: value,mobileNumberErrorMessage: ''})} 
+        <View style={{ flex: 1 }}>
+          <Text style={styles.appTitle}>{APP_TITLE}</Text>
+          <Text style={styles.screenTitle}>Reset Password</Text>
+          <InputComponent
+            label="Mobile Number"
+            secureTextEntry={false}
+            updateParentState={value => this.setState({ mobileNumber: value, mobileNumberErrorMessage: '' })}
           />
           {mobileNumberErrorMessage.length !== 0 && <ErrorMessage errorMessage={mobileNumberErrorMessage} />}
-          <InputComponent 
-            placeholder="Password" 
-            secureTextEntry={true} 
-            updateParentState={value => this.setState({ password: value, passwordErrorMessage: '' })} 
+          <InputComponent
+            label="Password"
+            secureTextEntry={true}
+            updateParentState={value => this.setState({ password: value, passwordErrorMessage: '' })}
           />
           {passwordErrorMessage.length !== 0 && <ErrorMessage errorMessage={passwordErrorMessage} />}
-          <InputComponent 
-            placeholder="Confirm Password" 
-            secureTextEntry={true} 
-            updateParentState={value => this.setState({confirmPassword: value, confirmPasswordErrorMessage: ''})} 
+          <InputComponent
+            label="Confirm Password"
+            secureTextEntry={true}
+            updateParentState={value => this.setState({ confirmPassword: value, confirmPasswordErrorMessage: '' })}
           />
           {confirmPasswordErrorMessage.length !== 0 && <ErrorMessage errorMessage={confirmPasswordErrorMessage} />}
-          {!loaderVisible && <Button
-            title="Update Password"
-            buttonStyle={{ backgroundColor: FLAG_COLOR_ORANGE }}
-            onPress={this.handleLogin}
-          />}
-        {loaderVisible && <Loader title="Please wait..." message="We will auto verify OTP and update password" />}  
+          {!loaderVisible && <TouchableOpacity onPress={handleLogin} style={styles.signInContainerStyle}>
+            <Text style={styles.signInText}>Reset Password</Text>
+          </TouchableOpacity>}
+          {loaderVisible && <Loader title="Please wait..." message="We will auto verify OTP and update password" />}
         </View>
       </ScrollView>
     );
   }
 }
+
+const styles = StyleSheet.create({
+  appTitle: {
+    marginBottom: 30,
+    color: FLAG_COLOR_ORANGE,
+    textAlign: 'center',
+    fontSize: 20,
+    fontFamily: 'cursive'
+  },
+  screenTitle: {
+    marginBottom: 40,
+    textAlign: 'center',
+    fontSize: 30,
+    color: BLACK,
+  },
+  signInContainerStyle: {
+    margin: 10,
+    marginTop: 25,
+    padding: 10,
+    backgroundColor: FLAG_COLOR_ORANGE,
+    borderRadius: 25
+  },
+  signInText: {
+    textAlign: 'center',
+    color: FLAG_COLOR_WHITE,
+    fontSize: 18
+  },
+});
 
 export default ResetPassowrdScreen;

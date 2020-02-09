@@ -1,14 +1,16 @@
 import React, { useState, useEffect } from 'react';
 import { Button } from 'react-native-elements';
-import { View, Alert, ActivityIndicator } from 'react-native';
-import { SCREEN_TITLES } from '../constants/appConstants';
-import { styles, FLAG_COLOR_WHITE, FLAG_COLOR_ORANGE } from '../constants/styleConstants';
+import { View, Alert, ActivityIndicator, Text, StyleSheet } from 'react-native';
+import { SCREEN_TITLES, APP_TITLE } from '../constants/appConstants';
+import { FLAG_COLOR_WHITE, FLAG_COLOR_ORANGE, BLACK } from '../constants/styleConstants';
 import { getEmail, loginWithEmailAndPassword } from '../fireBase/auth/login';
 import { checkUserNameAndPasswordFields, regex } from '../utils/index';
 import ErrorMessage from '../components/common/errorMessage';
 import ScreenRedirecter from '../components/common/screenRedirecter';
 import InputComponent from '../components/common/inputComponent';
 import { useAuth } from '../customHooks';
+import { TouchableOpacity } from 'react-native-gesture-handler';
+import { HeaderBackButton, ScrollView } from 'react-navigation';
 
 const emailRegex = regex.email;
 
@@ -85,39 +87,93 @@ const LoginScreen = (props) => {
     setLoaderVisible(false);
   }
 
+  const { signInContainerStyle, signInText, appTitle, screenTitle, linkText, registerContainer } = styles;
+
+
   return (
-    <View style={{ alignItems: 'center', justifyContent: 'center' }}>
-      <InputComponent
-        placeholder="Email or Mobile Number"
-        secureTextEntry={false}
-        updateParentState={value => { setUserName(value); setUserNameErrorMessage('') }}
-      />
-      {userNameErrorMessage.length !== 0 && <ErrorMessage errorMessage={userNameErrorMessage} />}
-      <InputComponent
-        placeholder="Password"
-        secureTextEntry={true}
-        updateParentState={value => { setPassword(value); setPasswordErrorMessage('') }}
-      />
-      {passwordErrorMessage.length !== 0 && <ErrorMessage errorMessage={passwordErrorMessage} />}
-      {
-        loaderVisible
-          ? <ActivityIndicator color={FLAG_COLOR_ORANGE} />
-          : <Button
-              title="Login"
-              titleStyle={{ color: FLAG_COLOR_WHITE }}
-              buttonStyle={styles.button}
-              onPress={handleLogin}
-            />
-      }
-      <ScreenRedirecter title="New user?" buttonText="Sign up" handleRedirection={handleSignUp} />
-      <ScreenRedirecter title="Forgot password?" buttonText="Reset Password" handleRedirection={handleResetPassword} />
-    </View>
+    <ScrollView>
+      <View style={{ flex: 1, justifyContent: 'space-between' }}>
+        <View>
+          <Text style={appTitle}>{APP_TITLE}</Text>
+          <Text style={screenTitle}>Sign In</Text>
+          <InputComponent
+            label="Email or Mobile Number"
+            updateParentState={value => { setUserName(value); setUserNameErrorMessage('') }}
+          />
+          {userNameErrorMessage.length !== 0 && <ErrorMessage errorMessage={userNameErrorMessage} />}
+          <InputComponent
+            label="Password"
+            secureTextEntry={true}
+            updateParentState={value => { setPassword(value); setPasswordErrorMessage('') }}
+          />
+          {passwordErrorMessage.length !== 0 && <ErrorMessage errorMessage={passwordErrorMessage} />}
+          <TouchableOpacity onPress={handleResetPassword} style={{ alignSelf: 'flex-end', paddingRight: 20 }}>
+            <Text style={linkText}>Forgot Password?</Text>
+          </TouchableOpacity>
+          {
+            loaderVisible
+              ? <ActivityIndicator color={FLAG_COLOR_ORANGE} />
+              : <TouchableOpacity onPress={handleLogin} style={signInContainerStyle}>
+                <Text style={signInText}>Sign In</Text>
+              </TouchableOpacity>
+          }
+        </View>
+        <View style={registerContainer}>
+          <Text>Don't have an account? </Text>
+          <TouchableOpacity onPress={handleSignUp}>
+            <Text style={linkText}>Register</Text>
+          </TouchableOpacity>
+        </View>
+      </View>
+    </ScrollView>
   );
 }
+
+const styles = StyleSheet.create({
+  appTitle: {
+    marginBottom: 30,
+    color: FLAG_COLOR_ORANGE,
+    textAlign: 'center',
+    fontSize: 20,
+    fontFamily: 'cursive'
+  },
+  screenTitle: {
+    marginBottom: 40,
+    textAlign: 'center',
+    fontSize: 30,
+    color: BLACK,
+  },
+  signInContainerStyle: {
+    margin: 10,
+    marginTop: 25,
+    padding: 10,
+    backgroundColor: FLAG_COLOR_ORANGE,
+    borderRadius: 25
+  },
+  signInText: {
+    textAlign: 'center',
+    color: FLAG_COLOR_WHITE,
+    fontSize: 18
+  },
+  linkText: {
+    color: "#1DA1F2"
+  },
+  registerContainer: {
+    flexDirection: 'row',
+    alignSelf: 'center',
+    marginBottom: 10
+  }
+});
 
 LoginScreen.navigationOptions = {
   title: SCREEN_TITLES.LOGIN,
   headerLeft: null
 }
+
+LoginScreen.navigationOptions = ({ navigation }) => ({
+  title: '',
+  headerLeft: (<HeaderBackButton onPress={() => { navigation.goBack() }} tintColor={FLAG_COLOR_ORANGE} />),
+  headerRight: null
+})
 
 export default LoginScreen;

@@ -4,8 +4,9 @@ import { FLAG_COLOR_ORANGE, FLAG_COLOR_WHITE } from '../constants/styleConstants
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import Button from '../components/common/button';
+import { APP_TITLE } from '../constants/appConstants';
 
-const LandingScreen = ({navigation}) => {
+const LandingScreen = ({ navigation }) => {
     handleSignUp = () => {
         navigation.navigate('SignUp');
     }
@@ -26,11 +27,11 @@ const LandingScreen = ({navigation}) => {
         Alert.alert("need to implement facebook sign in");
     }
 
-    const { container, appNameAndLogoContainer, appName, buttons, socialMediaLoginButton, socialMediaButtonText,separater } = styles;
+    const { container, appNameAndLogoContainer, appName, buttons, socialMediaLoginButton, socialMediaButtonText, separater } = styles;
     return (
         <View style={container}>
             <View style={appNameAndLogoContainer}>
-                <Text style={appName}>Haisaa</Text>
+                <Text style={appName}>{APP_TITLE}</Text>
             </View>
             <View style={buttons}>
                 <TouchableOpacity style={{ ...socialMediaLoginButton, backgroundColor: "#3b5998" }} onPress={handleFacebookSignIn}>
@@ -52,7 +53,7 @@ const LandingScreen = ({navigation}) => {
                     </Text>
                 </TouchableOpacity>
                 <Text style={separater}>OR WITH EMAIL</Text>
-                <View style={{flexDirection: "row"}}>
+                <View style={{ flexDirection: "row" }}>
                     <Button textColor={FLAG_COLOR_WHITE} bgColor={FLAG_COLOR_ORANGE} onPress={handleSignUp}>Sign up</Button>
                     <Button textColor={FLAG_COLOR_WHITE} bgColor={FLAG_COLOR_ORANGE} onPress={handleSignIn}>Sign in</Button>
                 </View>
