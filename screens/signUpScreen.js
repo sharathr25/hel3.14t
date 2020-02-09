@@ -3,8 +3,8 @@ import { Button, Text, CheckBox } from 'react-native-elements';
 import { View, Alert, StyleSheet, TouchableOpacity, Modal, ActivityIndicator } from 'react-native';
 import { ScrollView } from 'react-native-gesture-handler';
 import firebase from 'react-native-firebase';
-import { SIGN_UP_SCREEN, SCREEN_TITLES } from '../constants/appConstants';
-import { styles, FLAG_COLOR_ORANGE, FLAG_COLOR_WHITE, FONT_FAMILY } from '../constants/styleConstants';
+import { SIGN_UP_SCREEN, SCREEN_TITLES, APP_TITLE } from '../constants/appConstants';
+import { styles, FLAG_COLOR_ORANGE, FLAG_COLOR_WHITE, FONT_FAMILY, BLACK } from '../constants/styleConstants';
 import { updateUser } from '../fireBase/auth/signUp';
 import { addUserDetailsToDb } from '../fireBase/database';
 import { regex } from '../utils/index';
@@ -15,6 +15,7 @@ import { getAge } from '../utils';
 import gql from 'graphql-tag';
 import { useMutation } from 'react-apollo';
 import CustomModal from '../components/common/CustomModal';
+import { HeaderBackButton } from 'react-navigation';
 
 const CREATE_USER = gql`
 mutation CreateUser($uid:String!) {
@@ -131,33 +132,32 @@ function SignUpScreen(props) {
   return (
     <ScrollView>
       <View style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', margin: 10 }}>
+        <Text style={formStyles.appTitle}>{APP_TITLE}</Text>
+        <Text style={formStyles.screenTitle}>Register</Text>
         {/* Name */}
         <InputComponent
-          placeholder="Name"
-          secureTextEntry={false}
+          label="Name"
           updateParentState={value => setState({ ...state, name: value, nameErrorMessage: '' })}
         />
         {nameErrorMessage.length !== 0 && <ErrorMessage errorMessage={nameErrorMessage} />}
 
         {/* Email */}
         <InputComponent
-          placeholder="Email"
-          secureTextEntry={false}
+          label="Email"
           updateParentState={value => setState({ ...state, email: value, emailErrorMessage: '' })}
         />
         {emailErrorMessage.length !== 0 && <ErrorMessage errorMessage={emailErrorMessage} />}
 
         {/* Mobile number */}
         <InputComponent
-          placeholder="Mobile Number"
-          secureTextEntry={false}
+          label="Mobile Number"
           updateParentState={value => setState({ ...state, mobileNumber: value, mobileNumberErrorMessage: '' })}
         />
         {mobileNumberErrorMessage.length !== 0 && <ErrorMessage errorMessage={mobileNumberErrorMessage} />}
 
         {/* password */}
         <InputComponent
-          placeholder="Password"
+          label="Password"
           secureTextEntry={true}
           updateParentState={value => setState({ ...state, password: value, passwordErrorMessage: '' })}
         />
@@ -165,7 +165,7 @@ function SignUpScreen(props) {
 
         {/* Confirm password */}
         <InputComponent
-          placeholder="Confirm Password"
+          label="Confirm Password"
           secureTextEntry={true}
           updateParentState={value => setState({ ...state, confirmPassword: value, confirmPasswordErrorMessage: '' })}
         />
@@ -207,14 +207,28 @@ function SignUpScreen(props) {
   );
 }
 
-SignUpScreen.navigationOptions = {
-  title: SCREEN_TITLES.SIGN_UP,
-  headerLeft: null
-}
+SignUpScreen.navigationOptions = ({ navigation }) => ({
+  title: '',
+  headerLeft: (<HeaderBackButton onPress={() => { navigation.goBack() }} tintColor={FLAG_COLOR_ORANGE} />),
+  headerRight: null
+})
 
 export default SignUpScreen;
 
 const formStyles = StyleSheet.create({
+  appTitle: {
+    marginBottom: 30,
+    color: FLAG_COLOR_ORANGE,
+    textAlign: 'center',
+    fontSize: 20,
+    fontFamily: 'cursive'
+  },
+  screenTitle: {
+    marginBottom: 40,
+    textAlign: 'center',
+    fontSize: 30,
+    color: BLACK,
+  },
   genderSelector: {
     display: 'flex',
     flexDirection: 'row',
