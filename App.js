@@ -1,6 +1,5 @@
 // packages
 import React, { memo, useEffect } from 'react';
-import { createAppContainer } from 'react-navigation';
 import { ApolloProvider } from "react-apollo";
 import ApolloClient from './apolloClient';
 import whyDidYouRender from "@welldone-software/why-did-you-render";
@@ -8,10 +7,12 @@ import mainStackNavigator from './navigators/mainStackNavigator';
 import { PermissionsAndroid, Alert } from "react-native";
 import { useAuth } from './customHooks';
 import Loader from './components/common/Loader';
+import { NavigationContainer } from '@react-navigation/native';
+
 
 whyDidYouRender(React);
 
-const AppContainer = createAppContainer(mainStackNavigator);
+const AppContainer = mainStackNavigator;
 
 function App() {
   const { initializing } = useAuth();
@@ -28,7 +29,9 @@ function App() {
 
   return (
     <ApolloProvider client={ApolloClient}>
-      <AppContainer />
+      <NavigationContainer>
+        <AppContainer />
+      </NavigationContainer>
     </ApolloProvider>
   );
 }

@@ -3,7 +3,7 @@ import { View, Alert, StyleSheet, TouchableOpacity, Text } from 'react-native';
 import { ScrollView } from 'react-native-gesture-handler';
 import firebase from 'react-native-firebase';
 import { SIGN_UP_SCREEN, SCREEN_TITLES, APP_TITLE } from '../constants/appConstants';
-import { FLAG_COLOR_ORANGE, FLAG_COLOR_WHITE, BLACK } from '../constants/styleConstants';
+import { ORANGE, WHITE, BLACK } from '../constants/styleConstants';
 import InputComponent from '../components/common/inputComponent';
 import ErrorMessage from '../components/common/errorMessage';
 import { regex } from '../utils/index';
@@ -14,7 +14,7 @@ import { HeaderBackButton } from 'react-navigation';
 class ResetPassowrdScreen extends Component {
   static navigationOptions = ({ navigation }) => ({
     title: '',
-    headerLeft: (<HeaderBackButton onPress={() => { navigation.goBack() }} tintColor={FLAG_COLOR_ORANGE} />),
+    headerLeft: (<HeaderBackButton onPress={() => { navigation.goBack() }} tintColor={ORANGE} />),
     headerRight: null
   })
 
@@ -118,7 +118,7 @@ class ResetPassowrdScreen extends Component {
 const styles = StyleSheet.create({
   appTitle: {
     marginBottom: 30,
-    color: FLAG_COLOR_ORANGE,
+    color: ORANGE,
     textAlign: 'center',
     fontSize: 20,
     fontFamily: 'cursive'
@@ -133,12 +133,12 @@ const styles = StyleSheet.create({
     margin: 10,
     marginTop: 25,
     padding: 10,
-    backgroundColor: FLAG_COLOR_ORANGE,
+    backgroundColor: ORANGE,
     borderRadius: 25
   },
   signInText: {
     textAlign: 'center',
-    color: FLAG_COLOR_WHITE,
+    color: WHITE,
     fontSize: 18
   },
 });

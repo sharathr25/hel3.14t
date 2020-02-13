@@ -17,20 +17,20 @@ const QUERY_TO_REMOVE_NOTIFICATION = gql`
     }
 `;
 
-const NotificationItem = ({ message, id, timeStamp = "", removeNotf }) => {
+const NotificationItem = ({ message, id, timeStamp = "", removeNotification }) => {
     const { user: { uid } } = useAuth();
     const [removeNotificationFromDb] = useMutation(QUERY_TO_REMOVE_NOTIFICATION);
 
-    const removeNotification = () => {
-        removeNotf(id);
+    const _removeNotification = () => {
+        removeNotification(id);
         removeNotificationFromDb({ variables: { uid, value: { _id: id } } });
     }
 
     return (
         <View style={styles.notificationContainer}>
             <View style={{ flexDirection: "row", justifyContent: "space-between" }}>
-                <Text style={{ flex: 3, fontSize: 20, paddingLeft: 5, justifyContent: "flex-start" }}>{message}</Text>
-                <TouchableOpacity style={{ flex: 2 }} onPress={removeNotification}>
+                <Text style={{ flex: 3, fontSize: 20, justifyContent: "flex-start" }}>{message}</Text>
+                <TouchableOpacity style={{ flex: 2 }} onPress={_removeNotification}>
                     <Icon style={{ justifyContent: "flex-end", borderWidth: 1, borderColor: 'black' }} name="close" size={25} />
                 </TouchableOpacity>
             </View>
@@ -46,6 +46,6 @@ const styles = StyleSheet.create({
         flex: 1,
         borderBottomWidth: 1,
         borderBottomColor: "#e3e3e3",
-        padding: 5
+        padding: 10
     }
 });

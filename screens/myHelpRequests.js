@@ -4,6 +4,7 @@ import HelpRequest from '../components/helpRequest/user/helpRequest';
 import { useQuery, useSubscription } from 'react-apollo';
 import gql from 'graphql-tag';
 import { useAuth } from '../customHooks';
+import { WHITE } from '../constants/styleConstants';
 
 const MyHelpRequestsScreen = (props) => {
     const { user:currentUser } = useAuth();
@@ -46,7 +47,7 @@ const MyHelpRequestsScreen = (props) => {
     getHelpRequest = ({ item }) => <HelpRequest keyOfHelpRequest={item} />
 
     return (
-        <View style={{flex: 1}}>
+        <View style={{flex: 1, backgroundColor: WHITE}}>
             <FlatList
                 data={createdHelpRequests}
                 renderItem={getHelpRequest}

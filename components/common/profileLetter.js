@@ -2,7 +2,7 @@ import React from 'react';
 import {
   Text, View, StyleSheet
 } from 'react-native';
-import { FLAG_COLOR_ORANGE, FLAG_COLOR_WHITE } from '../../constants/styleConstants';
+import { ORANGE, WHITE } from '../../constants/styleConstants';
 
 const ProfileLetter = props => {
   const { letter } = props;
@@ -18,7 +18,7 @@ const ProfileLetter = props => {
 export default ProfileLetter;
 
 const styles = StyleSheet.create({
-  text: { fontSize: 20, color: FLAG_COLOR_WHITE },
+  text: { fontSize: 20, color: WHITE },
   textWrapper: {
     position: 'absolute', 
     top: 0, 
@@ -29,7 +29,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   textContainer: {
-    backgroundColor: FLAG_COLOR_ORANGE,
+    backgroundColor: ORANGE,
     borderRadius: 25,
     width: 50,
     height: 50,

@@ -1,6 +1,6 @@
 import React from 'react';
 import { Input } from 'react-native-elements';
-import { FLAG_COLOR_WHITE, INPUT_BORDER_COLOR, INPUT_TEXT_COLOR } from '../../constants/styleConstants';
+import { WHITE, INPUT_BORDER_COLOR, INPUT_TEXT_COLOR } from '../../constants/styleConstants';
 import { StyleSheet } from 'react-native';
 
 const InputComponent = (props) => {
@@ -25,7 +25,7 @@ const styles = StyleSheet.create({
     marginBottom: 10
   },
   labelStyle: {
-    backgroundColor: FLAG_COLOR_WHITE,
+    backgroundColor: WHITE,
     zIndex: 2,
     left: 40,
     top: -10,

@@ -3,7 +3,7 @@ import { TouchableOpacity, StyleSheet, View, Text } from "react-native";
 import Icon from "react-native-vector-icons/FontAwesome";
 import gql from "graphql-tag";
 import { useMutation } from "react-apollo";
-import { FLAG_COLOR_ORANGE, FLAG_COLOR_GREEN, RED } from "../../../constants/styleConstants";
+import { ORANGE, GREEN, RED } from "../../../constants/styleConstants";
 
 const UPDATE_HELP = gql`
     mutation UpdateHelp($id:String!, $key:String!,$value:Any, $type:String!, $operation:String!){
@@ -32,7 +32,7 @@ const Stars = (props) => {
         return stars.map((number) => {
             return (
                 <TouchableOpacity onPress={() => setStarsGivenByUser(number + 1)} key={number}>
-                    <Icon name={starsGivenByUser > number ? "star" : "star-o"} size={20} color={FLAG_COLOR_ORANGE} />
+                    <Icon name={starsGivenByUser > number ? "star" : "star-o"} size={20} color={ORANGE} />
                 </TouchableOpacity>
             );
         })
@@ -53,7 +53,7 @@ const Stars = (props) => {
                 <Icon name="remove" size={20} color={RED} />
             </TouchableOpacity>
             <TouchableOpacity onPress={handleGiveStars} style={check}>
-                <Icon name="check" size={20} color={FLAG_COLOR_GREEN} />
+                <Icon name="check" size={20} color={GREEN} />
             </TouchableOpacity>
             </View>
         </View>
@@ -75,7 +75,7 @@ const styles = StyleSheet.create({
     help: {
         width: 50,
         fontSize: 20,
-        color: FLAG_COLOR_ORANGE
+        color: ORANGE
     },
     text: {
         
@@ -93,7 +93,7 @@ const styles = StyleSheet.create({
         borderWidth: 1,
         justifyContent: 'center',
         alignItems: 'center',
-        borderColor: FLAG_COLOR_GREEN,
+        borderColor: GREEN,
         borderRadius: 20,
         marginRight: 10,
         marginLeft: 10

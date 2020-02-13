@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import { TouchableOpacity, StyleSheet, Text } from "react-native";
-import { FLAG_COLOR_WHITE, FLAG_COLOR_ORANGE } from "../../../constants/styleConstants";
+import { WHITE, ORANGE } from "../../../constants/styleConstants";
 
 export default class ReferButton extends Component {
 render(){
@@ -18,9 +18,9 @@ const styles = StyleSheet.create({
       flex: 1,
       flexDirection: "row",
       justifyContent: "center",
-      backgroundColor: FLAG_COLOR_WHITE,
+      backgroundColor: WHITE,
       borderWidth: 1,
-      borderColor: FLAG_COLOR_ORANGE,
+      borderColor: ORANGE,
       margin: 10,
       borderRadius: 5,
       padding: 5,
@@ -28,7 +28,7 @@ const styles = StyleSheet.create({
     help:{
         width: 50,
         fontSize: 20,
-        color:FLAG_COLOR_ORANGE
+        color:ORANGE
     },
     text:{
         fontSize: 20

@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import { TouchableOpacity, StyleSheet, Text , ActivityIndicator} from "react-native";
 import firebase from "react-native-firebase";
 import Icon from "react-native-vector-icons/AntDesign";
-import { FLAG_COLOR_WHITE, FLAG_COLOR_ORANGE } from "../../../constants/styleConstants";
+import { WHITE, ORANGE } from "../../../constants/styleConstants";
 import { updateFirebase, removeFromFirebaseWithURl, firebaseOnEventListner, firebaseOnEventListnerTurnOff, pushToFirebaseWithURL, updateFirebaseWithURL } from '../../../fireBase/database';
 
 export default class LikeButton extends Component {
@@ -59,10 +59,10 @@ export default class LikeButton extends Component {
     render(){
       const { likes,userLiked, isLoading } = this.state;
       return (
-        <TouchableOpacity style={[styles.container,{backgroundColor: userLiked ? FLAG_COLOR_WHITE:FLAG_COLOR_ORANGE}]} onPress={this.handleLike}>
-          <Icon name="like1" color={userLiked ? FLAG_COLOR_ORANGE : FLAG_COLOR_WHITE} size={20} style={styles.likeIcon}/>
+        <TouchableOpacity style={[styles.container,{backgroundColor: userLiked ? WHITE:ORANGE}]} onPress={this.handleLike}>
+          <Icon name="like1" color={userLiked ? ORANGE : WHITE} size={20} style={styles.likeIcon}/>
           <Text style={userLiked ? styles.textActive : styles.textInactive}>{likes}</Text>
-          {isLoading && <ActivityIndicator color={userLiked?FLAG_COLOR_ORANGE:FLAG_COLOR_WHITE} />}
+          {isLoading && <ActivityIndicator color={userLiked?ORANGE:WHITE} />}
         </TouchableOpacity>
       );
     }
@@ -74,9 +74,9 @@ const styles = StyleSheet.create({
     flex: 1,
     flexDirection: "row",
     justifyContent: "center",
-    backgroundColor: FLAG_COLOR_WHITE,
+    backgroundColor: WHITE,
     borderWidth: 1,
-    borderColor: FLAG_COLOR_ORANGE,
+    borderColor: ORANGE,
     margin: 3,
     borderRadius: 5,
     padding: 10
@@ -87,10 +87,10 @@ const styles = StyleSheet.create({
   },
   textActive:{
       fontSize: 15,
-      color: FLAG_COLOR_ORANGE
+      color: ORANGE
   },
   textInactive:{
     fontSize: 15,
-    color: FLAG_COLOR_WHITE
+    color: WHITE
   }
   });
