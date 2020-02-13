@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
 import { Button, Text, CheckBox } from 'react-native-elements';
-import { View, Alert, StyleSheet, TouchableOpacity, Modal, ActivityIndicator } from 'react-native';
+import { View, Alert, StyleSheet, TouchableOpacity, ActivityIndicator } from 'react-native';
 import { ScrollView } from 'react-native-gesture-handler';
 import firebase from 'react-native-firebase';
-import { SIGN_UP_SCREEN, SCREEN_TITLES, APP_TITLE } from '../constants/appConstants';
-import { styles, FLAG_COLOR_ORANGE, FLAG_COLOR_WHITE, FONT_FAMILY, BLACK } from '../constants/styleConstants';
+import { SIGN_UP_SCREEN, APP_TITLE } from '../constants/appConstants';
+import { styles, ORANGE, WHITE, FONT_FAMILY, BLACK } from '../constants/styleConstants';
 import { updateUser } from '../fireBase/auth/signUp';
 import { addUserDetailsToDb } from '../fireBase/database';
 import { regex } from '../utils/index';
@@ -15,7 +15,6 @@ import { getAge } from '../utils';
 import gql from 'graphql-tag';
 import { useMutation } from 'react-apollo';
 import CustomModal from '../components/common/CustomModal';
-import { HeaderBackButton } from 'react-navigation';
 
 const CREATE_USER = gql`
 mutation CreateUser($uid:String!) {
@@ -131,7 +130,7 @@ function SignUpScreen(props) {
 
   return (
     <ScrollView>
-      <View style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', margin: 10 }}>
+      <View style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', backgroundColor: WHITE }}>
         <Text style={formStyles.appTitle}>{APP_TITLE}</Text>
         <Text style={formStyles.screenTitle}>Register</Text>
         {/* Name */}
@@ -193,12 +192,12 @@ function SignUpScreen(props) {
           title={<View><Text>Creating an acount means you're akay with our </Text><TouchableOpacity onPress={handleTermsAndConditions}><Text style={{ color: '#3a8bbb' }}>Terms of Service, Privacy, Policy</Text></TouchableOpacity></View>}
           checked={termsAndConditionChecked}
           onPress={() => setState({ ...state, termsAndConditionChecked: !termsAndConditionChecked })}
-          checkedColor={FLAG_COLOR_ORANGE}
+          checkedColor={ORANGE}
         />
         {/* Sign Up button */}
         {!loaderVisible && <Button title="Sign Up" buttonStyle={styles.button} onPress={handleSignUp} />}
         {loaderVisible && <CustomModal><View style={{margin: 20, alignItems: 'center'}}>
-          <ActivityIndicator color={FLAG_COLOR_ORANGE} size={20} />
+          <ActivityIndicator color={ORANGE} size={20} />
           <Text style={{color: 'black'}}>Please wait...</Text>
           <Text style={{color: 'black'}}>We will auto verify OTP and log you in</Text>
           </View></CustomModal>}
@@ -207,18 +206,12 @@ function SignUpScreen(props) {
   );
 }
 
-SignUpScreen.navigationOptions = ({ navigation }) => ({
-  title: '',
-  headerLeft: (<HeaderBackButton onPress={() => { navigation.goBack() }} tintColor={FLAG_COLOR_ORANGE} />),
-  headerRight: null
-})
-
 export default SignUpScreen;
 
 const formStyles = StyleSheet.create({
   appTitle: {
     marginBottom: 30,
-    color: FLAG_COLOR_ORANGE,
+    color: ORANGE,
     textAlign: 'center',
     fontSize: 20,
     fontFamily: 'cursive'
@@ -236,8 +229,8 @@ const formStyles = StyleSheet.create({
     alignItems: 'center'
   },
   activeCheckBox: {
-    backgroundColor: FLAG_COLOR_ORANGE,
-    borderColor: FLAG_COLOR_ORANGE,
+    backgroundColor: ORANGE,
+    borderColor: ORANGE,
   },
   defaultCheckBoxStyle: {
     display: 'flex',
@@ -249,16 +242,16 @@ const formStyles = StyleSheet.create({
     borderRadius: 5
   },
   inActiveCheckBox: {
-    backgroundColor: FLAG_COLOR_WHITE,
-    borderColor: FLAG_COLOR_ORANGE,
+    backgroundColor: WHITE,
+    borderColor: ORANGE,
   },
   activeText: {
-    color: FLAG_COLOR_WHITE,
+    color: WHITE,
     fontSize: 15,
     fontFamily: FONT_FAMILY
   },
   inActiveText: {
-    color: FLAG_COLOR_ORANGE,
+    color: ORANGE,
     fontSize: 15,
     fontFamily: FONT_FAMILY
   },
@@ -266,7 +259,7 @@ const formStyles = StyleSheet.create({
     display: "flex",
     justifyContent: 'center',
     flexDirection: 'row',
-    borderColor: FLAG_COLOR_ORANGE,
+    borderColor: ORANGE,
     borderWidth: 1.5,
     margin: 10,
     borderRadius: 5

@@ -1,6 +1,6 @@
 import React from 'react';
 import { Text, StyleSheet, View } from 'react-native';
-import { STATUS_COLOR_MAPPING, FLAG_COLOR_WHITE } from '../../constants/styleConstants';
+import { STATUS_COLOR_MAPPING, WHITE } from '../../constants/styleConstants';
 import { STATUS_TEXT_MAPPING } from '../../constants/appConstants';
 
 const Status = (props) => {
@@ -8,7 +8,7 @@ const Status = (props) => {
     const { container } = styles;
     return (
         <View style={{ ...container, backgroundColor: STATUS_COLOR_MAPPING[children] }}>
-            <Text style={{ color: FLAG_COLOR_WHITE, textAlign: 'center', fontWeight: '900' }}>{STATUS_TEXT_MAPPING[children]}</Text>
+            <Text style={{ color: WHITE, textAlign: 'center', fontWeight: '900' }}>{STATUS_TEXT_MAPPING[children]}</Text>
         </View>
     );
 }

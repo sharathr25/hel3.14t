@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { Text, Input } from "react-native-elements";
 import Icon from "react-native-vector-icons/Feather";
 import { View, TouchableOpacity, Modal, StyleSheet, Alert } from "react-native";
-import { FLAG_COLOR_WHITE, FLAG_COLOR_ORANGE, FONT_FAMILY, RED, FLAG_COLOR_GREEN } from "../../../constants/styleConstants";
+import { WHITE, ORANGE, FONT_FAMILY, RED, GREEN } from "../../../constants/styleConstants";
 import gql from "graphql-tag";
 import { useMutation } from "react-apollo";
 import Button from "../../common/button";
@@ -100,7 +100,7 @@ const HelpRequestForm = () => {
         onPress={handleAddHelpRequest}
         style={styles.touchableOpacityStyle}
       >
-        <Icon name="plus" size={40} color={FLAG_COLOR_WHITE} />
+        <Icon name="plus" size={40} color={WHITE} />
       </TouchableOpacity>
       <Modal
         animationType='fade'
@@ -124,7 +124,7 @@ const HelpRequestForm = () => {
             <View style={styles.buttons}>
               <Button borderColor={RED} textColor={RED}
                onPress={() => setState({ ...state, formVisible: !state.formVisible })}>Cancel</Button>
-              <Button borderColor={FLAG_COLOR_GREEN} textColor={FLAG_COLOR_GREEN}
+              <Button borderColor={GREEN} textColor={GREEN}
                onPress={requestHelp}>Request help</Button>
             </View>
           </View>
@@ -148,7 +148,7 @@ const styles = StyleSheet.create({
     flex: 1,
     padding: 10,
     margin: 10,
-    backgroundColor: FLAG_COLOR_WHITE,
+    backgroundColor: WHITE,
     justifyContent: 'center',
     alignItems: "center",
     borderRadius: 10
@@ -161,12 +161,12 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     right: 30,
     bottom: 30,
-    backgroundColor: FLAG_COLOR_ORANGE,
+    backgroundColor: ORANGE,
     borderRadius: 15
   },
   descriptionContainerStyle: {
     borderWidth: 1,
-    borderColor: FLAG_COLOR_ORANGE,
+    borderColor: ORANGE,
     borderRadius: 5
   },
   noPeopleSelector: {
@@ -175,8 +175,8 @@ const styles = StyleSheet.create({
     alignItems: 'center'
   },
   activeCheckBox: {
-    backgroundColor: FLAG_COLOR_ORANGE,
-    borderColor: FLAG_COLOR_ORANGE,
+    backgroundColor: ORANGE,
+    borderColor: ORANGE,
   },
   defaultCheckBoxStyle: {
     display: 'flex',
@@ -191,16 +191,16 @@ const styles = StyleSheet.create({
     borderRadius: 5
   },
   inActiveCheckBox: {
-    backgroundColor: FLAG_COLOR_WHITE,
-    borderColor: FLAG_COLOR_ORANGE,
+    backgroundColor: WHITE,
+    borderColor: ORANGE,
   },
   activeText: {
-    color: FLAG_COLOR_WHITE,
+    color: WHITE,
     fontSize: 20,
     fontFamily: FONT_FAMILY
   },
   inActiveText: {
-    color: FLAG_COLOR_ORANGE,
+    color: ORANGE,
     fontSize: 20,
     fontFamily: FONT_FAMILY
   },

@@ -1,9 +1,9 @@
 import React from 'react';
 import { ActivityIndicator, View, Text, StyleSheet } from 'react-native';
-import { FLAG_COLOR_ORANGE, FLAG_COLOR_WHITE } from '../../constants/styleConstants';
+import { ORANGE, WHITE } from '../../constants/styleConstants';
 
 const Loader = (props) => {
-    const { bgColor = FLAG_COLOR_ORANGE, color = FLAG_COLOR_WHITE, title, message } = props;
+    const { bgColor = ORANGE, color = WHITE, title, message } = props;
     const { container, content } = styles;
     return (
         <View style={{ ...container,backgroundColor: bgColor, borderColor: color}}>

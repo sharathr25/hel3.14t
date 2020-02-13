@@ -1,6 +1,6 @@
 import React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
-import { RED, FLAG_COLOR_WHITE } from '../../constants/styleConstants';
+import { RED, WHITE } from '../../constants/styleConstants';
 import Icon from 'react-native-vector-icons/FontAwesome';
 
 const Error = (props) => {
@@ -9,7 +9,7 @@ const Error = (props) => {
     return (
         <View style={container}>
             <View style={icon}>
-                <Icon size={25} color={FLAG_COLOR_WHITE} name="exclamation" />
+                <Icon size={25} color={WHITE} name="exclamation" />
             </View>
             <Text style={textStyle}>{text}</Text>
         </View>

@@ -1,6 +1,6 @@
 import React from "react";
 import { Alert } from "react-native";
-import { FLAG_COLOR_WHITE, FLAG_COLOR_ORANGE } from "../../../constants/styleConstants";
+import { WHITE, ORANGE } from "../../../constants/styleConstants";
 import Loader from '../../common/inlineLoader';
 import Button from "../../common/button";
 import { useMutation } from "react-apollo";
@@ -38,7 +38,7 @@ const HelpButton = (props) => {
     }
   }
 
-  return loading ? <Loader bgColor={FLAG_COLOR_WHITE} color={FLAG_COLOR_ORANGE} /> : <Button onPress={handleHelp}>Help</Button>
+  return loading ? <Loader bgColor={WHITE} color={ORANGE} /> : <Button onPress={handleHelp}>Help</Button>
 }
 
 export default HelpButton;

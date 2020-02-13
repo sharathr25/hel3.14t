@@ -1,12 +1,19 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { View, Text, StyleSheet, Alert } from 'react-native';
-import { FLAG_COLOR_ORANGE, FLAG_COLOR_WHITE } from '../constants/styleConstants';
+import { ORANGE, WHITE } from '../constants/styleConstants';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import Button from '../components/common/button';
 import { APP_TITLE } from '../constants/appConstants';
 
 const LandingScreen = ({ navigation }) => {
+    const { user, initializing } = useAuth();
+    useEffect(() => {
+        if (user) {
+            navigation.replace('Main', { currentUser: user });
+        }
+    }, [initializing]);
+
     handleSignUp = () => {
         navigation.navigate('SignUp');
     }
@@ -35,27 +42,27 @@ const LandingScreen = ({ navigation }) => {
             </View>
             <View style={buttons}>
                 <TouchableOpacity style={{ ...socialMediaLoginButton, backgroundColor: "#3b5998" }} onPress={handleFacebookSignIn}>
-                    <Icon name="facebook" color={FLAG_COLOR_WHITE} size={20} />
+                    <Icon name="facebook" color={WHITE} size={20} />
                     <Text style={socialMediaButtonText}>
                         Sign-in with Facebook
                     </Text>
                 </TouchableOpacity>
                 <TouchableOpacity style={{ ...socialMediaLoginButton, backgroundColor: "#4c8bf5" }} onPress={handleGoogleSignIn}>
-                    <Icon name="google" color={FLAG_COLOR_WHITE} size={20} />
+                    <Icon name="google" color={WHITE} size={20} />
                     <Text style={socialMediaButtonText}>
                         Sign-in with Google
                     </Text>
                 </TouchableOpacity>
                 <TouchableOpacity style={{ ...socialMediaLoginButton, backgroundColor: "#1DA1F2" }} onPress={handleTwitterSignIn}>
-                    <Icon name="twitter" color={FLAG_COLOR_WHITE} size={20} />
+                    <Icon name="twitter" color={WHITE} size={20} />
                     <Text style={socialMediaButtonText}>
                         Sign in with Twitter
                     </Text>
                 </TouchableOpacity>
                 <Text style={separater}>OR WITH EMAIL</Text>
                 <View style={{ flexDirection: "row" }}>
-                    <Button textColor={FLAG_COLOR_WHITE} bgColor={FLAG_COLOR_ORANGE} onPress={handleSignUp}>Sign up</Button>
-                    <Button textColor={FLAG_COLOR_WHITE} bgColor={FLAG_COLOR_ORANGE} onPress={handleSignIn}>Sign in</Button>
+                    <Button textColor={WHITE} bgColor={ORANGE} onPress={handleSignUp}>Sign up</Button>
+                    <Button textColor={WHITE} bgColor={ORANGE} onPress={handleSignIn}>Sign in</Button>
                 </View>
             </View>
         </View>
@@ -70,6 +77,7 @@ LandingScreen.navigationOptions = {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
+        backgroundColor: WHITE
     },
     appNameAndLogoContainer: {
         display: 'flex',
@@ -80,7 +88,7 @@ const styles = StyleSheet.create({
         textAlign: 'left',
         fontFamily: "cursive",
         fontSize: 30,
-        color: FLAG_COLOR_ORANGE
+        color: ORANGE
     },
     buttons: {
         display: 'flex',
@@ -96,7 +104,7 @@ const styles = StyleSheet.create({
         borderRadius: 3
     },
     socialMediaButtonText: {
-        color: FLAG_COLOR_WHITE,
+        color: WHITE,
         paddingLeft: 10,
         fontSize: 20
     },

@@ -1,9 +1,9 @@
 import React from "react";
 import { TouchableOpacity, StyleSheet, Text } from "react-native";
-import { FLAG_COLOR_WHITE, FLAG_COLOR_ORANGE } from "../../constants/styleConstants";
+import { WHITE, ORANGE } from "../../constants/styleConstants";
 
 const Button = (props) => {
-  const { borderColor = FLAG_COLOR_ORANGE, textColor = FLAG_COLOR_ORANGE, bgColor = FLAG_COLOR_WHITE } = props;
+  const { borderColor = ORANGE, textColor = ORANGE, bgColor = WHITE } = props;
   return (
     <TouchableOpacity style={{ ...styles.container, borderColor, backgroundColor: bgColor }} onPress={props.onPress}>
       <Text style={{ ...styles.text, color: textColor }}>{props.children}</Text>
@@ -18,7 +18,7 @@ const styles = StyleSheet.create({
     flex: 1,
     flexDirection: "row",
     justifyContent: "center",
-    backgroundColor: FLAG_COLOR_WHITE,
+    backgroundColor: WHITE,
     borderWidth: 1,
     margin: 10,
     borderRadius: 5,

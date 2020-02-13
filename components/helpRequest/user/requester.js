@@ -1,6 +1,6 @@
 import React from 'react';
 import { Text, View, TouchableOpacity, StyleSheet, Alert, ActivityIndicator } from 'react-native';
-import { FLAG_COLOR_GREEN, RED } from '../../../constants/styleConstants';
+import { GREEN, RED } from '../../../constants/styleConstants';
 import ProfileLetter from '../../common/profileLetter';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { useMutation } from 'react-apollo';
@@ -63,8 +63,8 @@ const Requester = props => {
         <TouchableOpacity style={accept} onPress={handleAccept}>
           {
             loadingForAccept
-              ? <ActivityIndicator size={20} color={FLAG_COLOR_GREEN} />
-              : <Icon name="check" size={20} color={FLAG_COLOR_GREEN} />
+              ? <ActivityIndicator size={20} color={GREEN} />
+              : <Icon name="check" size={20} color={GREEN} />
           }
         </TouchableOpacity>
       </View>
@@ -104,7 +104,7 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    borderColor: FLAG_COLOR_GREEN,
+    borderColor: GREEN,
     margin: 10,
     borderRadius: 20
   },
