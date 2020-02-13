@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import { TouchableOpacity, StyleSheet, Text } from "react-native";
 import Icon from "react-native-vector-icons/FontAwesome5";
-import { FLAG_COLOR_WHITE, FLAG_COLOR_ORANGE } from "../../../constants/styleConstants";
+import { WHITE, ORANGE } from "../../../constants/styleConstants";
 import { firebaseOnEventListner, firebaseOnEventListnerTurnOff } from '../../../fireBase/database';
 import { withNavigation } from 'react-navigation';
 
@@ -35,8 +35,8 @@ class CommentButton extends Component {
     render(){
       const { commentsCount } = this.state;
       return (
-        <TouchableOpacity style={[styles.container,{backgroundColor:FLAG_COLOR_WHITE}]} onPress={this.handleComment}>
-          <Icon name="comment-alt" color={FLAG_COLOR_ORANGE} size={20} />
+        <TouchableOpacity style={[styles.container,{backgroundColor:WHITE}]} onPress={this.handleComment}>
+          <Icon name="comment-alt" color={ORANGE} size={20} />
           <Text style={styles.text}>{commentsCount}</Text>
         </TouchableOpacity>
       );
@@ -50,16 +50,16 @@ class CommentButton extends Component {
       flex: 1,
       flexDirection: "row",
       justifyContent: "center",
-      backgroundColor: FLAG_COLOR_WHITE,
+      backgroundColor: WHITE,
       borderWidth: 1,
-      borderColor: FLAG_COLOR_ORANGE,
+      borderColor: ORANGE,
       margin: 3,
       borderRadius: 5,
       padding: 10
     },
     text:{
         fontSize: 15,
-        color: FLAG_COLOR_ORANGE,
+        color: ORANGE,
         paddingLeft: 5,
     },
   });

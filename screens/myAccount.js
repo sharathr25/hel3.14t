@@ -5,7 +5,7 @@ import { useLazyQuery } from 'react-apollo';
 import gql from 'graphql-tag';
 import Loader from '../components/common/Loader';
 import Icon from 'react-native-vector-icons/FontAwesome';
-import { FLAG_COLOR_ORANGE, FLAG_COLOR_WHITE } from '../constants/styleConstants';
+import { ORANGE, WHITE } from '../constants/styleConstants';
 import Error from '../components/common/Error';
 
 const USER_QUERY = gql`
@@ -55,13 +55,13 @@ const MyAccountScreen = (props) => {
             <View style={details}>
                 <View style={detailRow}>
                     <View style={icon}>
-                        <Icon size={30} name="envelope-o" color={FLAG_COLOR_ORANGE} />
+                        <Icon size={30} name="envelope-o" color={ORANGE} />
                     </View>
                     <Text style={text}>{email}</Text>
                 </View>
                 <View style={detailRow}>
                     <View style={icon}>
-                        <Icon size={30} name="phone" color={FLAG_COLOR_ORANGE} />
+                        <Icon size={30} name="phone" color={ORANGE} />
                     </View>
                     <Text style={text}>{phoneNumberWithoutCountryCode}</Text>
                 </View>
@@ -73,7 +73,7 @@ const MyAccountScreen = (props) => {
                 </View>
                 <View style={detailRow}>
                     <View style={icon}>
-                        <Icon size={30} name="star-o" color={FLAG_COLOR_ORANGE} />
+                        <Icon size={30} name="star-o" color={ORANGE} />
                     </View>
                     <Text style={text}>{stars}</Text>
                 </View>
@@ -90,6 +90,7 @@ const styles = StyleSheet.create({
         justifyContent: 'flex-start',
         display: 'flex',
         flex: 1,
+        backgroundColor: WHITE
     },
     details: {
         alignItems: 'flex-start',
@@ -109,7 +110,7 @@ const styles = StyleSheet.create({
         display: 'flex',
         justifyContent: 'center',
         alignItems: 'center',
-        backgroundColor: FLAG_COLOR_ORANGE,
+        backgroundColor: ORANGE,
         width: 200,
         height: 200,
         borderRadius: 100,
@@ -117,7 +118,7 @@ const styles = StyleSheet.create({
         margin: 5
     },
     profileLetter: {
-        color: FLAG_COLOR_WHITE,
+        color: WHITE,
         fontSize: 80
     },
     detailRow: {
@@ -135,12 +136,12 @@ const styles = StyleSheet.create({
         width: 30,
         height: 30,
         borderWidth: 2,
-        borderColor: FLAG_COLOR_ORANGE,
+        borderColor: ORANGE,
         padding: 4,
         borderRadius: 5
     },
     xpTextStyle: {
-        color: FLAG_COLOR_ORANGE,
+        color: ORANGE,
         fontWeight: 'bold',
     },
     icon: {

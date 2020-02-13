@@ -5,6 +5,7 @@
 	};
 	objectVersion = 46;
 	objects = {
+
 /* Begin PBXBuildFile section */
 		00C302E51ABCBA2D00DB3ED1 /* libRCTActionSheet.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 00C302AC1ABCB8CE00DB3ED1 /* libRCTActionSheet.a */; };
 		00C302E71ABCBA2D00DB3ED1 /* libRCTGeolocation.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 00C302BA1ABCB90400DB3ED1 /* libRCTGeolocation.a */; };
@@ -82,6 +83,9 @@
 		8627D3D3715B4FFEA678C36D /* libRNScreens.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 3A8828F1905747A09B3E60D6 /* libRNScreens.a */; };
 		76B68AFF2ED842CDB9F288B4 /* libRNScreens-tvOS.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 366C75A1CF2949E996E1BFEF /* libRNScreens-tvOS.a */; };
 		A7B1D64C8EC144ABB2CCEFBF /* libRNImagePicker.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 49755683787F485790FC0CD1 /* libRNImagePicker.a */; };
+		89EF760165A2451896338946 /* libRNCMaskedView.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 3FFDCB5536AF4549A5D3E1F1 /* libRNCMaskedView.a */; };
+		45B11E38DE92490BB82D62F0 /* libRNCSafeAreaContext.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 2FC2EB2F419A45B0B9744D5D /* libRNCSafeAreaContext.a */; };
+		794001A16F764F8C948BC88D /* Fontisto.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 9BAC7E59A0AE4E6BB5C02514 /* Fontisto.ttf */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -439,6 +443,11 @@
 		366C75A1CF2949E996E1BFEF /* libRNScreens-tvOS.a */ = {isa = PBXFileReference; name = "libRNScreens-tvOS.a"; path = "libRNScreens-tvOS.a"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = archive.ar; explicitFileType = undefined; includeInIndex = 0; };
 		0FDB3D3B37004A0895EAA6E7 /* RNImagePicker.xcodeproj */ = {isa = PBXFileReference; name = "RNImagePicker.xcodeproj"; path = "../node_modules/react-native-image-picker/ios/RNImagePicker.xcodeproj"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = wrapper.pb-project; explicitFileType = undefined; includeInIndex = 0; };
 		49755683787F485790FC0CD1 /* libRNImagePicker.a */ = {isa = PBXFileReference; name = "libRNImagePicker.a"; path = "libRNImagePicker.a"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = archive.ar; explicitFileType = undefined; includeInIndex = 0; };
+		B79A2136978E48D5BD7A6AD7 /* RNCMaskedView.xcodeproj */ = {isa = PBXFileReference; name = "RNCMaskedView.xcodeproj"; path = "../node_modules/@react-native-community/masked-view/ios/RNCMaskedView.xcodeproj"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = wrapper.pb-project; explicitFileType = undefined; includeInIndex = 0; };
+		3FFDCB5536AF4549A5D3E1F1 /* libRNCMaskedView.a */ = {isa = PBXFileReference; name = "libRNCMaskedView.a"; path = "libRNCMaskedView.a"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = archive.ar; explicitFileType = undefined; includeInIndex = 0; };
+		FB12B1622463474DB77C0596 /* SafeAreaView.xcodeproj */ = {isa = PBXFileReference; name = "SafeAreaView.xcodeproj"; path = "../node_modules/react-native-safe-area-context/ios/SafeAreaView.xcodeproj"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = wrapper.pb-project; explicitFileType = undefined; includeInIndex = 0; };
+		2FC2EB2F419A45B0B9744D5D /* libRNCSafeAreaContext.a */ = {isa = PBXFileReference; name = "libRNCSafeAreaContext.a"; path = "libRNCSafeAreaContext.a"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = archive.ar; explicitFileType = undefined; includeInIndex = 0; };
+		9BAC7E59A0AE4E6BB5C02514 /* Fontisto.ttf */ = {isa = PBXFileReference; name = "Fontisto.ttf"; path = "../node_modules/react-native-vector-icons/Fonts/Fontisto.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -474,6 +483,8 @@
 				941F41193FAF4FCEAF7F5697 /* libRNReanimated.a in Frameworks */,
 				8627D3D3715B4FFEA678C36D /* libRNScreens.a in Frameworks */,
 				A7B1D64C8EC144ABB2CCEFBF /* libRNImagePicker.a in Frameworks */,
+				89EF760165A2451896338946 /* libRNCMaskedView.a in Frameworks */,
+				45B11E38DE92490BB82D62F0 /* libRNCSafeAreaContext.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -674,6 +685,8 @@
 				EDBED09BE1304177966A58E8 /* RNReanimated.xcodeproj */,
 				FAC29A1A2A7B423FAC87D26F /* RNScreens.xcodeproj */,
 				0FDB3D3B37004A0895EAA6E7 /* RNImagePicker.xcodeproj */,
+				B79A2136978E48D5BD7A6AD7 /* RNCMaskedView.xcodeproj */,
+				FB12B1622463474DB77C0596 /* SafeAreaView.xcodeproj */,
 			);
 			name = Libraries;
 			sourceTree = "<group>";
@@ -758,6 +771,7 @@
 				58EB28B2BC674EC1851F385B /* Octicons.ttf */,
 				50C2430B15FA4D71B65945CF /* SimpleLineIcons.ttf */,
 				36999800E25442218CC577D1 /* Zocial.ttf */,
+				9BAC7E59A0AE4E6BB5C02514 /* Fontisto.ttf */,
 			);
 			name = Resources;
 			sourceTree = "<group>";
@@ -1242,6 +1256,7 @@
 				3BCD690C66D1454084F99873 /* Octicons.ttf in Resources */,
 				84E20BDA2E264AA9A0922848 /* SimpleLineIcons.ttf in Resources */,
 				4DAE4EA604BA4731A2BDFE8E /* Zocial.ttf in Resources */,
+				794001A16F764F8C948BC88D /* Fontisto.ttf in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1379,6 +1394,8 @@
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 				);
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
@@ -1389,6 +1406,8 @@
 					"$(SRCROOT)/../node_modules/react-native-reanimated/ios/**",
 					"$(SRCROOT)/../node_modules/react-native-screens/ios",
 					"$(SRCROOT)/../node_modules/react-native-image-picker/ios",
+					"$(SRCROOT)/../node_modules/@react-native-community/masked-view/ios",
+					"$(SRCROOT)/../node_modules/react-native-safe-area-context/ios/SafeAreaView",
 				);
 			};
 			name = Debug;
@@ -1413,6 +1432,8 @@
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 				);
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
@@ -1423,6 +1444,8 @@
 					"$(SRCROOT)/../node_modules/react-native-reanimated/ios/**",
 					"$(SRCROOT)/../node_modules/react-native-screens/ios",
 					"$(SRCROOT)/../node_modules/react-native-image-picker/ios",
+					"$(SRCROOT)/../node_modules/@react-native-community/masked-view/ios",
+					"$(SRCROOT)/../node_modules/react-native-safe-area-context/ios/SafeAreaView",
 				);
 			};
 			name = Release;
@@ -1452,6 +1475,8 @@
 					"$(SRCROOT)/../node_modules/react-native-reanimated/ios/**",
 					"$(SRCROOT)/../node_modules/react-native-screens/ios",
 					"$(SRCROOT)/../node_modules/react-native-image-picker/ios",
+					"$(SRCROOT)/../node_modules/@react-native-community/masked-view/ios",
+					"$(SRCROOT)/../node_modules/react-native-safe-area-context/ios/SafeAreaView",
 				);
 			};
 			name = Debug;
@@ -1480,6 +1505,8 @@
 					"$(SRCROOT)/../node_modules/react-native-reanimated/ios/**",
 					"$(SRCROOT)/../node_modules/react-native-screens/ios",
 					"$(SRCROOT)/../node_modules/react-native-image-picker/ios",
+					"$(SRCROOT)/../node_modules/@react-native-community/masked-view/ios",
+					"$(SRCROOT)/../node_modules/react-native-safe-area-context/ios/SafeAreaView",
 				);
 			};
 			name = Release;
@@ -1512,6 +1539,8 @@
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 				);
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
@@ -1522,6 +1551,8 @@
 					"$(SRCROOT)/../node_modules/react-native-reanimated/ios/**",
 					"$(SRCROOT)/../node_modules/react-native-screens/ios",
 					"$(SRCROOT)/../node_modules/react-native-image-picker/ios",
+					"$(SRCROOT)/../node_modules/@react-native-community/masked-view/ios",
+					"$(SRCROOT)/../node_modules/react-native-safe-area-context/ios/SafeAreaView",
 				);
 			};
 			name = Debug;
@@ -1554,6 +1585,8 @@
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 				);
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
@@ -1564,6 +1597,8 @@
 					"$(SRCROOT)/../node_modules/react-native-reanimated/ios/**",
 					"$(SRCROOT)/../node_modules/react-native-screens/ios",
 					"$(SRCROOT)/../node_modules/react-native-image-picker/ios",
+					"$(SRCROOT)/../node_modules/@react-native-community/masked-view/ios",
+					"$(SRCROOT)/../node_modules/react-native-safe-area-context/ios/SafeAreaView",
 				);
 			};
 			name = Release;
@@ -1595,6 +1630,8 @@
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 				);
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
@@ -1605,6 +1642,8 @@
 					"$(SRCROOT)/../node_modules/react-native-reanimated/ios/**",
 					"$(SRCROOT)/../node_modules/react-native-screens/ios",
 					"$(SRCROOT)/../node_modules/react-native-image-picker/ios",
+					"$(SRCROOT)/../node_modules/@react-native-community/masked-view/ios",
+					"$(SRCROOT)/../node_modules/react-native-safe-area-context/ios/SafeAreaView",
 				);
 			};
 			name = Debug;
@@ -1636,6 +1675,8 @@
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 				);
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
@@ -1646,6 +1687,8 @@
 					"$(SRCROOT)/../node_modules/react-native-reanimated/ios/**",
 					"$(SRCROOT)/../node_modules/react-native-screens/ios",
 					"$(SRCROOT)/../node_modules/react-native-image-picker/ios",
+					"$(SRCROOT)/../node_modules/@react-native-community/masked-view/ios",
+					"$(SRCROOT)/../node_modules/react-native-safe-area-context/ios/SafeAreaView",
 				);
 			};
 			name = Release;

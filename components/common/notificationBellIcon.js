@@ -1,7 +1,7 @@
 import React from "react";
 import { Text, View, StyleSheet } from "react-native";
 import Icon from "react-native-vector-icons/AntDesign";
-import { FLAG_COLOR_WHITE, FLAG_COLOR_ORANGE } from "../../constants/styleConstants";
+import { WHITE, ORANGE } from "../../constants/styleConstants";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import { useNotifications } from "../../customHooks";
 
@@ -16,7 +16,7 @@ const NotificationBellIcon = (props) => {
 
     return notifications.length
         ? <TouchableOpacity onPress={handleBellIconClick} style={container}>
-            <Icon name="bells" size={25} color={FLAG_COLOR_ORANGE} />
+            <Icon name="bells" size={25} color={ORANGE} />
             <View style={textContainer}>
                 <Text style={text}>{notifications.length}</Text>
             </View>
@@ -46,6 +46,6 @@ const styles = StyleSheet.create({
     },
     text: {
         fontSize: 10,
-        color: FLAG_COLOR_WHITE,
+        color: WHITE,
     }
 });

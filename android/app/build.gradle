@@ -149,6 +149,8 @@ android {
 }
 
 dependencies {
+    implementation project(':react-native-safe-area-context')
+    implementation project(':@react-native-community_masked-view')
     implementation project(':react-native-image-picker')
     implementation project(':react-native-screens')
     implementation project(':react-native-geolocation-service')
@@ -163,12 +165,12 @@ dependencies {
     implementation "com.android.support:appcompat-v7:${rootProject.ext.supportLibVersion}"
     implementation "com.facebook.react:react-native:+"  // From node_modules
     implementation "com.google.android.gms:play-services-base:16.1.0"
-  implementation "com.google.firebase:firebase-core:16.0.8" 
-  implementation "com.google.firebase:firebase-auth:17.0.0"
-  implementation "com.google.firebase:firebase-database:17.0.0"
-  implementation "com.google.firebase:firebase-storage:17.0.0"
-
-        implementation 'androidx.swiperefreshlayout:swiperefreshlayout:1.1.0-alpha02'
+    implementation "com.google.firebase:firebase-core:16.0.8" 
+    implementation "com.google.firebase:firebase-auth:17.0.0"
+    implementation "com.google.firebase:firebase-database:17.0.0"
+    implementation "com.google.firebase:firebase-storage:17.0.0"
+    implementation 'androidx.swiperefreshlayout:swiperefreshlayout:1.1.0-alpha02'
+    implementation 'androidx.appcompat:appcompat:1.1.0-rc01'
 }
 
 // Run this once to be able to run the application with BUCK

@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import { Alert, TouchableOpacity, StyleSheet, Text, TextInput } from "react-native";
 import firebase from "react-native-firebase";
-import { FLAG_COLOR_WHITE, FLAG_COLOR_ORANGE } from "../../../constants/styleConstants";
+import { WHITE, ORANGE } from "../../../constants/styleConstants";
 import ImagePicker from 'react-native-image-picker';
 import uuid from 'uuid/v4';
 import { 
@@ -131,16 +131,16 @@ const styles = StyleSheet.create({
       flex: 1,
       flexDirection: "row",
       justifyContent: "center",
-      backgroundColor: FLAG_COLOR_WHITE,
+      backgroundColor: WHITE,
       borderWidth: 1,
-      borderColor: FLAG_COLOR_ORANGE,
+      borderColor: ORANGE,
       margin: 10,
       borderRadius: 5,
       padding: 5
     },
     done:{
         fontSize: 20,
-        color:FLAG_COLOR_ORANGE
+        color:ORANGE
     },
     text:{
         fontSize: 20

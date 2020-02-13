@@ -1,16 +1,12 @@
-import React, { useState, useEffect } from 'react';
-import { Button } from 'react-native-elements';
+import React, { useState } from 'react';
 import { View, Alert, ActivityIndicator, Text, StyleSheet } from 'react-native';
-import { SCREEN_TITLES, APP_TITLE } from '../constants/appConstants';
-import { FLAG_COLOR_WHITE, FLAG_COLOR_ORANGE, BLACK } from '../constants/styleConstants';
+import { APP_TITLE } from '../constants/appConstants';
+import { WHITE, ORANGE, BLACK } from '../constants/styleConstants';
 import { getEmail, loginWithEmailAndPassword } from '../fireBase/auth/login';
 import { checkUserNameAndPasswordFields, regex } from '../utils/index';
 import ErrorMessage from '../components/common/errorMessage';
-import ScreenRedirecter from '../components/common/screenRedirecter';
 import InputComponent from '../components/common/inputComponent';
-import { useAuth } from '../customHooks';
-import { TouchableOpacity } from 'react-native-gesture-handler';
-import { HeaderBackButton, ScrollView } from 'react-navigation';
+import { TouchableOpacity, ScrollView } from 'react-native-gesture-handler';
 
 const emailRegex = regex.email;
 
@@ -20,14 +16,7 @@ const LoginScreen = (props) => {
   const [password, setPassword] = useState('');
   const [passwordErrorMessage, setPasswordErrorMessage] = useState('');
   const [loaderVisible, setLoaderVisible] = useState(false);
-  const { user, initializing } = useAuth();
   const { navigation } = props;
-
-  useEffect(() => {
-    if (user) {
-      navigation.navigate('Main', { currentUser: user });
-    }
-  }, [initializing]);
 
   handleSignUp = () => {
     navigation.navigate('SignUp');
@@ -91,9 +80,9 @@ const LoginScreen = (props) => {
 
 
   return (
-    <ScrollView>
-      <View style={{ flex: 1, justifyContent: 'space-between' }}>
-        <View>
+    <ScrollView contentContainerStyle={{flex: 1, justifyContent: 'space-between'}}>
+      <View style={{ flex: 1, justifyContent: 'space-between', backgroundColor: WHITE }}>
+        <View style={{flex:1}}>
           <Text style={appTitle}>{APP_TITLE}</Text>
           <Text style={screenTitle}>Sign In</Text>
           <InputComponent
@@ -112,7 +101,7 @@ const LoginScreen = (props) => {
           </TouchableOpacity>
           {
             loaderVisible
-              ? <ActivityIndicator color={FLAG_COLOR_ORANGE} />
+              ? <ActivityIndicator color={ORANGE} />
               : <TouchableOpacity onPress={handleLogin} style={signInContainerStyle}>
                 <Text style={signInText}>Sign In</Text>
               </TouchableOpacity>
@@ -132,7 +121,7 @@ const LoginScreen = (props) => {
 const styles = StyleSheet.create({
   appTitle: {
     marginBottom: 30,
-    color: FLAG_COLOR_ORANGE,
+    color: ORANGE,
     textAlign: 'center',
     fontSize: 20,
     fontFamily: 'cursive'
@@ -147,12 +136,12 @@ const styles = StyleSheet.create({
     margin: 10,
     marginTop: 25,
     padding: 10,
-    backgroundColor: FLAG_COLOR_ORANGE,
+    backgroundColor: ORANGE,
     borderRadius: 25
   },
   signInText: {
     textAlign: 'center',
-    color: FLAG_COLOR_WHITE,
+    color: WHITE,
     fontSize: 18
   },
   linkText: {
@@ -164,16 +153,5 @@ const styles = StyleSheet.create({
     marginBottom: 10
   }
 });
-
-LoginScreen.navigationOptions = {
-  title: SCREEN_TITLES.LOGIN,
-  headerLeft: null
-}
-
-LoginScreen.navigationOptions = ({ navigation }) => ({
-  title: '',
-  headerLeft: (<HeaderBackButton onPress={() => { navigation.goBack() }} tintColor={FLAG_COLOR_ORANGE} />),
-  headerRight: null
-})
 
 export default LoginScreen;
