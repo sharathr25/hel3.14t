@@ -4,7 +4,7 @@ import { createAppContainer } from 'react-navigation';
 import { ApolloProvider } from "react-apollo";
 import ApolloClient from './apolloClient';
 import whyDidYouRender from "@welldone-software/why-did-you-render";
-import mainStackNavigator from './navigators/mainStackNavigator';
+import mainStackNavigator from './mainStackNavigator';
 import { PermissionsAndroid, Alert } from "react-native";
 import { useAuth } from './customHooks';
 import Loader from './components/common/Loader';
