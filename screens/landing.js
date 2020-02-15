@@ -60,7 +60,7 @@ const LandingScreen = ({ navigation }) => {
                     </Text>
                 </TouchableOpacity>
                 <Text style={separater}>OR WITH EMAIL</Text>
-                <View style={{ flexDirection: "row" }}>
+                <View style={{ flexDirection: "row", alignItems: 'center', alignSelf: 'stretch', justifyContent: 'center' }}>
                     <Button textColor={WHITE} bgColor={ORANGE} onPress={handleSignUp}>Sign up</Button>
                     <Button textColor={WHITE} bgColor={ORANGE} onPress={handleSignIn}>Sign in</Button>
                 </View>
@@ -77,7 +77,7 @@ LandingScreen.navigationOptions = {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: WHITE
+        backgroundColor: WHITE,
     },
     appNameAndLogoContainer: {
         display: 'flex',

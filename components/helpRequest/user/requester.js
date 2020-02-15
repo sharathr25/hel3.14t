@@ -20,8 +20,8 @@ const Requester = props => {
     }
   `;
 
-  const [updateHelpForAccept, { loadingForAccept }] = useMutation(QUERY);
-  const [updateHelpForReject, { loadingForReject }] = useMutation(QUERY);
+  const [updateHelpForAccept, { loading: loadingForAccept }] = useMutation(QUERY);
+  const [updateHelpForReject, { loading: loadingForReject }] = useMutation(QUERY);
 
   const handleAccept = async () => {
     if (noPeopleRequired === usersAccepted.length) {
@@ -44,7 +44,7 @@ const Requester = props => {
   return (
     <View style={container}>
       <View style={content}>
-      <ProfileLetter letter={firstLetterOfName} />
+        <ProfileLetter letter={firstLetterOfName} />
         <View style={details}>
           <Text style={nameStyle}>{name}</Text>
           <Text style={detailsText}>{xp} XP</Text>

@@ -15,14 +15,13 @@ export default Button;
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
-    flexDirection: "row",
+    alignItems: 'center',
     justifyContent: "center",
     backgroundColor: WHITE,
     borderWidth: 1,
-    margin: 10,
     borderRadius: 5,
-    padding: 5,
+    margin: 5,
+    padding: 5
   },
   text: {
     fontSize: 20,

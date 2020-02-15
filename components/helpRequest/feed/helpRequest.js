@@ -28,7 +28,7 @@ const HelpRequest = (props) => {
   const { data } = props;
   const subscriptionData = useSubscription(HELP_SUBSCRIPTION, { shouldResubscribe: true });
 
-  if(!data) return null;
+  if (!data) return null;
 
   let updatedData = subscriptionData && subscriptionData.data && subscriptionData.data.onUpdateHelp || null;
 
@@ -39,34 +39,34 @@ const HelpRequest = (props) => {
     }
   }
 
-  const { usersAccepted, description,distance, timeStamp, noPeopleRequired, creator, status } = data;
-
+  const { usersAccepted, description, distance, timeStamp, noPeopleRequired, creator, status } = data;
 
   return (
-    <Card borderLeftColor={STATUS_COLOR_MAPPING[status]}>
-        <HelpDescription data={{ description }}/>
-        <Status>{status}</Status>
-        <NoOfHelpers noPeopleAccepted={usersAccepted.length} noPeopleRequired={noPeopleRequired} />
-        <View style={styles.buttons}>
-          {status === "REQUESTED" && <HelpButton data={data} />}
-          <ReferButton data={data} />
-        </View>
-        <View style={styles.timeAndDistance}>
-          <Time time={new Date(timeStamp).getTime()} /><Distance distance={distance} />
-        </View>
-    </Card>
+    status === "REQUESTED"
+      ? <Card borderLeftColor={STATUS_COLOR_MAPPING[status]}>
+          <HelpDescription data={{ description }} />
+          <Status>{status}</Status>
+          <NoOfHelpers noPeopleAccepted={usersAccepted.length} noPeopleRequired={noPeopleRequired} />
+          <View style={styles.buttons}>
+            <HelpButton data={data} />
+            <ReferButton data={data} />
+          </View>
+          <View style={styles.timeAndDistance}>
+            <Time time={new Date(timeStamp).getTime()} /><Distance distance={distance} />
+          </View>
+        </Card>
+      : null
   );
-} 
+}
 
 export default HelpRequest;
 
 const styles = StyleSheet.create({
-  buttons:{
+  buttons: {
     flex: 1,
     flexDirection: "row",
-    justifyContent:'space-evenly'
   },
-  timeAndDistance:{
+  timeAndDistance: {
     flex: 1,
     flexDirection: 'row',
   }
