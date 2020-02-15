@@ -69,7 +69,7 @@ const HELPS = gql`
 
 const HelpRequestFeed = (props) => {
   const { longitude, latitude, locationProviderAvailable } = useLocation();
-  const { loading, data, error, fetchMore} = useQuery(HELPS, {
+  const { loading, data, error, fetchMore } = useQuery(HELPS, {
     variables: {
       offset: 0
     },
@@ -109,12 +109,12 @@ const HelpRequestFeed = (props) => {
 
   getHelpRequestsByDistance = (helpRequests) => {
     if (!locationProviderAvailable) return helpRequests;
-    return helpRequests.map((helpRequest) => {
+    return helpRequests.filter(({ status }) => status === "REQUESTED").map((helpRequest) => {
       const lattitudeOfUser = latitude;
       const longitudeOfUser = longitude;
       const lattitudeOfHelpRequest = helpRequest.latitude;
       const longitudeOfHelpRequest = helpRequest.longitude;
-      const dist = getDistanceFromLatLonInKm(lattitudeOfUser, longitudeOfUser,longitudeOfHelpRequest,lattitudeOfHelpRequest);
+      const dist = getDistanceFromLatLonInKm(lattitudeOfUser, longitudeOfUser, longitudeOfHelpRequest, lattitudeOfHelpRequest);
       const newObj = {
         ...helpRequest,
         userLatitude: lattitudeOfUser,

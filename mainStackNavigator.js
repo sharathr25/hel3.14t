@@ -21,7 +21,7 @@ const headerStyle = {
 
 const MainNavigatorWithUser = () => {
   return (
-    <Stack.Navigator initialRouteName="AppLandingScreen" 
+    <Stack.Navigator initialRouteName="SignUp" 
       screenOptions={
         { headerStyle: { ...headerStyle }, 
           headerTitleAlign: "center", 
@@ -30,11 +30,11 @@ const MainNavigatorWithUser = () => {
         }
       }
     >
-      <Stack.Screen name="AppLandingScreen" component={LandingScreen}></Stack.Screen>
+      <Stack.Screen name="AppLandingScreen" component={LandingScreen} options={{title: ""}}></Stack.Screen>
       <Stack.Screen name="Main" component={BottomNavigator}></Stack.Screen>
       <Stack.Screen name="Notifications" component={NotificationsScreen}></Stack.Screen>
-      <Stack.Screen name="SignUp" component={SignUpScreen}></Stack.Screen>
-      <Stack.Screen name="Login" component={LoginScreen}></Stack.Screen>
+      <Stack.Screen name="SignUp" component={SignUpScreen} options={{title: ""}}></Stack.Screen>
+      <Stack.Screen name="Login" component={LoginScreen} options={{title: ""}}></Stack.Screen>
       <Stack.Screen name="ResetPassword" component={ResetPassowrdScreen}></Stack.Screen>
       <Stack.Screen name="TermsAndConditions" component={TermsAndConditionsScreen}></Stack.Screen>
     </Stack.Navigator>

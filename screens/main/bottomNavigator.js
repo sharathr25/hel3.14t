@@ -13,10 +13,6 @@ import MyAccountScreen from '../myAccount';
 
 const Tab = createMaterialBottomTabNavigator();
 
-const C = () => {
-  return <View><Text>More</Text></View>;
-}
-
 const ActivityIcon = ({ color, size = 20 }) => <FontAwesome5Icons name="hands-helping" color={color} size={size} />
 
 const HomeIcon = ({ color, size = 20 }) => <MaterialCommunityIcons name="home" color={color} size={size} />

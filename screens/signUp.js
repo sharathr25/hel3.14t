@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
-import { Button, Text, CheckBox } from 'react-native-elements';
+import { Text, CheckBox } from 'react-native-elements';
 import { View, Alert, StyleSheet, TouchableOpacity, ActivityIndicator } from 'react-native';
 import { ScrollView } from 'react-native-gesture-handler';
 import firebase from 'react-native-firebase';
 import { SIGN_UP_SCREEN, APP_TITLE } from '../constants/appConstants';
-import { styles, ORANGE, WHITE, FONT_FAMILY, BLACK } from '../constants/styleConstants';
+import { ORANGE, WHITE, FONT_FAMILY, BLACK } from '../constants/styleConstants';
 import { updateUser } from '../fireBase/auth/signUp';
 import { addUserDetailsToDb } from '../fireBase/database';
 import { regex } from '../utils/index';
@@ -15,6 +15,7 @@ import { getAge } from '../utils';
 import gql from 'graphql-tag';
 import { useMutation } from 'react-apollo';
 import CustomModal from '../components/common/CustomModal';
+import Button from '../components/common/button';
 
 const CREATE_USER = gql`
 mutation CreateUser($uid:String!) {
@@ -129,8 +130,8 @@ function SignUpScreen(props) {
   } = state;
 
   return (
-    <ScrollView>
-      <View style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', backgroundColor: WHITE }}>
+    <ScrollView style={{ backgroundColor: WHITE }}>
+      <View style={{ margin: 10 }}>
         <Text style={formStyles.appTitle}>{APP_TITLE}</Text>
         <Text style={formStyles.screenTitle}>Register</Text>
         {/* Name */}
@@ -171,14 +172,19 @@ function SignUpScreen(props) {
         {confirmPasswordErrorMessage.length !== 0 && <ErrorMessage errorMessage={confirmPasswordErrorMessage} />}
 
         {/* Date of Birth */}
-        <View style={formStyles.dob}>
-          <Text style={{ fontSize: 20, padding: 10 }}>Date of Birth</Text>
+        <View style={formStyles.dobContainer}>
+          <Text style={formStyles.dobLabel}>Date of Birth</Text>
           <DateComponent date={state.dob} updateParentState={date => setState({ ...state, dob: date })} />
         </View>
 
         {/* Gender */}
         <View style={formStyles.genderSelector}>
-          <Text style={{ fontSize: 20, padding: 10 }} >Gender</Text>
+          <Text style={{
+            fontSize: 16,
+            opacity: 0.8,
+            fontWeight: 'bold',
+            paddingRight: 10
+          }} >Gender</Text>
           <TouchableOpacity onPress={() => handleCheckBox("male")} style={getCheckBoxStyle("male")}>
             <Text style={getCheckBoxTextStyle("male")}>Male</Text>
           </TouchableOpacity>
@@ -189,18 +195,25 @@ function SignUpScreen(props) {
 
         {/* Terms and Conditions */}
         <CheckBox
-          title={<View><Text>Creating an acount means you're akay with our </Text><TouchableOpacity onPress={handleTermsAndConditions}><Text style={{ color: '#3a8bbb' }}>Terms of Service, Privacy, Policy</Text></TouchableOpacity></View>}
+          title={<View style={{ marign: 5 }}>
+            <Text>Creating an acount means you're akay with our </Text>
+            <TouchableOpacity onPress={handleTermsAndConditions}>
+              <Text style={{ color: '#3a8bbb' }}>Terms of Service, Privacy, Policy</Text>
+            </TouchableOpacity>
+          </View>}
           checked={termsAndConditionChecked}
           onPress={() => setState({ ...state, termsAndConditionChecked: !termsAndConditionChecked })}
           checkedColor={ORANGE}
         />
         {/* Sign Up button */}
-        {!loaderVisible && <Button title="Sign Up" buttonStyle={styles.button} onPress={handleSignUp} />}
-        {loaderVisible && <CustomModal><View style={{margin: 20, alignItems: 'center'}}>
+        {!loaderVisible && <TouchableOpacity onPress={handleSignUp} style={formStyles.signInContainerStyle}>
+          <Text style={formStyles.signInText}>Sign Up</Text>
+        </TouchableOpacity>}
+        {loaderVisible && <CustomModal><View style={{ margin: 20, alignItems: 'center' }}>
           <ActivityIndicator color={ORANGE} size={20} />
-          <Text style={{color: 'black'}}>Please wait...</Text>
-          <Text style={{color: 'black'}}>We will auto verify OTP and log you in</Text>
-          </View></CustomModal>}
+          <Text style={{ color: 'black' }}>Please wait...</Text>
+          <Text style={{ color: 'black' }}>We will auto verify OTP and log you in</Text>
+        </View></CustomModal>}
       </View>
     </ScrollView>
   );
@@ -225,8 +238,8 @@ const formStyles = StyleSheet.create({
   genderSelector: {
     display: 'flex',
     flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center'
+    alignItems: 'center',
+    margin: 10
   },
   activeCheckBox: {
     backgroundColor: ORANGE,
@@ -255,13 +268,26 @@ const formStyles = StyleSheet.create({
     fontSize: 15,
     fontFamily: FONT_FAMILY
   },
-  dob: {
-    display: "flex",
-    justifyContent: 'center',
+  dobContainer: {
     flexDirection: 'row',
-    borderColor: ORANGE,
-    borderWidth: 1.5,
+    alignItems: 'center',
     margin: 10,
-    borderRadius: 5
-  }
+  },
+  dobLabel: {
+    fontSize: 16,
+    opacity: 0.8,
+    fontWeight: 'bold',
+    paddingRight: 10
+  },
+  signInContainerStyle: {
+    margin: 10,
+    padding: 10,
+    backgroundColor: ORANGE,
+    borderRadius: 25
+  },
+  signInText: {
+    textAlign: 'center',
+    color: WHITE,
+    fontSize: 18
+  },
 });

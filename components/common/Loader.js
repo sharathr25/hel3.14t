@@ -1,6 +1,6 @@
 import React from 'react';
 import { StyleSheet, Text, View, ActivityIndicator } from 'react-native';
-import { ORANGE } from '../../constants/styleConstants';
+import { ORANGE, WHITE } from '../../constants/styleConstants';
 
 const Loader = (props) => {
     const { text = "Loading" } = props;
@@ -20,7 +20,8 @@ const styles = StyleSheet.create({
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
-        flex: 1
+        flex: 1,
+        backgroundColor: WHITE
     },
     textStyle: {
         fontSize: 25

@@ -1,10 +1,11 @@
 import React, { useState } from "react";
 import { Text, Input } from "react-native-elements";
-import { View, TouchableOpacity, StyleSheet, Alert, ActivityIndicator } from "react-native";
-import { WHITE, ORANGE, FONT_FAMILY } from "../constants/styleConstants";
+import { View, TouchableOpacity, StyleSheet, Alert, ActivityIndicator, Keyboard } from "react-native";
+import { WHITE, ORANGE, FONT_FAMILY, GREEN } from "../constants/styleConstants";
 import gql from "graphql-tag";
 import { useMutation } from "react-apollo";
 import { useAuth, useLocation } from "../customHooks";
+import CustomModal from "../components/common/CustomModal";
 
 const LIMIT = 3;
 
@@ -48,13 +49,15 @@ const HelpRequestFormScreen = () => {
         locationErrorMessage: "",
     });
 
+    const [showModal, setShowModal] = useState(false);
+
     const { user: currentUser } = useAuth();
-    
+
     const { longitude, latitude, locationProviderAvailable, locationErrorMessage } = useLocation();
 
     const { uid, displayName, phoneNumber } = currentUser;
 
-    const [createHelp, { loading }] = useMutation(HELP_REQUEST);
+    const [createHelp, { loading, data, error }] = useMutation(HELP_REQUEST);
 
     handleCheckBox = (val) => {
         setState({ ...state, noPeopleRequired: val, [`checkBox${val}`]: true });
@@ -71,6 +74,8 @@ const HelpRequestFormScreen = () => {
         } else if (locationProviderAvailable === false && latitude === null && longitude === null) {
             Alert.alert(locationErrorMessage ? locationErrorMessage : "location error");
         } else {
+            Keyboard.dismiss();
+            setShowModal(true);
             createHelp({
                 variables: {
                     uid,
@@ -88,6 +93,16 @@ const HelpRequestFormScreen = () => {
 
     const { signInContainerStyle, signInText, container, selectBoxLabel, selectBoxContainer, descriptionContainerStyle, inputLabelStyle } = styles;
 
+    if (showModal) {
+        if (loading) {
+            return <CustomModal onClose={() => setShowModal(!showModal)} variant="loading" />
+        } else if (data) {
+            return <CustomModal onClose={() => setShowModal(!showModal)} variant="success" desc="Goto Activity tab to check your help request" />
+        } else if (error) {
+            return <CustomModal onClose={() => setShowModal(!showModal)} variant="error" />
+        }
+    }
+
     return (
         <View style={container}>
             <Input
@@ -104,13 +119,9 @@ const HelpRequestFormScreen = () => {
                     {noOfPeopleSelectBoxOptions.map((val) => <Option key={val} val={val} />)}
                 </View>
             </View>
-            {
-                loading
-                    ? <ActivityIndicator color={ORANGE} />
-                    : <TouchableOpacity onPress={requestHelp} style={signInContainerStyle}>
-                        <Text style={signInText}>Request help</Text>
-                    </TouchableOpacity>
-            }
+            <TouchableOpacity onPress={requestHelp} style={signInContainerStyle}>
+                <Text style={signInText}>Request help</Text>
+            </TouchableOpacity>
         </View>
     );
 }
@@ -125,7 +136,7 @@ const styles = StyleSheet.create({
         padding: 10
     },
     inputLabelStyle: {
-        top: 10, zIndex: 2, left: 10, backgroundColor: WHITE, alignSelf: 'flex-start', paddingLeft: 10, paddingRight: 10 
+        top: 10, zIndex: 2, left: 10, backgroundColor: WHITE, alignSelf: 'flex-start', paddingLeft: 10, paddingRight: 10
     },
     signInContainerStyle: {
         margin: 10,
