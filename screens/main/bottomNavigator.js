@@ -27,11 +27,15 @@ function BottomTabNavigator() {
   const notifications = useNotifications();
 
   return (
-    <Tab.Navigator screenOptions={{tabBarColor: ORANGE}}>
+    <Tab.Navigator screenOptions={{ tabBarColor: ORANGE }}>
       <Tab.Screen name="Home" component={HomeScreenTopNavigator} options={{ tabBarIcon: HomeIcon }} />
       <Tab.Screen name="Activity" component={MyHelpRequestsScreen} options={{ tabBarIcon: ActivityIcon }} />
       <Tab.Screen name="Request" component={HelpRequestFormScreen} options={{ tabBarIcon: RequestIcon }} />
-      <Tab.Screen name="Notification" component={NotificationsScreen} options={{ tabBarIcon: NotificationIcon, tabBarBadge: (notifications.length) }} />
+      <Tab.Screen 
+        name="Notification" 
+        options={{ tabBarIcon: NotificationIcon, tabBarBadge: (notifications.length) }} 
+        children={() => <NotificationsScreen notifications={notifications} />}
+      />
       <Tab.Screen name="Account" component={MyAccountScreen} options={{ tabBarIcon: AccountIcon }} />
     </Tab.Navigator>
   );

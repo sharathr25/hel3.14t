@@ -24,7 +24,7 @@ const HelpButton = (props) => {
   const { usersAccepted, usersRequested, creator, _id, usersRejected } = data;
   const { user: currentUser} = useAuth();
   const { uid, displayName } = currentUser;
-  const [updateHelp, { response, loading }] = useMutation(HELP_UPDATE_SCHEMA);
+  const [updateHelp, { response, loading, error }] = useMutation(HELP_UPDATE_SCHEMA);
 
   handleHelp = async () => {
     if (usersAccepted.map((user) => user.uid).indexOf(uid) > -1) {

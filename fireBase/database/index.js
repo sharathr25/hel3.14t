@@ -9,22 +9,22 @@ export const addUserDetailsToDb = async (mobileNumber, email, name, gender, dob)
   }
 }
 
-export const getUser = async (uid) => {
+export const getUser = async (mobNo) => {
   try {
-    return await firebase.database().ref(`/users/${uid}`).once('value');
+    return await firebase.database().ref(`/mapping/+91${mobNo}`).once('value');
   } catch (error) {
     console.log(error);
     Alert.alert(error.toString());
   }
 }
 
-export const updateFirebase = (db,key,value) => {
+export const updateFirebase = (db, key, value) => {
   db.update({ [key]: value });
 };
 
 export const updateFirebaseWithURL = async (dbUrl, key, value) => {
   try {
-    await firebase.database().ref(dbUrl).update({[key]:value });
+    await firebase.database().ref(dbUrl).update({ [key]: value });
   } catch (error) {
     console.log(error)
   }
@@ -39,33 +39,33 @@ export const pushToFirebase = async (db, value) => {
   }
 }
 
-export const notifyUser = async (uid,data) => {
+export const notifyUser = async (uid, data) => {
   try {
-    await pushToFirebase(firebase.database().ref('users').child(uid).child('notifications'),data);
+    await pushToFirebase(firebase.database().ref('users').child(uid).child('notifications'), data);
   } catch (error) {
     console.log(error)
   }
 }
 
-export const removeFromFirebase = async (db,value) => {
+export const removeFromFirebase = async (db, value) => {
   try {
     const data = await db.orderByValue(value).equalTo(value).limitToFirst(1).once('value');
-    db.child(Object.keys(data.val())[0]).remove();      
+    db.child(Object.keys(data.val())[0]).remove();
   } catch (error) {
     console.log(error);
   }
-} 
+}
 
-export const removeFromFirebaseWithUrlAndValue = async (dbUrl,value) => {
+export const removeFromFirebaseWithUrlAndValue = async (dbUrl, value) => {
   try {
     const data = await firebase.database().ref(dbUrl).orderByValue(value).equalTo(value).limitToFirst(1).once('value');
-    firebase.database().ref(dbUrl).child(Object.keys(data.val())[0]).remove();      
+    firebase.database().ref(dbUrl).child(Object.keys(data.val())[0]).remove();
   } catch (error) {
     console.log(error);
   }
-} 
+}
 
-export const removeFromFirebaseOrderingChild = async (dbUrl,value) => {
+export const removeFromFirebaseOrderingChild = async (dbUrl, value) => {
   try {
     const data = await firebase.database().ref(dbUrl).orderByChild("idOfHelpRequest").equalTo(value).limitToFirst(1).once('value');
     firebase.database().ref(dbUrl).child(Object.keys(data.val())[0]).remove();
@@ -82,10 +82,10 @@ export const removeFromFirebaseWithURl = async (url) => {
   }
 }
 
-export const pushToFirebaseWithURL = async (dbUrl,data) => {
+export const pushToFirebaseWithURL = async (dbUrl, data) => {
   try {
     const snapShot = await firebase.database().ref(dbUrl).push(data)
-    return snapShot.key;    
+    return snapShot.key;
   } catch (error) {
     console.log(error);
   }
@@ -94,7 +94,7 @@ export const pushToFirebaseWithURL = async (dbUrl,data) => {
 export const getDataFromFirebase = async (dbUrl) => {
   try {
     const snapShot = await firebase.database().ref(dbUrl).once('value');
-    return snapShot;    
+    return snapShot;
   } catch (error) {
     console.log(error)
   }
@@ -103,17 +103,17 @@ export const getDataFromFirebase = async (dbUrl) => {
 export const getDataFromFirebaseByValue = async (dbUrl, value) => {
   try {
     const snapShot = await firebase.database().ref(dbUrl).orderByValue(value).equalTo(value).limitToFirst(1).once('value');
-    return snapShot;    
+    return snapShot;
   } catch (error) {
     console.log(error)
   }
 }
 
-export const firebaseOnEventListner = (dbUrl,eventType,cb) => {
-  firebase.database().ref(dbUrl).on(eventType,data => {
+export const firebaseOnEventListner = (dbUrl, eventType, cb) => {
+  firebase.database().ref(dbUrl).on(eventType, data => {
     cb(data)
-  },err => console.log(err));
-} 
+  }, err => console.log(err));
+}
 
 export const firebaseOnEventListnerWithUrlAndType = (dbUrl, eventType) => {
   return firebase.database().ref(dbUrl).on(eventType, data => {
@@ -126,13 +126,13 @@ export const firebaseOnEventListnerTurnOff = (dbUrl) => {
 }
 
 export const getFeed = (db, firstTime, referenceToOldestKey, limit) => {
-  if(firstTime) {
-    if(limit === 1) {
+  if (firstTime) {
+    if (limit === 1) {
       return firebase.database().ref(`${db}`).orderByKey().limitToLast(limit).once("value");
     } else {
       return firebase.database().ref(`${db}`).orderByKey().limitToFirst(limit).once("value");
     }
   } else {
-    return firebase.database().ref(`${db}`).orderByKey().startAt(referenceToOldestKey).limitToFirst(limit+1).once("value");
+    return firebase.database().ref(`${db}`).orderByKey().startAt(referenceToOldestKey).limitToFirst(limit + 1).once("value");
   }
 }

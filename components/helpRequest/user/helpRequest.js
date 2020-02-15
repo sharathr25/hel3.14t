@@ -12,7 +12,7 @@ import Card from '../../common/card';
 import Status from '../../common/status';
 
 const HelpRequest = (props) => {
-  const { keyOfHelpRequest } = props;
+  const { keyOfHelpRequest, showDone = true } = props;
 
   const QUERY = gql`
     query {
@@ -138,7 +138,7 @@ const HelpRequest = (props) => {
           ListHeaderComponent={usersAccepted.length ? <Text style={{ fontFamily: FONT_FAMILY, marginBottom: 5 }}>People who are helping</Text> : null}
         />
       </View>
-      <DoneButton keyOfHelpRequest={keyOfHelpRequest} status={status} usersAccepted={usersAccepted} />
+      {showDone && <DoneButton keyOfHelpRequest={keyOfHelpRequest} status={status} usersAccepted={usersAccepted} />}
       <Time time={timeStamp} />
     </Card>
   );

@@ -215,6 +215,12 @@ function SignUpScreen(props) {
           <Text style={{ color: 'black' }}>We will auto verify OTP and log you in</Text>
         </View></CustomModal>}
       </View>
+      <View style={formStyles.loginContainer}>
+        <Text>Already have an account? </Text>
+        <TouchableOpacity onPress={handleSignUp}>
+          <Text style={formStyles.linkText}>Register</Text>
+        </TouchableOpacity>
+      </View>
     </ScrollView>
   );
 }
@@ -290,4 +296,12 @@ const formStyles = StyleSheet.create({
     color: WHITE,
     fontSize: 18
   },
+  linkText: {
+    color: "#1DA1F2"
+  },
+  loginContainer: {
+    flexDirection: 'row',
+    alignSelf: 'center',
+    marginBottom: 10
+  }
 });

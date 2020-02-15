@@ -1,20 +1,17 @@
 import React, { useState, useEffect } from 'react';
 import { View, FlatList } from 'react-native';
-import { HeaderBackButton } from 'react-navigation';
 import NotificationItem from '../components/common/NotificationItem';
-import { ORANGE, WHITE } from '../constants/styleConstants';
-import { useNotifications } from '../customHooks';
+import { WHITE } from '../constants/styleConstants';
 
-const NotificationsScreen = () => {
-    const notifications = useNotifications();
+const NotificationsScreen = ({ notifications }) => {
     const [_notifications, setNotifications] = useState(notifications);
 
     useEffect(() => {
-        setNotifications(notifications);
+        setNotifications(notifications)
     }, [notifications.length]);
 
     const _removeNotification = (id) => {
-        setNotifications(_notifications.filter(({_id}) => _id !== id));
+        setNotifications(_notifications.filter(({ _id }) => _id !== id));
     }
 
     getNotification = ({ item: { _id, message, timeStamp } }) => (
@@ -22,7 +19,7 @@ const NotificationsScreen = () => {
     );
 
     return (
-        <View style={{flex:1, backgroundColor: WHITE}}>
+        <View style={{ flex: 1, backgroundColor: WHITE }}>
             <FlatList
                 data={_notifications}
                 renderItem={getNotification}

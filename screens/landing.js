@@ -34,14 +34,24 @@ const LandingScreen = ({ navigation }) => {
         Alert.alert("need to implement facebook sign in");
     }
 
-    const { container, appNameAndLogoContainer, appName, buttons, socialMediaLoginButton, socialMediaButtonText, separater } = styles;
+    const {
+        container,
+        appNameAndLogoContainer,
+        appName, buttons,
+        socialMediaLoginButton,
+        socialMediaButtonText,
+        separater,
+        buttonContainerStyle,
+        buttonText
+    } = styles;
+
     return (
         <View style={container}>
             <View style={appNameAndLogoContainer}>
                 <Text style={appName}>{APP_TITLE}</Text>
             </View>
             <View style={buttons}>
-                <TouchableOpacity style={{ ...socialMediaLoginButton, backgroundColor: "#3b5998" }} onPress={handleFacebookSignIn}>
+                {/* <TouchableOpacity style={{ ...socialMediaLoginButton, backgroundColor: "#3b5998" }} onPress={handleFacebookSignIn}>
                     <Icon name="facebook" color={WHITE} size={20} />
                     <Text style={socialMediaButtonText}>
                         Sign-in with Facebook
@@ -59,10 +69,14 @@ const LandingScreen = ({ navigation }) => {
                         Sign in with Twitter
                     </Text>
                 </TouchableOpacity>
-                <Text style={separater}>OR WITH EMAIL</Text>
-                <View style={{ flexDirection: "row", alignItems: 'center', alignSelf: 'stretch', justifyContent: 'center' }}>
-                    <Button textColor={WHITE} bgColor={ORANGE} onPress={handleSignUp}>Sign up</Button>
-                    <Button textColor={WHITE} bgColor={ORANGE} onPress={handleSignIn}>Sign in</Button>
+                <Text style={separater}>OR WITH EMAIL</Text> */}
+                <View>
+                    <TouchableOpacity onPress={handleSignIn} style={buttonContainerStyle}>
+                        <Text style={buttonText}>Sign in</Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity onPress={handleSignUp} style={buttonContainerStyle}>
+                        <Text style={buttonText}>Sign up</Text>
+                    </TouchableOpacity>
                 </View>
             </View>
         </View>
@@ -78,6 +92,7 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         backgroundColor: WHITE,
+        padding: 10
     },
     appNameAndLogoContainer: {
         display: 'flex',
@@ -110,7 +125,18 @@ const styles = StyleSheet.create({
     },
     separater: {
         textAlign: "center"
-    }
+    },
+    buttonContainerStyle: {
+        margin: 10,
+        padding: 10,
+        backgroundColor: ORANGE,
+        borderRadius: 25
+    },
+    buttonText: {
+        textAlign: 'center',
+        color: WHITE,
+        fontSize: 18
+    },
 });
 
 export default LandingScreen;

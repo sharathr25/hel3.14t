@@ -43,7 +43,7 @@ const LoginScreen = (props) => {
     try {
       const user = await loginWithEmailAndPassword(email, password);
       setLoaderVisible(false);
-      navigation.navigate('Main', { currentUser: user });
+      navigation.replace('Main', { currentUser: user });
     } catch (err) {
       Alert.alert('invalid username or password. please try again...');
       console.log(err);
@@ -80,9 +80,9 @@ const LoginScreen = (props) => {
 
 
   return (
-    <ScrollView contentContainerStyle={{flex: 1, justifyContent: 'space-between'}}>
-      <View style={{ flex: 1, justifyContent: 'space-between', backgroundColor: WHITE }}>
-        <View style={{flex:1}}>
+    <ScrollView contentContainerStyle={{ flex: 1, backgroundColor: WHITE, }}>
+      <View style={{ flex: 1, margin: 10 }}>
+        <View>
           <Text style={appTitle}>{APP_TITLE}</Text>
           <Text style={screenTitle}>Sign In</Text>
           <InputComponent
