@@ -21,7 +21,7 @@ const headerStyle = {
 
 const MainNavigatorWithUser = () => {
   return (
-    <Stack.Navigator initialRouteName="SignUp" 
+    <Stack.Navigator initialRouteName="AppLandingScreen" 
       screenOptions={
         { headerStyle: { ...headerStyle }, 
           headerTitleAlign: "center", 
