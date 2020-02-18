@@ -41,6 +41,7 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         alignItems: 'center',
         borderRadius: 20,
+        padding: 10
     },
     closeButton: {
         backgroundColor: ORANGE,

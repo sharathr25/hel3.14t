@@ -8,6 +8,7 @@ import Requester from './Requester';
 import Accepter from './Accepter';
 import { Status, Time, Card } from '../atoms';
 import { FONT_FAMILY_BOLD, FONT_SIZE_16, FONT_WEIGHT_BOLD, FONT_FAMILY_REGULAR } from '../../styles/typography';
+import { margin } from '../../styles/mixins';
 
 const UserHelpRequest = (props) => {
   const { keyOfHelpRequest, showDone = true } = props;
@@ -117,8 +118,8 @@ const UserHelpRequest = (props) => {
   return (
     <Card borderLeftColor={STATUS_COLOR_MAPPING[status]}>
       <Text style={styles.descriptionStyle}>{description}</Text>
+      <Status>{status}</Status>
       <View>
-        <Status>{status}</Status>
         <FlatList
           data={usersRequested}
           renderItem={getRequestedUser}
@@ -136,7 +137,7 @@ const UserHelpRequest = (props) => {
           ListHeaderComponent={usersAccepted.length ? <Text style={{ fontFamily: FONT_FAMILY_REGULAR, marginBottom: 5 }}>People who are helping</Text> : null}
         />
       </View>
-      {showDone && <DoneButton keyOfHelpRequest={keyOfHelpRequest} status={status} usersAccepted={usersAccepted} />}
+      {showDone && <View style={{ ...margin(5, 0, 0, 0) }}><DoneButton keyOfHelpRequest={keyOfHelpRequest} status={status} usersAccepted={usersAccepted} /></View>}
       <Time time={timeStamp} />
     </Card>
   );
