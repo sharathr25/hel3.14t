@@ -1,3 +1,4 @@
+// @flow
 import React, { useEffect } from 'react';
 import { View, Text, StyleSheet, Alert } from 'react-native';
 import { ORANGE, WHITE } from '../../constants/styleConstants';
@@ -5,8 +6,10 @@ import { TouchableOpacity } from 'react-native-gesture-handler';
 // import Icon from 'react-native-vector-icons/FontAwesome';
 // import Button from '../../components/common/button';
 import { APP_TITLE } from '../../constants/appConstants';
+import { useAuth } from '../../customHooks'
 
-const LandingScreen = ({ navigation }) => {
+const LandingScreen = ({ navigation }: { navigation: Object}) => {
+    
     const { user, initializing } = useAuth();
     useEffect(() => {
         if (user) {
@@ -14,23 +17,23 @@ const LandingScreen = ({ navigation }) => {
         }
     }, [initializing]);
 
-    handleSignUp = () => {
+    const handleSignUp = () => {
         navigation.navigate('SignUp');
     }
 
-    handleSignIn = () => {
+    const handleSignIn = () => {
         navigation.navigate('Login');
     }
 
-    handleFacebookSignIn = () => {
+    const handleFacebookSignIn = () => {
         Alert.alert("need to implement facebook sign in");
     }
 
-    handleGoogleSignIn = () => {
+    const handleGoogleSignIn = () => {
         Alert.alert("need to implement facebook sign in");
     }
 
-    handleTwitterSignIn = () => {
+    const handleTwitterSignIn = () => {
         Alert.alert("need to implement facebook sign in");
     }
 
