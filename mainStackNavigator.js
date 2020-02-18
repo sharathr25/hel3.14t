@@ -7,7 +7,7 @@ import LoginScreen from './screens/LoginScreen';
 import ResetPassowrdScreen from './screens/ResetPassword';
 import TermsAndConditionsScreen from './screens/TermsAndConditions';
 import LandingScreen from './screens/LandingScreen';
-import BottomNavigator from './screens/Main/bottomNavigator';
+import BottomNavigator from './screens/main/bottomNavigator';
 import { APP_TITLE } from './constants/appConstants';
 
 const Stack = createStackNavigator();

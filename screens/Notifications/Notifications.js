@@ -1,9 +1,11 @@
+// @flow
+
 import React, { useState, useEffect } from 'react';
 import { View, FlatList } from 'react-native';
 import {NotificationItem} from '../../components/molecules';
 import { WHITE } from '../../constants/styleConstants';
 
-const NotificationsScreen = ({ notifications }) => {
+const NotificationsScreen = ({ notifications } : { notifications : Object }) => {
     const [_notifications, setNotifications] = useState(notifications);
 
     useEffect(() => {
@@ -14,7 +16,7 @@ const NotificationsScreen = ({ notifications }) => {
         setNotifications(_notifications.filter(({ _id }) => _id !== id));
     }
 
-    getNotification = ({ item: { _id, message, timeStamp } }) => (
+    const getNotification = ({ item: { _id, message, timeStamp } }) => (
         <NotificationItem id={_id} message={message} timeStamp={timeStamp} removeNotification={_removeNotification} />
     );
 

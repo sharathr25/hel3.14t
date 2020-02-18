@@ -12,18 +12,19 @@ import MyAccountScreen from '../MyAccount';
 
 const Tab = createMaterialBottomTabNavigator();
 
-const ActivityIcon = ({ color, size = 20 }) => <FontAwesome5Icons name="hands-helping" color={color} size={size} />
+const ActivityIcon = ({ color, size = 20 }: { color: string, size: number }) => <FontAwesome5Icons name="hands-helping" color={color} size={size} />
 
-const HomeIcon = ({ color, size = 20 }) => <MaterialCommunityIcons name="home" color={color} size={size} />
+const HomeIcon = ({ color, size = 20 }: { color: string, size: number }) => <MaterialCommunityIcons name="home" color={color} size={size} />
 
-const RequestIcon = ({ color, size = 20 }) => <MaterialCommunityIcons name="plus" color={color} size={size} />
+const RequestIcon = ({ color, size = 20 }: { color: string, size: number }) => <MaterialCommunityIcons name="plus" color={color} size={size} />
 
-const NotificationIcon = ({ color, size = 20 }) => <MaterialCommunityIcons name="bell" color={color} size={size} />
+const NotificationIcon = ({ color, size = 20 }: { color: string, size: number }) => <MaterialCommunityIcons name="bell" color={color} size={size} />
 
-const AccountIcon = ({ color, size = 20 }) => <FontAwesome5Icons name="user" color={color} size={size} />
+const AccountIcon = ({ color, size = 20 }: { color: string, size: number }) => <FontAwesome5Icons name="user" color={color} size={size} />
 
 function BottomTabNavigator() {
   const notifications = useNotifications();
+  const noOfNotifications = notifications.length;
 
   return (
     <Tab.Navigator screenOptions={{ tabBarColor: ORANGE }}>
@@ -32,7 +33,7 @@ function BottomTabNavigator() {
       <Tab.Screen name="Request" component={HelpRequestFormScreen} options={{ tabBarIcon: RequestIcon }} />
       <Tab.Screen 
         name="Notification" 
-        options={{ tabBarIcon: NotificationIcon, tabBarBadge: (notifications.length) }} 
+        options={{ tabBarIcon: NotificationIcon, tabBarBadge: noOfNotifications }} 
         children={() => <NotificationsScreen notifications={notifications} />}
       />
       <Tab.Screen name="Account" component={MyAccountScreen} options={{ tabBarIcon: AccountIcon }} />

@@ -1,3 +1,4 @@
+// @flow
 import React, { useState } from 'react';
 import { View, Alert, StyleSheet, TouchableOpacity, Text } from 'react-native';
 import { ScrollView } from 'react-native-gesture-handler';
@@ -9,8 +10,22 @@ import { regex } from '../../utils/index';
 import { getUser } from '../../fireBase/database';
 import { CustomModal } from '../../components/molecules';
 
-const ResetPassowrdScreen = (props) => {
-  const [state, setState] = useState({
+type ResetPassowrdScreenProps = {
+  navigation: Object
+}
+
+type State = {
+  mobileNumber: string,
+    mobileNumberErrorMessage: string,
+    password: string,
+    passwordErrorMessage: string,
+    confirmPassword: string,
+    confirmPasswordErrorMessage: string,
+    loaderVisible: boolean,
+}
+
+const ResetPassowrdScreen = (props: ResetPassowrdScreenProps) => {
+  const [state, setState] = useState<State>({
     mobileNumber: '',
     mobileNumberErrorMessage: '',
     password: '',
@@ -30,24 +45,24 @@ const ResetPassowrdScreen = (props) => {
     loaderVisible,
   } = state;
 
-  checkMobileNumberField = () => {
+  const checkMobileNumberField = () => {
     let valid = false;
     const { mobileNumber, password, confirmPassword } = state;
     if (mobileNumber.length === 0) {
-      setState({ mobileNumberErrorMessage: SIGN_UP_SCREEN.ERRORS.EMPTY_MOBILE_NUMBER_ERROR });
+      setState({ ...state, mobileNumberErrorMessage: SIGN_UP_SCREEN.ERRORS.EMPTY_MOBILE_NUMBER_ERROR });
     } else if (!mobileNumber.match(regex.phoneNo)) {
-      setState({ mobileNumberErrorMessage: SIGN_UP_SCREEN.ERRORS.INVALID_MOBILE_NUMBER_ERROR });
+      setState({ ...state, mobileNumberErrorMessage: SIGN_UP_SCREEN.ERRORS.INVALID_MOBILE_NUMBER_ERROR });
     } else if (password.length === 0) {
-      setState({ passwordErrorMessage: SIGN_UP_SCREEN.ERRORS.EMPTY_PASSWORD_ERROR });
+      setState({ ...state, passwordErrorMessage: SIGN_UP_SCREEN.ERRORS.EMPTY_PASSWORD_ERROR });
     } else if (password.length < 6) {
-      setState({ passwordErrorMessage: SIGN_UP_SCREEN.ERRORS.INVALID_PASSWORD_ERROR });
+      setState({ ...state, passwordErrorMessage: SIGN_UP_SCREEN.ERRORS.INVALID_PASSWORD_ERROR });
     } else if (password !== confirmPassword) {
-      setState({ confirmPasswordErrorMessage: SIGN_UP_SCREEN.ERRORS.PASSWORD_MISMATCH_ERROR });
+      setState({ ...state, confirmPasswordErrorMessage: SIGN_UP_SCREEN.ERRORS.PASSWORD_MISMATCH_ERROR });
     } else valid = true;
     return valid;
   }
 
-  handleLogin = async () => {
+  const handleLogin = async () => {
     if (checkMobileNumberField()) {
       const { mobileNumber, password } = state;
       try {
@@ -55,7 +70,7 @@ const ResetPassowrdScreen = (props) => {
         setStatus({ loading: true, success: false, error: false })
         const user = await getUser(mobileNumber);
         if (user.val() === null) {
-          setState({ loaderVisible: false });
+          setState({ ...state, loaderVisible: false });
           Alert.alert("User not found");
         }
         await firebase.auth().signInWithPhoneNumber(`+91${mobileNumber}`);

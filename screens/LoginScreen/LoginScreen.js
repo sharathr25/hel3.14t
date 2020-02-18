@@ -1,3 +1,4 @@
+// @flow
 import React, { useState } from 'react';
 import { View, Alert, ActivityIndicator, Text, StyleSheet } from 'react-native';
 import { APP_TITLE } from '../../constants/appConstants';
@@ -10,7 +11,11 @@ import { LIGHT_BLUE } from '../../styles/colors';
 
 const emailRegex = regex.email;
 
-const LoginScreen = (props) => {
+type LoginScreenProps = {
+  navigation: Object
+}
+
+const LoginScreen = (props: LoginScreenProps) => {
   const [userName, setUserName] = useState('');
   const [userNameErrorMessage, setUserNameErrorMessage] = useState('');
   const [password, setPassword] = useState('');
@@ -18,15 +23,15 @@ const LoginScreen = (props) => {
   const [loaderVisible, setLoaderVisible] = useState(false);
   const { navigation } = props;
 
-  handleSignUp = () => {
+  const handleSignUp = () => {
     navigation.navigate('SignUp');
   }
 
-  handleResetPassword = () => {
+  const handleResetPassword = () => {
     navigation.navigate('ResetPassword');
   }
 
-  checkUserNameAndPassword = () => {
+  const checkUserNameAndPassword = () => {
     const datum = checkUserNameAndPasswordFields(userName, password);
     if (datum.valid) return datum.valid
     else {
@@ -39,7 +44,7 @@ const LoginScreen = (props) => {
     }
   };
 
-  loginWithEmail = async (email, password) => {
+  const loginWithEmail = async (email: string, password:string) => {
     try {
       const user = await loginWithEmailAndPassword(email, password);
       setLoaderVisible(false);
@@ -50,7 +55,7 @@ const LoginScreen = (props) => {
     }
   }
 
-  loginWithMobileNumber = async (mobileNumber, password) => {
+  const loginWithMobileNumber = async (mobileNumber: string, password: string) => {
     try {
       const email = await getEmail(mobileNumber);
       if (email) {
@@ -64,7 +69,7 @@ const LoginScreen = (props) => {
     }
   }
 
-  handleLogin = async () => {
+  const handleLogin = async () => {
     setLoaderVisible(true);
     if (checkUserNameAndPassword()) {
       if (userName.match(emailRegex)) {

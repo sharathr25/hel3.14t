@@ -8,6 +8,11 @@
 ; Ignore unexpected extra "@providesModule"
 .*/node_modules/.*/node_modules/fbjs/.*
 
+; Ignore react-native-image-picker
+.*/node_modules/react-native-image-picker/lib/commonjs/index.js.flow 
+.*/node_modules/react-native-image-picker/lib/commonjs/internal/nativeInterface.js.flow
+
+
 ; Ignore duplicate module providers
 ; For RN Apps installed via npm, "Libraries" folder is inside
 ; "node_modules/react-native" but in the source repo it is in the root

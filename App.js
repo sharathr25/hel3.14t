@@ -1,4 +1,4 @@
-// packages
+// @flow
 import React, { memo, useEffect } from 'react';
 import { ApolloProvider } from "react-apollo";
 import ApolloClient from './apolloClient';
@@ -37,4 +37,4 @@ function App() {
 
 App.whyDidYouRender = true;
 
-export default memo(App);
+export default memo<Element>(App);

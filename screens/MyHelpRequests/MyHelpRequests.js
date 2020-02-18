@@ -1,8 +1,10 @@
+// @flow
 import React from 'react';
 import { FlatList, View } from 'react-native';
 import { UserHelpRequest } from '../../components/molecules';
 import { useQuery, useSubscription } from 'react-apollo';
 import gql from 'graphql-tag';
+import type { DocumentNode } from 'graphql';
 import { useAuth } from '../../customHooks';
 import { WHITE, ORANGE } from '../../constants/styleConstants';
 import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
@@ -40,8 +42,12 @@ subscription{
     } 
     }
 `;
+type HelpsProps = {
+    queryGql: DocumentNode,
+    subscriptionGql: DocumentNode
+}
 
-const Helps = (props) => {
+const Helps = (props:HelpsProps) => {
     const { user: currentUser } = useAuth();
     const { uid } = currentUser;
     const { queryGql, subscriptionGql } = props;
@@ -63,7 +69,7 @@ const Helps = (props) => {
     }
     let { createdHelpRequests, helpedHelpRequests } = user;
 
-    getHelpRequest = ({ item }) => <UserHelpRequest keyOfHelpRequest={item} showDone={createdHelpRequests ? true : false} />
+    const getHelpRequest = ({ item }) => <UserHelpRequest keyOfHelpRequest={item} showDone={createdHelpRequests ? true : false} />
 
     return (
         <View style={{ flex: 1, backgroundColor: WHITE }}>
@@ -71,7 +77,6 @@ const Helps = (props) => {
                 data={createdHelpRequests || helpedHelpRequests}
                 renderItem={getHelpRequest}
                 keyExtractor={(item, index) => item.key + index.toString()}
-                listKey={(item, index) => item.key + index.toString()}
             />
         </View>
     );
@@ -79,7 +84,7 @@ const Helps = (props) => {
 
 const Tab = createMaterialTopTabNavigator();
 
-function MyHelpRequestsScreen(props) {
+function MyHelpRequestsScreen() {
     return (
         <Tab.Navigator tabBarOptions={{ indicatorStyle: { backgroundColor: ORANGE } }}>
             <Tab.Screen name="Requested" children={() => <Helps queryGql={REQUESTED_HELPS_QUERY} subscriptionGql={REQUESTED_HELPS_SUBSCRPTION} />} />
