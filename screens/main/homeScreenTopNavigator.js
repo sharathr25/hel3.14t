@@ -1,7 +1,7 @@
-import React from './node_modules/react';
+import React from 'react';
 import { View, Text } from 'react-native'
 import { WHITE, ORANGE } from '../../constants/styleConstants';
-import { createMaterialTopTabNavigator } from './node_modules/@react-navigation/material-top-tabs';
+import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
 import { HelpRequestFeed } from '../../components/oraganisms';
 
 const Tab = createMaterialTopTabNavigator();
