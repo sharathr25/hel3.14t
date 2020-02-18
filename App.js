@@ -6,9 +6,8 @@ import whyDidYouRender from "@welldone-software/why-did-you-render";
 import mainStackNavigator from './mainStackNavigator';
 import { PermissionsAndroid, Alert } from "react-native";
 import { useAuth } from './customHooks';
-import Loader from './components/common/Loader';
 import { NavigationContainer } from '@react-navigation/native';
-
+import { FullScreenLoader } from './components/atoms';
 
 whyDidYouRender(React);
 
@@ -24,7 +23,7 @@ function App() {
   }, []);
 
   if (initializing) {
-    return <Loader />;
+    return <FullScreenLoader />;
   }
 
   return (
