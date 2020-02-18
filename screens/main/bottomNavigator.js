@@ -1,15 +1,14 @@
 import React from 'react';
 import { createMaterialBottomTabNavigator } from '@react-navigation/material-bottom-tabs';
-import MyHelpRequestsScreen from '../myHelpRequests';
-import { View, Text } from 'react-native';
+import MyHelpRequestsScreen from '../MyHelpRequests';
 import HomeScreenTopNavigator from './homeScreenTopNavigator';
-import NotificationsScreen from '../notifications';
+import NotificationsScreen from '../Notifications';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import FontAwesome5Icons from 'react-native-vector-icons/FontAwesome5'
-import HelpRequestFormScreen from '../helpRequestForm';
+import HelpRequestFormScreen from '../HelpRequestForm';
 import { ORANGE } from '../../constants/styleConstants';
 import { useNotifications } from '../../customHooks';
-import MyAccountScreen from '../myAccount';
+import MyAccountScreen from '../MyAccount';
 
 const Tab = createMaterialBottomTabNavigator();
 

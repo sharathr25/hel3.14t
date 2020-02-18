@@ -1,14 +1,13 @@
 import React from 'react';
 import { createStackNavigator } from '@react-navigation/stack';
-
-import NotificationsScreen from './screens/notifications';
+import NotificationsScreen from './screens/Notifications';
 import { WHITE, ORANGE } from './constants/styleConstants';
-import SignUpScreen from './screens/signUp';
-import LoginScreen from './screens/login';
-import ResetPassowrdScreen from './screens/resetPassword';
-import TermsAndConditionsScreen from './screens/termsAndConditions';
-import LandingScreen from './screens/landing';
-import BottomNavigator from './screens/main/bottomNavigator';
+import SignUpScreen from './screens/SignUp';
+import LoginScreen from './screens/LoginScreen';
+import ResetPassowrdScreen from './screens/ResetPassword';
+import TermsAndConditionsScreen from './screens/TermsAndConditions';
+import LandingScreen from './screens/LandingScreen';
+import BottomNavigator from './screens/Main/bottomNavigator';
 import { APP_TITLE } from './constants/appConstants';
 
 const Stack = createStackNavigator();

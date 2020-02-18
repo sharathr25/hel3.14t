@@ -1,9 +1,8 @@
 import React from 'react';
 import { View, Text } from 'react-native'
-
-import HelpRequestFeed from "../../components/helpRequest/feed/helpRequestFeed";
 import { WHITE, ORANGE } from '../../constants/styleConstants';
 import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
+import { HelpRequestFeed } from '../../components/oraganisms';
 
 const Tab = createMaterialTopTabNavigator();
 
