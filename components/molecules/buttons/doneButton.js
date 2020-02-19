@@ -14,7 +14,7 @@ type DoneButtonProps = {
 }
 
 const UPDATE_HELP_QUERY = gql`
-    mutation UpdateHelp($key:String!, $value:Any, $type:String!, $operation:String!, !id: String!){
+    mutation UpdateHelp($key:String!, $value:Any, $type:String!, $operation:String!, $id: String!){
         updateHelp(id:$id, key:$key, value:$value, type:$type, operation:$operation){
             _id
         }
