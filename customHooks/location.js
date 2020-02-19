@@ -1,16 +1,17 @@
+// @flow
 import { useEffect, useState } from 'react';
 import geolocation from 'react-native-geolocation-service';
 
 export default function useLocation() {
     const [state, setState] = useState({ latitude: null, longitude: null, locationProviderAvailable: false, locationErrorMessage: "" });
 
-    setLocation = (position) => {
+    const setLocation = (position) => {
         const { coords } = position;
         const { latitude, longitude } = coords;
         setState({ latitude, longitude, locationProviderAvailable: true, locationErrorMessage: "" });
     }
 
-    setLocationError = (error) => {
+    const setLocationError = (error) => {
         console.log(error.code, error.message);
         let locationErrorMessage;
         switch (error.code) {
@@ -23,7 +24,7 @@ export default function useLocation() {
         setState({ latitude: null, longitude: null, locationProviderAvailable: false, locationErrorMessage });
     }
 
-    watchPosition = () => {
+    const watchPosition = () => {
         geolocation.watchPosition(
             (position) => setLocation(position),
             (error) => setLocationError(error),
@@ -31,7 +32,7 @@ export default function useLocation() {
         );
     }
 
-    getPosition = () => {
+    const getPosition = () => {
         geolocation.getCurrentPosition(
             (position) => setLocation(position),
             (error) => setLocationError(error),

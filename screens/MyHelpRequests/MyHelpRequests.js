@@ -6,7 +6,7 @@ import { useQuery, useSubscription } from 'react-apollo';
 import gql from 'graphql-tag';
 import type { DocumentNode } from 'graphql';
 import { useAuth } from '../../customHooks';
-import { WHITE, ORANGE } from '../../constants/styleConstants';
+import { WHITE, ORANGE } from '../../styles/colors';
 import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
 
 const REQUESTED_HELPS_QUERY = gql`

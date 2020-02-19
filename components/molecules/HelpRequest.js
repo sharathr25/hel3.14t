@@ -1,10 +1,11 @@
+// @flow
 import React from "react";
 import { View, StyleSheet, Text } from "react-native";
 import HelpButton from "./buttons/helpButton";
 import ReferButton from "./buttons/referButton";
 import gql from "graphql-tag";
 import { useSubscription } from "react-apollo";
-import { STATUS_COLOR_MAPPING } from "../../constants/styleConstants";
+import { STATUS_COLOR_MAPPING } from "../../components/atoms/Status";
 import { Status, NoOfHelpers, Card } from "../atoms";
 import { TimeAndDistance } from ".";
 import { FONT_FAMILY_BOLD, FONT_SIZE_16, FONT_WEIGHT_BOLD } from "../../styles/typography";
@@ -21,10 +22,25 @@ subscription{
 }
 `;
 
-const HelpRequest = (props) => {
-  const { data } = props;
+type HelpRequestProps = {
+  data: {
+    usersAccepted: Array<Object>, 
+    usersRequested: Array<Object>,
+    usersRejected: Array<Object>,
+    description: Array<Object>, 
+    distance: number, 
+    timeStamp: number, 
+    noPeopleRequired: number,
+    creator: string, 
+    status:  string,
+    _id: string
+  }
+}
 
-  const { usersAccepted, description, distance, timeStamp, noPeopleRequired, creator, status } = data;
+const HelpRequest = (props: HelpRequestProps) => {
+  let { data } = props;
+
+  const { usersAccepted, description, distance, timeStamp, noPeopleRequired, creator, status, usersRequested, usersRejected } = data;
 
   const subscriptionData = useSubscription(HELP_SUBSCRIPTION, { shouldResubscribe: true });
 

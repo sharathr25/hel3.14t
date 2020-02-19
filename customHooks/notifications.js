@@ -1,3 +1,4 @@
+// @flow
 import { useEffect } from "react";
 import gql from "graphql-tag";
 import { useLazyQuery, useSubscription } from "react-apollo";
@@ -32,14 +33,13 @@ const useNotifications = () => {
     const { user } = useAuth();
     const [getNotifcations, { data: initialData }] = useLazyQuery(USER_NOTIFICATIONS_QUERY);
     let { data: subscriptionData } = useSubscription(SUBSCRPTION);
+    let uid = null;
 
     useEffect(() => {
         if (uid) {
             getNotifcations({ variables: { uid } });
         }
     }, [uid]);
-
-    let uid = null;
 
     if(user) {
         ({ uid } = user);

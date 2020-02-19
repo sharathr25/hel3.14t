@@ -1,11 +1,11 @@
 // @flow
 import React, { Component } from 'react';
 import { View, Text } from 'react-native';
-import { Button } from 'react-native-elements';
+import { Button } from '../../components/atoms'
 import { SCREEN_TITLES } from '../../constants/appConstants';
-import { styles } from '../../constants/styleConstants';
+import { ORANGE } from '../../styles/colors';
 
-const TermsAndConditionsScreen = ({navigation}:{navigation:Object}) => {
+const TermsAndConditionsScreen = ({ navigation } : { navigation:Object }) => {
     const handleBackButton = () => {
         navigation.navigate('SignUp');
     }
@@ -13,7 +13,7 @@ const TermsAndConditionsScreen = ({navigation}:{navigation:Object}) => {
     return (
         <View style={{ alignItems: 'center', justifyContent: 'center' }}>
             <Text>Terms and Conditions</Text>
-            <Button title="Back" buttonStyle={styles.button} onPress={handleBackButton} />
+            <Button onPress={handleBackButton} >Back</Button>
         </View>
     );
 }

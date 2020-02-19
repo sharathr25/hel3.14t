@@ -1,7 +1,7 @@
 // @flow
 import React, { useEffect } from 'react';
 import { View, Text, StyleSheet, Alert } from 'react-native';
-import { ORANGE, WHITE } from '../../constants/styleConstants';
+import { ORANGE, WHITE } from '../../styles/colors';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 // import Icon from 'react-native-vector-icons/FontAwesome';
 // import Button from '../../components/common/button';

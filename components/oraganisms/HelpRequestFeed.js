@@ -1,3 +1,4 @@
+// @flow
 import React from "react";
 import { FlatList, Platform, UIManager, Text } from 'react-native';
 import { getDistanceFromLatLonInKm, sortByDistance } from '../../utils';
@@ -67,7 +68,7 @@ const HELPS = gql`
 // }
 // `;
 
-const HelpRequestFeed = (props) => {
+const HelpRequestFeed = () => {
   const { longitude, latitude, locationProviderAvailable } = useLocation();
   const { loading, data, error, fetchMore } = useQuery(HELPS, {
     variables: {
@@ -101,15 +102,20 @@ const HelpRequestFeed = (props) => {
 
   if (error) return <Text>{error.networkError}</Text>
 
-  gethelpRequestsSortedByDistance = (feedItems) => {
-    const newHelpRequests = getHelpRequestsByDistance(feedItems);
-    const helpRequestsSortedByDistance = sortByDistance(newHelpRequests);
+  const gethelpRequestsSortedByDistance = (feedItems) => {
+    if(!locationProviderAvailable) return feedItems;
+    const requestedHelpRequests = getRequestedHelpRequests(feedItems);
+    const helpRequestsWithDistance = getHelpRequestsWithDistance(requestedHelpRequests);
+    const helpRequestsSortedByDistance = sortByDistance(helpRequestsWithDistance);
     return helpRequestsSortedByDistance;
   }
 
-  getHelpRequestsByDistance = (helpRequests) => {
-    if (!locationProviderAvailable) return helpRequests;
-    return helpRequests.filter(({ status }) => status === "REQUESTED").map((helpRequest) => {
+  const getRequestedHelpRequests = (helpRequests) => {
+    return helpRequests.filter(({ status }) => status === "REQUESTED");
+  }
+
+  const getHelpRequestsWithDistance = (helpRequests) => {
+    return helpRequests.map((helpRequest) => {
       const lattitudeOfUser = latitude;
       const longitudeOfUser = longitude;
       const lattitudeOfHelpRequest = helpRequest.latitude;
@@ -125,7 +131,7 @@ const HelpRequestFeed = (props) => {
     });
   }
 
-  getHelpRequest = ({ item }) => {
+  const getHelpRequest = ({ item }) => {
     return <HelpRequest data={item} key={item._id} />
   }
 

@@ -1,9 +1,10 @@
+// @flow
 import React from "react";
 import { Text, StyleSheet } from "react-native";
 import { getTimeDiffrence } from '../../utils/index';
 import { FONT_FAMILY_REGULAR } from "../../styles/typography";
 
-const Time = props => {
+const Time = (props: {time : number }) => {
   const { time } = props;
   const { text } = styles;
   return (

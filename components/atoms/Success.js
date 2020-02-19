@@ -1,9 +1,10 @@
+// @flow
 import React from "react";
 import { StyleSheet, View, Text } from "react-native";
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { GREEN, BLACK } from "../../styles/colors";
 
-const Success = ({desc = "" }) => {
+const Success = ({ desc = "" } : { desc: string }) => {
     const { content, textStyle, descStyle } = styles;
     return (
         <View style={content}>

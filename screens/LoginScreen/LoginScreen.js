@@ -2,7 +2,7 @@
 import React, { useState } from 'react';
 import { View, Alert, ActivityIndicator, Text, StyleSheet } from 'react-native';
 import { APP_TITLE } from '../../constants/appConstants';
-import { WHITE, ORANGE, BLACK } from '../../constants/styleConstants';
+import { WHITE, ORANGE, BLACK } from '../../styles/colors';
 import { getEmail, loginWithEmailAndPassword } from '../../fireBase/auth/login';
 import { checkUserNameAndPasswordFields, regex } from '../../utils/index';
 import { InputComponent, ErrorMessage } from '../../components/atoms';
@@ -36,11 +36,7 @@ const LoginScreen = (props: LoginScreenProps) => {
     if (datum.valid) return datum.valid
     else {
       const { key } = datum;
-      if (key == 'userNameErrorMessage') {
-        setUserNameErrorMessage(datum[key]);
-      } else {
-        setPasswordErrorMessage(datum[key]);
-      }
+      setUserNameErrorMessage(datum[key]);
     }
   };
 

@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet, TextInput } from 'react-native';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import { firebaseOnEventListner, firebaseOnEventListnerTurnOff, pushToFirebaseWithURL, getDataFromFirebase, updateFirebaseWithURL } from '../../fireBase/database';
-import { ORANGE, FONT_FAMILY } from '../../constants/styleConstants';
+import { ORANGE, FONT_FAMILY } from '../../styles/colors';
 import firebase from 'react-native-firebase';
 import Time from '../../components/common/time';
 import  Icon from 'react-native-vector-icons/FontAwesome';

@@ -1,11 +1,12 @@
+// @flow
 import React from 'react';
 import { Text } from 'react-native';
-import { styles } from '../../constants/styleConstants';
+import { RED } from '../../styles/colors';
 
-const ErrorMessage = (props) => {
+const ErrorMessage = (props: { message : string }) => {
   const { message } = props;
   return (
-    <Text style={styles.errorMessage}>
+    <Text style={{ color: RED, padding: 5 }}>
       {message}
     </Text>
   );

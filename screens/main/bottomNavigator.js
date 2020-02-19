@@ -1,3 +1,4 @@
+// @flow
 import React from 'react';
 import { createMaterialBottomTabNavigator } from '@react-navigation/material-bottom-tabs';
 import MyHelpRequestsScreen from '../MyHelpRequests';
@@ -6,7 +7,7 @@ import NotificationsScreen from '../Notifications';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import FontAwesome5Icons from 'react-native-vector-icons/FontAwesome5'
 import HelpRequestFormScreen from '../HelpRequestForm';
-import { ORANGE } from '../../constants/styleConstants';
+import { ORANGE } from '../../styles/colors';
 import { useNotifications } from '../../customHooks';
 import MyAccountScreen from '../MyAccount';
 

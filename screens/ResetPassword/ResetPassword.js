@@ -4,7 +4,7 @@ import { View, Alert, StyleSheet, TouchableOpacity, Text } from 'react-native';
 import { ScrollView } from 'react-native-gesture-handler';
 import firebase from 'react-native-firebase';
 import { SIGN_UP_SCREEN, APP_TITLE } from '../../constants/appConstants';
-import { ORANGE, WHITE, BLACK } from '../../constants/styleConstants';
+import { ORANGE, WHITE, BLACK } from '../../styles/colors';
 import { InputComponent, ErrorMessage } from '../../components/atoms';
 import { regex } from '../../utils/index';
 import { getUser } from '../../fireBase/database';

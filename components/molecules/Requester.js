@@ -1,3 +1,4 @@
+// @flow
 import React from 'react';
 import { Text, View, StyleSheet, Alert } from 'react-native';
 import { ProfileLetter, RightButton, WrongButton } from '../atoms';
@@ -6,7 +7,17 @@ import gql from 'graphql-tag';
 import { useAuth } from '../../customHooks';
 import { FONT_SIZE_16, FONT_WEIGHT_BOLD } from '../../styles/typography';
 
-const Requester = props => {
+type RequesterProps = {
+  uidOfRequester: string, 
+  keyOfHelpRequest: string,
+  usersAccepted: Array<Object>, 
+  noPeopleRequired: number, 
+  xp: number, 
+  name: string, 
+  stars: number
+}
+
+const Requester = (props: RequesterProps) => {
   const { user: currentUser } = useAuth();
   const { phoneNumber } = currentUser;
   const { uidOfRequester, keyOfHelpRequest, usersAccepted, noPeopleRequired, xp, name, stars } = props;
@@ -38,7 +49,7 @@ const Requester = props => {
 
   const firstLetterOfName = name.substring(0, 1);
 
-  const { container, content, details, nameStyle, detailsText, buttons } = styles;
+  const { container, content, details, nameStyle, buttons } = styles;
 
   return (
     <View style={container}>
@@ -46,9 +57,9 @@ const Requester = props => {
         <ProfileLetter letter={firstLetterOfName} />
         <View style={details}>
           <Text style={nameStyle}>{name}</Text>
-          <Text style={detailsText}>{xp} XP</Text>
-          <Text style={detailsText}>{stars} Stars</Text>
-          <Text style={detailsText}></Text>
+          <Text>{xp} XP</Text>
+          <Text>{stars} Stars</Text>
+          <Text></Text>
         </View>
       </View>
       <View style={buttons}>

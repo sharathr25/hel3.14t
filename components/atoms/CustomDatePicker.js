@@ -1,9 +1,10 @@
+// @flow
 import React from 'react';
 import DatePicker from 'react-native-datepicker'
-import { ORANGE } from '../../constants/styleConstants';
+import { ORANGE } from '../../styles/colors';
 import { StyleSheet } from 'react-native';
 
-const CustomDatePicker = (props) => {
+const CustomDatePicker = (props: { date: string , updateParentState: Function }) => {
   const { date, updateParentState } = props;
   const { dateInput } = styles;
   return (

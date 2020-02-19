@@ -5,7 +5,7 @@ import useAuth from '../../customHooks/auth';
 import { useLazyQuery } from 'react-apollo';
 import gql from 'graphql-tag';
 import Icon from 'react-native-vector-icons/FontAwesome';
-import { ORANGE, WHITE } from '../../constants/styleConstants';
+import { ORANGE, WHITE } from '../../styles/colors';
 import { FullScreenError , FullScreenLoader} from '../../components/atoms';
 
 const USER_QUERY = gql`
