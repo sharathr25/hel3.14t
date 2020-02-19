@@ -1,13 +1,22 @@
+// @flow
 import React from "react";
 import { TouchableOpacity, StyleSheet, Text } from "react-native";
-import { WHITE, ORANGE } from "../../constants/styleConstants";
+import { WHITE, ORANGE } from "../../styles/colors";
 
-const Button = (props) => {
-  const { borderColor = ORANGE, textColor = ORANGE, bgColor = WHITE, loading = false } = props;
-  typeof props.children
+type ButtonProps = {
+  borderColor?: string,
+  textColor?: string,
+  bgColor?: string,
+  loading?: string,
+  children?: any,
+  onPress: Function
+}
+
+const Button = (props: ButtonProps) => {
+  const { borderColor = ORANGE, textColor = ORANGE, bgColor = WHITE, loading = false, onPress, children } = props;
   return (
-    <TouchableOpacity style={{ ...styles.container, borderColor, backgroundColor: bgColor }} onPress={loading ? () => { } : props.onPress}>
-      {typeof props.children === "string" ? <Text style={{ ...styles.text, color: textColor }}>{props.children}</Text> : props.children}
+    <TouchableOpacity style={{ ...styles.container, borderColor, backgroundColor: bgColor }} onPress={loading ? () => { } : onPress}>
+      {typeof children === "string" ? <Text style={{ ...styles.text, color: textColor }}>{children}</Text> : children}
     </TouchableOpacity>
   );
 }

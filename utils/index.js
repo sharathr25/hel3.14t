@@ -1,4 +1,4 @@
-
+// @flow
 import { LOGIN_SCREEN } from '../constants/appConstants'
 
 export const regex = {
@@ -6,7 +6,14 @@ export const regex = {
     phoneNo:  /^\d{10}$/
 }
 
-export const checkUserNameAndPasswordFields = (userName, password) => {
+type checkUserNameAndPasswordFieldsReturnType = {
+  userNameErrorMessage?: string,
+  passwordErrorMessage?: string,
+  key: string,
+  valid: boolean
+}
+
+export const checkUserNameAndPasswordFields = (userName: string, password: string):checkUserNameAndPasswordFieldsReturnType => {
     if (userName.length === 0) {
       return { key: "userNameErrorMessage", userNameErrorMessage: LOGIN_SCREEN.ERRORS.EMPTY_USERNAME_ERROR, valid: false }
     } else if (!(userName.match(regex.email) || userName.match(regex.phoneNo))) {
@@ -16,31 +23,31 @@ export const checkUserNameAndPasswordFields = (userName, password) => {
     } else if (password.length < 6) {
       return { key:"passwordErrorMessage", passwordErrorMessage: LOGIN_SCREEN.ERRORS.INVALID_PASSWORD_ERROR, valid: false };
     } 
-    return { valid: true }
+    return { valid: true , key: ""}
   };
 
-export const getStr = (value, str) =>
+export const getPluralStr = (value: number, str: string) =>
 Math.floor(value) === 0
   ? ""
   : Math.floor(value) === 1
   ? `${Math.floor(value)} ${str}`
   : `${Math.floor(value)} ${str}s`;
 
-export const getTimeDiffrence = time => {
+export const getTimeDiffrence = (time: number) => {
   const currentTime = new Date().getTime();
   const inMilliSeconds = currentTime - time;
   const inSeconds = inMilliSeconds / 1000;
   const inMinutes = inSeconds / 60;
   if (inMinutes < 60) {
-    return `${getStr(inMinutes, "minute")} ago`;
+    return `${getPluralStr(inMinutes, "minute")} ago`;
   }
   const inHours = inMinutes / 60;
   if (inHours < 24) {
-    return `${getStr(inHours, "hour")} ago`;
+    return `${getPluralStr(inHours, "hour")} ago`;
   }
   const inDays = inHours / 24;
   if (inDays < 30) {
-    return `${getStr(inDays, "day")} ago`
+    return `${getPluralStr(inDays, "day")} ago`
   }
   return "Long time ago";
 };
@@ -82,7 +89,7 @@ export const getTimeDiffrence = time => {
   //   return "Long time ago";
   // };
 
-  export const getDistanceFromLatLonInKm = (lat1, lon1, lat2, lon2) => {
+  export const getDistanceFromLatLonInKm = (lat1: number, lon1: number, lat2: number, lon2: number) => {
     const R = 6371; // Radius of the earth in km
     const dLat = deg2rad(lat2 - lat1); // deg2rad below
     const dLon = deg2rad(lon2 - lon1);
@@ -96,7 +103,7 @@ export const getTimeDiffrence = time => {
   
   const deg2rad = deg => deg * (Math.PI / 180);
   
-  export const getAge = (dob) => {
+  export const getAge = (dob: string) => {
     const birthday = new Date(dob);
     const ageDifMs = Date.now() - birthday.getTime();
     const ageDate = new Date(ageDifMs); // miliseconds from epoch
@@ -104,7 +111,7 @@ export const getTimeDiffrence = time => {
   }
   
   
-  export const sortByDistance = (helpRequests) => {
+  export const sortByDistance = (helpRequests: Array<Object>):Array<Object> => {
     const sortedHelpRequests = helpRequests.sort((a,b)=>{
       return a.distance>b.distance?1:-1
     })

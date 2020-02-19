@@ -1,16 +1,17 @@
+// @flow
 import React from "react";
 import { View, StyleSheet, Text } from "react-native";
 import { LIGHT_GRAY } from "../../styles/colors";
 
-function Card(props) {
-  const { borderLeftColor } = props;
+function Card(props : { borderLeftColor: string, children: any }) {
+  const { borderLeftColor, children } = props;
   return (
     <View style={styles.outerContanier}>
       {borderLeftColor && <View style={{ backgroundColor: borderLeftColor, width: 5}}>
         <Text></Text>
       </View>}
       <View style={{display:'flex', flex:1, padding: 10}}>
-        {props.children}
+        {children}
       </View>
     </View>
   );

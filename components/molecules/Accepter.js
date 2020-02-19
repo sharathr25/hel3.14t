@@ -1,9 +1,19 @@
+// @flow
 import React from 'react';
 import { Text, View, StyleSheet } from 'react-native';
 import Stars from './buttons/starsButton';
 import { ProfileLetter } from '../atoms';
 
-const Accepter = (props) => {
+type AccepterProps = {
+  status: string, 
+  name: string, 
+  mobileNo: string,
+  stars: number, 
+  keyOfHelpRequest: string, 
+  uidOfAccepter: string
+};
+
+const Accepter = (props: AccepterProps) => {
   const { status, name, mobileNo, stars, keyOfHelpRequest, uidOfAccepter } = props;
   const firstLetterOfName = name.substring(0, 1);
   const mobileNoWithoutCountryCode = mobileNo.replace("+91", "");

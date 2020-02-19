@@ -3,7 +3,7 @@ import { TouchableOpacity, StyleSheet, ActivityIndicator } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { RED } from '../../styles/colors';
 
-const WrongButton = props => {
+const WrongButton = (props: { onPress: Function, loading: boolean } ) => {
     const { onPress, loading = false } = props;
     const { reject } = styles;
     

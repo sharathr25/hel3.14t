@@ -1,10 +1,11 @@
+// @flow
 import React, { useEffect } from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import useAuth from '../../customHooks/auth';
 import { useLazyQuery } from 'react-apollo';
 import gql from 'graphql-tag';
 import Icon from 'react-native-vector-icons/FontAwesome';
-import { ORANGE, WHITE } from '../../constants/styleConstants';
+import { ORANGE, WHITE } from '../../styles/colors';
 import { FullScreenError , FullScreenLoader} from '../../components/atoms';
 
 const USER_QUERY = gql`
@@ -16,16 +17,21 @@ const USER_QUERY = gql`
     }
 `;
 
-const MyAccountScreen = (props) => {
+type MyAccountScreenProps = {
+    navigation: Object
+}
+
+const MyAccountScreen = (props: MyAccountScreenProps) => {
     const { navigation } = props;
     const { user } = useAuth();
+    const { displayName, email, phoneNumber, uid } = user;
     const [getUserData, { error, data, loading }] = useLazyQuery(USER_QUERY);
 
     useEffect(() => {
         getUserData({ variables: { uid } })
     }, [uid])
 
-    handleLogOut = () => {
+    const handleLogOut = () => {
         console.log(navigation);
         // firebase.auth().signOut();
     }
@@ -37,7 +43,6 @@ const MyAccountScreen = (props) => {
         return <FullScreenError />
     }
 
-    const { displayName, email, phoneNumber, uid } = user;
     const phoneNumberWithoutCountryCode = phoneNumber.replace("+91", "");
     const firstLetterOfDisplayName = displayName.charAt(0).toUpperCase();
 

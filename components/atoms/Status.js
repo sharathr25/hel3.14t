@@ -4,13 +4,13 @@ import { RED, ORANGE, GREEN, WHITE } from '../../styles/colors';
 import { FONT_REGULAR, FONT_SIZE_14 } from '../../styles/typography';
 import { padding } from '../../styles/mixins';
 
-const STATUS_TEXT_MAPPING = {
+export const STATUS_TEXT_MAPPING = {
     'REQUESTED': 'Requested',
     'ON_GOING': 'On going',
     'COMPLETED': 'Completed'
 }
 
-const STATUS_COLOR_MAPPING = {
+export const STATUS_COLOR_MAPPING = {
     'REQUESTED': RED,
     'ON_GOING': ORANGE,
     'COMPLETED': GREEN

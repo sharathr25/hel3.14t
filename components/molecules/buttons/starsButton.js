@@ -1,3 +1,4 @@
+// @flow
 import React, { useState } from "react";
 import { TouchableOpacity, StyleSheet, View, Text } from "react-native";
 import Icon from "react-native-vector-icons/FontAwesome";
@@ -16,12 +17,12 @@ const UPDATE_HELP = gql`
 
 const stars = [0, 1, 2, 3, 4];
 
-const Stars = (props) => {
+const Stars = (props: { uidOfUser: string, keyOfHelpRequest: string }) => {
     const { uidOfUser, keyOfHelpRequest } = props;
     const [starsGivenByUser, setStarsGivenByUser] = useState(0);
     const [updateHelp] = useMutation(UPDATE_HELP);
 
-    handleGiveStars = () => {
+    const handleGiveStars = () => {
         updateHelp({
             variables: {
                 id: keyOfHelpRequest,
@@ -33,11 +34,11 @@ const Stars = (props) => {
         })
     }
 
-    handleResetStars = () => {
+    const handleResetStars = () => {
         setStarsGivenByUser(0);
     }
 
-    getStars = () => {
+    const getStars = () => {
         return stars.map((number) => {
             return (
                 <TouchableOpacity onPress={() => setStarsGivenByUser(number + 1)} key={number}>

@@ -1,3 +1,4 @@
+// @flow
 import React from 'react';
 import {
   Text, View, StyleSheet
@@ -5,7 +6,7 @@ import {
 import { FONT_BOLD, FONT_REGULAR, FONT_SIZE_16 } from '../../styles/typography';
 import { padding } from '../../styles/mixins';
 
-const NoOfHelpers = props => {
+const NoOfHelpers = (props: { noPeopleAccepted: number, noPeopleRequired: number }) => {
   const { noPeopleAccepted, noPeopleRequired } = props;
   const { container, innerContainer } = styles;
   return (

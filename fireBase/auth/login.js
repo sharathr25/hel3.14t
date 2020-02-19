@@ -1,9 +1,10 @@
 
+// @flow
 import firebase from 'react-native-firebase';
 
-export const getEmail = async (mobileNumber) => {
+export const getEmail = async (mobileNumber : string) => {
     try {
-      const data = await firebase.database().ref(`/mapping/+91${mobileNumber}`).once('value');
+      const data = await firebase.database().ref(`/mapping/+91${mobileNumber}`).once('value', () => {}, () => {});
       const email = data.val() && data.val().email;
       return email;
     } catch (error) {
@@ -12,7 +13,7 @@ export const getEmail = async (mobileNumber) => {
     }
   }
 
- export const loginWithEmailAndPassword = async (email, password) => {
+ export const loginWithEmailAndPassword = async (email: string, password: string) => {
     try {
       const { user } = await firebase.auth().signInWithEmailAndPassword(email, password);
       return user;

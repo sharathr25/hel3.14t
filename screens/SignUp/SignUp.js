@@ -1,17 +1,18 @@
+// @flow
 import React, { useState } from 'react';
 import { Text, CheckBox } from 'react-native-elements';
 import { View, Alert, StyleSheet, TouchableOpacity, ActivityIndicator } from 'react-native';
 import { ScrollView } from 'react-native-gesture-handler';
 import firebase from 'react-native-firebase';
 import { SIGN_UP_SCREEN, APP_TITLE } from '../../constants/appConstants';
-import { ORANGE, WHITE, FONT_FAMILY, BLACK } from '../../constants/styleConstants';
+import { ORANGE, WHITE, FONT_FAMILY, BLACK } from '../../styles/colors';
 import { updateUser } from '../../fireBase/auth/signUp';
 import { addUserDetailsToDb } from '../../fireBase/database';
 import { regex } from '../../utils/index';
 import { getAge } from '../../utils';
 import gql from 'graphql-tag';
 import { useMutation } from 'react-apollo';
-import CustomModal from '../../components/molecules';
+import { CustomModal } from '../../components/molecules';
 import { CustomDatePicker, InputComponent, ErrorMessage } from '../../components/atoms';
 
 const CREATE_USER = gql`
@@ -22,7 +23,7 @@ mutation CreateUser($uid:String!) {
 }
 `;
 
-function SignUpScreen(props) {
+function SignUpScreen(props: { navigation: Object }) {
   const [state, setState] = useState({
     name: '',
     nameErrorMessage: '',
@@ -41,12 +42,12 @@ function SignUpScreen(props) {
   });
   const [createUser, { loading }] = useMutation(CREATE_USER);
 
-  handleTermsAndConditions = () => {
+  const handleTermsAndConditions = () => {
     const { navigation } = props;
     navigation.navigate('TermsAndConditions', { currentUser: firebase.auth().currentUser });
   }
 
-  checkFields = () => {
+  const checkFields = () => {
     let valid = false;
     const { name, email, mobileNumber, password, confirmPassword } = state;
     if (name.length === 0) {
@@ -71,7 +72,7 @@ function SignUpScreen(props) {
     return valid;
   };
 
-  handleSignUp = async () => {
+  const handleSignUp = async () => {
     const { termsAndConditionChecked, mobileNumber, dob, name, email, password, gender, } = state;
     const age = getAge(dob);
     let error = "";
@@ -85,19 +86,19 @@ function SignUpScreen(props) {
         await firebase.auth().signInWithPhoneNumber(`+91${mobileNumber}`);
         const unsubscribe = firebase.auth().onAuthStateChanged(async (user) => {
           if (user) {
-            const { currentUser } = await firebase.auth();
+            const { uid } = user;
             const { navigation } = props;
             try {
-              await updateUser(currentUser, email, password, name);
+              await updateUser(user, email, password, name);
               await addUserDetailsToDb(mobileNumber, email, name, gender, dob);
-              createUser({ variables: { uid: currentUser.uid } });
+              createUser({ variables: { uid } });
             } catch (error) {
               console.log(error);
             } finally {
               unsubscribe();
             }
             setState({ ...state, loaderVisible: false });
-            navigation.navigate('Main', { currentUser: currentUser });
+            navigation.navigate('Main', { currentUser: user });
           }
         });
       } catch (error) {
@@ -108,13 +109,13 @@ function SignUpScreen(props) {
     }
   };
 
-  handleCheckBox = (val) => {
+  const handleCheckBox = (val) => {
     setState({ ...state, gender: val });
   }
 
-  getCheckBoxStyle = (val) => [formStyles.defaultCheckBoxStyle, state.gender === val ? formStyles.activeCheckBox : formStyles.inActiveCheckBox];
+  const getCheckBoxStyle = (val) => [formStyles.defaultCheckBoxStyle, state.gender === val ? formStyles.activeCheckBox : formStyles.inActiveCheckBox];
 
-  getCheckBoxTextStyle = (val) => state.gender === val ? formStyles.activeText : formStyles.inActiveText;
+  const getCheckBoxTextStyle = (val) => state.gender === val ? formStyles.activeText : formStyles.inActiveText;
 
   const {
     nameErrorMessage,
@@ -192,12 +193,14 @@ function SignUpScreen(props) {
 
         {/* Terms and Conditions */}
         <CheckBox
-          title={<View style={{ marign: 5 }}>
-            <Text>Creating an acount means you're akay with our </Text>
-            <TouchableOpacity onPress={handleTermsAndConditions}>
-              <Text style={{ color: '#3a8bbb' }}>Terms of Service, Privacy, Policy</Text>
-            </TouchableOpacity>
-          </View>}
+          title={
+            <View style={{ margin: 5 }}>
+              <Text>Creating an acount means you're akay with our </Text>
+              <TouchableOpacity onPress={handleTermsAndConditions}>
+                <Text style={{ color: '#3a8bbb' }}>Terms of Service, Privacy, Policy</Text>
+              </TouchableOpacity>
+            </View>
+          }
           checked={termsAndConditionChecked}
           onPress={() => setState({ ...state, termsAndConditionChecked: !termsAndConditionChecked })}
           checkedColor={ORANGE}

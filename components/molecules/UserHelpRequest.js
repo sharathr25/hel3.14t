@@ -2,7 +2,7 @@ import React from 'react';
 import { Text, View, FlatList, StyleSheet } from 'react-native';
 import { useQuery, useSubscription } from 'react-apollo';
 import gql from 'graphql-tag';
-import { FONT_FAMILY, STATUS_COLOR_MAPPING } from '../../constants/styleConstants';
+import { FONT_FAMILY, STATUS_COLOR_MAPPING } from '../../components/atoms/Status';
 import DoneButton from './buttons/doneButton';
 import Requester from './Requester';
 import Accepter from './Accepter';

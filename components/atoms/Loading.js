@@ -1,8 +1,9 @@
+// @flow
 import React from "react";
 import { StyleSheet, View, Text, ActivityIndicator } from "react-native";
 import { ORANGE, BLACK } from "../../styles/colors";
 
-const Loading = (props) => {
+const Loading = (props: { desc :String }) => {
     const { desc = "Loading" } = props;
     const { content, textStyle } = styles;
     return (

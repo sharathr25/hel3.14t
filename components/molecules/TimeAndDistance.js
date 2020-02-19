@@ -1,8 +1,9 @@
+// @flow
 import React from "react";
 import { View, StyleSheet } from "react-native";
 import { Time, Distance } from "../atoms";
 
-const TimeAndDistance = ({ timeStamp, distance }) => {
+const TimeAndDistance = ({ timeStamp, distance } : { timeStamp: number, distance: number }) => {
     const { timeAndDistance } = styles;
 
     return (

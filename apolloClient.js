@@ -17,7 +17,7 @@ console.log(wsEndPoint);
 
 // Create an http link:
 const httpLink = new HttpLink({
-    uri: httpEndPoint
+    uri: httpEndPoint,
 });
 
 // Create a WebSocket link:

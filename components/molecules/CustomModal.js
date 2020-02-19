@@ -1,9 +1,16 @@
+// @flow
 import React from "react";
 import { StyleSheet, Modal, View, Text, TouchableOpacity } from "react-native";
 import { ORANGE, WHITE } from "../../styles/colors";
 import { Loading, Failed, Success, Button } from "../atoms";
 
-const CustomModal = (props) => {
+type CustomModalProps = {
+    onClose: Function, 
+    variant: "loading" | "success" | "error",
+    desc: string
+}
+
+const CustomModal = (props: CustomModalProps) => {
     const { onClose, variant = "loading", desc } = props;
     const { outerContainer, innerContainer, closeButton, closeButtonText } = styles;
 

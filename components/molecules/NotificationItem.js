@@ -1,3 +1,4 @@
+// @flow
 import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import Icon from 'react-native-vector-icons/AntDesign'
@@ -17,7 +18,15 @@ const QUERY_TO_REMOVE_NOTIFICATION = gql`
     }
 `;
 
-const NotificationItem = ({ message, id, timeStamp = "", removeNotification }) => {
+type NotificationItemProps = {
+    message: string,
+    id: string,
+    timeStamp?: number | "",
+    removeNotification: Function
+}
+
+const NotificationItem = (props: NotificationItemProps) => {
+    const { message, id, timeStamp = "", removeNotification } = props;
     const { user: { uid } } = useAuth();
     const [removeNotificationFromDb] = useMutation(QUERY_TO_REMOVE_NOTIFICATION);
 

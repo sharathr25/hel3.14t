@@ -1,10 +1,17 @@
+// @flow
 import React from 'react';
 import { Input } from 'react-native-elements';
-import { WHITE, INPUT_BORDER_COLOR, INPUT_TEXT_COLOR } from '../../constants/styleConstants';
+import { WHITE, INPUT_BORDER_COLOR, INPUT_TEXT_COLOR } from '../../styles/colors';
 import { StyleSheet } from 'react-native';
 
-const InputComponent = (props) => {
-  const { label = "", secureTextEntry = false } = props;
+type InputComponentProps = {
+  label?: string,
+  secureTextEntry?: boolean,
+  updateParentState: Function
+}
+
+const InputComponent = (props: InputComponentProps) => {
+  const { label = "", secureTextEntry = false, updateParentState } = props;
   const { labelStyle, containerStyle, inputContainerStyle, inputStyle } = styles;
   return (
     <Input
@@ -14,7 +21,7 @@ const InputComponent = (props) => {
       inputStyle={inputStyle}
       containerStyle={containerStyle}
       secureTextEntry={secureTextEntry}
-      onChangeText={value => props.updateParentState(value)}
+      onChangeText={value => updateParentState(value)}
     />
   );
 }

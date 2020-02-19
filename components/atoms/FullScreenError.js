@@ -1,9 +1,10 @@
+// @flow
 import React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
-import { RED, WHITE } from '../../constants/styleConstants';
+import { RED, WHITE } from '../../styles/colors';
 import Icon from 'react-native-vector-icons/FontAwesome';
 
-const FullScreenError = (props) => {
+const FullScreenError = (props: { text: string }) => {
     const { text = "Something went wrong, please try again later..." } = props;
     const { container, textStyle, icon } = styles;
     return (

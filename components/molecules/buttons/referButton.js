@@ -1,7 +1,8 @@
+// @flow
 import React from "react";
-import Button from "../../atoms/Button";
+import { Button } from '../../atoms';
 
-const ReferButton = props => {
+const ReferButton = () => {
   return <Button>Refer</Button>;
 };
 

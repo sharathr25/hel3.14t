@@ -1,11 +1,11 @@
+// @flow
 import React from 'react';
 import { View, Text } from 'react-native'
-import { WHITE, ORANGE } from '../../constants/styleConstants';
+import { WHITE, ORANGE } from '../../styles/colors';
 import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
 import { HelpRequestFeed } from '../../components/oraganisms';
 
 const Tab = createMaterialTopTabNavigator();
-
 
 const Helps = () => {
   return (

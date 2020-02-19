@@ -1,3 +1,4 @@
+// @flow
 import React from "react";
 import { View, Text, StyleSheet } from "react-native";
 import Icon from 'react-native-vector-icons/FontAwesome';
@@ -5,8 +6,7 @@ import { padding } from "../../styles/mixins";
 import { FONT_SIZE_12, FONT_FAMILY_REGULAR } from "../../styles/typography";
 import { BLACK } from "../../styles/colors";
 
-
-const Distance = props => {
+const Distance = (props: { distance: number}) => {
   const { distance } = props;
   return (
     <View style={styles.distanceContainer}>

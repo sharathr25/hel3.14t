@@ -1,8 +1,9 @@
+// @flow
 import React from 'react';
 import { StyleSheet, Text, View, ActivityIndicator } from 'react-native';
-import { ORANGE, WHITE } from '../../constants/styleConstants';
+import { ORANGE, WHITE } from '../../styles/colors';
 
-const FullScreenLoader = (props) => {
+const FullScreenLoader = (props: { text: string }) => {
     const { text = "Loading" } = props;
     const { container, textStyle } = styles;
     return (

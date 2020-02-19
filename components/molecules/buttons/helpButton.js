@@ -1,3 +1,4 @@
+// @flow
 import React from "react";
 import { Alert } from "react-native";
 import Button from "../../atoms/Button";
@@ -17,14 +18,24 @@ const HELP_UPDATE_SCHEMA = gql`
   }
 `;
 
-const HelpButton = (props) => {
+type HelpButtonProps = {
+  data: {
+    usersAccepted: Array<Object>, 
+    usersRequested: Array<Object>, 
+    usersRejected: Array<Object>,
+    creator: string, 
+    _id: string, 
+  }
+}
+
+const HelpButton = (props: HelpButtonProps) => {
   const { data } = props;
   const { usersAccepted, usersRequested, creator, _id, usersRejected } = data;
   const { user: currentUser } = useAuth();
   const { uid, displayName } = currentUser;
   const [updateHelp, { loading }] = useMutation(HELP_UPDATE_SCHEMA);
 
-  handleHelp = () => {
+  const handleHelp = () => {
     if (usersAccepted.map((user) => user.uid).indexOf(uid) > -1) {
       Alert.alert(ACCEPTED_ERROR);
     } else if (usersRequested.map((user) => user.uid).indexOf(uid) > -1) {

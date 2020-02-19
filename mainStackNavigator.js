@@ -1,7 +1,7 @@
 import React from 'react';
 import { createStackNavigator } from '@react-navigation/stack';
 import NotificationsScreen from './screens/Notifications';
-import { WHITE, ORANGE } from './constants/styleConstants';
+import { WHITE, ORANGE } from './styles/colors';
 import SignUpScreen from './screens/SignUp';
 import LoginScreen from './screens/LoginScreen';
 import ResetPassowrdScreen from './screens/ResetPassword';

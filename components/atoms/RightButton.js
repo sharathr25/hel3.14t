@@ -1,9 +1,10 @@
+// @flow
 import React from 'react';
 import { TouchableOpacity, StyleSheet, ActivityIndicator } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { GREEN } from '../../styles/colors';
 
-const RightButton = props => {
+const RightButton = (props: { onPress: Function, loading: boolean }) => {
     const { onPress, loading = false } = props;
     const { accept } = styles;
 

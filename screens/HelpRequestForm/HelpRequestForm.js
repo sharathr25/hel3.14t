@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Text, Input } from "react-native-elements";
 import { View, TouchableOpacity, StyleSheet, Alert, Keyboard } from "react-native";
-import { WHITE, ORANGE, FONT_FAMILY } from "../../constants/styleConstants";
+import { WHITE, ORANGE, FONT_FAMILY } from "../../styles/colors";
 import gql from "graphql-tag";
 import { useMutation } from "react-apollo";
 import { useAuth, useLocation } from "../../customHooks";
