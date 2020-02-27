@@ -3,5 +3,6 @@ import CustomModal from './CustomModal';
 import NotificationItem from './NotificationItem';
 import HelpRequest from './HelpRequest';
 import UserHelpRequest from './UserHelpRequest';
+import Header from './Header';
 
-export { TimeAndDistance, CustomModal, NotificationItem, HelpRequest, UserHelpRequest }
+export { TimeAndDistance, CustomModal, NotificationItem, HelpRequest, UserHelpRequest, Header }

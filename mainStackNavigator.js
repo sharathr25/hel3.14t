@@ -1,7 +1,6 @@
 import React from 'react';
 import { createStackNavigator } from '@react-navigation/stack';
 import NotificationsScreen from './screens/Notifications';
-import { WHITE, ORANGE } from './styles/colors';
 import SignUpScreen from './screens/SignUp';
 import LoginScreen from './screens/LoginScreen';
 import ResetPassowrdScreen from './screens/ResetPassword';
@@ -9,24 +8,17 @@ import TermsAndConditionsScreen from './screens/TermsAndConditions';
 import LandingScreen from './screens/LandingScreen';
 import BottomNavigator from './screens/main/bottomNavigator';
 import { APP_TITLE } from './constants/appConstants';
+import {Header} from './components/molecules';
 
 const Stack = createStackNavigator();
-
-const headerStyle = {
-  backgroundColor: WHITE,
-  shadowOpacity: 0,
-  elevation: 0
-}
 
 const MainNavigatorWithUser = () => {
   return (
     <Stack.Navigator initialRouteName="AppLandingScreen"
       screenOptions={
         {
-          headerStyle: { ...headerStyle },
-          headerTitleAlign: "center",
+          header: (props) => <Header {...props} />,
           title: APP_TITLE,
-          headerTitleStyle: { fontFamily: 'cursive', color: ORANGE }
         }
       }
     >
