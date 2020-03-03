@@ -8,12 +8,19 @@ import { PermissionsAndroid, Alert } from "react-native";
 import { useAuth } from './customHooks';
 import { NavigationContainer } from '@react-navigation/native';
 import { FullScreenLoader } from './components/atoms';
+import Amplify,{Auth} from 'aws-amplify';
+import awsConfig from './aws-exports';
+
+Amplify.configure({...awsConfig});
 
 whyDidYouRender(React);
 
 const AppContainer = mainStackNavigator;
 
 function App() {
+  Auth.signIn({username:'sharathdupati@gmail.com', password:'Sharath@25'})
+  // Auth.signUp({username: "sharathdupati@gmail.com", password: "Sharath@25", attributes: { email: "sharathdupati@gmail.com" }})
+  .then(data => console.log(data)).catch(err => console.log('error signing up user...', err));
   const { initializing } = useAuth();
 
   useEffect(() => {
@@ -37,4 +44,4 @@ function App() {
 
 App.whyDidYouRender = true;
 
-export default memo<Element>(App);
+export default (memo(App));;

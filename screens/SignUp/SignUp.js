@@ -83,24 +83,25 @@ function SignUpScreen(props: { navigation: Object }) {
     else {
       try {
         setState({ ...state, loaderVisible: true });
-        await firebase.auth().signInWithPhoneNumber(`+91${mobileNumber}`);
-        const unsubscribe = firebase.auth().onAuthStateChanged(async (user) => {
-          if (user) {
-            const { uid } = user;
-            const { navigation } = props;
-            try {
-              await updateUser(user, email, password, name);
-              await addUserDetailsToDb(mobileNumber, email, name, gender, dob);
-              createUser({ variables: { uid } });
-            } catch (error) {
-              console.log(error);
-            } finally {
-              unsubscribe();
-            }
-            setState({ ...state, loaderVisible: false });
-            navigation.navigate('Main', { currentUser: user });
-          }
-        });
+          
+        // await firebase.auth().signInWithPhoneNumber(`+91${mobileNumber}`);
+        // const unsubscribe = firebase.auth().onAuthStateChanged(async (user) => {
+        //   if (user) {
+        //     const { uid } = user;
+        //     const { navigation } = props;
+        //     try {
+        //       await updateUser(user, email, password, name);
+        //       await addUserDetailsToDb(mobileNumber, email, name, gender, dob);
+        //       createUser({ variables: { uid } });
+        //     } catch (error) {
+        //       console.log(error);
+        //     } finally {
+        //       unsubscribe();
+        //     }
+        //     setState({ ...state, loaderVisible: false });
+        //     navigation.navigate('Main', { currentUser: user });
+        //   }
+        // });
       } catch (error) {
         setState({ ...state, loaderVisible: false });
         console.log(error);
