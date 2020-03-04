@@ -8,6 +8,7 @@ import { checkUserNameAndPasswordFields, regex } from '../../utils/index';
 import { InputComponent, ErrorMessage } from '../../components/atoms';
 import { TouchableOpacity, ScrollView } from 'react-native-gesture-handler';
 import { LIGHT_BLUE } from '../../styles/colors';
+import { Auth } from "aws-amplify";
 
 const emailRegex = regex.email;
 
@@ -69,9 +70,24 @@ const LoginScreen = (props: LoginScreenProps) => {
     setLoaderVisible(true);
     if (checkUserNameAndPassword()) {
       if (userName.match(emailRegex)) {
-        await loginWithEmail(userName, password);
+        Auth.signIn({
+        username: userName, // Required, the username
+        password, // Optional, the password
+      }).then(user => {
+        console.log(user)
+        navigation.navigate('Main', {user});
+      })
+        .catch(err => console.log(err));
       } else {
-        await loginWithMobileNumber(userName, password);
+          console.log(userName);
+          Auth.signIn({
+          username: `+91${userName}`, // Required, the username
+          password, // Optional, the password
+        }).then(user => {console.log(user)
+          const {navigation} = props
+          navigation.navigate('Main', {user});
+        })
+        .catch(err => console.log(err));
       }
     }
     setLoaderVisible(false);
@@ -84,8 +100,6 @@ const LoginScreen = (props: LoginScreenProps) => {
     <ScrollView contentContainerStyle={{ flex: 1, backgroundColor: WHITE, }}>
       <View style={{ flex: 1, margin: 10 }}>
         <View>
-          <Text style={appTitle}>{APP_TITLE}</Text>
-          <Text style={screenTitle}>Sign In</Text>
           <InputComponent
             label="Email or Mobile Number"
             updateParentState={value => { setUserName(value); setUserNameErrorMessage('') }}
@@ -138,12 +152,12 @@ const styles = StyleSheet.create({
     marginTop: 25,
     padding: 10,
     backgroundColor: ORANGE,
-    borderRadius: 25
+    borderRadius: 10
   },
   signInText: {
     textAlign: 'center',
     color: WHITE,
-    fontSize: 18
+    fontSize: 20
   },
   linkText: {
     color: LIGHT_BLUE

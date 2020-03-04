@@ -13,7 +13,7 @@ const CustomDatePicker = (props: { date: string , updateParentState: Function })
       date={date}
       mode="date"
       placeholder="select date"
-      format="MMMM Do YYYY"
+      format="YYYY-MM-DD"
       minDate="1900-01-01"
       maxDate="2016-06-01"
       confirmBtnText="Confirm"
@@ -29,7 +29,7 @@ export default CustomDatePicker;
 const styles = StyleSheet.create({
   dateInput: {
     borderColor: ORANGE, 
-    borderRadius: 25, 
+    borderRadius: 10, 
     padding: 5
   }
 });

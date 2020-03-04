@@ -7,6 +7,7 @@ import LoginScreen from './screens/LoginScreen';
 import ResetPassowrdScreen from './screens/ResetPassword';
 import TermsAndConditionsScreen from './screens/TermsAndConditions';
 import LandingScreen from './screens/LandingScreen';
+import Verification from "./screens/Verification/";
 import BottomNavigator from './screens/main/bottomNavigator';
 import { APP_TITLE } from './constants/appConstants';
 
@@ -37,6 +38,7 @@ const MainNavigatorWithUser = () => {
       <Stack.Screen name="Login" component={LoginScreen} options={{ title: "" }}></Stack.Screen>
       <Stack.Screen name="ResetPassword" component={ResetPassowrdScreen} options={{ title: "" }}></Stack.Screen>
       <Stack.Screen name="TermsAndConditions" component={TermsAndConditionsScreen}></Stack.Screen>
+      <Stack.Screen name="Verification" component={Verification}></Stack.Screen>
     </Stack.Navigator>
   );
 }

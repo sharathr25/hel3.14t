@@ -7,15 +7,14 @@ import { TouchableOpacity } from 'react-native-gesture-handler';
 // import Button from '../../components/common/button';
 import { APP_TITLE } from '../../constants/appConstants';
 import { useAuth } from '../../customHooks'
+import { Auth } from "aws-amplify";
 
 const LandingScreen = ({ navigation }: { navigation: Object}) => {
-    
-    const { user, initializing } = useAuth();
-    useEffect(() => {
-        if (user) {
-            navigation.replace('Main', { currentUser: user });
-        }
-    }, [initializing]);
+    const {initializing, user} = useAuth();
+
+    if(user) {
+        navigation.navigate('Main', { user } );
+    }
 
     const handleSignUp = () => {
         navigation.navigate('SignUp');

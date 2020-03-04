@@ -1,7 +1,8 @@
 // @flow
 import React from 'react';
 import { Input } from 'react-native-elements';
-import { WHITE, INPUT_BORDER_COLOR, INPUT_TEXT_COLOR } from '../../styles/colors';
+import { WHITE, ORANGE, INPUT_TEXT_COLOR, BLACK } from '../../styles/colors';
+import { FONT_WEIGHT_REGULAR } from "../../styles/typography";
 import { StyleSheet } from 'react-native';
 
 type InputComponentProps = {
@@ -35,16 +36,19 @@ const styles = StyleSheet.create({
     backgroundColor: WHITE,
     zIndex: 2,
     left: 40,
-    top: -10,
+    top: -15,
     alignSelf: 'flex-start',
     position: 'absolute',
     paddingLeft: 5,
-    paddingRight: 5
+    paddingRight: 5,
+    fontSize: 20,
+    color: BLACK,
+    fontWeight: FONT_WEIGHT_REGULAR
   },
   inputContainerStyle: {
-    borderColor: INPUT_BORDER_COLOR,
+    borderColor: ORANGE,
     borderWidth: 1.5,
-    borderRadius: 25,
+    borderRadius: 10,
     paddingLeft: 15,
   },
   inputStyle: {

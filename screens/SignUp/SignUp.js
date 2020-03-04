@@ -14,6 +14,8 @@ import gql from 'graphql-tag';
 import { useMutation } from 'react-apollo';
 import { CustomModal } from '../../components/molecules';
 import { CustomDatePicker, InputComponent, ErrorMessage } from '../../components/atoms';
+import { padding } from "../../styles/mixins";
+import { Auth } from "aws-amplify";
 
 const CREATE_USER = gql`
 mutation CreateUser($uid:String!) {
@@ -73,6 +75,7 @@ function SignUpScreen(props: { navigation: Object }) {
   };
 
   const handleSignUp = async () => {
+    const { navigation } = props;
     const { termsAndConditionChecked, mobileNumber, dob, name, email, password, gender, } = state;
     const age = getAge(dob);
     let error = "";
@@ -83,6 +86,18 @@ function SignUpScreen(props: { navigation: Object }) {
     else {
       try {
         setState({ ...state, loaderVisible: true });
+        const data = await Auth.signUp({
+          username: email, 
+          password, 
+          attributes: { 
+              email, 
+              phone_number:`+91${mobileNumber}`,
+              name,
+              birthdate: dob,
+              gender
+            }
+          }
+        )
           
         // await firebase.auth().signInWithPhoneNumber(`+91${mobileNumber}`);
         // const unsubscribe = firebase.auth().onAuthStateChanged(async (user) => {
@@ -102,6 +117,8 @@ function SignUpScreen(props: { navigation: Object }) {
         //     navigation.navigate('Main', { currentUser: user });
         //   }
         // });
+        setState({ ...state, loaderVisible: false });
+        navigation.navigate('Verification', { email, mobileNumber });
       } catch (error) {
         setState({ ...state, loaderVisible: false });
         console.log(error);
@@ -130,9 +147,7 @@ function SignUpScreen(props: { navigation: Object }) {
 
   return (
     <ScrollView style={{ backgroundColor: WHITE }}>
-      <View style={{ margin: 10 }}>
-        <Text style={formStyles.appTitle}>{APP_TITLE}</Text>
-        <Text style={formStyles.screenTitle}>Register</Text>
+      <View>
         {/* Name */}
         <InputComponent
           label="Name"
@@ -193,22 +208,24 @@ function SignUpScreen(props: { navigation: Object }) {
         </View>
 
         {/* Terms and Conditions */}
+        <View style={{ flexDirection: 'row' , alignItems: 'center', backgroundColor: "#DBD5D5", ...padding(5,5,5,5) }}>
         <CheckBox
-          title={
-            <View style={{ margin: 5 }}>
-              <Text>Creating an acount means you're akay with our </Text>
-              <TouchableOpacity onPress={handleTermsAndConditions}>
-                <Text style={{ color: '#3a8bbb' }}>Terms of Service, Privacy, Policy</Text>
-              </TouchableOpacity>
-            </View>
-          }
-          checked={termsAndConditionChecked}
-          onPress={() => setState({ ...state, termsAndConditionChecked: !termsAndConditionChecked })}
-          checkedColor={ORANGE}
-        />
+            checked={termsAndConditionChecked}
+            onPress={() => setState({ ...state, termsAndConditionChecked: !termsAndConditionChecked })}
+            checkedColor={ORANGE}
+            containerStyle={{padding: 0 , margin: 0}}
+            center={true}
+            uncheckedColor={BLACK}
+          />
+          <Text color={BLACK}>Click to accept </Text>
+          <TouchableOpacity onPress={handleTermsAndConditions}>
+            <Text style={{ color: '#3a8bbb' }}>Terms of Service, Privacy, Policy</Text>
+          </TouchableOpacity>
+        </View>
+        
         {/* Sign Up button */}
-        {!loaderVisible && <TouchableOpacity onPress={handleSignUp} style={formStyles.signInContainerStyle}>
-          <Text style={formStyles.signInText}>Sign Up</Text>
+        {!loaderVisible && <TouchableOpacity onPress={handleSignUp} style={formStyles.signUpContainerStyle}>
+          <Text style={formStyles.signUpText}>Sign Up</Text>
         </TouchableOpacity>}
         {loaderVisible && <CustomModal><View style={{ margin: 20, alignItems: 'center' }}>
           <ActivityIndicator color={ORANGE} size={20} />
@@ -286,16 +303,16 @@ const formStyles = StyleSheet.create({
     fontWeight: 'bold',
     paddingRight: 10
   },
-  signInContainerStyle: {
-    margin: 10,
+  signUpContainerStyle: {
+    margin: 30,
     padding: 10,
     backgroundColor: ORANGE,
-    borderRadius: 25
+    borderRadius: 10
   },
-  signInText: {
+  signUpText: {
     textAlign: 'center',
     color: WHITE,
-    fontSize: 18
+    fontSize: 20
   },
   linkText: {
     color: "#1DA1F2"
