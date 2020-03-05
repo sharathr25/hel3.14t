@@ -6,8 +6,6 @@ import { ScrollView } from 'react-native-gesture-handler';
 import firebase from 'react-native-firebase';
 import { SIGN_UP_SCREEN, APP_TITLE } from '../../constants/appConstants';
 import { ORANGE, WHITE, FONT_FAMILY, BLACK } from '../../styles/colors';
-import { updateUser } from '../../fireBase/auth/signUp';
-import { addUserDetailsToDb } from '../../fireBase/database';
 import { regex } from '../../utils/index';
 import { getAge } from '../../utils';
 import gql from 'graphql-tag';
@@ -27,6 +25,8 @@ mutation CreateUser($uid:String!) {
 
 function SignUpScreen(props: { navigation: Object }) {
   const [state, setState] = useState({
+    username: '',
+    usernameErrorMessage: '',
     name: '',
     nameErrorMessage: '',
     mobileNumber: '',
@@ -51,8 +51,10 @@ function SignUpScreen(props: { navigation: Object }) {
 
   const checkFields = () => {
     let valid = false;
-    const { name, email, mobileNumber, password, confirmPassword } = state;
-    if (name.length === 0) {
+    const { username, name, email, mobileNumber, password, confirmPassword } = state;
+    if(username.length === 0) {
+      setState({...state, usernameErrorMessage: 'Username cannot be empty'});
+    } else if (name.length === 0) {
       setState({ ...state, nameErrorMessage: SIGN_UP_SCREEN.ERRORS.EMPTY_NAME_ERROR });
     } else if (email.length === 0) {
       setState({ ...state, emailErrorMessage: SIGN_UP_SCREEN.ERRORS.EMPTY_EMAIL_ERROR });
@@ -75,8 +77,9 @@ function SignUpScreen(props: { navigation: Object }) {
   };
 
   const handleSignUp = async () => {
+    console.log("handle sign up clicked");
     const { navigation } = props;
-    const { termsAndConditionChecked, mobileNumber, dob, name, email, password, gender, } = state;
+    const { username, termsAndConditionChecked, mobileNumber, dob, name, email, password, gender, } = state;
     const age = getAge(dob);
     let error = "";
     if (!termsAndConditionChecked) error = "To Sign Up You have to accept Terms and Conditions";
@@ -84,10 +87,11 @@ function SignUpScreen(props: { navigation: Object }) {
     if (age < 15) error = "You should be more than 15 years old to sign up";
     if (error) Alert.alert(error);
     else {
+      console.log(state);
       try {
         setState({ ...state, loaderVisible: true });
         const data = await Auth.signUp({
-          username: email, 
+          username: username, 
           password, 
           attributes: { 
               email, 
@@ -97,28 +101,10 @@ function SignUpScreen(props: { navigation: Object }) {
               gender
             }
           }
-        )
-          
-        // await firebase.auth().signInWithPhoneNumber(`+91${mobileNumber}`);
-        // const unsubscribe = firebase.auth().onAuthStateChanged(async (user) => {
-        //   if (user) {
-        //     const { uid } = user;
-        //     const { navigation } = props;
-        //     try {
-        //       await updateUser(user, email, password, name);
-        //       await addUserDetailsToDb(mobileNumber, email, name, gender, dob);
-        //       createUser({ variables: { uid } });
-        //     } catch (error) {
-        //       console.log(error);
-        //     } finally {
-        //       unsubscribe();
-        //     }
-        //     setState({ ...state, loaderVisible: false });
-        //     navigation.navigate('Main', { currentUser: user });
-        //   }
-        // });
+        );
+        console.log(data);
         setState({ ...state, loaderVisible: false });
-        navigation.navigate('Verification', { email, mobileNumber });
+        navigation.navigate('Verification', { username, email, mobileNumber });
       } catch (error) {
         setState({ ...state, loaderVisible: false });
         console.log(error);
@@ -136,6 +122,7 @@ function SignUpScreen(props: { navigation: Object }) {
   const getCheckBoxTextStyle = (val) => state.gender === val ? formStyles.activeText : formStyles.inActiveText;
 
   const {
+    usernameErrorMessage,
     nameErrorMessage,
     passwordErrorMessage,
     confirmPasswordErrorMessage,
@@ -148,6 +135,12 @@ function SignUpScreen(props: { navigation: Object }) {
   return (
     <ScrollView style={{ backgroundColor: WHITE }}>
       <View>
+      <InputComponent
+          label="Username"
+          updateParentState={value => setState({ ...state, username: value, usernameErrorMessage: '' })}
+        />
+        {usernameErrorMessage.length !== 0 && <ErrorMessage message={usernameErrorMessage} />}
+
         {/* Name */}
         <InputComponent
           label="Name"
@@ -236,7 +229,7 @@ function SignUpScreen(props: { navigation: Object }) {
       <View style={formStyles.loginContainer}>
         <Text>Already have an account? </Text>
         <TouchableOpacity onPress={handleSignUp}>
-          <Text style={formStyles.linkText}>Register</Text>
+          <Text style={formStyles.linkText}>Login</Text>
         </TouchableOpacity>
       </View>
     </ScrollView>

@@ -21,30 +21,59 @@ const Verification = (props: VerificationProps) => {
   const [OTP, setOTP] = useState('');
   const { navigation, route } = props;
   const { params } = route;
-  const { email, mobileNumber} = params;
+  // const { username, mobileNumber } = params;
+  const [showModal, setShowModal] = useState(false);
+  const [successDesc, setSuccessDesc] = useState('');
+  const [errorDesc, setErrorDesc] = useState('');
 
     const handleResendOtp = () => {
-        Auth.resendSignUp(email)
+        Auth.resendSignUp("sharathr25")
             .then(() => {
-                console.log('code resent successfully');
-        
+              setShowModal(true);
+              setErrorDesc('');
+              setSuccessDesc('Code Resent successfully');
+              console.log('code resent successfully');
             })
             .catch(e => {
-                console.log(e);
+              setShowModal(true);
+              setSuccessDesc('');
+              setErrorDesc("Code resent failed");
+              console.log(e);
             }
         );
     }
    
   const handleVerify = async () => {
     try {
-        const data = await Auth.confirmSignUp(email, OTP, {
+        await Auth.confirmSignUp("sharathr25", OTP, {
           forceAliasCreation: true    
         });
-        console.log(data)
-        const {navigation } = props;
+        setShowModal(true);
+        setErrorDesc('');
+        setSuccessDesc('OTP verification successful');
         navigation.navigate('Login');
     } catch (error) {
+        setShowModal(true);
+        setSuccessDesc('');
+        setErrorDesc("Verification code invalid");
         console.log(error);
+    }
+  }
+
+  const hideModal = () => {
+    setShowModal(false);
+    setSuccessDesc('');
+    setErrorDesc('');
+  }
+
+  if(showModal) {
+    if(successDesc.length === 0 && errorDesc.length === 0) {
+      return <CustomModal variant="loading" /> 
+    } else if(successDesc.length != 0) {
+      return <CustomModal variant="success" desc={successDesc} onClose={hideModal} />
+    } else {
+      {console.log('error..........')}
+      return <CustomModal variant="error" desc={errorDesc} onClose={hideModal} />
     }
   }
 
@@ -68,9 +97,9 @@ const Verification = (props: VerificationProps) => {
           <Text style={{color: "#1DA1F2"}}>Resend</Text>
         </TouchableOpacity>
       </View>
-        <View style={{...margin(30,30,0,30)}}>
-            <Button bgColor={ORANGE} textColor={WHITE} onPress={handleVerify}>Verify</Button>
-        </View>
+      <View style={{...margin(30,30,0,30)}}>
+        <Button bgColor={ORANGE} textColor={WHITE} onPress={handleVerify}>Verify</Button>
+      </View>
       </View>
   );
 }

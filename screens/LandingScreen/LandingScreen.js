@@ -74,10 +74,10 @@ const LandingScreen = ({ navigation }: { navigation: Object}) => {
                 <Text style={separater}>OR WITH EMAIL</Text> */}
                 <View>
                     <TouchableOpacity onPress={handleSignIn} style={buttonContainerStyle}>
-                        <Text style={buttonText}>Sign in</Text>
+                        <Text style={buttonText}>Login</Text>
                     </TouchableOpacity>
                     <TouchableOpacity onPress={handleSignUp} style={buttonContainerStyle}>
-                        <Text style={buttonText}>Sign up</Text>
+                        <Text style={buttonText}>Register</Text>
                     </TouchableOpacity>
                 </View>
             </View>
@@ -132,7 +132,7 @@ const styles = StyleSheet.create({
         margin: 10,
         padding: 10,
         backgroundColor: ORANGE,
-        borderRadius: 25
+        borderRadius: 10
     },
     buttonText: {
         textAlign: 'center',
