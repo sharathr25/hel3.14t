@@ -9,7 +9,7 @@ type state = {
 }
 
 export default function useAuth() {
-    const [state, setState] = useState<state>({ initializing: false, user: null });
+    const [state, setState] = useState<state>({ initializing: true, user: null });
 
     useEffect(() => {
       checkUser();
@@ -22,11 +22,10 @@ export default function useAuth() {
             })
             .then(user => {
               if (user) {
-                console.log(user);
-                setState({initializing: !user, user })
+                setState({initializing: !user, user: { username: user.username, attributes: user.attributes } })
             }
         })
-        .catch(err => console.log(err));
+        .catch(err => {console.log(err); setState({initializing: false})});
     }
 
     const listener = (data) => {

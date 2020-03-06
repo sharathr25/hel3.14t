@@ -5,9 +5,11 @@ import { APP_TITLE } from '../../constants/appConstants';
 import { WHITE, ORANGE, BLACK } from '../../styles/colors';
 import { getEmail, loginWithEmailAndPassword } from '../../fireBase/auth/login';
 import { checkUserNameAndPasswordFields, regex } from '../../utils/index';
-import { InputComponent, ErrorMessage } from '../../components/atoms';
+import { InputComponent, ErrorMessage , Link, Button } from '../../components/atoms';
+import { CustomModal } from '../../components/molecules';
 import { TouchableOpacity, ScrollView } from 'react-native-gesture-handler';
 import { LIGHT_BLUE } from '../../styles/colors';
+import { margin } from '../../styles/mixins';
 import { Auth } from "aws-amplify";
 
 const emailRegex = regex.email;
@@ -16,13 +18,12 @@ type LoginScreenProps = {
   navigation: Object
 }
 
-const LoginScreen = (props: LoginScreenProps) => {
+const LoginScreen = ({navigation}: LoginScreenProps) => {
   const [userName, setUserName] = useState('');
   const [userNameErrorMessage, setUserNameErrorMessage] = useState('');
   const [password, setPassword] = useState('');
   const [passwordErrorMessage, setPasswordErrorMessage] = useState('');
   const [loaderVisible, setLoaderVisible] = useState(false);
-  const { navigation } = props;
 
   const handleSignUp = () => {
     navigation.navigate('SignUp');
@@ -41,92 +42,46 @@ const LoginScreen = (props: LoginScreenProps) => {
     }
   };
 
-  const loginWithEmail = async (email: string, password:string) => {
-    try {
-      const user = await loginWithEmailAndPassword(email, password);
-      setLoaderVisible(false);
-      navigation.replace('Main', { currentUser: user });
-    } catch (err) {
-      Alert.alert('invalid username or password. please try again...');
-      console.log(err);
-    }
-  }
-
-  const loginWithMobileNumber = async (mobileNumber: string, password: string) => {
-    try {
-      const email = await getEmail(mobileNumber);
-      if (email) {
-        await loginWithEmail(email, password);
-      } else {
-        Alert.alert('user not found');
-      }
-    } catch (error) {
-      console.log(error);
-      Alert.alert('user not found');
-    }
-  }
-
   const handleLogin = async () => {
-    setLoaderVisible(true);
     if (checkUserNameAndPassword()) {
-      if (userName.match(emailRegex)) {
-        Auth.signIn({
-        username: userName, // Required, the username
-        password, // Optional, the password
-      }).then(user => {
-        console.log(user)
-        navigation.navigate('Main', {user});
-      })
-        .catch(err => console.log(err));
-      } else {
-          console.log(userName);
-          Auth.signIn({
-          username: `+91${userName}`, // Required, the username
-          password, // Optional, the password
-        }).then(user => {console.log(user)
-          const {navigation} = props
-          navigation.navigate('Main', {user});
-        })
-        .catch(err => console.log(err));
+      try {
+        setLoaderVisible(true);
+        const uname = userName.match(emailRegex) ? userName : `+91${userName}`
+        const user = await Auth.signIn({username: uname , password })
+        navigation.navigate('Main', { user });
+      } catch (error) {
+        console.log(error);
+      } finally {
+        setLoaderVisible(false);
       }
     }
-    setLoaderVisible(false);
   }
 
-  const { signInContainerStyle, signInText, appTitle, screenTitle, linkText, registerContainer } = styles;
-
+  const { registerContainer } = styles;
 
   return (
     <ScrollView contentContainerStyle={{ flex: 1, backgroundColor: WHITE, }}>
       <View style={{ flex: 1, margin: 10 }}>
+        {loaderVisible && <CustomModal desc="Please Wait..." />}
         <View>
           <InputComponent
             label="Email or Mobile Number"
             updateParentState={value => { setUserName(value); setUserNameErrorMessage('') }}
+            errMsg={userNameErrorMessage}
           />
-          {userNameErrorMessage.length !== 0 && <ErrorMessage message={userNameErrorMessage} />}
           <InputComponent
             label="Password"
             secureTextEntry={true}
             updateParentState={value => { setPassword(value); setPasswordErrorMessage('') }}
+            errMsg={passwordErrorMessage}
           />
-          {passwordErrorMessage.length !== 0 && <ErrorMessage message={passwordErrorMessage} />}
-          <TouchableOpacity onPress={handleResetPassword} style={{ alignSelf: 'flex-end', paddingRight: 20 }}>
-            <Text style={linkText}>Forgot Password?</Text>
-          </TouchableOpacity>
-          {
-            loaderVisible
-              ? <ActivityIndicator color={ORANGE} />
-              : <TouchableOpacity onPress={handleLogin} style={signInContainerStyle}>
-                <Text style={signInText}>Sign In</Text>
-              </TouchableOpacity>
-          }
+          <Link onPress={handleResetPassword} style={{ alignSelf: 'flex-end', paddingRight: 20 }} >Forgot Password?</Link>
+          <View style={{...margin(10,30,10,30)}}>
+            <Button bgColor={ORANGE} textColor={WHITE} onPress={handleLogin}>Sign In</Button>
+          </View>
         </View>
         <View style={registerContainer}>
-          <Text>Don't have an account? </Text>
-          <TouchableOpacity onPress={handleSignUp}>
-            <Text style={linkText}>Register</Text>
-          </TouchableOpacity>
+          <Text>Don't have an account? </Text><Link onPress={handleSignUp}>Register</Link>
         </View>
       </View>
     </ScrollView>
@@ -134,34 +89,6 @@ const LoginScreen = (props: LoginScreenProps) => {
 }
 
 const styles = StyleSheet.create({
-  appTitle: {
-    marginBottom: 30,
-    color: ORANGE,
-    textAlign: 'center',
-    fontSize: 20,
-    fontFamily: 'cursive'
-  },
-  screenTitle: {
-    marginBottom: 40,
-    textAlign: 'center',
-    fontSize: 30,
-    color: BLACK,
-  },
-  signInContainerStyle: {
-    margin: 10,
-    marginTop: 25,
-    padding: 10,
-    backgroundColor: ORANGE,
-    borderRadius: 10
-  },
-  signInText: {
-    textAlign: 'center',
-    color: WHITE,
-    fontSize: 20
-  },
-  linkText: {
-    color: LIGHT_BLUE
-  },
   registerContainer: {
     flexDirection: 'row',
     alignSelf: 'center',

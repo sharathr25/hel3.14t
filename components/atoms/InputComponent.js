@@ -8,11 +8,12 @@ import { StyleSheet } from 'react-native';
 type InputComponentProps = {
   label?: string,
   secureTextEntry?: boolean,
-  updateParentState: Function
+  updateParentState: Function,
+  errMsg: string
 }
 
 const InputComponent = (props: InputComponentProps) => {
-  const { label = "", secureTextEntry = false, updateParentState } = props;
+  const { label = "", secureTextEntry = false, updateParentState, errMsg = "" } = props;
   const { labelStyle, containerStyle, inputContainerStyle, inputStyle } = styles;
   return (
     <Input
@@ -23,6 +24,7 @@ const InputComponent = (props: InputComponentProps) => {
       containerStyle={containerStyle}
       secureTextEntry={secureTextEntry}
       onChangeText={value => updateParentState(value)}
+      errorMessage={errMsg}
     />
   );
 }

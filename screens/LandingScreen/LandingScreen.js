@@ -8,12 +8,17 @@ import { TouchableOpacity } from 'react-native-gesture-handler';
 import { APP_TITLE } from '../../constants/appConstants';
 import { useAuth } from '../../customHooks'
 import { Auth } from "aws-amplify";
+import { CustomModal } from "../../components/molecules";
 
 const LandingScreen = ({ navigation }: { navigation: Object}) => {
     const {initializing, user} = useAuth();
 
+    if(initializing) {
+        return <CustomModal desc="Please wait" />
+    }
+ 
     if(user) {
-        navigation.navigate('Main', { user } );
+        navigation.replace('Main', { user } );
     }
 
     const handleSignUp = () => {

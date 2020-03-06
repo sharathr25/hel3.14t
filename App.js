@@ -13,7 +13,7 @@ import awsConfig from './aws-exports';
 
 Amplify.configure({...awsConfig});
 
-whyDidYouRender(React);
+// whyDidYouRender(React);
 
 const AppContainer = mainStackNavigator;
 

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { View, Alert, StyleSheet, TouchableOpacity, Text } from 'react-native';
 import { ScrollView } from 'react-native-gesture-handler';
 import firebase from 'react-native-firebase';
@@ -21,42 +21,83 @@ const Verification = (props: VerificationProps) => {
   const [OTP, setOTP] = useState('');
   const { navigation, route } = props;
   const { params } = route;
-  // const { username, mobileNumber } = params;
+  const { username, mobileNumber, email, type="phone", redirectTo="Login" } = params;
   const [showModal, setShowModal] = useState(false);
   const [successDesc, setSuccessDesc] = useState('');
   const [errorDesc, setErrorDesc] = useState('');
 
+  const sendOtpToEmail = () => {
+    Auth.verifyCurrentUserAttribute('email') //user should be authenticated to send otp to email
+        .then(() => {
+          console.log('code sent successfully');
+        }).catch((e) => {
+          console.log(e, 'code sent failed')
+      });
+  }
+
+  useEffect(() => {
+    if(type === "email") {
+      sendOtpToEmail();
+    }
+  }, []);
+
+  const verifyPhoneOTP = async () => {
+    await Auth.confirmSignUp(username, OTP, { forceAliasCreation: true });
+  }
+
+  const verifyEmailOTP = async () => {
+    await Auth.verifyCurrentUserAttributeSubmit('email', OTP)
+  }
+
+  const resendOTPToEmail = () => {
+    sendOtpToEmail();
+  }
+
+  const resendOTPTOPhone = () => {
+    Auth.resendSignUp(username)
+      .then(() => {
+        onSuccess('Code Resent successfully');
+      })
+      .catch(e => {
+        onError(e, 'Code resent failed');
+      }
+    );
+  }
+
     const handleResendOtp = () => {
-        Auth.resendSignUp("sharathr25")
-            .then(() => {
-              setShowModal(true);
-              setErrorDesc('');
-              setSuccessDesc('Code Resent successfully');
-              console.log('code resent successfully');
-            })
-            .catch(e => {
-              setShowModal(true);
-              setSuccessDesc('');
-              setErrorDesc("Code resent failed");
-              console.log(e);
-            }
-        );
+      if(type === "phone") {
+        resendOTPTOPhone();
+      } else {
+        resendOTPToEmail();
+      }
+    }
+
+    const onSuccess = async (msg) => {
+      setShowModal(true);
+      setErrorDesc('');
+      setSuccessDesc(msg);
+      console.log(msg);
+    }
+
+    const onError = (error, msg) => {
+      setShowModal(true);
+      setSuccessDesc('');
+      setErrorDesc(msg);
+      console.log(error);
     }
    
   const handleVerify = async () => {
     try {
-        await Auth.confirmSignUp("sharathr25", OTP, {
-          forceAliasCreation: true    
-        });
-        setShowModal(true);
-        setErrorDesc('');
-        setSuccessDesc('OTP verification successful');
-        navigation.navigate('Login');
+      if(type === "phone") {
+        await verifyPhoneOTP();
+      } else {
+        await verifyEmailOTP();
+      }
+      onSuccess('OTP verification successfull');
+      await Auth.signOut();
+      navigation.navigate(redirectTo);
     } catch (error) {
-        setShowModal(true);
-        setSuccessDesc('');
-        setErrorDesc("Verification code invalid");
-        console.log(error);
+      onError(error, "Verification code invalid");
     }
   }
 
@@ -72,7 +113,6 @@ const Verification = (props: VerificationProps) => {
     } else if(successDesc.length != 0) {
       return <CustomModal variant="success" desc={successDesc} onClose={hideModal} />
     } else {
-      {console.log('error..........')}
       return <CustomModal variant="error" desc={errorDesc} onClose={hideModal} />
     }
   }
@@ -80,7 +120,13 @@ const Verification = (props: VerificationProps) => {
   return (
       <View style={{backgroundColor: WHITE, flex: 1}}>
         <View style={{backgroundColor: '#C4C4C4', marginBottom: 10, justifyContent: 'center', alignItems: 'center', padding: 15}}>
-            {/* <Text style={{color: BLACK}}>Enter OTP sent to  xxxxxxxxx{mobileNumber.substring(8)}</Text> */}
+            <Text style={{color: BLACK}}>
+              { type === "phone" 
+                  ? `Enter OTP sent to  xxxxxxxxx${mobileNumber.substring(8)}`
+                  :  `Enter OTP sent to xxxxxxxxx${email}`
+              }
+              
+            </Text>
         </View>
         <InputComponent
           label="OTP"
