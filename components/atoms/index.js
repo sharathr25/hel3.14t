@@ -18,6 +18,8 @@ import RightButton from './RightButton';
 import WrongButton from './WrongButton';
 import Selector from './Selector';
 import Link from './Link';
+import HeaderTitle from './HeaderTitle'
+import Curve from "./Curve";
 
 export {
     Status,
@@ -39,5 +41,7 @@ export {
     RightButton,
     WrongButton,
     Selector,
-    Link
+    Link,
+    HeaderTitle,
+    Curve
 };

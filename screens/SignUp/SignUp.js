@@ -72,6 +72,8 @@ function SignUpScreen({navigation}: { navigation: Object }) {
 
   const [createUser, { loading }] = useMutation(CREATE_USER);
 
+  const [err, setErr] = useState('');
+
   const handleTermsAndConditions = () => {
     navigation.navigate('TermsAndConditions');
   }
@@ -132,9 +134,11 @@ function SignUpScreen({navigation}: { navigation: Object }) {
           }
         );
         console.log(data);
+        setErr('');
         navigation.navigate('Verification', { username, email, mobileNumber });
       } catch (error) {
         console.log(error);
+        setErr(error.message);
       } finally {
         setIsLoading(false);
     }
@@ -148,7 +152,7 @@ function SignUpScreen({navigation}: { navigation: Object }) {
     <ScrollView style={{ backgroundColor: WHITE }}>
       <View>
         {isLoading && <CustomModal desc="Please wait..."/>}
-
+        {err.length !== 0 && <CustomModal variant="error" desc={err} onClose={() => setErr('')}/>}
         {/* Username */}
         <InputComponent
           label="Username"

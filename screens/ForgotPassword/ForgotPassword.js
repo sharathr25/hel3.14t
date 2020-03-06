@@ -22,7 +22,6 @@ const ResetPassowrdScreen = ({navigation}: ResetPassowrdScreenProps) => {
 
   const checkUsernameField = () => {
     let valid = false;
-    console.log(username);
     if (username.length === 0) {
       setUsernameErrorMessage('Username cannot be empty');
     } 
@@ -39,10 +38,8 @@ const ResetPassowrdScreen = ({navigation}: ResetPassowrdScreenProps) => {
         const data = await Auth.forgotPassword(username);
         setSuccessDesc('OTP sent Sucessfully');
         setStatus({loading:false, success: true, error: false});
-        console.log(data)
         navigation.navigate('ResetPassword', { username });
       } catch (error) {
-        console.log(error)
         setErrorDesc('Something went wrong');
         setStatus({loading:false, success: false, error: true});
       } finally {
@@ -65,10 +62,10 @@ const ResetPassowrdScreen = ({navigation}: ResetPassowrdScreenProps) => {
   return (
       <View style={{ flex: 1, backgroundColor: WHITE, justifyContent: 'space-evenly' }}>
         <View style={{backgroundColor:"#C4C4C4", display:'flex', alignItems:'center', padding: 10}}>
-          <Text style={{color: BLACK}}>Enter you Registered email or mobile number</Text>
+          <Text style={{color: BLACK}}>Enter your email</Text>
         </View>
         <InputComponent
-          label="Username"
+          label="Email"
           secureTextEntry={false}
           updateParentState={value => {setUsername(value); setUsernameErrorMessage('')}}
         />
