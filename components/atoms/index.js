@@ -16,6 +16,8 @@ import FullScreenError from './FullScreenError';
 import FullScreenLoader from './FullScreenLoader';
 import RightButton from './RightButton';
 import WrongButton from './WrongButton';
+import Selector from './Selector';
+import Link from './Link';
 
 export {
     Status,
@@ -35,5 +37,7 @@ export {
     FullScreenError,
     FullScreenLoader,
     RightButton,
-    WrongButton
+    WrongButton,
+    Selector,
+    Link
 };

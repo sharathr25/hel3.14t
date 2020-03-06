@@ -7,11 +7,12 @@ import { Loading, Failed, Success, Button } from "../atoms";
 type CustomModalProps = {
     onClose: Function, 
     variant: "loading" | "success" | "error",
-    desc: string
+    desc: string,
+    buttonText: string
 }
 
 const CustomModal = (props: CustomModalProps) => {
-    const { onClose, variant = "loading", desc } = props;
+    const { onClose, variant = "loading", desc, buttonText="close" } = props;
     const { outerContainer, innerContainer, closeButton, closeButtonText } = styles;
 
     const variants = {
@@ -25,7 +26,7 @@ const CustomModal = (props: CustomModalProps) => {
             <View style={outerContainer}>
                 <View style={innerContainer}>
                     {variants[variant]}
-                    {onClose && <Button onPress={onClose}>Close</Button>}
+                    {onClose && <Button bgColor={ORANGE} textColor={WHITE} onPress={onClose}>{buttonText}</Button>}
                 </View>
             </View>
         </Modal>

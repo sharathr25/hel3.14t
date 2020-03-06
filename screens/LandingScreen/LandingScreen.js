@@ -7,15 +7,19 @@ import { TouchableOpacity } from 'react-native-gesture-handler';
 // import Button from '../../components/common/button';
 import { APP_TITLE } from '../../constants/appConstants';
 import { useAuth } from '../../customHooks'
+import { Auth } from "aws-amplify";
+import { CustomModal } from "../../components/molecules";
 
 const LandingScreen = ({ navigation }: { navigation: Object}) => {
-    
-    const { user, initializing } = useAuth();
-    useEffect(() => {
-        if (user) {
-            navigation.replace('Main', { currentUser: user });
-        }
-    }, [initializing]);
+    const {initializing, user} = useAuth();
+
+    if(initializing) {
+        return <CustomModal desc="Please wait" />
+    }
+ 
+    if(user) {
+        navigation.replace('Main', { user } );
+    }
 
     const handleSignUp = () => {
         navigation.navigate('SignUp');
@@ -75,10 +79,10 @@ const LandingScreen = ({ navigation }: { navigation: Object}) => {
                 <Text style={separater}>OR WITH EMAIL</Text> */}
                 <View>
                     <TouchableOpacity onPress={handleSignIn} style={buttonContainerStyle}>
-                        <Text style={buttonText}>Sign in</Text>
+                        <Text style={buttonText}>Login</Text>
                     </TouchableOpacity>
                     <TouchableOpacity onPress={handleSignUp} style={buttonContainerStyle}>
-                        <Text style={buttonText}>Sign up</Text>
+                        <Text style={buttonText}>Register</Text>
                     </TouchableOpacity>
                 </View>
             </View>
@@ -133,7 +137,7 @@ const styles = StyleSheet.create({
         margin: 10,
         padding: 10,
         backgroundColor: ORANGE,
-        borderRadius: 25
+        borderRadius: 10
     },
     buttonText: {
         textAlign: 'center',
