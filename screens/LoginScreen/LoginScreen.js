@@ -30,7 +30,7 @@ const LoginScreen = ({navigation}: LoginScreenProps) => {
   }
 
   const handleResetPassword = () => {
-    navigation.navigate('ResetPassword');
+    navigation.navigate('ForgotPassword');
   }
 
   const checkUserNameAndPassword = () => {
