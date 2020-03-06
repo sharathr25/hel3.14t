@@ -11,15 +11,20 @@ import Verification from "./screens/Verification/";
 import BottomNavigator from './screens/main/bottomNavigator';
 import { APP_TITLE } from './constants/appConstants';
 import { View, Text } from 'react-native';
-import { CustomModal } from './components//molecules'
+import { CustomModal, Header } from './components//molecules'
+
+const TITLES = {
+  APP_LANDING_SCREEN : "Welcome to haisaa",
+  LOGIN : "Log in",
+  SIGNUP: "Registrer",
+  VERIFICATION: "Verification",
+  FORGOT_PASSWORD: "Forgot password",
+  RESET_PASSWORD: "Reset password",
+  TERMS_AND_CONDITIONS: "Terms & Conditions",
+  NOTIFICATIONS: "Notifications"
+}
 
 const Stack = createStackNavigator();
-
-const headerStyle = {
-  backgroundColor: WHITE,
-  shadowOpacity: 0,
-  elevation: 0
-}
 
 const TemporaryMain = ({route, navigation}) => {
   const { params } = route;
@@ -44,25 +49,29 @@ const TemporaryMain = ({route, navigation}) => {
   );
 }
 
+const {
+  APP_LANDING_SCREEN,
+  LOGIN,
+  SIGNUP,
+  VERIFICATION,
+  FORGOT_PASSWORD,
+  RESET_PASSWORD,
+  TERMS_AND_CONDITIONS,
+  NOTIFICATIONS
+} = TITLES;
+
 const MainNavigatorWithUser = () => {
   return (
-    <Stack.Navigator initialRouteName="AppLandingScreen"
-      screenOptions={
-        {
-          header: (props) => <Header {...props} />,
-          title: APP_TITLE,
-        }
-      }
-    >
-      <Stack.Screen name="AppLandingScreen" component={LandingScreen} options={{ title: "" }}></Stack.Screen>
+    <Stack.Navigator initialRouteName="AppLandingScreen" screenOptions={{ header: (props) => <Header {...props} /> }}>
+      <Stack.Screen name="AppLandingScreen" component={LandingScreen} options={{ title: APP_LANDING_SCREEN, headerLeft: null }}></Stack.Screen>
       <Stack.Screen name="Main" component={TemporaryMain} options={{ headerLeft: null }}></Stack.Screen>
-      {/* <Stack.Screen name="Notifications" component={NotificationsScreen}></Stack.Screen> */}
-      <Stack.Screen name="SignUp" component={SignUpScreen} options={{ title: "" }}></Stack.Screen>
-      <Stack.Screen name="Login" component={LoginScreen} options={{ title: "" }}></Stack.Screen>
-      <Stack.Screen name="ForgotPassword" component={ForgotPassword} options={{ title: "" }}></Stack.Screen>
-      <Stack.Screen name="ResetPassword" component={ResetPassword} options={{ title: "" }}></Stack.Screen>
-      <Stack.Screen name="TermsAndConditions" component={TermsAndConditionsScreen}></Stack.Screen>
-      <Stack.Screen name="Verification" component={Verification}></Stack.Screen>
+      <Stack.Screen name="Notifications" component={NotificationsScreen} options={{title:NOTIFICATIONS}}></Stack.Screen>
+      <Stack.Screen name="SignUp" component={SignUpScreen} options={{ title: SIGNUP }}></Stack.Screen>
+      <Stack.Screen name="Login" component={LoginScreen} options={{ title: LOGIN }}></Stack.Screen>
+      <Stack.Screen name="ForgotPassword" component={ForgotPassword} options={{ title: FORGOT_PASSWORD }}></Stack.Screen>
+      <Stack.Screen name="ResetPassword" component={ResetPassword} options={{ title: RESET_PASSWORD }}></Stack.Screen>
+      <Stack.Screen name="TermsAndConditions" component={TermsAndConditionsScreen} options={{title:TERMS_AND_CONDITIONS}}></Stack.Screen>
+      <Stack.Screen name="Verification" component={Verification} options={{title:VERIFICATION}}></Stack.Screen>
     </Stack.Navigator>
   );
 }

@@ -63,19 +63,22 @@ const LoginScreen = ({navigation}: LoginScreenProps) => {
     <ScrollView contentContainerStyle={{ flex: 1, backgroundColor: WHITE, }}>
       <View style={{ flex: 1, margin: 10 }}>
         {loaderVisible && <CustomModal desc="Please Wait..." />}
-        <View>
+        <View style={{flex: 1,justifyContent:'space-evenly'}}>
           <InputComponent
             label="Email or Mobile Number"
             updateParentState={value => { setUserName(value); setUserNameErrorMessage('') }}
             errMsg={userNameErrorMessage}
           />
-          <InputComponent
-            label="Password"
-            secureTextEntry={true}
-            updateParentState={value => { setPassword(value); setPasswordErrorMessage('') }}
-            errMsg={passwordErrorMessage}
-          />
-          <Link onPress={handleResetPassword} style={{ alignSelf: 'flex-end', paddingRight: 20 }} >Forgot Password?</Link>
+          <View>
+            <InputComponent
+              label="Password"
+              secureTextEntry={true}
+              updateParentState={value => { setPassword(value); setPasswordErrorMessage('') }}
+              errMsg={passwordErrorMessage}
+            />
+            <Link onPress={handleResetPassword} style={{ alignSelf: 'flex-end', paddingRight: 20 }} >Forgot Password?</Link>
+          </View>
+          
           <View style={{...margin(10,30,10,30)}}>
             <Button bgColor={ORANGE} textColor={WHITE} onPress={handleLogin}>Sign In</Button>
           </View>
