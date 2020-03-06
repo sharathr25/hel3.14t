@@ -8,8 +8,12 @@ import { PermissionsAndroid, Alert } from "react-native";
 import { useAuth } from './customHooks';
 import { NavigationContainer } from '@react-navigation/native';
 import { FullScreenLoader } from './components/atoms';
+import Amplify,{Auth} from 'aws-amplify';
+import awsConfig from './aws-exports';
 
-whyDidYouRender(React);
+Amplify.configure({...awsConfig});
+
+// whyDidYouRender(React);
 
 const AppContainer = mainStackNavigator;
 
@@ -37,4 +41,4 @@ function App() {
 
 App.whyDidYouRender = true;
 
-export default memo<Element>(App);
+export default (memo<Element>(App));

@@ -86,6 +86,10 @@
 		89EF760165A2451896338946 /* libRNCMaskedView.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 3FFDCB5536AF4549A5D3E1F1 /* libRNCMaskedView.a */; };
 		45B11E38DE92490BB82D62F0 /* libRNCSafeAreaContext.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 2FC2EB2F419A45B0B9744D5D /* libRNCSafeAreaContext.a */; };
 		794001A16F764F8C948BC88D /* Fontisto.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 9BAC7E59A0AE4E6BB5C02514 /* Fontisto.ttf */; };
+		4BF255C241DB4A0D8D8D28E7 /* libRNCNetInfo.a in Frameworks */ = {isa = PBXBuildFile; fileRef = FE8D2AAAD2BD4CE1935A9DE1 /* libRNCNetInfo.a */; };
+		95110FBA3DA347939C173D24 /* libRNCNetInfo-tvOS.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 6A7B5AB2542F49788DECFF8E /* libRNCNetInfo-tvOS.a */; };
+		7CAFEF346B074765B1EE7C69 /* libRNAWSCognito.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 147395CC40014E7081C76CAF /* libRNAWSCognito.a */; };
+		F42521189ED640A2B1E904C8 /* libRNDateTimePicker.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 6C82E06413B44261B610B492 /* libRNDateTimePicker.a */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -448,6 +452,13 @@
 		FB12B1622463474DB77C0596 /* SafeAreaView.xcodeproj */ = {isa = PBXFileReference; name = "SafeAreaView.xcodeproj"; path = "../node_modules/react-native-safe-area-context/ios/SafeAreaView.xcodeproj"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = wrapper.pb-project; explicitFileType = undefined; includeInIndex = 0; };
 		2FC2EB2F419A45B0B9744D5D /* libRNCSafeAreaContext.a */ = {isa = PBXFileReference; name = "libRNCSafeAreaContext.a"; path = "libRNCSafeAreaContext.a"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = archive.ar; explicitFileType = undefined; includeInIndex = 0; };
 		9BAC7E59A0AE4E6BB5C02514 /* Fontisto.ttf */ = {isa = PBXFileReference; name = "Fontisto.ttf"; path = "../node_modules/react-native-vector-icons/Fonts/Fontisto.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		7085C6B4782E4A6CACFBC972 /* RNCNetInfo.xcodeproj */ = {isa = PBXFileReference; name = "RNCNetInfo.xcodeproj"; path = "../node_modules/@react-native-community/netinfo/ios/RNCNetInfo.xcodeproj"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = wrapper.pb-project; explicitFileType = undefined; includeInIndex = 0; };
+		FE8D2AAAD2BD4CE1935A9DE1 /* libRNCNetInfo.a */ = {isa = PBXFileReference; name = "libRNCNetInfo.a"; path = "libRNCNetInfo.a"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = archive.ar; explicitFileType = undefined; includeInIndex = 0; };
+		6A7B5AB2542F49788DECFF8E /* libRNCNetInfo-tvOS.a */ = {isa = PBXFileReference; name = "libRNCNetInfo-tvOS.a"; path = "libRNCNetInfo-tvOS.a"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = archive.ar; explicitFileType = undefined; includeInIndex = 0; };
+		A3A522AE95544D3CAEFB2858 /* RNAWSCognito.xcodeproj */ = {isa = PBXFileReference; name = "RNAWSCognito.xcodeproj"; path = "../node_modules/amazon-cognito-identity-js/ios/RNAWSCognito.xcodeproj"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = wrapper.pb-project; explicitFileType = undefined; includeInIndex = 0; };
+		147395CC40014E7081C76CAF /* libRNAWSCognito.a */ = {isa = PBXFileReference; name = "libRNAWSCognito.a"; path = "libRNAWSCognito.a"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = archive.ar; explicitFileType = undefined; includeInIndex = 0; };
+		99C83327FB884E19B0ECF597 /* RNDateTimePicker.xcodeproj */ = {isa = PBXFileReference; name = "RNDateTimePicker.xcodeproj"; path = "../node_modules/@react-native-community/datetimepicker/ios/RNDateTimePicker.xcodeproj"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = wrapper.pb-project; explicitFileType = undefined; includeInIndex = 0; };
+		6C82E06413B44261B610B492 /* libRNDateTimePicker.a */ = {isa = PBXFileReference; name = "libRNDateTimePicker.a"; path = "libRNDateTimePicker.a"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = archive.ar; explicitFileType = undefined; includeInIndex = 0; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -485,6 +496,9 @@
 				A7B1D64C8EC144ABB2CCEFBF /* libRNImagePicker.a in Frameworks */,
 				89EF760165A2451896338946 /* libRNCMaskedView.a in Frameworks */,
 				45B11E38DE92490BB82D62F0 /* libRNCSafeAreaContext.a in Frameworks */,
+				4BF255C241DB4A0D8D8D28E7 /* libRNCNetInfo.a in Frameworks */,
+				7CAFEF346B074765B1EE7C69 /* libRNAWSCognito.a in Frameworks */,
+				F42521189ED640A2B1E904C8 /* libRNDateTimePicker.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -505,6 +519,7 @@
 				B542DE9FA70D471A84FAA379 /* libRNSVG-tvOS.a in Frameworks */,
 				3D12255AFF84474ABE723F47 /* libRNVectorIcons-tvOS.a in Frameworks */,
 				76B68AFF2ED842CDB9F288B4 /* libRNScreens-tvOS.a in Frameworks */,
+				95110FBA3DA347939C173D24 /* libRNCNetInfo-tvOS.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -687,6 +702,9 @@
 				0FDB3D3B37004A0895EAA6E7 /* RNImagePicker.xcodeproj */,
 				B79A2136978E48D5BD7A6AD7 /* RNCMaskedView.xcodeproj */,
 				FB12B1622463474DB77C0596 /* SafeAreaView.xcodeproj */,
+				7085C6B4782E4A6CACFBC972 /* RNCNetInfo.xcodeproj */,
+				A3A522AE95544D3CAEFB2858 /* RNAWSCognito.xcodeproj */,
+				99C83327FB884E19B0ECF597 /* RNDateTimePicker.xcodeproj */,
 			);
 			name = Libraries;
 			sourceTree = "<group>";
@@ -1396,6 +1414,10 @@
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 				);
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
@@ -1408,6 +1430,9 @@
 					"$(SRCROOT)/../node_modules/react-native-image-picker/ios",
 					"$(SRCROOT)/../node_modules/@react-native-community/masked-view/ios",
 					"$(SRCROOT)/../node_modules/react-native-safe-area-context/ios/SafeAreaView",
+					"$(SRCROOT)/../node_modules/@react-native-community/netinfo/ios",
+					"$(SRCROOT)/../node_modules/amazon-cognito-identity-js/ios/**",
+					"$(SRCROOT)/../node_modules/@react-native-community/datetimepicker/ios",
 				);
 			};
 			name = Debug;
@@ -1434,6 +1459,10 @@
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 				);
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
@@ -1446,6 +1475,9 @@
 					"$(SRCROOT)/../node_modules/react-native-image-picker/ios",
 					"$(SRCROOT)/../node_modules/@react-native-community/masked-view/ios",
 					"$(SRCROOT)/../node_modules/react-native-safe-area-context/ios/SafeAreaView",
+					"$(SRCROOT)/../node_modules/@react-native-community/netinfo/ios",
+					"$(SRCROOT)/../node_modules/amazon-cognito-identity-js/ios/**",
+					"$(SRCROOT)/../node_modules/@react-native-community/datetimepicker/ios",
 				);
 			};
 			name = Release;
@@ -1477,6 +1509,9 @@
 					"$(SRCROOT)/../node_modules/react-native-image-picker/ios",
 					"$(SRCROOT)/../node_modules/@react-native-community/masked-view/ios",
 					"$(SRCROOT)/../node_modules/react-native-safe-area-context/ios/SafeAreaView",
+					"$(SRCROOT)/../node_modules/@react-native-community/netinfo/ios",
+					"$(SRCROOT)/../node_modules/amazon-cognito-identity-js/ios/**",
+					"$(SRCROOT)/../node_modules/@react-native-community/datetimepicker/ios",
 				);
 			};
 			name = Debug;
@@ -1507,6 +1542,9 @@
 					"$(SRCROOT)/../node_modules/react-native-image-picker/ios",
 					"$(SRCROOT)/../node_modules/@react-native-community/masked-view/ios",
 					"$(SRCROOT)/../node_modules/react-native-safe-area-context/ios/SafeAreaView",
+					"$(SRCROOT)/../node_modules/@react-native-community/netinfo/ios",
+					"$(SRCROOT)/../node_modules/amazon-cognito-identity-js/ios/**",
+					"$(SRCROOT)/../node_modules/@react-native-community/datetimepicker/ios",
 				);
 			};
 			name = Release;
@@ -1541,6 +1579,10 @@
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 				);
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
@@ -1553,6 +1595,9 @@
 					"$(SRCROOT)/../node_modules/react-native-image-picker/ios",
 					"$(SRCROOT)/../node_modules/@react-native-community/masked-view/ios",
 					"$(SRCROOT)/../node_modules/react-native-safe-area-context/ios/SafeAreaView",
+					"$(SRCROOT)/../node_modules/@react-native-community/netinfo/ios",
+					"$(SRCROOT)/../node_modules/amazon-cognito-identity-js/ios/**",
+					"$(SRCROOT)/../node_modules/@react-native-community/datetimepicker/ios",
 				);
 			};
 			name = Debug;
@@ -1587,6 +1632,10 @@
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 				);
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
@@ -1599,6 +1648,9 @@
 					"$(SRCROOT)/../node_modules/react-native-image-picker/ios",
 					"$(SRCROOT)/../node_modules/@react-native-community/masked-view/ios",
 					"$(SRCROOT)/../node_modules/react-native-safe-area-context/ios/SafeAreaView",
+					"$(SRCROOT)/../node_modules/@react-native-community/netinfo/ios",
+					"$(SRCROOT)/../node_modules/amazon-cognito-identity-js/ios/**",
+					"$(SRCROOT)/../node_modules/@react-native-community/datetimepicker/ios",
 				);
 			};
 			name = Release;
@@ -1632,6 +1684,10 @@
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 				);
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
@@ -1644,6 +1700,9 @@
 					"$(SRCROOT)/../node_modules/react-native-image-picker/ios",
 					"$(SRCROOT)/../node_modules/@react-native-community/masked-view/ios",
 					"$(SRCROOT)/../node_modules/react-native-safe-area-context/ios/SafeAreaView",
+					"$(SRCROOT)/../node_modules/@react-native-community/netinfo/ios",
+					"$(SRCROOT)/../node_modules/amazon-cognito-identity-js/ios/**",
+					"$(SRCROOT)/../node_modules/@react-native-community/datetimepicker/ios",
 				);
 			};
 			name = Debug;
@@ -1677,6 +1736,10 @@
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 				);
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
@@ -1689,6 +1752,9 @@
 					"$(SRCROOT)/../node_modules/react-native-image-picker/ios",
 					"$(SRCROOT)/../node_modules/@react-native-community/masked-view/ios",
 					"$(SRCROOT)/../node_modules/react-native-safe-area-context/ios/SafeAreaView",
+					"$(SRCROOT)/../node_modules/@react-native-community/netinfo/ios",
+					"$(SRCROOT)/../node_modules/amazon-cognito-identity-js/ios/**",
+					"$(SRCROOT)/../node_modules/@react-native-community/datetimepicker/ios",
 				);
 			};
 			name = Release;
