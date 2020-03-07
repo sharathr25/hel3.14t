@@ -11,7 +11,7 @@ import Verification from "./screens/Verification/";
 import BottomNavigator from './screens/main/bottomNavigator';
 import { APP_TITLE } from './constants/appConstants';
 import { View, Text } from 'react-native';
-import { CustomModal, Header } from './components//molecules'
+import { CustomModal, Header } from './components/molecules'
 
 const TITLES = {
   APP_LANDING_SCREEN : "Welcome to haisaa",
@@ -25,29 +25,6 @@ const TITLES = {
 }
 
 const Stack = createStackNavigator();
-
-const TemporaryMain = ({route, navigation}) => {
-  const { params } = route;
-  const { user } = params;
-  const { username, attributes } = user;
-  const { email_verified, email } = attributes;
-  const [showModal, setShowModal] = useState(!email_verified);
-
-  const _onPress = () => {
-    setShowModal(!showModal);
-    navigation.navigate('Verification', {username, email, type:"email" });
-  }
-
-  if(showModal) {
-    return <CustomModal variant="error" desc="email not verified" onClose={_onPress} buttonText="Verify" />
-  }
-
-  return (
-    <View>
-      <Text>Home</Text>
-    </View>
-  );
-}
 
 const {
   APP_LANDING_SCREEN,
@@ -64,7 +41,7 @@ const MainNavigatorWithUser = () => {
   return (
     <Stack.Navigator initialRouteName="AppLandingScreen" screenOptions={{ header: (props) => <Header {...props} /> }}>
       <Stack.Screen name="AppLandingScreen" component={LandingScreen} options={{ title: APP_LANDING_SCREEN, headerLeft: null }}></Stack.Screen>
-      <Stack.Screen name="Main" component={TemporaryMain} options={{ headerLeft: null }}></Stack.Screen>
+      <Stack.Screen name="Main" component={BottomNavigator} options={{ headerLeft: null }}></Stack.Screen>
       <Stack.Screen name="Notifications" component={NotificationsScreen} options={{title:NOTIFICATIONS}}></Stack.Screen>
       <Stack.Screen name="SignUp" component={SignUpScreen} options={{ title: SIGNUP }}></Stack.Screen>
       <Stack.Screen name="Login" component={LoginScreen} options={{ title: LOGIN }}></Stack.Screen>

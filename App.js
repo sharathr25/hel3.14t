@@ -10,6 +10,7 @@ import { NavigationContainer } from '@react-navigation/native';
 import { FullScreenLoader } from './components/atoms';
 import Amplify,{Auth} from 'aws-amplify';
 import awsConfig from './aws-exports';
+import Context from './context';
 
 Amplify.configure({...awsConfig});
 
@@ -18,23 +19,34 @@ Amplify.configure({...awsConfig});
 const AppContainer = mainStackNavigator;
 
 function App() {
-  const { initializing } = useAuth();
-
+  const { initializing , user } = useAuth();
   useEffect(() => {
     PermissionsAndroid.request(PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION)
       .then(() => { })
       .catch((err) => Alert.alert("GPS can't be accessed"));
   }, []);
 
-  if (initializing) {
-    return <FullScreenLoader />;
-  }
-
+  //   user : { username: "xxxxxxx"
+            //  attributes:{
+              //  sub: "f09929fb-c4ac-4148-bc48-a282e4f10632"
+              //  birthdate: "1992-03-06"
+              //  email_verified: true
+              //  gender: "male"
+              //  name: "xxxxxx"
+              //  phone_number_verified: true
+              //  phone_number: "+917xxxxxxxxxx"
+              //  email: "xxxxxx@gmail.com"
+            //  }
+            //  __proto__: Object
+            //  uid: "f09929fb-c4ac-4148-bc48-a282e4f10632"}
+  
   return (
     <ApolloProvider client={ApolloClient}>
-      <NavigationContainer>
-        <AppContainer />
-      </NavigationContainer>
+      <Context.Provider value={{initializing, user}}>
+        <NavigationContainer>
+          <AppContainer />
+        </NavigationContainer>
+      </Context.Provider>
     </ApolloProvider>
   );
 }

@@ -1,12 +1,12 @@
 // @flow
-import React from 'react';
+import React, {useContext} from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import Icon from 'react-native-vector-icons/AntDesign'
 import { Time, Button } from '../atoms';
 import gql from 'graphql-tag';
 import { useMutation } from 'react-apollo';
-import { useAuth } from '../../customHooks';
 import { ORANGE, BLACK } from '../../styles/colors';
+import Context from '../../context';
 
 const QUERY_TO_REMOVE_NOTIFICATION = gql`
     mutation UpdateUser($uid: String!, $value: Any) {
@@ -27,7 +27,7 @@ type NotificationItemProps = {
 
 const NotificationItem = (props: NotificationItemProps) => {
     const { message, id, timeStamp = "", removeNotification } = props;
-    const { user: { uid } } = useAuth();
+    const { user: { uid } } = useContext(Context);
     const [removeNotificationFromDb] = useMutation(QUERY_TO_REMOVE_NOTIFICATION);
 
     const _removeNotification = () => {

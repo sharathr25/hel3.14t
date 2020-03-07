@@ -1,12 +1,12 @@
 // @flow
-import React, { useEffect } from 'react';
+import React, { useEffect, useContext } from 'react';
 import { View, Text, StyleSheet } from 'react-native';
-import useAuth from '../../customHooks/auth';
 import { useLazyQuery } from 'react-apollo';
 import gql from 'graphql-tag';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { ORANGE, WHITE } from '../../styles/colors';
 import { FullScreenError , FullScreenLoader} from '../../components/atoms';
+import Context from "../../context";
 
 const USER_QUERY = gql`
     query User($uid:String!) {
@@ -23,8 +23,9 @@ type MyAccountScreenProps = {
 
 const MyAccountScreen = (props: MyAccountScreenProps) => {
     const { navigation } = props;
-    const { user } = useAuth();
-    const { displayName, email, phoneNumber, uid } = user;
+    const { user } = useContext(Context);
+    const { uid, attributes } = user;
+    const { name, email, phone_number: phoneNumber } = user;
     const [getUserData, { error, data, loading }] = useLazyQuery(USER_QUERY);
 
     useEffect(() => {
@@ -44,7 +45,7 @@ const MyAccountScreen = (props: MyAccountScreenProps) => {
     }
 
     const phoneNumberWithoutCountryCode = phoneNumber.replace("+91", "");
-    const firstLetterOfDisplayName = displayName.charAt(0).toUpperCase();
+    const firstLetterOfDisplayName = name.charAt(0).toUpperCase();
 
     const { xp = 0, stars = 0 } = data ? data.user : {};
 
@@ -55,7 +56,7 @@ const MyAccountScreen = (props: MyAccountScreenProps) => {
             <View style={profileLetterContainer}>
                 <Text style={profileLetter}>{firstLetterOfDisplayName}</Text>
             </View>
-            <Text style={displayNameStyle}>{displayName}</Text>
+            <Text style={displayNameStyle}>{name}</Text>
             <View style={details}>
                 <View style={detailRow}>
                     <View style={icon}>

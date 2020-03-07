@@ -27,6 +27,7 @@ const UserHelpRequest = (props) => {
         usersRequested {
           uid
           name,
+          mobileNo,
           xp,
           stars
         },
@@ -52,17 +53,20 @@ const UserHelpRequest = (props) => {
           uid
           name,
           xp,
+          mobileNo,
           stars
         },
     }
   }
   `;
 
-  let { data } = useQuery(QUERY);
+  let { data , error } = useQuery(QUERY);
 
   const subscriptionData = useSubscription(SUBSCRIPTION, { shouldResubscribe: true });
 
   let updatedData = subscriptionData && subscriptionData.data && subscriptionData.data.onUpdateHelp || null;
+
+  console.log(updatedData);
 
   if (updatedData) {
     const { _id } = updatedData;
@@ -78,8 +82,16 @@ const UserHelpRequest = (props) => {
   const { status, usersRequested, usersAccepted, description, timeStamp, noPeopleRequired } = help;
 
   getRequestedUser = ({ item }) => {
-    const { name, xp, uid, stars } = item;
-    return <Requester uidOfRequester={uid} name={name} xp={xp} stars={stars} keyOfHelpRequest={keyOfHelpRequest} usersAccepted={usersAccepted} noPeopleRequired={noPeopleRequired} />
+    const { name, xp, uid, stars, mobileNo } = item;
+    return <Requester 
+      uidOfRequester={uid} 
+      name={name} xp={xp} 
+      stars={stars} 
+      keyOfHelpRequest={keyOfHelpRequest} 
+      usersAccepted={usersAccepted} 
+      noPeopleRequired={noPeopleRequired} 
+      mobileNo={mobileNo}
+    />
   }
 
   getAcceptedUser = ({ item }) => {

@@ -1,8 +1,8 @@
 // @flow
-import { useEffect } from "react";
+import { useEffect, useContext } from "react";
 import gql from "graphql-tag";
 import { useLazyQuery, useSubscription } from "react-apollo";
-import { useAuth } from ".";
+import Context from "../context";
 
 const USER_NOTIFICATIONS_QUERY = gql`
     query User($uid:String!) {
@@ -30,7 +30,7 @@ const SUBSCRPTION = gql`
 `;
 
 const useNotifications = () => {
-    const { user } = useAuth();
+    const { user } = useContext(Context);
     const [getNotifcations, { data: initialData }] = useLazyQuery(USER_NOTIFICATIONS_QUERY);
     let { data: subscriptionData } = useSubscription(SUBSCRPTION);
     let uid = null;

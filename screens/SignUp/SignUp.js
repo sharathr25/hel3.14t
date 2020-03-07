@@ -82,10 +82,9 @@ function SignUpScreen({navigation}: { navigation: Object }) {
     navigation.navigate('Login');
   }
 
-  const checkFields = () => {
+  const isValid = () => {
     let valid = false;
     
-
     if(username.length === 0) {
       setUserNameErr('Username cannot be empty');
     } else if (name.length === 0) {
@@ -118,7 +117,7 @@ function SignUpScreen({navigation}: { navigation: Object }) {
 
   const handleSignUp = async () => {
     const age = dob ? getAge(dob.value) : 0
-    if(checkFields())
+    if(isValid())
       try {
         setIsLoading(true);
         const data = await Auth.signUp({
@@ -133,11 +132,11 @@ function SignUpScreen({navigation}: { navigation: Object }) {
             }
           }
         );
-        console.log(data);
         setErr('');
+        const { userSub } = data;
+        createUser({ variables: { uid : userSub } })
         navigation.navigate('Verification', { username, email, mobileNumber });
       } catch (error) {
-        console.log(error);
         setErr(error.message);
       } finally {
         setIsLoading(false);

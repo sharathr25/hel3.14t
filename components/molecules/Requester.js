@@ -1,11 +1,11 @@
 // @flow
-import React from 'react';
+import React,{useContext} from 'react';
 import { Text, View, StyleSheet, Alert } from 'react-native';
 import { ProfileLetter, RightButton, WrongButton } from '../atoms';
 import { useMutation } from 'react-apollo';
 import gql from 'graphql-tag';
-import { useAuth } from '../../customHooks';
 import { FONT_SIZE_16, FONT_WEIGHT_BOLD } from '../../styles/typography';
+import Context from '../../context';
 
 type RequesterProps = {
   uidOfRequester: string, 
@@ -14,13 +14,12 @@ type RequesterProps = {
   noPeopleRequired: number, 
   xp: number, 
   name: string, 
-  stars: number
+  stars: number,
+  mobileNo: String
 }
 
 const Requester = (props: RequesterProps) => {
-  const { user: currentUser } = useAuth();
-  const { phoneNumber } = currentUser;
-  const { uidOfRequester, keyOfHelpRequest, usersAccepted, noPeopleRequired, xp, name, stars } = props;
+  const { uidOfRequester, keyOfHelpRequest, usersAccepted, noPeopleRequired, xp, name, mobileNo, stars } = props;
 
   const QUERY = gql`
     mutation UpdateHelp($key:String!, $value:Any, $operation:String!){
@@ -39,7 +38,7 @@ const Requester = (props: RequesterProps) => {
     } else if (usersAccepted.indexOf(uidOfRequester) > -1) {
       Alert.alert("You are already helping....");
     } else {
-      updateHelpForAccept({ variables: { key: "usersAccepted", value: { uid: uidOfRequester, name, mobileNo: phoneNumber }, operation: "push" } });
+      updateHelpForAccept({ variables: { key: "usersAccepted", value: { uid: uidOfRequester, name, mobileNo }, operation: "push" } });
     }
   };
 
