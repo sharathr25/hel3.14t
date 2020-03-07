@@ -27,6 +27,16 @@ export const margin = (top: number, right: number, bottom: number, left: number)
 export const padding = (top: number, right: number, bottom: number, left: number) => {
     return dimensions(top, right, bottom, left, 'padding');
 }
+export const borderRadius = (topLeft: number, topRight: number, bottomRight: number, bottomLeft: number) => {
+    let styles = {};
+
+    styles["borderTopLeftRadius"] = topLeft;
+    styles["borderTopRightRadius"] = topRight;
+    styles["borderBottomLeftRadius"] = bottomLeft;
+    styles["borderBottomRightRadius"] = bottomRight;
+    
+    return styles;
+}
 
 export const boxShadow = (color: string , offset:{ height: number, width: number} = { height: 2, width: 2 },
     radius: number = 8, opacity: number = 0.2) => {

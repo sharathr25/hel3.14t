@@ -1,6 +1,6 @@
 // @flow
 import React, { useEffect, useContext } from 'react';
-import { View, Text, StyleSheet, Alert } from 'react-native';
+import { View, Text, StyleSheet, Alert, Image } from 'react-native';
 import { ORANGE, WHITE } from '../../styles/colors';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import Icon from 'react-native-vector-icons/FontAwesome';
@@ -10,6 +10,7 @@ import { Auth } from "aws-amplify";
 import { CustomModal } from "../../components/molecules";
 import { useAuth } from "../../customHooks/";
 import Context from "../../context";
+import { padding, borderRadius, margin } from "../../styles/mixins";
 
 const LandingScreen = ({ navigation }: { navigation: Object}) => {
     const { user } = useContext(Context);
@@ -46,13 +47,24 @@ const LandingScreen = ({ navigation }: { navigation: Object}) => {
     } = styles;
 
     const RegisterButton = () => (
-        <TouchableOpacity onPress={handleSignUp} style={buttonContainerStyle}>
+        <TouchableOpacity onPress={handleSignUp} 
+        style={{
+            ...padding(10, 20, 10, 20),
+            backgroundColor: ORANGE,
+            ...borderRadius(0, 15, 15, 0)
+        }}>
             <Text style={buttonText}>Register</Text>
         </TouchableOpacity>
     );
 
     const LoginButton = () => (
-        <TouchableOpacity onPress={handleSignIn} style={buttonContainerStyle}>
+        <TouchableOpacity onPress={handleSignIn} 
+            style={{
+                ...padding(10, 20, 10, 20),
+                backgroundColor: ORANGE,
+                borderRadius: 15,
+                ...borderRadius(15, 0, 0, 15)
+            }}>
             <Text style={buttonText}>Login</Text>
         </TouchableOpacity>  
     )
@@ -86,16 +98,16 @@ const LandingScreen = ({ navigation }: { navigation: Object}) => {
 
     return (
         <View style={container}>
-            <View style={appNameAndLogoContainer}>
-                <Text style={appName}>{APP_TITLE}</Text>
-            </View>
+            <Image style={{ width: 360, height: 360, borderWidth: 1, alignSelf: "center", top: 30 }} source={require('../../assets/Adobe_Post_20200305_0056150.7629810774930801.png')} />    
             <View style={buttons}>
                 {/* <LoginWithFacebook /> */}
                 {/* <LoginWithGoogle /> */}
                 {/* <LoginWithTwitter /> */}
                 {/* <Text style={separater}>OR WITH EMAIL</Text> */}
-                <LoginButton />
-                <RegisterButton />
+                <View style={{flexDirection:'row', justifyContent: 'space-between', ...margin(0, 0, 40, 0)}}>
+                    <RegisterButton />
+                    <LoginButton />
+                </View>
             </View>
         </View>
     );
@@ -110,11 +122,10 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         backgroundColor: WHITE,
-        padding: 10
+        justifyContent: 'space-between'
     },
     appNameAndLogoContainer: {
         display: 'flex',
-        flex: 1.5,
         padding: 10
     },
     appName: {
@@ -125,8 +136,6 @@ const styles = StyleSheet.create({
     },
     buttons: {
         display: 'flex',
-        flex: 2,
-        padding: 5,
     },
     socialMediaLoginButton: {
         flexDirection: 'row',
@@ -145,10 +154,9 @@ const styles = StyleSheet.create({
         textAlign: "center"
     },
     buttonContainerStyle: {
-        margin: 10,
-        padding: 10,
+        ...padding(10, 20, 10, 20),
         backgroundColor: ORANGE,
-        borderRadius: 10
+        borderRadius: 15
     },
     buttonText: {
         textAlign: 'center',
