@@ -1,5 +1,5 @@
 // @flow
-import React, { useState, useContext } from 'react';
+import React, { useState , useContext} from 'react';
 import { View, Text } from 'react-native'
 import { WHITE, ORANGE } from '../../styles/colors';
 import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
@@ -9,13 +9,14 @@ import Context from '../../context';
 
 const Tab = createMaterialTopTabNavigator();
 
-const Helps = ({navigation}) => {
-  const { user } = useContext(Context);
+const Helps = ({route}) => {
   const [showModal, setShowModal] = useState(false);
+  const { params } = route;
+  const user = useContext(Context).user || params.user;
   if(!user) return null;
+
   const { username, attributes } = user;
   const { email_verified, email } = attributes;
-  // TODO : need to popup for user when his email is not verified
 
   const _onPress = () => {
     setShowModal(!showModal);
@@ -23,7 +24,7 @@ const Helps = ({navigation}) => {
   }
 
   if(showModal) {
-    return <CustomModal variant="error" desc="email not verified" onClose={_onPress} buttonText="Verify" />
+    return <CustomModal variant="error" desc="email not verified" onClose={_onPress} buttonText="Close" />
   }
 
   return (
@@ -35,10 +36,10 @@ const Helps = ({navigation}) => {
 
 const Helpers = () => <View style={{ flex: 1 }} ><Text>Helpers</Text></View>;
 
-function HomeScreenTopNavigator() {
+function HomeScreenTopNavigator(props:any) {
   return (
     <Tab.Navigator tabBarOptions={{indicatorStyle: {backgroundColor: ORANGE}}}>
-      <Tab.Screen name="Helps" component={Helps} />
+      <Tab.Screen name="Helps" children={() => <Helps {...props} />} {...props}/>
       <Tab.Screen name="Helpers" component={Helpers} />
     </Tab.Navigator>
   );

@@ -1,5 +1,5 @@
 // @flow
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { View, StyleSheet, Text } from "react-native";
 import HelpButton from "./buttons/helpButton";
 import ReferButton from "./buttons/referButton";

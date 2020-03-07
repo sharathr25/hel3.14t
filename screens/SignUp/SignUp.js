@@ -32,13 +32,13 @@ const AGE_LIMIT = 15;
 
 const CREATE_USER = gql`
 mutation CreateUser($uid:String!) {
-  createUser(uid:$uid){
-    uid
+    createUser(uid:$uid){
+      uid
+    }
   }
-}
 `;
 
-const genderOptions = [
+const GENDER_OPTIONS = [
   {label:"Male", value: "male"}, 
   {label:"Female", value:"female"}
 ];
@@ -64,15 +64,15 @@ function SignUpScreen({navigation}: { navigation: Object }) {
   
   const [dob, setDob] = useState('');
 
-  const [gender, setGender] = useState(genderOptions[0].value);
+  const [gender, setGender] = useState(GENDER_OPTIONS[0].value);
 
   const [termsAndConditionChecked, settermsAndConditionChecked] = useState(false);
 
   const [isLoading, setIsLoading] = useState(false);
 
-  const [createUser, { loading }] = useMutation(CREATE_USER);
-
   const [err, setErr] = useState('');
+
+  const [createUser, { loading }] = useMutation(CREATE_USER);
 
   const handleTermsAndConditions = () => {
     navigation.navigate('TermsAndConditions');
@@ -147,85 +147,62 @@ function SignUpScreen({navigation}: { navigation: Object }) {
     return username.length ? "Username can't be empty" : "";
   }
 
+  const DateOfBirthInput = () => (
+    <View style={formStyles.dobContainer}>
+      <CustomDatePicker date={dob} updateParentState={setDob} label="Date of Birth" />
+    </View>
+  );
+
+  const GenderSelector = () => (
+    <Selector options={GENDER_OPTIONS} label="Gender" onValueChange={setGender} />
+  );
+
+  const TermsAndConditionsCheckBox = () => (
+    <View style={formStyles.termsAndConditionsContainer}>
+      <CheckBox
+          checked={termsAndConditionChecked}
+          onPress={() => settermsAndConditionChecked(!termsAndConditionChecked)}
+          checkedColor={ORANGE}
+          containerStyle={{padding: 0 , margin: 0}}
+          center={true}
+          uncheckedColor={BLACK}
+        />
+      <Text color={BLACK}>Click to accept </Text>
+      <Link onPress={handleTermsAndConditions}>Terms of Service, Privacy, Policy</Link>
+    </View>
+  );
+
+  const SignUpButton = () => (
+    <View style={{...margin(10,30,10,30)}}>
+      <Button bgColor={ORANGE} textColor={WHITE} onPress={handleSignUp}>Sign Up</Button>
+    </View>
+  );
+
+  const LoginLink = () => (
+    <View style={formStyles.loginContainer}>
+      <Text>Already have an account? </Text>
+      <Link onPress={handleLogin}>Login</Link>
+    </View>
+  )
+
+  if(isLoading) return <CustomModal desc="Please wait..."/>
+
+  if(err.length !== 0) return <CustomModal variant="error" desc={err} onClose={() => setErr('')}/>
+
   return (
     <ScrollView style={{ backgroundColor: WHITE }}>
       <View>
-        {isLoading && <CustomModal desc="Please wait..."/>}
-        {err.length !== 0 && <CustomModal variant="error" desc={err} onClose={() => setErr('')}/>}
-        {/* Username */}
-        <InputComponent
-          label="Username"
-          updateParentState={setUsername}
-          errMsg={userNameErr}
-        />
-
-        {/* Name */}
-        <InputComponent
-          label="Name"
-          updateParentState={setName}
-          errMsg={nameErr}
-        />
-
-        {/* Email */}
-        <InputComponent
-          label="Email"
-          updateParentState={setEmail}
-          errMsg={emailErr}
-        />
-
-        {/* Mobile number */}
-        <InputComponent
-          label="Mobile Number"
-          updateParentState={setMobileNumber}
-          errMsg={mobileNumberErr}
-        />
-
-        {/* password */}
-        <InputComponent
-          label="Password"
-          secureTextEntry={true}
-          updateParentState={setPassword}
-          errMsg={passwordErr}
-        />
-
-        {/* Confirm password */}
-        <InputComponent
-          label="Confirm Password"
-          secureTextEntry={true}
-          updateParentState={setConfirmPassword}
-          errMsg={confirmPasswordErr}
-        />
-
-        {/* Date of Birth */}
-        <View style={formStyles.dobContainer}>
-          <CustomDatePicker date={dob} updateParentState={setDob} label="Date of Birth" />
-        </View>
-
-        {/* Gender */}
-        <Selector options={genderOptions} label="Gender" onValueChange={setGender} />
-        
-        {/* Terms and Conditions */}
-        <View style={formStyles.termsAndConditionsContainer}>
-          <CheckBox
-              checked={termsAndConditionChecked}
-              onPress={() => settermsAndConditionChecked(!termsAndConditionChecked)}
-              checkedColor={ORANGE}
-              containerStyle={{padding: 0 , margin: 0}}
-              center={true}
-              uncheckedColor={BLACK}
-            />
-          <Text color={BLACK}>Click to accept </Text>
-          <Link onPress={handleTermsAndConditions}>Terms of Service, Privacy, Policy</Link>
-        </View>
-        
-        <View style={{...margin(10,30,10,30)}}>
-          <Button bgColor={ORANGE} textColor={WHITE} onPress={handleSignUp}>Sign Up</Button>
-        </View>
-      
-        <View style={formStyles.loginContainer}>
-          <Text>Already have an account? </Text>
-          <Link onPress={handleLogin}>Login</Link>
-        </View>
+        <InputComponent label="Username" updateParentState={setUsername} errMsg={userNameErr} />
+        <InputComponent label="Name" updateParentState={setName} errMsg={nameErr} />
+        <InputComponent label="Email" updateParentState={setEmail} errMsg={emailErr} />
+        <InputComponent label="Mobile Number" updateParentState={setMobileNumber} errMsg={mobileNumberErr} />
+        <InputComponent label="Password"  updateParentState={setPassword} errMsg={passwordErr} secureTextEntry={true} />
+        <InputComponent label="Confirm Password" updateParentState={setConfirmPassword} errMsg={confirmPasswordErr} secureTextEntry={true} />
+        <DateOfBirthInput />
+        <GenderSelector />
+        <TermsAndConditionsCheckBox />
+        <SignUpButton />
+        <LoginLink />
       </View>
     </ScrollView>
   );

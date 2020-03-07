@@ -23,13 +23,13 @@ const NotificationIcon = ({ color, size = 20 }: { color: string, size: number })
 
 const AccountIcon = ({ color, size = 20 }: { color: string, size: number }) => <FontAwesome5Icons name="user" color={color} size={size} />
 
-function BottomTabNavigator() {
+function BottomTabNavigator(props:any) {
   const notifications = useNotifications();
   const noOfNotifications = notifications.length;
 
   return (
     <Tab.Navigator screenOptions={{ tabBarColor: ORANGE }}>
-      <Tab.Screen name="Home" component={HomeScreenTopNavigator} options={{ tabBarIcon: HomeIcon }} />
+      <Tab.Screen name="Home" children={() => <HomeScreenTopNavigator {...props} />} options={{ tabBarIcon: HomeIcon }} />
       <Tab.Screen name="Activity" component={MyHelpRequestsScreen} options={{ tabBarIcon: ActivityIcon }} />
       <Tab.Screen name="Request" component={HelpRequestFormScreen} options={{ tabBarIcon: RequestIcon }} />
       <Tab.Screen 

@@ -37,10 +37,13 @@ const {
   NOTIFICATIONS
 } = TITLES;
 
-const MainNavigatorWithUser = () => {
+const MainNavigatorWithUser = (props) => {
+  const { isLogedIn } = props;
+  const initialScreen = isLogedIn ? "Main" : "LandingScreen";
+  console.log(initialScreen);
   return (
-    <Stack.Navigator initialRouteName="AppLandingScreen" screenOptions={{ header: (props) => <Header {...props} /> }}>
-      <Stack.Screen name="AppLandingScreen" component={LandingScreen} options={{ title: APP_LANDING_SCREEN, headerLeft: null }}></Stack.Screen>
+    <Stack.Navigator initialRouteName={initialScreen} screenOptions={{ header: (props) => <Header {...props} /> }}>
+      <Stack.Screen name="LandingScreen" component={LandingScreen} options={{ title: APP_LANDING_SCREEN, headerLeft: null }}></Stack.Screen>
       <Stack.Screen name="Main" component={BottomNavigator} options={{ headerLeft: null }}></Stack.Screen>
       <Stack.Screen name="Notifications" component={NotificationsScreen} options={{title:NOTIFICATIONS}}></Stack.Screen>
       <Stack.Screen name="SignUp" component={SignUpScreen} options={{ title: SIGNUP }}></Stack.Screen>

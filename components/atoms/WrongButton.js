@@ -12,7 +12,7 @@ const WrongButton = (props: { onPress: Function, loading: boolean } ) => {
             {
                 loading
                     ? <ActivityIndicator size={20} color={RED} />
-                    : <Icon name="check" size={20} color={RED} />
+                    : <Icon name="remove" size={20} color={RED} />
             }
         </TouchableOpacity>
     );
