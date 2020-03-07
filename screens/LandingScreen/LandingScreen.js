@@ -1,17 +1,17 @@
 // @flow
-import React, { useEffect } from 'react';
+import React, { useEffect, useContext } from 'react';
 import { View, Text, StyleSheet, Alert } from 'react-native';
 import { ORANGE, WHITE } from '../../styles/colors';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 // import Icon from 'react-native-vector-icons/FontAwesome';
 // import Button from '../../components/common/button';
 import { APP_TITLE } from '../../constants/appConstants';
-import { useAuth } from '../../customHooks'
 import { Auth } from "aws-amplify";
 import { CustomModal } from "../../components/molecules";
+import Context from '../../context';
 
 const LandingScreen = ({ navigation }: { navigation: Object}) => {
-    const {initializing, user} = useAuth();
+    const {initializing, user} = useContext(Context);;
 
     if(initializing) {
         return <CustomModal desc="Please wait" />

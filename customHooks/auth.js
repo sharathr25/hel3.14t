@@ -22,7 +22,7 @@ export default function useAuth() {
             })
             .then(user => {
               if (user) {
-                setState({initializing: !user, user: { username: user.username, attributes: user.attributes } })
+                setState({initializing: !user, user: { username: user.username, attributes: user.attributes, uid: user.attributes.sub } })
             }
         })
         .catch(err => {console.log(err); setState({initializing: false})});

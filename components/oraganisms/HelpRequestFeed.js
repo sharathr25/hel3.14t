@@ -80,7 +80,7 @@ const HelpRequestFeed = () => {
   const getHelps = () => {
     fetchMore({
       variables: {
-        offset: data.helps.length
+        offset: getRequestedHelpRequests(data.helps).length
       },
       updateQuery: (prev, { fetchMoreResult }) => {
         if (!fetchMoreResult) return prev;

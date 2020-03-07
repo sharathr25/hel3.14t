@@ -1,10 +1,11 @@
-import React, { useState } from "react";
+import React, { useState , useContext } from "react";
 import { Text, Input } from "react-native-elements";
 import { View, TouchableOpacity, StyleSheet, Alert, Keyboard } from "react-native";
 import { WHITE, ORANGE, FONT_FAMILY } from "../../styles/colors";
 import gql from "graphql-tag";
 import { useMutation } from "react-apollo";
-import { useAuth, useLocation } from "../../customHooks";
+import { useLocation } from "../../customHooks/";
+import Context from "../../context";
 import { CustomModal } from "../../components/molecules";
 
 const LIMIT = 3;
@@ -51,11 +52,11 @@ const HelpRequestForm = () => {
 
     const [showModal, setShowModal] = useState(false);
 
-    const { user: currentUser } = useAuth();
+    const { user: currentUser } = useContext(Context);
+    const { uid, attributes } = currentUser;
+    const { name, phone_number: phoneNumber } = attributes;
 
     const { longitude, latitude, locationProviderAvailable, locationErrorMessage } = useLocation();
-
-    const { uid, displayName, phoneNumber } = currentUser;
 
     const [createHelp, { loading, data, error }] = useMutation(HELP_REQUEST);
 
@@ -85,7 +86,7 @@ const HelpRequestForm = () => {
                     long: longitude,
                     desc: description,
                     time: new Date().getTime(),
-                    name: displayName,
+                    name,
                 }
             });
         }
