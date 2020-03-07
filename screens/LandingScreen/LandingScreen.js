@@ -3,23 +3,16 @@ import React, { useEffect, useContext } from 'react';
 import { View, Text, StyleSheet, Alert } from 'react-native';
 import { ORANGE, WHITE } from '../../styles/colors';
 import { TouchableOpacity } from 'react-native-gesture-handler';
-// import Icon from 'react-native-vector-icons/FontAwesome';
+import Icon from 'react-native-vector-icons/FontAwesome';
 // import Button from '../../components/common/button';
 import { APP_TITLE } from '../../constants/appConstants';
 import { Auth } from "aws-amplify";
 import { CustomModal } from "../../components/molecules";
-import Context from '../../context';
+import { useAuth } from "../../customHooks/";
+import Context from "../../context";
 
 const LandingScreen = ({ navigation }: { navigation: Object}) => {
-    const {initializing, user} = useContext(Context);;
-
-    if(initializing) {
-        return <CustomModal desc="Please wait" />
-    }
- 
-    if(user) {
-        navigation.replace('Main', { user } );
-    }
+    const { user } = useContext(Context);
 
     const handleSignUp = () => {
         navigation.navigate('SignUp');
@@ -45,12 +38,51 @@ const LandingScreen = ({ navigation }: { navigation: Object}) => {
         container,
         appNameAndLogoContainer,
         appName, buttons,
-        // socialMediaLoginButton,
-        // socialMediaButtonText,
-        // separater,
+        socialMediaLoginButton,
+        socialMediaButtonText,
+        separater,
         buttonContainerStyle,
         buttonText
     } = styles;
+
+    const RegisterButton = () => (
+        <TouchableOpacity onPress={handleSignUp} style={buttonContainerStyle}>
+            <Text style={buttonText}>Register</Text>
+        </TouchableOpacity>
+    );
+
+    const LoginButton = () => (
+        <TouchableOpacity onPress={handleSignIn} style={buttonContainerStyle}>
+            <Text style={buttonText}>Login</Text>
+        </TouchableOpacity>  
+    )
+
+    const LoginWithFacebook = () => (
+        <TouchableOpacity style={{ ...socialMediaLoginButton, backgroundColor: "#3b5998" }} onPress={handleFacebookSignIn}>
+            <Icon name="facebook" color={WHITE} size={20} />
+            <Text style={socialMediaButtonText}>
+                Sign-in with Facebook
+            </Text>
+        </TouchableOpacity>
+    ) 
+
+    const LoginWithGoogle = () => (
+        <TouchableOpacity style={{ ...socialMediaLoginButton, backgroundColor: "#4c8bf5" }} onPress={handleGoogleSignIn}>
+            <Icon name="google" color={WHITE} size={20} />
+            <Text style={socialMediaButtonText}>
+                Sign-in with Google
+            </Text>
+        </TouchableOpacity>
+    );
+
+    const LoginWithTwitter = () => (
+        <TouchableOpacity style={{ ...socialMediaLoginButton, backgroundColor: "#1DA1F2" }} onPress={handleTwitterSignIn}>
+            <Icon name="twitter" color={WHITE} size={20} />
+            <Text style={socialMediaButtonText}>
+                Sign in with Twitter
+            </Text>
+        </TouchableOpacity>
+    );
 
     return (
         <View style={container}>
@@ -58,33 +90,12 @@ const LandingScreen = ({ navigation }: { navigation: Object}) => {
                 <Text style={appName}>{APP_TITLE}</Text>
             </View>
             <View style={buttons}>
-                {/* <TouchableOpacity style={{ ...socialMediaLoginButton, backgroundColor: "#3b5998" }} onPress={handleFacebookSignIn}>
-                    <Icon name="facebook" color={WHITE} size={20} />
-                    <Text style={socialMediaButtonText}>
-                        Sign-in with Facebook
-                    </Text>
-                </TouchableOpacity>
-                <TouchableOpacity style={{ ...socialMediaLoginButton, backgroundColor: "#4c8bf5" }} onPress={handleGoogleSignIn}>
-                    <Icon name="google" color={WHITE} size={20} />
-                    <Text style={socialMediaButtonText}>
-                        Sign-in with Google
-                    </Text>
-                </TouchableOpacity>
-                <TouchableOpacity style={{ ...socialMediaLoginButton, backgroundColor: "#1DA1F2" }} onPress={handleTwitterSignIn}>
-                    <Icon name="twitter" color={WHITE} size={20} />
-                    <Text style={socialMediaButtonText}>
-                        Sign in with Twitter
-                    </Text>
-                </TouchableOpacity>
-                <Text style={separater}>OR WITH EMAIL</Text> */}
-                <View>
-                    <TouchableOpacity onPress={handleSignIn} style={buttonContainerStyle}>
-                        <Text style={buttonText}>Login</Text>
-                    </TouchableOpacity>
-                    <TouchableOpacity onPress={handleSignUp} style={buttonContainerStyle}>
-                        <Text style={buttonText}>Register</Text>
-                    </TouchableOpacity>
-                </View>
+                {/* <LoginWithFacebook /> */}
+                {/* <LoginWithGoogle /> */}
+                {/* <LoginWithTwitter /> */}
+                {/* <Text style={separater}>OR WITH EMAIL</Text> */}
+                <LoginButton />
+                <RegisterButton />
             </View>
         </View>
     );
@@ -103,7 +114,7 @@ const styles = StyleSheet.create({
     },
     appNameAndLogoContainer: {
         display: 'flex',
-        flex: 2.5,
+        flex: 1.5,
         padding: 10
     },
     appName: {

@@ -11,6 +11,7 @@ import { FullScreenLoader } from './components/atoms';
 import Amplify,{Auth} from 'aws-amplify';
 import awsConfig from './aws-exports';
 import Context from './context';
+import { CustomModal } from "./components/molecules"
 
 Amplify.configure({...awsConfig});
 
@@ -39,12 +40,14 @@ function App() {
             //  }
             //  __proto__: Object
             //  uid: "f09929fb-c4ac-4148-bc48-a282e4f10632"}
+
+  if(initializing) return <CustomModal />
   
   return (
     <ApolloProvider client={ApolloClient}>
       <Context.Provider value={{initializing, user}}>
         <NavigationContainer>
-          <AppContainer />
+          <AppContainer isLogedIn={user ? true : false}/>
         </NavigationContainer>
       </Context.Provider>
     </ApolloProvider>

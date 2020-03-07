@@ -10,34 +10,7 @@ import { Status, Time, Card } from '../atoms';
 import { FONT_FAMILY_BOLD, FONT_SIZE_16, FONT_WEIGHT_BOLD, FONT_FAMILY_REGULAR } from '../../styles/typography';
 import { margin } from '../../styles/mixins';
 
-const UserHelpRequest = (props) => {
-  const { keyOfHelpRequest, showDone = true } = props;
-
-  const QUERY = gql`
-    query {
-      help(id:"${keyOfHelpRequest}") {
-        status,
-        description,
-        usersAccepted {
-          uid
-          name
-          mobileNo
-          stars
-        },
-        usersRequested {
-          uid
-          name,
-          mobileNo,
-          xp,
-          stars
-        },
-        timeStamp,
-        noPeopleRequired
-      }
-    }
-  `;
-
-  const SUBSCRIPTION = gql`
+const SUBSCRIPTION = gql`
     subscription{
       onUpdateHelp{
         _id,
@@ -60,13 +33,38 @@ const UserHelpRequest = (props) => {
   }
   `;
 
-  let { data , error } = useQuery(QUERY);
+  const QUERY = gql`
+    query Help($id: String!){
+      help(id:$id) {
+        status,
+        description,
+        usersAccepted {
+          uid
+          name
+          mobileNo
+          stars
+        },
+        usersRequested {
+          uid
+          name,
+          mobileNo,
+          xp,
+          stars
+        },
+        timeStamp,
+        noPeopleRequired
+      }
+    }
+  `;
+
+const UserHelpRequest = (props) => {
+  const { keyOfHelpRequest, showDone = true } = props;
+
+  let { data , error } = useQuery(QUERY, { variables: { id: keyOfHelpRequest }});
 
   const subscriptionData = useSubscription(SUBSCRIPTION, { shouldResubscribe: true });
 
   let updatedData = subscriptionData && subscriptionData.data && subscriptionData.data.onUpdateHelp || null;
-
-  console.log(updatedData);
 
   if (updatedData) {
     const { _id } = updatedData;
@@ -109,24 +107,6 @@ const UserHelpRequest = (props) => {
 
   if (!status) return null;
 
-  if (status === "COMPLETED") {
-    return (
-      <Card borderLeftColor={STATUS_COLOR_MAPPING[status]}>
-        <Text style={styles.descriptionStyle}>{description}</Text>
-        <Status>{status}</Status>
-        <View>
-          <FlatList
-            data={usersAccepted}
-            renderItem={getAcceptedUser}
-            keyExtractor={getAcceptedUserKey}
-            listKey={getAcceptedUserKey}
-            ListHeaderComponent={usersAccepted.length ? <Text style={{ fontFamily: FONT_FAMILY, marginBottom: 5 }}>people who helped you</Text> : null}
-          />
-        </View>
-      </Card>
-    );
-  }
-
   return (
     <Card borderLeftColor={STATUS_COLOR_MAPPING[status]}>
       <Text style={styles.descriptionStyle}>{description}</Text>
@@ -149,7 +129,7 @@ const UserHelpRequest = (props) => {
           ListHeaderComponent={usersAccepted.length ? <Text style={{ fontFamily: FONT_FAMILY_REGULAR, marginBottom: 5 }}>People who are helping</Text> : null}
         />
       </View>
-      {showDone && <View style={{ ...margin(5, 0, 0, 0) }}><DoneButton keyOfHelpRequest={keyOfHelpRequest} status={status} usersAccepted={usersAccepted} /></View>}
+      {showDone && status !== "COMPLETED" && <View style={{ ...margin(5, 0, 0, 0) }}><DoneButton keyOfHelpRequest={keyOfHelpRequest} status={status} usersAccepted={usersAccepted} /></View>}
       <Time time={timeStamp} />
     </Card>
   );

@@ -1,6 +1,6 @@
 // @flow
 import React from "react";
-import { StyleSheet, View, Text } from "react-native";
+import { StyleSheet, View, Text, Dimensions } from "react-native";
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { RED, BLACK } from "../../styles/colors";
 
@@ -19,12 +19,15 @@ export default Failed;
 
 const styles = StyleSheet.create({
     content: {
-        padding: 30,
+        width: Dimensions.get('window').width/2,
+        height: Dimensions.get('window').height/4,
+        padding: 20,
         justifyContent: 'center',
         alignItems: 'center'
     },
     textStyle: {
         color: BLACK,
-        fontSize: 20
+        fontSize: 20,
+        textAlign: 'center'
     },
 });

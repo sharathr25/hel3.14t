@@ -12,7 +12,8 @@ export default function useAuth() {
     const [state, setState] = useState<state>({ initializing: true, user: null });
 
     useEffect(() => {
-      checkUser();
+      checkUser();  
+      Hub.listen('auth', listener);
     }, [])
 
     const checkUser = () => {
@@ -34,7 +35,5 @@ export default function useAuth() {
     }
   }
 
-  Hub.listen('auth', listener);
-  
   return state
 }

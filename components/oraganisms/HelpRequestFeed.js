@@ -41,33 +41,6 @@ const HELPS = gql`
   }
 `;
 
-// const HELPS_CREATE_SUBSCRIPITON = gql`
-// subscription {
-//   onCreateHelp{
-//     _id,
-//     latitude,
-//     longitude,
-//     timeStamp,
-//     description,
-//     usersAccepted{
-//       uid,
-//       name,
-//       mobileNo
-//     }
-//     usersRequested{
-//       uid,
-//       name,
-//       xp
-//     },
-//     usersRejected {
-//       uid
-//     }
-//     noPeopleRequired,
-//     creator
-//   }
-// }
-// `;
-
 const HelpRequestFeed = () => {
   const { longitude, latitude, locationProviderAvailable } = useLocation();
   const { loading, data, error, fetchMore } = useQuery(HELPS, {
@@ -90,15 +63,6 @@ const HelpRequestFeed = () => {
       }
     })
   }
-
-  // const subscriptionDataForNewHelp = useSubscription(HELPS_CREATE_SUBSCRIPITON);
-
-  // let newHelp = subscriptionDataForNewHelp && subscriptionDataForNewHelp.data && subscriptionDataForNewHelp.data.onCreateHelp || null;
-
-  // if (newHelp) {
-  //   helps = [newHelp, ...helps];
-  //   newHelp = null;
-  // }
 
   if (error) return <Text>{error.networkError}</Text>
 

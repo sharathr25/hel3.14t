@@ -1,11 +1,10 @@
 // @flow
-import React,{useContext} from 'react';
+import React from 'react';
 import { Text, View, StyleSheet, Alert } from 'react-native';
 import { ProfileLetter, RightButton, WrongButton } from '../atoms';
 import { useMutation } from 'react-apollo';
 import gql from 'graphql-tag';
 import { FONT_SIZE_16, FONT_WEIGHT_BOLD } from '../../styles/typography';
-import Context from '../../context';
 
 type RequesterProps = {
   uidOfRequester: string, 

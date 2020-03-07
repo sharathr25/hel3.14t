@@ -3,7 +3,7 @@ import { View, Alert, StyleSheet, TouchableOpacity, Text } from 'react-native';
 import { ScrollView } from 'react-native-gesture-handler';
 import firebase from 'react-native-firebase';
 import { SIGN_UP_SCREEN, APP_TITLE } from '../../constants/appConstants';
-import { ORANGE, WHITE, BLACK } from '../../styles/colors';
+import { ORANGE, WHITE, BLACK, LIGHT_BLUE } from '../../styles/colors';
 import { InputComponent, ErrorMessage } from '../../components/atoms';
 import { regex } from '../../utils/index';
 import { getUser } from '../../fireBase/database';
@@ -107,6 +107,32 @@ const Verification = (props: VerificationProps) => {
     setErrorDesc('');
   }
 
+  const NotificationMessage = () => (
+    <View style={{ backgroundColor: '#C4C4C4', marginBottom: 10, justifyContent: 'center', alignItems: 'center', padding: 15 }}>
+      <Text style={{ color: BLACK }}>
+        { type === "phone" 
+            ? `Enter OTP sent to xxxxxxxxx${mobileNumber.substring(8)}`
+            : `Enter OTP sent to xxxxxxxxx@${email.split('@')[1]}`
+        }
+      </Text>
+    </View>
+  );
+
+  const ResendLink = () => (
+    <View style={{ flexDirection: 'row',alignSelf: 'flex-end', ...margin(0,10,0,0) }}>
+      <Text>Haven’t received OTP? </Text>
+      <TouchableOpacity onPress={handleResendOtp}>
+        <Text style={{color: LIGHT_BLUE}}>Resend</Text>
+      </TouchableOpacity>
+    </View>
+  );
+
+  const VerifyButton = () => (
+    <View style={{...margin(30,30,0,30)}}>
+      <Button bgColor={ORANGE} textColor={WHITE} onPress={handleVerify}>Verify</Button>
+    </View>
+  );
+
   if(showModal) {
     if(successDesc.length === 0 && errorDesc.length === 0) {
       return <CustomModal variant="loading" /> 
@@ -118,34 +144,11 @@ const Verification = (props: VerificationProps) => {
   }
 
   return (
-      <View style={{backgroundColor: WHITE, flex: 1}}>
-        <View style={{backgroundColor: '#C4C4C4', marginBottom: 10, justifyContent: 'center', alignItems: 'center', padding: 15}}>
-            <Text style={{color: BLACK}}>
-              { type === "phone" 
-                  ? `Enter OTP sent to  xxxxxxxxx${mobileNumber.substring(8)}`
-                  :  `Enter OTP sent to xxxxxxxxx${email}`
-              }
-              
-            </Text>
-        </View>
-        <InputComponent
-          label="OTP"
-          secureTextEntry={false}
-          updateParentState={setOTP}
-        />
-        <View style={{
-            flexDirection: 'row',
-            alignSelf: 'flex-end',
-            ...margin(0,10,0,0)
-        }}>
-        <Text>Haven’t received OTP? </Text>
-        <TouchableOpacity onPress={handleResendOtp}>
-          <Text style={{color: "#1DA1F2"}}>Resend</Text>
-        </TouchableOpacity>
-      </View>
-      <View style={{...margin(30,30,0,30)}}>
-        <Button bgColor={ORANGE} textColor={WHITE} onPress={handleVerify}>Verify</Button>
-      </View>
+      <View style={{ backgroundColor: WHITE, flex: 1, paddingTop: 20 }}>
+        <NotificationMessage />
+        <InputComponent label="OTP" secureTextEntry={false} updateParentState={setOTP} />
+        <ResendLink />
+        <VerifyButton />
       </View>
   );
 }

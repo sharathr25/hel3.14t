@@ -1,6 +1,6 @@
 // @flow
 import React from "react";
-import { StyleSheet, View, Text, ActivityIndicator } from "react-native";
+import { StyleSheet, View, Text, ActivityIndicator, Dimensions } from "react-native";
 import { ORANGE, BLACK } from "../../styles/colors";
 
 const Loading = (props: { desc :String }) => {
@@ -18,12 +18,15 @@ export default Loading;
 
 const styles = StyleSheet.create({
     content: {
-        padding: 30,
+        width: Dimensions.get('window').width/2,
+        height: Dimensions.get('window').height/4,
+        padding: 20,
         justifyContent: 'center',
         alignItems: 'center'
     },
     textStyle: {
         color: BLACK,
-        fontSize: 20
+        fontSize: 20,
+        textAlign: 'center'
     },
 });
