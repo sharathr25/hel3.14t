@@ -10,7 +10,6 @@ import Success from './Success';
 import Failed from './Failed';
 import CustomDatePicker from './CustomDatePicker';
 import ProfileLetter from './ProfileLetter';
-import InputComponent from './InputComponent';
 import ErrorMessage from './ErrorMessage';
 import FullScreenError from './FullScreenError';
 import FullScreenLoader from './FullScreenLoader';
@@ -20,6 +19,7 @@ import Selector from './Selector';
 import Link from './Link';
 import HeaderTitle from './HeaderTitle'
 import Curve from "./Curve";
+import PasswordIcon from "./PasswordIcon"
 
 export {
     Status,
@@ -34,7 +34,6 @@ export {
     Failed,
     CustomDatePicker,
     ProfileLetter,
-    InputComponent,
     ErrorMessage,
     FullScreenError,
     FullScreenLoader,
@@ -43,5 +42,6 @@ export {
     Selector,
     Link,
     HeaderTitle,
-    Curve
+    Curve,
+    PasswordIcon
 };

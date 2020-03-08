@@ -19,10 +19,10 @@ const { multiply } = Animated;
 const TITLES = {
   APP_LANDING_SCREEN : "Welcome to haisaa",
   LOGIN : "Log in",
-  SIGNUP: "Registrer",
+  SIGNUP: "Register",
   VERIFICATION: "Verification",
   FORGOT_PASSWORD: "Forgot password",
-  RESET_PASSWORD: "Reset password",
+  RESET_PASSWORD: "Reset your passward",
   TERMS_AND_CONDITIONS: "Terms & Conditions",
   NOTIFICATIONS: "Notifications"
 }
@@ -108,6 +108,10 @@ const leftToRight = (screenProps) => {
       ],
     },
   };
+}
+
+const Main = () => {
+  return <View><Text>Main</Text></View>
 }
 
 const MainNavigatorWithUser = (props) => {

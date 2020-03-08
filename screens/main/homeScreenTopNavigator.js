@@ -6,21 +6,36 @@ import { createMaterialTopTabNavigator } from '@react-navigation/material-top-ta
 import { HelpRequestFeed } from '../../components/oraganisms';
 import { CustomModal } from "../../components/molecules";
 import Context from '../../context';
+import { Auth } from "aws-amplify";
 
 const Tab = createMaterialTopTabNavigator();
 
-const Helps = ({route}) => {
-  const [showModal, setShowModal] = useState(false);
+const Helps = ({navigation, route}) => {
+
   const { params } = route;
   const user = useContext(Context).user || params.user;
-  if(!user) return null;
 
   const { username, attributes } = user;
   const { email_verified, email } = attributes;
+  const [showModal, setShowModal] = useState(!email_verified);
 
-  const _onPress = () => {
+  const verify = async (otp) => {
+    await Auth.verifyCurrentUserAttributeSubmit('email', otp)
+  }
+
+  const resend = async () => {
+    return await Auth.verifyCurrentUserAttribute('email')
+  }
+
+  const redirectTo = async () => {
+    await Auth.signOut();
+    navigation.navigate('Login');
+  }
+
+  const _onPress = async () => {
     setShowModal(!showModal);
-    // navigation.navigate('Verification', {username, email, type:"email" });
+    await Auth.verifyCurrentUserAttribute('email')
+    navigation.navigate('Verification', { verify, redirectTo, resend, message: "Enter OTP sent to registered email" });
   }
 
   if(showModal) {

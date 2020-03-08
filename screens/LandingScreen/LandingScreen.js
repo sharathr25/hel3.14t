@@ -51,7 +51,8 @@ const LandingScreen = ({ navigation }: { navigation: Object}) => {
         style={{
             ...padding(10, 20, 10, 20),
             backgroundColor: ORANGE,
-            ...borderRadius(0, 15, 15, 0)
+            ...borderRadius(0, 15, 15, 0),
+            width: 120
         }}>
             <Text style={buttonText}>Register</Text>
         </TouchableOpacity>
@@ -63,7 +64,8 @@ const LandingScreen = ({ navigation }: { navigation: Object}) => {
                 ...padding(10, 20, 10, 20),
                 backgroundColor: ORANGE,
                 borderRadius: 15,
-                ...borderRadius(15, 0, 0, 15)
+                ...borderRadius(15, 0, 0, 15),
+                width: 120
             }}>
             <Text style={buttonText}>Login</Text>
         </TouchableOpacity>  

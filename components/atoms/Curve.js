@@ -8,15 +8,16 @@ import Icon from 'react-native-vector-icons/FontAwesome5'
 const Curve = ({bottom = 0, width, children = <Text/>, zIndex=0, backgroundColor=ORANGE }) => {
   return (
     <View style={{  
-        borderRadius: width*2,
+        borderRadius: width*2.5,
         backgroundColor: backgroundColor,
-        width: width * 4,
-        height: width * 4,
-        marginLeft: -(width*1.5),
+        width: width * 5,
+        height: width * 5,
+        marginLeft: -(width*2),
         position:'absolute' ,
         bottom:bottom,
         overflow: 'hidden',
-        zIndex: zIndex
+        zIndex: zIndex,
+        alignItems: 'center',
       }}
     >
     {children}

@@ -2,9 +2,9 @@
 import React, { useState } from 'react';
 import { View, StyleSheet, Text } from 'react-native';
 import { ORANGE, WHITE, BLACK } from '../../styles/colors';
-import { InputComponent, ErrorMessage, Button } from '../../components/atoms';
+import { ErrorMessage, Button } from '../../components/atoms';
 import { regex } from '../../utils/index';
-import { CustomModal } from '../../components/molecules';
+import { CustomModal, InputComponent } from '../../components/molecules';
 import { margin } from '../../styles/mixins';
 import { Auth } from 'aws-amplify';
 
@@ -13,12 +13,11 @@ type ResetPassowrdScreenProps = {
   route: Object
 }
 
-const ResetPassowrdScreen = (props: ResetPassowrdScreenProps) => {
+const ResetPassowrdScreen = ({ navigation,route }: ResetPassowrdScreenProps) => {
   const [showModal, setShowModal] = useState(false);
   const [status, setStatus] = useState({loading: false, success: false, error: false});
   const [successDesc, setSuccessDesc] = useState('');
   const [errorDesc, setErrorDesc] = useState('');
-  const [otp, setOtp] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassowr] = useState('');
   const [passwordErrorMessage, setPasswordErrorMessage] = useState('');
@@ -38,18 +37,15 @@ const ResetPassowrdScreen = (props: ResetPassowrdScreenProps) => {
 
     const handleResetPassword = async () => {
         if(checkPasswordField()) {
-            const { navigation,route } = props;
-            const { username } = route.params;
-            console.log(username, password, otp);
+            const { username, otp } = route.params;
             setStatus({loading:true, success: false, error: false});
             try {
                 const data = await Auth.forgotPasswordSubmit(username, otp, password)
                 console.log(data)
                 setSuccessDesc('Password Changed Sucessfully');
                 setStatus({loading:false, success: true, error: false});
-                navigation.navigate('Login');
             } catch (error) {
-                setErrorDesc('Password change failed');
+                setErrorDesc('Password change failed, enter valid OTP');
                 setStatus({loading:false, success: false, error: true});
                 console.log(error)
             } finally {
@@ -62,64 +58,36 @@ const ResetPassowrdScreen = (props: ResetPassowrdScreenProps) => {
     if (loading) {
       return <CustomModal variant="loading" />
     } else if (success) {
-      return <CustomModal variant="success" onClose={() => setShowModal(!showModal)} desc={successDesc}/>
+      return <CustomModal variant="success" onClose={() => {setShowModal(!showModal);navigation.navigate('Login');}} desc={successDesc}/>
     } else if (error) {
-      return <CustomModal variant="error" onClose={() => setShowModal(!showModal)} desc={errorDesc}/>
+      return <CustomModal variant="error" onClose={() => {setShowModal(!showModal);navigation.goBack();}} desc={errorDesc}/>
     }
   }
 
   return (
-      <View style={{ flex: 1, backgroundColor: WHITE, justifyContent: 'space-evenly' }}>
-          <InputComponent
-          label="OTP"
-          secureTextEntry={true}
-          updateParentState={value => {setOtp(value)}}
-        />
+    <View style={{flex: 1, backgroundColor: WHITE }}>
+      <View style={{backgroundColor:"#C4C4C4", display:'flex', alignItems:'center', padding: 10, marginTop: 30}}>
+        <Text style={{color: BLACK, fontSize: 15 }}>Enter OTP and New password</Text>
+      </View>
+      <View style={{ flex: 1, justifyContent: 'space-evenly' , ...margin(0,30,0,30) }}>
         <InputComponent
           label="Password"
-          secureTextEntry={true}
+          showPasswordIcon={true}
           updateParentState={value => {setPassword(value); setPasswordErrorMessage('')}}
+          errMsg={passwordErrorMessage}
         />
-        {passwordErrorMessage.length !== 0 && <ErrorMessage message={passwordErrorMessage} />}
         <InputComponent
           label="Confirm Password"
-          secureTextEntry={true}
+          showPasswordIcon={true}
           updateParentState={value => {setConfirmPassowr(value); setConfirmPasswordErrorMessage('')}}
+          errMsg={confirmPasswordErrorMessage}
         />
-        {confirmPasswordErrorMessage.length !== 0 && <ErrorMessage message={confirmPasswordErrorMessage} />}
-        <View style={{...margin(0,10,0,10)}}>
+        <View>
           <Button bgColor={ORANGE} textColor={WHITE} onPress={handleResetPassword}>Change Password</Button>
         </View>
       </View>
+    </View>
   );
 }
-
-const styles = StyleSheet.create({
-  appTitle: {
-    marginBottom: 30,
-    color: ORANGE,
-    textAlign: 'center',
-    fontSize: 20,
-    fontFamily: 'cursive'
-  },
-  screenTitle: {
-    marginBottom: 40,
-    textAlign: 'center',
-    fontSize: 30,
-    color: BLACK,
-  },
-  signInContainerStyle: {
-    margin: 10,
-    marginTop: 25,
-    padding: 10,
-    backgroundColor: ORANGE,
-    borderRadius: 25
-  },
-  signInText: {
-    textAlign: 'center',
-    color: WHITE,
-    fontSize: 18
-  },
-});
 
 export default ResetPassowrdScreen;

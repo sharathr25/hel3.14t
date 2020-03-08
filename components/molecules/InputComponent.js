@@ -1,19 +1,28 @@
 // @flow
-import React from 'react';
+import React, { useState } from 'react';
 import { Input } from 'react-native-elements';
 import { WHITE, ORANGE, INPUT_TEXT_COLOR, BLACK } from '../../styles/colors';
 import { FONT_WEIGHT_REGULAR } from "../../styles/typography";
 import { StyleSheet } from 'react-native';
+import { PasswordIcon } from '../atoms'
 
 type InputComponentProps = {
   label?: string,
   secureTextEntry?: boolean,
   updateParentState: Function,
-  errMsg: string
+  errMsg: string,
+  rightIcon: any,
+  showPasswordIcon: boolean
 }
 
 const InputComponent = (props: InputComponentProps) => {
-  const { label = "", secureTextEntry = false, updateParentState, errMsg = "" } = props;
+  const [showPassword, setShowPassword] = useState(false);
+
+  const _setShowPassword = () => {
+    setShowPassword(!showPassword);
+  }
+
+  const { label = "", secureTextEntry = false, updateParentState, errMsg = "", rightIcon = null, showPasswordIcon = false } = props;
   const { labelStyle, containerStyle, inputContainerStyle, inputStyle } = styles;
   return (
     <Input
@@ -22,9 +31,11 @@ const InputComponent = (props: InputComponentProps) => {
       inputContainerStyle={inputContainerStyle}
       inputStyle={inputStyle}
       containerStyle={containerStyle}
-      secureTextEntry={secureTextEntry}
+      secureTextEntry={showPasswordIcon && !showPassword}
       onChangeText={value => updateParentState(value)}
       errorMessage={errMsg}
+      rightIcon={showPasswordIcon ? <PasswordIcon showPassword={showPassword} setShowPassword={_setShowPassword} /> : null}
+      rightIconContainerStyle={{ right: 8 }}
     />
   );
 }
@@ -32,7 +43,8 @@ const InputComponent = (props: InputComponentProps) => {
 const styles = StyleSheet.create({
   containerStyle: {
     marginTop: 10,
-    marginBottom: 10
+    marginBottom: 10,
+    paddingHorizontal: 0
   },
   labelStyle: {
     backgroundColor: WHITE,
@@ -54,7 +66,7 @@ const styles = StyleSheet.create({
     paddingLeft: 15,
   },
   inputStyle: {
-    color: INPUT_TEXT_COLOR
+    color: INPUT_TEXT_COLOR,
   },
 });
 export default InputComponent;
