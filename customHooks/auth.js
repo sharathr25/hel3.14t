@@ -1,6 +1,5 @@
 // @flow
 import { useEffect, useState } from 'react';
-import firebase from 'react-native-firebase'
 import { Hub, Auth } from 'aws-amplify';
 
 type state = {

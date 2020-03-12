@@ -34,7 +34,6 @@ const MyAccountScreen = (props: MyAccountScreenProps) => {
 
     const handleLogOut = () => {
         console.log(navigation);
-        // firebase.auth().signOut();
     }
 
     if (loading) {

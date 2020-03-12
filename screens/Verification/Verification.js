@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { View, Alert, StyleSheet, TouchableOpacity, Text } from 'react-native';
 import { ScrollView } from 'react-native-gesture-handler';
-import firebase from 'react-native-firebase';
 import { SIGN_UP_SCREEN, APP_TITLE } from '../../constants/appConstants';
 import { ORANGE, WHITE, BLACK, LIGHT_BLUE } from '../../styles/colors';
 import { ErrorMessage } from '../../components/atoms';

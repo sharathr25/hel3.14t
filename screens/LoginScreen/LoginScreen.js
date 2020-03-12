@@ -3,7 +3,6 @@ import React, { useState } from 'react';
 import { View, Alert, ActivityIndicator, Text, StyleSheet } from 'react-native';
 import { APP_TITLE } from '../../constants/appConstants';
 import { WHITE, ORANGE, BLACK } from '../../styles/colors';
-import { getEmail, loginWithEmailAndPassword } from '../../fireBase/auth/login';
 import { checkUserNameAndPasswordFields, regex } from '../../utils/index';
 import { ErrorMessage , Link, Button, PasswordIcon } from '../../components/atoms';
 import { CustomModal,InputComponent } from '../../components/molecules';

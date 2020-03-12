@@ -3,7 +3,6 @@ import React, { useState, useEffect } from 'react';
 import { Text, CheckBox } from 'react-native-elements';
 import { View, Alert, StyleSheet, TouchableOpacity, ActivityIndicator, Picker } from 'react-native';
 import { ScrollView } from 'react-native-gesture-handler';
-import firebase from 'react-native-firebase';
 import { SIGN_UP_SCREEN, APP_TITLE } from '../../constants/appConstants';
 import { ORANGE, WHITE, FONT_FAMILY, BLACK } from '../../styles/colors';
 import { margin } from "../../styles/mixins";
