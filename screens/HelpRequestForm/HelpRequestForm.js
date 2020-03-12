@@ -1,14 +1,16 @@
+// @flow
 import React, { useState , useContext } from "react";
 import { Text, Input } from "react-native-elements";
 import { View, TouchableOpacity, StyleSheet, Alert, Keyboard } from "react-native";
-import { WHITE, ORANGE, FONT_FAMILY } from "../../styles/colors";
+import { WHITE, ORANGE } from "../../styles/colors";
+import { FONT_FAMILY_REGULAR } from "../../styles/typography";
 import gql from "graphql-tag";
 import { useMutation } from "react-apollo";
 import { useLocation } from "../../customHooks/";
 import Context from "../../context";
 import { CustomModal } from "../../components/molecules";
 
-const LIMIT = 3;
+const DESCRIPTION_LIMIT = 3;
 
 const HELP_REQUEST = gql`
   mutation CreateHelpRequest($uid:String!,$mobileNo:String!,$lat:Float!,$long:Float!,$desc:String!, $time:Date!, $name:String!, $noPeopleRequired:Int!){
@@ -32,13 +34,7 @@ const HELP_REQUEST = gql`
 
 const noOfPeopleSelectBoxOptions = [1, 2, 3, 4, 5, 6];
 
-const Option = ({ val }) => {
-    return (
-        <TouchableOpacity onPress={() => handleCheckBox(val)} style={getCheckBoxStyle(val)} key={val}>
-            <Text style={getCheckBoxTextStyle(val)}>{val}</Text>
-        </TouchableOpacity>
-    );
-}
+
 
 const HelpRequestForm = () => {
     const [state, setState] = useState({
@@ -60,18 +56,18 @@ const HelpRequestForm = () => {
 
     const [createHelp, { loading, data, error }] = useMutation(HELP_REQUEST);
 
-    handleCheckBox = (val) => {
+    const handleCheckBox = (val) => {
         setState({ ...state, noPeopleRequired: val, [`checkBox${val}`]: true });
     }
 
-    getCheckBoxStyle = (val) => [styles.defaultCheckBoxStyle, state.noPeopleRequired === val ? styles.activeCheckBox : styles.inActiveCheckBox];
+    const getCheckBoxStyle = (val) => [styles.defaultCheckBoxStyle, state.noPeopleRequired === val ? styles.activeCheckBox : styles.inActiveCheckBox];
 
-    getCheckBoxTextStyle = (val) => state.noPeopleRequired === val ? styles.activeText : styles.inActiveText;
+    const getCheckBoxTextStyle = (val) => state.noPeopleRequired === val ? styles.activeText : styles.inActiveText;
 
-    requestHelp = () => {
+    const requestHelp = () => {
         const { description, noPeopleRequired } = state;
-        if (description.length < LIMIT) {
-            Alert.alert(`description should contain minimum ${LIMIT} characters`);
+        if (description.length < DESCRIPTION_LIMIT) {
+            Alert.alert(`description should contain minimum ${DESCRIPTION_LIMIT} characters`);
         } else if (locationProviderAvailable === false && latitude === null && longitude === null) {
             Alert.alert(locationErrorMessage ? locationErrorMessage : "location error");
         } else {
@@ -93,6 +89,14 @@ const HelpRequestForm = () => {
     }
 
     const { signInContainerStyle, signInText, container, selectBoxLabel, selectBoxContainer, descriptionContainerStyle, inputLabelStyle } = styles;
+
+    const Option = ({ val }) => {
+    return (
+            <TouchableOpacity onPress={() => handleCheckBox(val)} style={getCheckBoxStyle(val)} key={val}>
+                <Text style={getCheckBoxTextStyle(val)}>{val}</Text>
+            </TouchableOpacity>
+        );
+    }
 
     if (showModal) {
         if (loading) {
@@ -202,12 +206,12 @@ const styles = StyleSheet.create({
     activeText: {
         color: WHITE,
         fontSize: 20,
-        fontFamily: FONT_FAMILY
+        fontFamily: FONT_FAMILY_REGULAR
     },
     inActiveText: {
         color: ORANGE,
         fontSize: 20,
-        fontFamily: FONT_FAMILY
+        fontFamily: FONT_FAMILY_REGULAR
     },
     buttons: {
         height: 60,

@@ -4,23 +4,24 @@ import { View, Text, StyleSheet, Alert, Image } from 'react-native';
 import { ORANGE, WHITE } from '../../styles/colors';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import Icon from 'react-native-vector-icons/FontAwesome';
-// import Button from '../../components/common/button';
-import { APP_TITLE } from '../../constants/appConstants';
+import { SCREEN_DETAILS } from '../../constants/appConstants';
 import { Auth } from "aws-amplify";
 import { CustomModal } from "../../components/molecules";
 import { useAuth } from "../../customHooks/";
 import Context from "../../context";
 import { padding, borderRadius, margin } from "../../styles/mixins";
 
+const { SIGNUP, LOGIN } = SCREEN_DETAILS;
+
 const LandingScreen = ({ navigation }: { navigation: Object}) => {
     const { user } = useContext(Context);
 
     const handleSignUp = () => {
-        navigation.navigate('SignUp');
+        navigation.navigate(SIGNUP.screenName);
     }
 
     const handleSignIn = () => {
-        navigation.navigate('Login');
+        navigation.navigate(LOGIN.screenName);
     }
 
     const handleFacebookSignIn = () => {

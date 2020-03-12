@@ -1,3 +1,4 @@
+// @flow
 import React, { useState, useEffect } from 'react';
 import { View, Alert, StyleSheet, TouchableOpacity, Text } from 'react-native';
 import { ScrollView } from 'react-native-gesture-handler';
@@ -5,7 +6,6 @@ import { SIGN_UP_SCREEN, APP_TITLE } from '../../constants/appConstants';
 import { ORANGE, WHITE, BLACK, LIGHT_BLUE } from '../../styles/colors';
 import { ErrorMessage } from '../../components/atoms';
 import { regex } from '../../utils/index';
-import { getUser } from '../../fireBase/database';
 import { CustomModal, InputComponent } from '../../components/molecules';
 import { Button } from '../../components/atoms'; 
 import { Auth } from "aws-amplify";
@@ -20,7 +20,7 @@ const Verification = (props: VerificationProps) => {
   const [OTP, setOTP] = useState('');
   const { navigation, route } = props;
   const { params={} } = route;
-  const { verify=() => {}, redirectTo=() => {}, resend=() => {}, message = "", showStatus = true } = params;
+  const { verify=(otp) => {}, redirectTo=(otp) => {}, resend=() => {}, message = "", showStatus = true } = params;
   const [showModal, setShowModal] = useState(false);
   const [successDesc, setSuccessDesc] = useState('');
   const [errorDesc, setErrorDesc] = useState(''); 

@@ -1,12 +1,15 @@
 // @flow
 import React, { useState } from 'react';
 import { View, StyleSheet, Text } from 'react-native';
-import { ORANGE, WHITE, BLACK } from '../../styles/colors';
+import { ORANGE, WHITE, BLACK, LIGHT_GRAY } from '../../styles/colors';
 import { ErrorMessage, Button } from '../../components/atoms';
 import { regex } from '../../utils/index';
 import { CustomModal, InputComponent } from '../../components/molecules';
 import { margin } from '../../styles/mixins';
 import { Auth } from 'aws-amplify';
+import { SCREEN_DETAILS } from "../../constants/appConstants";
+
+const { LOGIN } = SCREEN_DETAILS;
 
 type ResetPassowrdScreenProps = {
   navigation: Object,
@@ -28,58 +31,80 @@ const ResetPassowrdScreen = ({ navigation,route }: ResetPassowrdScreenProps) => 
     if (password.length === 0) {
       setPasswordErrorMessage('Password cannot be empty');
     } else if(confirmPassword.length === 0) {
-        setConfirmPasswordErrorMessage('Password cannot be empty');
+      setConfirmPasswordErrorMessage('Password cannot be empty');
     } else if (password !== confirmPassword) {
       setConfirmPasswordErrorMessage('Password mismatch');
     } else valid = true;
     return valid;
   }
 
-    const handleResetPassword = async () => {
-        if(checkPasswordField()) {
-            const { username, otp } = route.params;
-            setStatus({loading:true, success: false, error: false});
-            try {
-                const data = await Auth.forgotPasswordSubmit(username, otp, password)
-                console.log(data)
-                setSuccessDesc('Password Changed Sucessfully');
-                setStatus({loading:false, success: true, error: false});
-            } catch (error) {
-                setErrorDesc('Password change failed, enter valid OTP');
-                setStatus({loading:false, success: false, error: true});
-                console.log(error)
-            } finally {
-                setShowModal(true);
-            }
-    }}
+  const handleResetPassword = async () => {
+    if(checkPasswordField()) {
+      const { params } = route;
+      const { username, otp } = params;
+      setStatus({loading:true, success: false, error: false});
+      try {
+          const data = await Auth.forgotPasswordSubmit(username, otp, password)
+          console.log(data)
+          setSuccessDesc('Password Changed Sucessfully');
+          setStatus({loading:false, success: true, error: false});
+      } catch (error) {
+          setErrorDesc('Password change failed, enter valid OTP');
+          setStatus({loading:false, success: false, error: true});
+          console.log(error)
+      } finally {
+          setShowModal(true);
+      }
+    }
+  }
+
+  const handleSuccess = () => {
+    setShowModal(!showModal);
+    navigation.navigate(LOGIN.screenName);
+  }
+
+  const handleError = () => {
+    setShowModal(!showModal);
+    navigation.goBack();
+  }
+
+  const onPasswordChange = (value) => {
+    setPassword(value); 
+    setPasswordErrorMessage('')
+  }
+
+  const onConfirmPasswordChange = (value) => {
+    setConfirmPassowr(value); 
+    setConfirmPasswordErrorMessage('')
+  }
 
   if (showModal) {
     const { loading, success, error } = status;
     if (loading) {
       return <CustomModal variant="loading" />
     } else if (success) {
-      return <CustomModal variant="success" onClose={() => {setShowModal(!showModal);navigation.navigate('Login');}} desc={successDesc}/>
+      return <CustomModal variant="success" onClose={handleSuccess} desc={successDesc}/>
     } else if (error) {
-      return <CustomModal variant="error" onClose={() => {setShowModal(!showModal);navigation.goBack();}} desc={errorDesc}/>
+      return <CustomModal variant="error" onClose={handleError} desc={errorDesc}/>
     }
   }
 
   return (
     <View style={{flex: 1, backgroundColor: WHITE }}>
-      <View style={{backgroundColor:"#C4C4C4", display:'flex', alignItems:'center', padding: 10, marginTop: 30}}>
+      <View style={{backgroundColor: LIGHT_GRAY, display:'flex', alignItems:'center', padding: 10, marginTop: 30}}>
         <Text style={{color: BLACK, fontSize: 15 }}>Enter OTP and New password</Text>
       </View>
       <View style={{ flex: 1, justifyContent: 'space-evenly' , ...margin(0,30,0,30) }}>
         <InputComponent
           label="Password"
           showPasswordIcon={true}
-          updateParentState={value => {setPassword(value); setPasswordErrorMessage('')}}
+          updateParentState={onPasswordChange}
           errMsg={passwordErrorMessage}
         />
         <InputComponent
           label="Confirm Password"
           showPasswordIcon={true}
-          updateParentState={value => {setConfirmPassowr(value); setConfirmPasswordErrorMessage('')}}
+          updateParentState={onConfirmPasswordChange}
           errMsg={confirmPasswordErrorMessage}
         />
         <View>

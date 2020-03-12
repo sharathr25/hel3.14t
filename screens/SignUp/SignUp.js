@@ -3,8 +3,8 @@ import React, { useState, useEffect } from 'react';
 import { Text, CheckBox } from 'react-native-elements';
 import { View, Alert, StyleSheet, TouchableOpacity, ActivityIndicator, Picker } from 'react-native';
 import { ScrollView } from 'react-native-gesture-handler';
-import { SIGN_UP_SCREEN, APP_TITLE } from '../../constants/appConstants';
-import { ORANGE, WHITE, FONT_FAMILY, BLACK } from '../../styles/colors';
+import { SIGN_UP_SCREEN , SCREEN_DETAILS} from '../../constants/appConstants';
+import { ORANGE, WHITE, BLACK } from '../../styles/colors';
 import { margin } from "../../styles/mixins";
 import { regex } from '../../utils/index';
 import { getAge } from '../../utils';
@@ -16,7 +16,9 @@ import { padding } from "../../styles/mixins";
 import { FONT_WEIGHT_REGULAR } from "../../styles/typography"
 import { Auth } from "aws-amplify";
 
+const { VERIFICATION, LOGIN, TERMS_AND_CONDITIONS } = SCREEN_DETAILS;
 const { ERRORS } = SIGN_UP_SCREEN;
+
 const {
   EMPTY_NAME_ERROR,EMPTY_EMAIL_ERROR, 
   INVALID_EMAIL_ERROR, 
@@ -74,11 +76,11 @@ function SignUpScreen({navigation}: { navigation: Object }) {
   const [createUser, { loading }] = useMutation(CREATE_USER);
 
   const handleTermsAndConditions = () => {
-    navigation.navigate('TermsAndConditions');
+    navigation.navigate(TERMS_AND_CONDITIONS.screenName);
   }
 
   const handleLogin = () => {
-    navigation.navigate('Login');
+    navigation.navigate(LOGIN.screenName);
   }
 
   const isValid = () => {
@@ -119,7 +121,7 @@ function SignUpScreen({navigation}: { navigation: Object }) {
   }
 
   const redirectTo = (otp) => {
-    navigation.navigate('Login');
+    navigation.navigate(LOGIN.screenName);
   }
 
   const resend = async () => {
@@ -145,8 +147,9 @@ function SignUpScreen({navigation}: { navigation: Object }) {
         );
         setErr('');
         const { userSub } = data;
-        createUser({ variables: { uid : userSub } })
-        navigation.navigate('Verification', { verify, redirectTo, resend, message: `Enter OTP sent to xxxxxxxx${mobileNumber.substr(8)}` });
+        createUser({ variables: { uid : userSub } });
+        const paramsForVerificationScreen = { verify, redirectTo, resend, message: `Enter OTP sent to xxxxxxxx${mobileNumber.substr(8)}` };
+        navigation.navigate(VERIFICATION.screenName, paramsForVerificationScreen);
       } catch (error) {
         setErr(error.message);
       } finally {

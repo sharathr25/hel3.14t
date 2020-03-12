@@ -7,10 +7,12 @@ import { regex } from '../../utils/index';
 import { ErrorMessage , Link, Button, PasswordIcon } from '../../components/atoms';
 import { CustomModal,InputComponent } from '../../components/molecules';
 import { TouchableOpacity, ScrollView } from 'react-native-gesture-handler';
-import { LIGHT_BLUE } from '../../styles/colors';
+import { LIGHT_BLUE, LIGHT_GRAY } from '../../styles/colors';
 import { margin } from '../../styles/mixins';
 import { Auth } from "aws-amplify";
-import { LOGIN_SCREEN } from "../../constants/appConstants";
+import { LOGIN_SCREEN, SCREEN_DETAILS } from "../../constants/appConstants";
+
+const { SIGNUP, FORGOT_PASSWORD , MAIN } = SCREEN_DETAILS;
 
 const emailRegex = regex.email;
 
@@ -28,11 +30,11 @@ const LoginScreen = ({navigation}: LoginScreenProps) => {
   const [err, setError] = useState('');
 
   const handleSignUp = () => {
-    navigation.navigate('SignUp');
+    navigation.navigate(SIGNUP.screenName);
   }
 
   const handleResetPassword = () => {
-    navigation.navigate('ForgotPassword');
+    navigation.navigate(FORGOT_PASSWORD.screenName);
   }
 
   const isValid = () => {
@@ -57,7 +59,7 @@ const LoginScreen = ({navigation}: LoginScreenProps) => {
         setLoaderVisible(true);
         const uname = userName.match(emailRegex) ? userName : `+91${userName}`
         const user = await Auth.signIn({username: uname , password })
-        navigation.navigate('Main', { user });
+        navigation.navigate(MAIN.screenName, { user });
       } catch (error) {
         console.log(error);
         setError(error.message);
@@ -70,7 +72,7 @@ const LoginScreen = ({navigation}: LoginScreenProps) => {
   const { registerContainer } = styles;
 
   const NotificationMessage = () => (
-    <View style={{ backgroundColor: '#C4C4C4', marginTop: 30, justifyContent: 'center', alignItems: 'center', padding: 15 }}>
+    <View style={{ backgroundColor: LIGHT_GRAY, marginTop: 30, justifyContent: 'center', alignItems: 'center', padding: 15 }}>
       <Text style={{ color: BLACK }}>
         Enter Registered email or mobile number
       </Text>

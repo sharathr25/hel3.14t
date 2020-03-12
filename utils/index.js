@@ -1,16 +1,7 @@
 // @flow
-import { LOGIN_SCREEN } from '../constants/appConstants'
-
 export const regex = {
     email : /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/,
     phoneNo:  /^\d{10}$/
-}
-
-type checkUserNameAndPasswordFieldsReturnType = {
-  userNameErrorMessage?: string,
-  passwordErrorMessage?: string,
-  key: string,
-  valid: boolean
 }
 
 export const getPluralStr = (value: number, str: string) =>
@@ -62,8 +53,8 @@ export const getAge = (dob: string) => {
   
   
 export const sortByDistance = (helpRequests: Array<Object>):Array<Object> => {
-  const sortedHelpRequests = helpRequests.sort((a,b)=>{
-    return a.distance>b.distance?1:-1
+  const sortedHelpRequests = helpRequests.sort((a,b) => {
+    return a.distance > b.distance ? 1 : -1
   })
   return sortedHelpRequests;
 }

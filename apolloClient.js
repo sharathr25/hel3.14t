@@ -6,14 +6,13 @@ import { getMainDefinition } from 'apollo-utilities';
 import { InMemoryCache } from 'apollo-cache-inmemory';
 import { config } from './config';
 
-const httpEndPoint = process.env.NODE_ENV === "development" ? config.dev.SERVER_HTTP_END_POINT : config.prod.SERVER_HTTP_END_POINT;
-const wsEndPoint = process.env.NODE_ENV === "development" ? config.dev.SERVER_WEB_SOCKET_END_POINT : config.prod.SERVER_WEB_SOCKET_END_POINT;
+const { dev, prod } = config;
 
-// const httpEndPoint = config.prod.SERVER_HTTP_END_POINT;
-// const wsEndPoint = config.prod.SERVER_WEB_SOCKET_END_POINT;
+const httpEndPoint = process.env.NODE_ENV === "development" ? dev.SERVER_HTTP_END_POINT : prod.SERVER_HTTP_END_POINT;
+const wsEndPoint = process.env.NODE_ENV === "development" ? dev.SERVER_WEB_SOCKET_END_POINT : prod.SERVER_WEB_SOCKET_END_POINT;
 
-console.log(httpEndPoint);
-console.log(wsEndPoint);
+// const httpEndPoint = prod.SERVER_HTTP_END_POINT;
+// const wsEndPoint = prod.SERVER_WEB_SOCKET_END_POINT;
 
 // Create an http link:
 const httpLink = new HttpLink({

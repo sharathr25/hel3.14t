@@ -1,7 +1,7 @@
 // @flow
 import React, { useState } from 'react';
 import { Input } from 'react-native-elements';
-import { WHITE, ORANGE, INPUT_TEXT_COLOR, BLACK } from '../../styles/colors';
+import { WHITE, ORANGE, BLACK } from '../../styles/colors';
 import { FONT_WEIGHT_REGULAR } from "../../styles/typography";
 import { StyleSheet } from 'react-native';
 import { PasswordIcon } from '../atoms'
@@ -66,7 +66,7 @@ const styles = StyleSheet.create({
     paddingLeft: 15,
   },
   inputStyle: {
-    color: INPUT_TEXT_COLOR,
+    color: BLACK,
   },
 });
 export default InputComponent;

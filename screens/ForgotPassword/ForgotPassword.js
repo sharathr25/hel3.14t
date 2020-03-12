@@ -1,12 +1,15 @@
 // @flow
 import React, { useState } from 'react';
 import { View, StyleSheet, Text } from 'react-native';
-import { ORANGE, WHITE, BLACK } from '../../styles/colors';
+import { ORANGE, WHITE, BLACK, LIGHT_GRAY } from '../../styles/colors';
 import { ErrorMessage, Button } from '../../components/atoms';
 import { regex } from '../../utils/index';
 import { CustomModal, InputComponent } from '../../components/molecules';
 import { margin } from '../../styles/mixins';
 import { Auth } from 'aws-amplify';
+import { SCREEN_DETAILS } from "../../constants/appConstants";
+
+const { RESET_PASSWORD, VERIFICATION } = SCREEN_DETAILS;
 
 type ResetPassowrdScreenProps = {
   navigation: Object
@@ -30,7 +33,7 @@ const ResetPassowrdScreen = ({navigation}: ResetPassowrdScreenProps) => {
   }
 
   const verify = (otp) => {
-    navigation.navigate('ResetPassword', { username, otp });
+    navigation.navigate(RESET_PASSWORD.screenName, { username, otp });
   }
 
   const resend = async () => {
@@ -46,7 +49,12 @@ const ResetPassowrdScreen = ({navigation}: ResetPassowrdScreenProps) => {
         const { DeliveryMedium }  = CodeDeliveryDetails;
         setSuccessDesc('OTP sent Sucessfully');
         setStatus({loading:false, success: true, error: false});
-        navigation.navigate('Verification', { verify, redirectTo, resend, message : `Enter OTP sent registered ${DeliveryMedium === 'SMS' ? "Mobile number" : "Email"}`, showStatus : false });
+        const paramsForVerificationScreen = { 
+          verify, redirectTo, resend, 
+          message : `Enter OTP sent registered ${DeliveryMedium === 'SMS' ? "Mobile number" : "Email"}`, 
+          showStatus : false 
+        }
+        navigation.navigate(VERIFICATION.screenName, paramsForVerificationScreen);
       } catch (error) {
         setErrorDesc('Something went wrong');
         console.log(error);
@@ -70,7 +78,7 @@ const ResetPassowrdScreen = ({navigation}: ResetPassowrdScreenProps) => {
 
   return (
       <View style={{ flex: 1, backgroundColor: WHITE }}>
-        <View style={{backgroundColor:"#C4C4C4", display:'flex', alignItems:'center', padding: 10, marginTop: 30}}>
+        <View style={{backgroundColor:LIGHT_GRAY, display:'flex', alignItems:'center', padding: 10, marginTop: 30}}>
           <Text style={{color: BLACK, fontSize: 15 }}>Enter you Registered email or Username</Text>
         </View>
         <View style={{ flex: 1, justifyContent: 'space-evenly', ...margin(0,30,0,30)}}>
@@ -84,7 +92,6 @@ const ResetPassowrdScreen = ({navigation}: ResetPassowrdScreenProps) => {
             <Button bgColor={ORANGE} textColor={WHITE} onPress={handleSendOTP}>Send OTP</Button>
           </View>
         </View>
-        
       </View>
   );
 }

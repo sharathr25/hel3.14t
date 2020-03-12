@@ -1,3 +1,4 @@
+// @flow
 import { scaleFont } from './mixins';
 
 // FONT FAMILY
