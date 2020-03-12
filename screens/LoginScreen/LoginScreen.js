@@ -3,7 +3,7 @@ import React, { useState } from 'react';
 import { View, Alert, ActivityIndicator, Text, StyleSheet } from 'react-native';
 import { APP_TITLE } from '../../constants/appConstants';
 import { WHITE, ORANGE, BLACK } from '../../styles/colors';
-import { checkUserNameAndPasswordFields, regex } from '../../utils/index';
+import { regex } from '../../utils/index';
 import { ErrorMessage , Link, Button, PasswordIcon } from '../../components/atoms';
 import { CustomModal,InputComponent } from '../../components/molecules';
 import { TouchableOpacity, ScrollView } from 'react-native-gesture-handler';
@@ -50,15 +50,6 @@ const LoginScreen = ({navigation}: LoginScreenProps) => {
     }
     return valid;
   }
-
-  const checkUserNameAndPassword = () => {
-    const datum = checkUserNameAndPasswordFields(userName, password);
-    if (datum.valid) return datum.valid
-    else {
-      const { key } = datum;
-      setUserNameErrorMessage(datum[key]);
-    }
-  };
 
   const handleLogin = async () => {
     if (isValid()) {
