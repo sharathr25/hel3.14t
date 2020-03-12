@@ -1,12 +1,15 @@
 // @flow
 import React, { useState } from 'react';
 import { View, StyleSheet, Text } from 'react-native';
-import { ORANGE, WHITE, BLACK } from '../../styles/colors';
-import { InputComponent, ErrorMessage, Button } from '../../components/atoms';
+import { ORANGE, WHITE, BLACK, LIGHT_GRAY } from '../../styles/colors';
+import { ErrorMessage, Button } from '../../components/atoms';
 import { regex } from '../../utils/index';
-import { CustomModal } from '../../components/molecules';
+import { CustomModal, InputComponent } from '../../components/molecules';
 import { margin } from '../../styles/mixins';
 import { Auth } from 'aws-amplify';
+import { SCREEN_DETAILS } from "../../constants/appConstants";
+
+const { RESET_PASSWORD, VERIFICATION } = SCREEN_DETAILS;
 
 type ResetPassowrdScreenProps = {
   navigation: Object
@@ -25,22 +28,36 @@ const ResetPassowrdScreen = ({navigation}: ResetPassowrdScreenProps) => {
     if (username.length === 0) {
       setUsernameErrorMessage('Username cannot be empty');
     } 
-    // else if (!(username.match(regex.phoneNo))) {
-      // setUsernameErrorMessage('Invalid username format');
-    // }
-     else valid = true;
+    else valid = true;
     return valid;
   }
+
+  const verify = (otp) => {
+    navigation.navigate(RESET_PASSWORD.screenName, { username, otp });
+  }
+
+  const resend = async () => {
+    return await Auth.forgotPassword(username);
+  }
+
+  const redirectTo = (otp) => {}
 
   const handleSendOTP = async () => {
     if(checkUsernameField()) {
       try {
-        const data = await Auth.forgotPassword(username);
+        const { CodeDeliveryDetails } = await Auth.forgotPassword(username);
+        const { DeliveryMedium }  = CodeDeliveryDetails;
         setSuccessDesc('OTP sent Sucessfully');
         setStatus({loading:false, success: true, error: false});
-        navigation.navigate('ResetPassword', { username });
+        const paramsForVerificationScreen = { 
+          verify, redirectTo, resend, 
+          message : `Enter OTP sent registered ${DeliveryMedium === 'SMS' ? "Mobile number" : "Email"}`, 
+          showStatus : false 
+        }
+        navigation.navigate(VERIFICATION.screenName, paramsForVerificationScreen);
       } catch (error) {
         setErrorDesc('Something went wrong');
+        console.log(error);
         setStatus({loading:false, success: false, error: true});
       } finally {
         setShowModal(true);
@@ -60,18 +77,20 @@ const ResetPassowrdScreen = ({navigation}: ResetPassowrdScreenProps) => {
   }
 
   return (
-      <View style={{ flex: 1, backgroundColor: WHITE, justifyContent: 'space-evenly' }}>
-        <View style={{backgroundColor:"#C4C4C4", display:'flex', alignItems:'center', padding: 10}}>
-          <Text style={{color: BLACK}}>Enter your email</Text>
+      <View style={{ flex: 1, backgroundColor: WHITE }}>
+        <View style={{backgroundColor:LIGHT_GRAY, display:'flex', alignItems:'center', padding: 10, marginTop: 30}}>
+          <Text style={{color: BLACK, fontSize: 15 }}>Enter you Registered email or Username</Text>
         </View>
-        <InputComponent
-          label="Email"
-          secureTextEntry={false}
-          updateParentState={value => {setUsername(value); setUsernameErrorMessage('')}}
-        />
-        {usernameErrorMessage.length !== 0 && <ErrorMessage message={usernameErrorMessage} />}
-        <View style={{...margin(0,10,0,10)}}>
-          <Button bgColor={ORANGE} textColor={WHITE} onPress={handleSendOTP}>Send OTP</Button>
+        <View style={{ flex: 1, justifyContent: 'space-evenly', ...margin(0,30,0,30)}}>
+          <InputComponent
+            label="Email or Username"
+            secureTextEntry={false}
+            updateParentState={value => {setUsername(value); setUsernameErrorMessage('')}}
+          />
+          {usernameErrorMessage.length !== 0 && <ErrorMessage message={usernameErrorMessage} />}
+          <View>
+            <Button bgColor={ORANGE} textColor={WHITE} onPress={handleSendOTP}>Send OTP</Button>
+          </View>
         </View>
       </View>
   );

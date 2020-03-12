@@ -1,3 +1,4 @@
+// @flow
 export const ORANGE = '#FF9933';
 export const WHITE = '#FFFFFF';
 export const GREEN = '#28a745';  // #138808

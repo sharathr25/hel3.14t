@@ -19,13 +19,14 @@ const Header = (props) => {
           width: width,
           overflow: 'hidden',
           backgroundColor: WHITE,
-          height: 55
+          height: 55,
         }}
       >
-        <Curve zIndex={2} width={width} bottom={3}>
+        <Curve zIndex={2} width={width} bottom={8} backgroundColor="#FF9933">
           <HeaderTitle title={title} width={width} height={height} navigation={navigation} headerLeft={headerLeft} />
         </Curve>
-        <Curve bottom={0} zIndex={0} backgroundColor="#f7ca9e" width={width} />
+        <Curve bottom={4} zIndex={1} backgroundColor="#FFA64D" width={width} />
+        <Curve bottom={0} zIndex={0} backgroundColor="#FFB366" width={width} />
       </View>
     );
   }

@@ -1,13 +1,12 @@
+// @flow
 import React, { useState, useEffect } from 'react';
 import { View, Alert, StyleSheet, TouchableOpacity, Text } from 'react-native';
 import { ScrollView } from 'react-native-gesture-handler';
-import firebase from 'react-native-firebase';
 import { SIGN_UP_SCREEN, APP_TITLE } from '../../constants/appConstants';
 import { ORANGE, WHITE, BLACK, LIGHT_BLUE } from '../../styles/colors';
-import { InputComponent, ErrorMessage } from '../../components/atoms';
+import { ErrorMessage } from '../../components/atoms';
 import { regex } from '../../utils/index';
-import { getUser } from '../../fireBase/database';
-import { CustomModal } from '../../components/molecules';
+import { CustomModal, InputComponent } from '../../components/molecules';
 import { Button } from '../../components/atoms'; 
 import { Auth } from "aws-amplify";
 import { margin } from "../../styles/mixins";
@@ -20,115 +19,77 @@ type VerificationProps = {
 const Verification = (props: VerificationProps) => {
   const [OTP, setOTP] = useState('');
   const { navigation, route } = props;
-  const { params } = route;
-  const { username, mobileNumber, email, type="phone", redirectTo="Login" } = params;
+  const { params={} } = route;
+  const { verify=(otp) => {}, redirectTo=(otp) => {}, resend=() => {}, message = "", showStatus = true } = params;
   const [showModal, setShowModal] = useState(false);
   const [successDesc, setSuccessDesc] = useState('');
-  const [errorDesc, setErrorDesc] = useState('');
+  const [errorDesc, setErrorDesc] = useState(''); 
 
-  const sendOtpToEmail = () => {
-    Auth.verifyCurrentUserAttribute('email') //user should be authenticated to send otp to email
-        .then(() => {
-          console.log('code sent successfully');
-        }).catch((e) => {
-          console.log(e, 'code sent failed')
-      });
-  }
-
-  useEffect(() => {
-    if(type === "email") {
-      sendOtpToEmail();
-    }
-  }, []);
-
-  const verifyPhoneOTP = async () => {
-    await Auth.confirmSignUp(username, OTP, { forceAliasCreation: true });
-  }
-
-  const verifyEmailOTP = async () => {
-    await Auth.verifyCurrentUserAttributeSubmit('email', OTP)
-  }
-
-  const resendOTPToEmail = () => {
-    sendOtpToEmail();
-  }
-
-  const resendOTPTOPhone = () => {
-    Auth.resendSignUp(username)
-      .then(() => {
-        onSuccess('Code Resent successfully');
-      })
-      .catch(e => {
-        onError(e, 'Code resent failed');
-      }
-    );
-  }
-
-    const handleResendOtp = () => {
-      if(type === "phone") {
-        resendOTPTOPhone();
-      } else {
-        resendOTPToEmail();
-      }
-    }
-
-    const onSuccess = async (msg) => {
+  
+  const onSuccess = async (msg) => {
+    if(showStatus) {
       setShowModal(true);
       setErrorDesc('');
       setSuccessDesc(msg);
-      console.log(msg);
+    } else {
+      redirectTo(OTP);
     }
+    console.log(msg);
+  }
 
-    const onError = (error, msg) => {
+  const onError = (error, msg) => {
+    if(setShowModal(true)) {
       setShowModal(true);
       setSuccessDesc('');
       setErrorDesc(msg);
-      console.log(error);
     }
-   
-  const handleVerify = async () => {
-    try {
-      if(type === "phone") {
-        await verifyPhoneOTP();
-      } else {
-        await verifyEmailOTP();
-      }
-      onSuccess('OTP verification successfull');
-      await Auth.signOut();
-      navigation.navigate(redirectTo);
-    } catch (error) {
-      onError(error, "Verification code invalid");
-    }
+    console.log(error);
   }
 
   const hideModal = () => {
     setShowModal(false);
     setSuccessDesc('');
     setErrorDesc('');
+    redirectTo(OTP);
   }
 
   const NotificationMessage = () => (
     <View style={{ backgroundColor: '#C4C4C4', marginBottom: 10, justifyContent: 'center', alignItems: 'center', padding: 15 }}>
       <Text style={{ color: BLACK }}>
-        { type === "phone" 
-            ? `Enter OTP sent to xxxxxxxxx${mobileNumber.substring(8)}`
-            : `Enter OTP sent to xxxxxxxxx@${email.split('@')[1]}`
-        }
+        {message}
       </Text>
     </View>
   );
 
+  const _resend = async () => {
+    try {
+      await resend();
+      onSuccess("Resent successfull");
+    } catch (error) {
+      onError(error, "Resent failed")
+    }
+  }
+
   const ResendLink = () => (
-    <View style={{ flexDirection: 'row',alignSelf: 'flex-end', ...margin(0,10,0,0) }}>
-      <Text>Haven’t received OTP? </Text>
-      <TouchableOpacity onPress={handleResendOtp}>
+    <View style={{ flexDirection: 'row',alignSelf: 'flex-end' }}>
+      <Text style={{color: BLACK}}>Haven’t received OTP? </Text>
+      <TouchableOpacity onPress={_resend}>
         <Text style={{color: LIGHT_BLUE}}>Resend</Text>
       </TouchableOpacity>
     </View>
   );
 
+  const handleVerify = async () => {
+    try {
+      await verify(OTP);
+      onSuccess("verification successfull");
+    } catch (error) {
+      onError(error, "verfication failed")
+    }
+  }
+
   const VerifyButton = () => (
-    <View style={{...margin(30,30,0,30)}}>
+    <View>
       <Button bgColor={ORANGE} textColor={WHITE} onPress={handleVerify}>Verify</Button>
     </View>
   );
@@ -144,11 +105,15 @@ const Verification = (props: VerificationProps) => {
   }
 
   return (
-      <View style={{ backgroundColor: WHITE, flex: 1, paddingTop: 20 }}>
+      <View style={{ backgroundColor: WHITE, flex: 1, paddingTop: 30 }}>
         <NotificationMessage />
-        <InputComponent label="OTP" secureTextEntry={false} updateParentState={setOTP} />
-        <ResendLink />
+        <View style={{flex: 1, justifyContent: 'space-evenly', ...margin(0,30,0,30)}}>
+        <View>
+          <InputComponent label="OTP" showPasswordIcon={true} updateParentState={setOTP} />
+          <ResendLink />
+        </View>
         <VerifyButton />
+        </View>
       </View>
   );
 }

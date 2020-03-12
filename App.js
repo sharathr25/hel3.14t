@@ -3,7 +3,7 @@ import React, { memo, useEffect } from 'react';
 import { ApolloProvider } from "react-apollo";
 import ApolloClient from './apolloClient';
 import whyDidYouRender from "@welldone-software/why-did-you-render";
-import mainStackNavigator from './mainStackNavigator';
+import MainStackNavigator from './MainStackNavigator';
 import { PermissionsAndroid, Alert } from "react-native";
 import { useAuth } from './customHooks';
 import { NavigationContainer } from '@react-navigation/native';
@@ -15,9 +15,9 @@ import { CustomModal } from "./components/molecules"
 
 Amplify.configure({...awsConfig});
 
-// whyDidYouRender(React);
+whyDidYouRender(React);
 
-const AppContainer = mainStackNavigator;
+const AppContainer = MainStackNavigator;
 
 function App() {
   const { initializing , user } = useAuth();
@@ -47,7 +47,7 @@ function App() {
     <ApolloProvider client={ApolloClient}>
       <Context.Provider value={{initializing, user}}>
         <NavigationContainer>
-          <AppContainer isLogedIn={user ? true : false}/>
+          <AppContainer isLogedIn={user ? true : false} />
         </NavigationContainer>
       </Context.Provider>
     </ApolloProvider>

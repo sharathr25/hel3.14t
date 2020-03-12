@@ -3,21 +3,22 @@ import React, { useState, useEffect } from 'react';
 import { Text, CheckBox } from 'react-native-elements';
 import { View, Alert, StyleSheet, TouchableOpacity, ActivityIndicator, Picker } from 'react-native';
 import { ScrollView } from 'react-native-gesture-handler';
-import firebase from 'react-native-firebase';
-import { SIGN_UP_SCREEN, APP_TITLE } from '../../constants/appConstants';
-import { ORANGE, WHITE, FONT_FAMILY, BLACK } from '../../styles/colors';
+import { SIGN_UP_SCREEN , SCREEN_DETAILS} from '../../constants/appConstants';
+import { ORANGE, WHITE, BLACK } from '../../styles/colors';
 import { margin } from "../../styles/mixins";
 import { regex } from '../../utils/index';
 import { getAge } from '../../utils';
 import gql from 'graphql-tag';
 import { useMutation } from 'react-apollo';
-import { CustomModal } from '../../components/molecules';
-import { CustomDatePicker, InputComponent, ErrorMessage, Selector, Button, Link } from '../../components/atoms';
+import { CustomModal, InputComponent } from '../../components/molecules';
+import { CustomDatePicker, ErrorMessage, Selector, Button, Link, PasswordIcon } from '../../components/atoms';
 import { padding } from "../../styles/mixins";
 import { FONT_WEIGHT_REGULAR } from "../../styles/typography"
 import { Auth } from "aws-amplify";
 
+const { VERIFICATION, LOGIN, TERMS_AND_CONDITIONS } = SCREEN_DETAILS;
 const { ERRORS } = SIGN_UP_SCREEN;
+
 const {
   EMPTY_NAME_ERROR,EMPTY_EMAIL_ERROR, 
   INVALID_EMAIL_ERROR, 
@@ -75,11 +76,11 @@ function SignUpScreen({navigation}: { navigation: Object }) {
   const [createUser, { loading }] = useMutation(CREATE_USER);
 
   const handleTermsAndConditions = () => {
-    navigation.navigate('TermsAndConditions');
+    navigation.navigate(TERMS_AND_CONDITIONS.screenName);
   }
 
   const handleLogin = () => {
-    navigation.navigate('Login');
+    navigation.navigate(LOGIN.screenName);
   }
 
   const isValid = () => {
@@ -115,6 +116,18 @@ function SignUpScreen({navigation}: { navigation: Object }) {
     return valid;
   };
 
+  const verify = async (otp) => {
+    return await Auth.confirmSignUp(username, otp, { forceAliasCreation: true });
+  }
+
+  const redirectTo = (otp) => {
+    navigation.navigate(LOGIN.screenName);
+  }
+
+  const resend = async () => {
+    return await Auth.resendSignUp(username)
+  }
+
   const handleSignUp = async () => {
     const age = dob ? getAge(dob.value) : 0
     if(isValid())
@@ -134,8 +147,9 @@ function SignUpScreen({navigation}: { navigation: Object }) {
         );
         setErr('');
         const { userSub } = data;
-        createUser({ variables: { uid : userSub } })
-        navigation.navigate('Verification', { username, email, mobileNumber });
+        createUser({ variables: { uid : userSub } });
+        const paramsForVerificationScreen = { verify, redirectTo, resend, message: `Enter OTP sent to xxxxxxxx${mobileNumber.substr(8)}` };
+        navigation.navigate(VERIFICATION.screenName, paramsForVerificationScreen);
       } catch (error) {
         setErr(error.message);
       } finally {
@@ -154,7 +168,9 @@ function SignUpScreen({navigation}: { navigation: Object }) {
   );
 
   const GenderSelector = () => (
-    <Selector options={GENDER_OPTIONS} label="Gender" onValueChange={setGender} />
+    <View>
+      <Selector options={GENDER_OPTIONS} label="Gender" onValueChange={setGender} />
+    </View>
   );
 
   const TermsAndConditionsCheckBox = () => (
@@ -167,21 +183,21 @@ function SignUpScreen({navigation}: { navigation: Object }) {
           center={true}
           uncheckedColor={BLACK}
         />
-      <Text color={BLACK}>Click to accept </Text>
+      <Text style={{color: BLACK}}>Click to accept </Text>
       <Link onPress={handleTermsAndConditions}>Terms of Service, Privacy, Policy</Link>
     </View>
   );
 
   const SignUpButton = () => (
-    <View style={{...margin(10,30,10,30)}}>
-      <Button bgColor={ORANGE} textColor={WHITE} onPress={handleSignUp}>Sign Up</Button>
+    <View>
+      <Button bgColor={ORANGE} textColor={WHITE} onPress={handleSignUp}>Register</Button>
     </View>
   );
 
   const LoginLink = () => (
     <View style={formStyles.loginContainer}>
-      <Text>Already have an account? </Text>
-      <Link onPress={handleLogin}>Login</Link>
+      <Text style={{color: BLACK}}>Already have an account? </Text>
+      <Link onPress={handleLogin}>Log in</Link>
     </View>
   )
 
@@ -192,17 +208,21 @@ function SignUpScreen({navigation}: { navigation: Object }) {
   return (
     <ScrollView style={{ backgroundColor: WHITE }}>
       <View>
-        <InputComponent label="Username" updateParentState={setUsername} errMsg={userNameErr} />
-        <InputComponent label="Name" updateParentState={setName} errMsg={nameErr} />
-        <InputComponent label="Email" updateParentState={setEmail} errMsg={emailErr} />
-        <InputComponent label="Mobile Number" updateParentState={setMobileNumber} errMsg={mobileNumberErr} />
-        <InputComponent label="Password"  updateParentState={setPassword} errMsg={passwordErr} secureTextEntry={true} />
-        <InputComponent label="Confirm Password" updateParentState={setConfirmPassword} errMsg={confirmPasswordErr} secureTextEntry={true} />
-        <DateOfBirthInput />
-        <GenderSelector />
+        <View style={{...margin(20, 30, 10, 30)}}>
+          <InputComponent label="Username" updateParentState={setUsername} errMsg={userNameErr} />
+          <InputComponent label="Name" updateParentState={setName} errMsg={nameErr} />
+          <InputComponent label="Email" updateParentState={setEmail} errMsg={emailErr} />
+          <InputComponent label="Mobile Number" updateParentState={setMobileNumber} errMsg={mobileNumberErr} />
+          <InputComponent label="Password"  updateParentState={setPassword} errMsg={passwordErr} showPasswordIcon={true} />
+          <InputComponent label="Confirm Password" updateParentState={setConfirmPassword} errMsg={confirmPasswordErr} showPasswordIcon={true} />
+          <DateOfBirthInput />
+          <GenderSelector />
+        </View>  
         <TermsAndConditionsCheckBox />
-        <SignUpButton />
-        <LoginLink />
+        <View style={{...margin(20, 30, 10, 30)}}>
+          <SignUpButton />
+          <LoginLink />
+        </View>
       </View>
     </ScrollView>
   );
@@ -214,18 +234,18 @@ const formStyles = StyleSheet.create({
   dobContainer: {
     flexDirection: 'row',
     alignItems: 'center',
-    ...margin(20,10,10,10),
+    ...margin(10,0,0,0),
     flex: 1
   },
   loginContainer: {
     flexDirection: 'row',
     alignSelf: 'center',
-    marginBottom: 10
+    margin: 10
   },
   termsAndConditionsContainer: {
     flexDirection: 'row' , 
     alignItems: 'center', 
     backgroundColor: "#DBD5D5", 
-    ...padding(5,5,5,5)
+    ...padding(10,5,10,5)
   }
 });

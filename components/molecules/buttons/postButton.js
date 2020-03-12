@@ -1,15 +1,9 @@
 // @flow
 import React, { useState } from "react";
 import { Alert, TouchableOpacity, StyleSheet, Text, TextInput } from "react-native";
-import firebase from "react-native-firebase";
 import { WHITE, ORANGE } from "../../../styles/colors";
 import ImagePicker from 'react-native-image-picker';
 import uuid from 'uuid/v4';
-import { 
-    pushToFirebaseWithURL, 
-    firebaseOnEventListner, 
-    firebaseOnEventListnerTurnOff 
-} from '../../../fireBase/database';
 
 const PostButton = () => {
     const [state, setState] = useState({ 

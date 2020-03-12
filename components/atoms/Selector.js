@@ -3,6 +3,7 @@ import { View, Alert, StyleSheet, TouchableOpacity, ActivityIndicator, Picker, T
 import { WHITE, BLACK, ORANGE } from "../../styles/colors";
 import { FONT_WEIGHT_REGULAR } from "../../styles/typography";
 import { margin } from "../../styles/mixins";
+import Icon from "react-native-vector-icons/MaterialCommunityIcons"
 
 const Selector = (props) => {
     const { options, label="", onValueChange } = props;
@@ -23,7 +24,7 @@ const Selector = (props) => {
                     onValueChange={_onValueChange}
                 >
                     {options.map(({label, value}) => <Picker.Item label={label} value={value} key={label} />)}
-          </Picker>
+                </Picker>
             </View>
         </View>
     );
@@ -48,7 +49,7 @@ const styles = StyleSheet.create({
     pickerContainerStyle: {
         borderColor: ORANGE,
         borderWidth: 1.5,
-        ...margin(20,10,10,10),
-        borderRadius: 10
+        ...margin(20,0,10,0),
+        borderRadius: 10,
     }
 })

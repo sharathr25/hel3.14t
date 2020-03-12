@@ -1,3 +1,4 @@
+// @flow
 export const SIGN_UP_SCREEN = {
   ERRORS: {
     EMPTY_NAME_ERROR: 'Name should not be empty',
@@ -72,4 +73,16 @@ export const STATUS_TEXT_MAPPING = {
   'COMPLETED' : 'Completed'
 }
 
-export const APP_TITLE = "Haisaa"
+export const APP_TITLE = "Haisaa";
+
+export const SCREEN_DETAILS = {
+  MAIN: { screenTitle: "Home", screenName: "Main"},
+  APP_LANDING_SCREEN : { screenTitle: "Welcome to haisaa", screenName: "LandingScreen" },
+  LOGIN : { screenTitle: "Log in", screenName: "Login" },
+  SIGNUP: { screenTitle: "Register", screenName: "SignUp" },
+  VERIFICATION: { screenTitle: "Verification", screenName: "Verification"},
+  FORGOT_PASSWORD: { screenTitle: "Forgot password", screenName: "ForgotPassword"},
+  RESET_PASSWORD: { screenTitle: "Reset your passward", screenName: "ResetPassword"},
+  TERMS_AND_CONDITIONS: { screenTitle: "Terms & Conditions", screenName: "TermsAndConditions"},
+  NOTIFICATIONS: { screenTitle: "Notifications", screenName: "Notifications"},
+}
