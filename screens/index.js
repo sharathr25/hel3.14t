@@ -4,7 +4,7 @@ import ForgotPassword  from "./ForgotPassword";
 import HelpRequestForm  from "./HelpRequestForm";
 import LandingScreen  from "./LandingScreen";
 import LoginScreen  from "./LoginScreen";
-import Main from "./Main";
+import Main from "./MainScreen";
 import MyAccount  from "./MyAccount";
 import MyHelpRequests  from "./MyHelpRequests";
 import Notifications  from "./Notifications";
