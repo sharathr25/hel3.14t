@@ -31,17 +31,17 @@ const {
   FORGOT_PASSWORD,
   RESET_PASSWORD,
   TERMS_AND_CONDITIONS,
-  NOTIFICATIONS
+  NOTIFICATIONS,
 } = SCREEN_DETAILS;
 
 
 const Main = () => {
-  return <View><Text>Main</Text></View>
+  return <View style={{backgroundColor: "white", flex: 1, justifyContent: "center", alignItems:"center"}}><Text>Main</Text></View>
 }
 
 const MainNavigator = (props: { isLogedIn: boolean }) => {
   const { isLogedIn } = props;
-  const initialScreen = isLogedIn ? "Main" : "LandingScreen";
+  const initialScreen = isLogedIn ? "MyAccount" : "LandingScreen";
   return (
     <Stack.Navigator initialRouteName={initialScreen} 
       screenOptions={{ header: (props) => <Header {...props} /> }}>
@@ -49,7 +49,7 @@ const MainNavigator = (props: { isLogedIn: boolean }) => {
         options={{ title: APP_LANDING_SCREEN.screenTitle, headerLeft: null }}>
       </Stack.Screen>
       <Stack.Screen name={MAIN.screenName} component={Main} 
-        options={{ headerLeft: null }}>
+        options={{ headerLeft: <Text/> }}>
       </Stack.Screen> 
       <Stack.Screen name={NOTIFICATIONS.screenName} component={Notifications} 
         options={{title:NOTIFICATIONS.screenTitle}}>
@@ -77,6 +77,8 @@ const MainNavigator = (props: { isLogedIn: boolean }) => {
       </Stack.Screen>
       <Stack.Screen name={VERIFICATION.screenName} component={Verification} 
         options={{title:VERIFICATION.screenTitle}}>
+      </Stack.Screen>
+      <Stack.Screen name="MyAccount" component={MyAccount} options={{title: "My Account"}}>
       </Stack.Screen>
     </Stack.Navigator>
   );

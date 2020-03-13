@@ -9,6 +9,7 @@ import { CustomModal,InputComponent } from '../../components/molecules';
 import { TouchableOpacity, ScrollView } from 'react-native-gesture-handler';
 import { LIGHT_BLUE, LIGHT_GRAY } from '../../styles/colors';
 import { margin } from '../../styles/mixins';
+import { FONT_SIZE_12 } from "../../styles/typography";
 import { Auth } from "aws-amplify";
 import { LOGIN_SCREEN, SCREEN_DETAILS } from "../../constants/appConstants";
 
@@ -59,8 +60,8 @@ const LoginScreen = ({navigation}: LoginScreenProps) => {
       try {
         setLoaderVisible(true);
         const uname = userName.match(emailRegex) ? userName : `+91${userName}`
-        const user = await Auth.signIn({username: uname , password })
-        navigation.navigate(MAIN.screenName, { user });
+        const user = await Auth.signIn({username: uname , password });
+        navigation.replace(MAIN.screenName);
       } catch (error) {
         console.log(error);
         setError(error.message);
@@ -77,6 +78,7 @@ const LoginScreen = ({navigation}: LoginScreenProps) => {
       <Text style={{ color: BLACK }}>
         Enter Registered email or mobile number
       </Text>
+      <Text style={{ color: BLACK,fontSize : FONT_SIZE_12 }}>If Email is not verified then you can't use it for Log in</Text>
     </View>
   );
 

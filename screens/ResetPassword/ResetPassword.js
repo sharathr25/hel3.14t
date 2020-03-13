@@ -92,7 +92,7 @@ const ResetPassowrdScreen = ({ navigation,route }: ResetPassowrdScreenProps) => 
   return (
     <View style={{flex: 1, backgroundColor: WHITE }}>
       <View style={{backgroundColor: LIGHT_GRAY, display:'flex', alignItems:'center', padding: 10, marginTop: 30}}>
-        <Text style={{color: BLACK, fontSize: 15 }}>Enter OTP and New password</Text>
+        <Text style={{color: BLACK, fontSize: 15 }}>Enter New password</Text>
       </View>
       <View style={{ flex: 1, justifyContent: 'space-evenly' , ...margin(0,30,0,30) }}>
         <InputComponent

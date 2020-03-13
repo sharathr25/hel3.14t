@@ -1,12 +1,16 @@
 // @flow
-import React, { useEffect, useContext } from 'react';
-import { View, Text, StyleSheet } from 'react-native';
+import React, { useEffect, useContext, useState } from 'react';
+import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import { useLazyQuery } from 'react-apollo';
 import gql from 'graphql-tag';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { ORANGE, WHITE } from '../../styles/colors';
 import { FullScreenError , FullScreenLoader} from '../../components/atoms';
 import Context from "../../context";
+import { Auth } from "aws-amplify";
+import { SCREEN_DETAILS } from "../../constants/appConstants";
+
+const { LOGIN, VERIFICATION } = SCREEN_DETAILS; 
 
 const USER_QUERY = gql`
     query User($uid:String!) {
@@ -25,8 +29,27 @@ const MyAccountScreen = (props: MyAccountScreenProps) => {
     const { navigation } = props;
     const { user } = useContext(Context);
     const { uid, attributes } = user;
-    const { name, email, phone_number: phoneNumber } = user;
+    const { name, email, phone_number: phoneNumber, email_verified } = attributes;
     const [getUserData, { error, data, loading }] = useLazyQuery(USER_QUERY);
+
+    const verify = async (otp) => {
+        await Auth.verifyCurrentUserAttributeSubmit('email', otp)
+    }
+
+    const resend = async () => {
+        return await Auth.verifyCurrentUserAttribute('email')
+    }
+
+    const redirectTo = async () => {
+        await Auth.signOut();
+        navigation.navigate(LOGIN.screenName);
+    }
+
+    const handleVerify = async () => {
+    await Auth.verifyCurrentUserAttribute('email');
+    const paramsForVerificationScreen = { verify, redirectTo, resend, message: "Enter OTP sent to registered email" };
+    navigation.navigate(VERIFICATION.screenName, paramsForVerificationScreen);
+  }
 
     useEffect(() => {
         getUserData({ variables: { uid } })
@@ -35,6 +58,21 @@ const MyAccountScreen = (props: MyAccountScreenProps) => {
     const handleLogOut = () => {
         console.log(navigation);
     }
+
+    const VerfifyButton = () => (
+        <TouchableOpacity onPress={handleVerify}>
+            <Text style={{ borderColor: ORANGE, borderWidth: 1, color: ORANGE, padding: 5, margin: 5, borderRadius: 5 }}>
+                Verify
+            </Text>
+        </TouchableOpacity>
+    );
+
+    const EmailVerifyMessage = () => (
+        <View style={{ flexDirection: 'row', ...text, alignItems: 'center'}}>
+            <Text>Email is not verified</Text>
+            <VerfifyButton />
+        </View>
+    );
 
     if (loading) {
         return <FullScreenLoader />
@@ -61,7 +99,10 @@ const MyAccountScreen = (props: MyAccountScreenProps) => {
                     <View style={icon}>
                         <Icon size={30} name="envelope-o" color={ORANGE} />
                     </View>
-                    <Text style={text}>{email}</Text>
+                    <View>
+                        <Text style={text}>{email}</Text>
+                        {!email_verified && <EmailVerifyMessage />}
+                    </View>
                 </View>
                 <View style={detailRow}>
                     <View style={icon}>
