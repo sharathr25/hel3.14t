@@ -12,7 +12,10 @@
 .*/node_modules/react-native-image-picker/lib/commonjs/index.js.flow 
 .*/node_modules/react-native-image-picker/lib/commonjs/internal/nativeInterface.js.flow
 
-.*/node_modules/react-native-keyboard-aware-scroll-view/lib/KeyboardAwareHOC.js:61:6
+.*/node_modules/react-native-keyboard-aware-scroll-view/lib/KeyboardAwareHOC.js
+.*/node_modules/react-native-keyboard-aware-scroll-view/lib/KeyboardAwareScrollView.js
+.*/node_modules/react-native-keyboard-aware-scroll-view/lib/KeyboardAwareFlatList.js
+.*/node_modules/react-native-keyboard-aware-scroll-view/index.js
 ; Ignore duplicate module providers
 ; For RN Apps installed via npm, "Libraries" folder is inside
 ; "node_modules/react-native" but in the source repo it is in the root
@@ -23,6 +26,7 @@
 
 ; Ignore metro
 .*/node_modules/metro/.*
+
 
 [include]
 
@@ -71,4 +75,4 @@ suppress_comment=\\(.\\|\n\\)*\\$FlowFixedInNextDeploy
 suppress_comment=\\(.\\|\n\\)*\\$FlowExpectedError
 
 [version]
-^0.92.0
+0.92.0

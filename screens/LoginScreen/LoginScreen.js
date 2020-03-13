@@ -30,6 +30,7 @@ const LoginScreen = ({navigation}: LoginScreenProps) => {
   const [err, setError] = useState('');
 
   const handleSignUp = () => {
+    navigation.goBack();
     navigation.navigate(SIGNUP.screenName);
   }
 

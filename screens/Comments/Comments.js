@@ -1,11 +1,10 @@
+// @flow
 import React, { Component } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet, TextInput } from 'react-native';
-import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
-import { ORANGE, FONT_FAMILY } from '../../styles/colors';
-import Time from '../../components/common/time';
+import { ORANGE } from '../../styles/colors';
 import  Icon from 'react-native-vector-icons/FontAwesome';
 
-class Comments extends Component {
+class Comments extends Component<{},{}> {
     static navigationOptions = {
         title: 'Comments',
         headerRight:null

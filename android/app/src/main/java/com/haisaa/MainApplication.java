@@ -15,14 +15,10 @@ import com.swmansion.reanimated.ReanimatedPackage;
 import com.oblador.vectoricons.VectorIconsPackage;
 import com.airbnb.android.react.maps.MapsPackage;
 import com.swmansion.gesturehandler.react.RNGestureHandlerPackage;
-import io.invertase.firebase.RNFirebasePackage;
-import io.invertase.firebase.auth.RNFirebaseAuthPackage;
 import com.facebook.react.ReactNativeHost;
 import com.facebook.react.ReactPackage;
 import com.facebook.react.shell.MainReactPackage;
 import com.facebook.soloader.SoLoader;
-import io.invertase.firebase.database.RNFirebaseDatabasePackage;
-import io.invertase.firebase.storage.RNFirebaseStoragePackage;
 
 import java.util.Arrays;
 import java.util.List;
@@ -50,11 +46,7 @@ public class MainApplication extends Application implements ReactApplication {
             new ReanimatedPackage(),
             new VectorIconsPackage(),
             new MapsPackage(),
-            new RNGestureHandlerPackage(),
-            new RNFirebasePackage(),
-            new RNFirebaseAuthPackage(),
-            new RNFirebaseDatabasePackage(),
-            new RNFirebaseStoragePackage()
+            new RNGestureHandlerPackage()
       );
     }
 
