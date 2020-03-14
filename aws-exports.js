@@ -6,3 +6,18 @@ const awsConfig = {
   }
   
 export default awsConfig;
+
+  //   user : { username: "xxxxxxx"
+            //  attributes:{
+              //  sub: "f09929fb-c4ac-4148-bc48-a282e4f10632"
+              //  birthdate: "1992-03-06"
+              //  email_verified: true
+              //  gender: "male"
+              //  name: "xxxxxx"
+              //  phone_number_verified: true
+              //  phone_number: "+917xxxxxxxxxx"
+              //  email: "xxxxxx@gmail.com"
+            //  }
+            //  __proto__: Object
+            //  uid: "f09929fb-c4ac-4148-bc48-a282e4f10632"}
+  // Create an http link:
