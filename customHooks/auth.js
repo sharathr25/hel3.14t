@@ -8,7 +8,7 @@ type state = {
 }
 
 export default function useAuth() {
-    const [state, setState] = useState<state>({ initializing: true, user: null });
+    const [state, setState] = useState<state>({ initializing: true, user: null, token: "" });
 
     useEffect(() => {
       checkUser();  
@@ -18,14 +18,17 @@ export default function useAuth() {
     const checkUser = () => {
       if(state.user) return;
       Auth.currentAuthenticatedUser({
-            bypassCache: false  // Optional, By default is false. If set to true, this call will send a request to Cognito to get the latest user data
-            })
-            .then(user => {
-              if (user) {
-                setState({initializing: !user, user: { username: user.username, attributes: user.attributes, uid: user.attributes.sub } })
-            }
-        })
-        .catch(err => {console.log(err); setState({initializing: false})});
+        bypassCache: false  // Optional, By default is false. If set to true, this call will send a request to Cognito to get the latest user data
+      })
+      .then(user => {
+        if (user) {
+          const { signInUserSession } = user;
+          const { accessToken } = signInUserSession;
+          const { jwtToken } = accessToken;
+          setState({initializing: !user, user: { username: user.username, attributes: user.attributes, uid: user.attributes.sub }, token: jwtToken })
+        }
+      })
+      .catch(err => {console.log(err); setState({initializing: false})});
     }
 
     const listener = (data) => {

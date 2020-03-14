@@ -32,6 +32,8 @@ const MyAccountScreen = (props: MyAccountScreenProps) => {
     const { name, email, phone_number: phoneNumber, email_verified } = attributes;
     const [getUserData, { error, data, loading }] = useLazyQuery(USER_QUERY);
 
+    console.log(error);
+
     const verify = async (otp) => {
         await Auth.verifyCurrentUserAttributeSubmit('email', otp)
     }

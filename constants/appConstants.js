@@ -85,4 +85,5 @@ export const SCREEN_DETAILS = {
   RESET_PASSWORD: { screenTitle: "Reset your passward", screenName: "ResetPassword"},
   TERMS_AND_CONDITIONS: { screenTitle: "Terms & Conditions", screenName: "TermsAndConditions"},
   NOTIFICATIONS: { screenTitle: "Notifications", screenName: "Notifications"},
+  MY_ACCOUNT: { screenTitle: "My Account", screenName: "MyAccount" }
 }
