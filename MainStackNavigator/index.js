@@ -17,7 +17,8 @@ import {
   LoginScreen,
   TermsAndConditions,
   Notifications,
-  Verification
+  Verification,
+  MainScreen
  } from "../screens";
 
 const Stack = createStackNavigator();
@@ -42,7 +43,7 @@ const Main = () => {
 
 const MainNavigator = (props: { isLogedIn: boolean }) => {
   const { isLogedIn } = props;
-  const initialScreen = isLogedIn ? MY_ACCOUNT.screenName : APP_LANDING_SCREEN.screenName;
+  const initialScreen = isLogedIn ? MAIN.screenName : APP_LANDING_SCREEN.screenName;
   return (
     <Stack.Navigator initialRouteName={initialScreen} 
       screenOptions={{ header: (props) => <Header {...props} /> }}>
@@ -53,7 +54,7 @@ const MainNavigator = (props: { isLogedIn: boolean }) => {
       </Stack.Screen>
       <Stack.Screen 
         name={MAIN.screenName} 
-        component={Main} 
+        component={MainScreen} 
         options={{ headerLeft: <Text/> }}>
       </Stack.Screen> 
       <Stack.Screen 

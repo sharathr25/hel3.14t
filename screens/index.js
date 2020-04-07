@@ -12,6 +12,7 @@ import ResetPassword  from "./ResetPassword";
 import SignUp  from "./SignUp";
 import TermsAndConditions from "./TermsAndConditions";
 import Verification from "./Verification";
+import MainScreen from "./MainScreen";
 
 export {
     Comments,
@@ -26,5 +27,6 @@ export {
     MyAccount,
     Main,
     TermsAndConditions,
-    Verification
+    Verification,
+    MainScreen
 }

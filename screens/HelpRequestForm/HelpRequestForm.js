@@ -1,16 +1,20 @@
 // @flow
 import React, { useState , useContext } from "react";
 import { Text, Input } from "react-native-elements";
-import { View, TouchableOpacity, StyleSheet, Alert, Keyboard } from "react-native";
-import { WHITE, ORANGE } from "../../styles/colors";
-import { FONT_FAMILY_REGULAR } from "../../styles/typography";
+import { View, TouchableOpacity, StyleSheet, Alert, Keyboard, ScrollView, Dimensions } from "react-native";
+import { WHITE, ORANGE, BLACK, RED } from "../../styles/colors";
+import { FONT_FAMILY_REGULAR, FONT_SIZE_20, FONT_SIZE_12, FONT_WEIGHT_BOLD } from "../../styles/typography";
 import gql from "graphql-tag";
 import { useMutation } from "react-apollo";
 import { useLocation } from "../../customHooks/";
 import Context from "../../context";
 import { CustomModal } from "../../components/molecules";
+import { padding } from "../../styles/mixins";
 
-const DESCRIPTION_LIMIT = 3;
+const WORD_LIMIT = 5;
+const CORNER_SIZE = 25;
+const NO_OF_LINES_FOR_DESC = Math.ceil(Dimensions.get("window").height / 50);
+const noOfPeopleSelectBoxOptions = [1, 2, 3, 4, 5, 6];
 
 const HELP_REQUEST = gql`
   mutation CreateHelpRequest($uid:String!,$mobileNo:String!,$lat:Float!,$long:Float!,$desc:String!, $time:Date!, $name:String!, $noPeopleRequired:Int!){
@@ -31,10 +35,6 @@ const HELP_REQUEST = gql`
     }
   }
 `;
-
-const noOfPeopleSelectBoxOptions = [1, 2, 3, 4, 5, 6];
-
-
 
 const HelpRequestForm = () => {
     const [state, setState] = useState({
@@ -66,9 +66,7 @@ const HelpRequestForm = () => {
 
     const requestHelp = () => {
         const { description, noPeopleRequired } = state;
-        if (description.length < DESCRIPTION_LIMIT) {
-            Alert.alert(`description should contain minimum ${DESCRIPTION_LIMIT} characters`);
-        } else if (locationProviderAvailable === false && latitude === null && longitude === null) {
+        if (locationProviderAvailable === false && latitude === null && longitude === null) {
             Alert.alert(locationErrorMessage ? locationErrorMessage : "location error");
         } else {
             Keyboard.dismiss();
@@ -88,14 +86,31 @@ const HelpRequestForm = () => {
         }
     }
 
-    const { signInContainerStyle, signInText, container, selectBoxLabel, selectBoxContainer, descriptionContainerStyle, inputLabelStyle } = styles;
+    const { requestHelpStyle, requestButtonText, container, label, descriptionContainerStyle, noPeopleSelector } = styles;
 
-    const Option = ({ val }) => {
-    return (
-            <TouchableOpacity onPress={() => handleCheckBox(val)} style={getCheckBoxStyle(val)} key={val}>
-                <Text style={getCheckBoxTextStyle(val)}>{val}</Text>
-            </TouchableOpacity>
-        );
+    const Option = ({ val }) => (
+        <TouchableOpacity onPress={() => handleCheckBox(val)} style={getCheckBoxStyle(val)} key={val}>
+            <Text style={getCheckBoxTextStyle(val)}>{val}</Text>
+        </TouchableOpacity>
+    );
+
+    const RequestButton = () => (
+        <TouchableOpacity onPress={requestHelp} style={requestHelpStyle}>
+            <Text style={requestButtonText}>Request</Text>
+        </TouchableOpacity>
+    );
+
+    const getWordsLeft = (description) => {
+        return WORD_LIMIT - description.split(/\s/).length + 1;
+    }
+
+    const WordLimitStatus = () => {
+        const { description } = state;
+        const wordsThreshold = getWordsLeft(description);
+        if(wordsThreshold <= 0) {
+            return <Text style={{...label, color: RED, textAlign: 'right', right: 10}}>Limit reached</Text>
+        }
+        return <Text style={{...label, color: "#979797", textAlign: 'right', right: 10}}>{wordsThreshold} words left</Text>
     }
 
     if (showModal) {
@@ -108,26 +123,42 @@ const HelpRequestForm = () => {
         }
     }
 
+    const _onChangeText = (value) => {
+        const temp = state.description;
+        if(getWordsLeft(value) <= 0 && value[value.length - 1] !== ' ') {
+            setState({...state, description: temp});
+        } else {
+            setState({ ...state, description: value })
+        }
+    }
+
     return (
-        <View style={container}>
-            <Input
-                label="Can you type some description?"
-                labelStyle={inputLabelStyle}
-                inputContainerStyle={descriptionContainerStyle}
-                multiline={true}
-                numberOfLines={4}
-                onChangeText={value => setState({ ...state, description: value })}
-            />
-            <View style={selectBoxContainer}>
-                <Text style={selectBoxLabel}>How many people do you require?</Text>
-                <View style={styles.noPeopleSelector}>
-                    {noOfPeopleSelectBoxOptions.map((val) => <Option key={val} val={val} />)}
+        <ScrollView style={{backgroundColor: WHITE}}>
+            <View style={container}>
+                <View style={{backgroundColor: WHITE, borderRadius: 10, elevation: 10, borderWidth: 0.1, borderColor: BLACK }}>
+                    <Text style={{...label, padding:10}}>Request will be created for current location</Text>
+                    {/* <View style={{borderColor: BLACK, borderTopWidth: 2, borderLeftWidth: 2, width: CORNER_SIZE, height: CORNER_SIZE, left: 10, position: 'absolute', top: 36, zIndex: 2}}/> */}
+                    {/* <View style={{borderColor: BLACK, borderTopWidth: 2, borderRightWidth: 2,width: CORNER_SIZE, height: CORNER_SIZE, right: 10, position: 'absolute', top: 36, zIndex: 2}}/> */}
+                    <Input
+                        placeholder="Please describe your help"
+                        inputContainerStyle={descriptionContainerStyle}
+                        multiline={true}
+                        numberOfLines={NO_OF_LINES_FOR_DESC}
+                        onChangeText={_onChangeText}
+                        inputStyle={{textAlign: 'center'}}
+                        value={state.description}
+                    />
+                    {/* <View style={{borderColor: BLACK, borderBottomWidth: 2,borderLeftWidth: 2, width: CORNER_SIZE, height: CORNER_SIZE, left: 10, position: 'absolute', top: NO_OF_LINES_FOR_DESC* 23.5, zIndex: 2}}/> */}
+                    {/* <View style={{borderColor: BLACK, borderBottomWidth: 2,borderRightWidth: 2, width: CORNER_SIZE, height: CORNER_SIZE, right: 10, position: 'absolute', top: NO_OF_LINES_FOR_DESC* 23.5, zIndex: 2}}/> */}
+                    <WordLimitStatus />
+                    <Text style={label}>Please select number of people required for help</Text>
+                    <View style={noPeopleSelector}>
+                        {noOfPeopleSelectBoxOptions.map((val) => <Option key={val} val={val} />)}
+                    </View>
+                    <RequestButton />
                 </View>
             </View>
-            <TouchableOpacity onPress={requestHelp} style={signInContainerStyle}>
-                <Text style={signInText}>Request help</Text>
-            </TouchableOpacity>
-        </View>
+        </ScrollView>  
     );
 }
 
@@ -137,51 +168,31 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         justifyContent: "center",
-        backgroundColor: "white",
-        padding: 10
+        backgroundColor: WHITE,
+        padding: 20,
     },
-    inputLabelStyle: {
-        top: 10, zIndex: 2, left: 10, backgroundColor: WHITE, alignSelf: 'flex-start', paddingLeft: 10, paddingRight: 10
-    },
-    signInContainerStyle: {
+    requestHelpStyle: {
         margin: 10,
-        marginTop: 25,
-        padding: 10,
+        ...padding(5,15,5,15),
         backgroundColor: ORANGE,
-        borderRadius: 25
+        borderRadius: 10,
+        alignSelf: 'center'
     },
-    signInText: {
+    requestButtonText: {
         textAlign: 'center',
         color: WHITE,
-        fontSize: 18
-    },
-    modalInnerContainer: {
-        flex: 1,
-        padding: 10,
-        backgroundColor: WHITE,
-        justifyContent: 'center',
-        alignItems: "center",
-    },
-    touchableOpacityStyle: {
-        position: 'absolute',
-        width: 44,
-        height: 44,
-        alignItems: 'center',
-        justifyContent: 'center',
-        right: 30,
-        bottom: 30,
-        backgroundColor: ORANGE,
-        borderRadius: 15
+        fontSize: FONT_SIZE_20
     },
     descriptionContainerStyle: {
-        borderWidth: 1,
-        borderColor: ORANGE,
-        borderRadius: 5
+        backgroundColor: WHITE,
+        borderWidth: 1, 
+        borderColor: BLACK,
     },
     noPeopleSelector: {
         display: 'flex',
         flexDirection: 'row',
-        alignItems: 'center'
+        alignItems: 'center',
+        justifyContent: 'center'
     },
     activeCheckBox: {
         backgroundColor: ORANGE,
@@ -213,28 +224,9 @@ const styles = StyleSheet.create({
         fontSize: 20,
         fontFamily: FONT_FAMILY_REGULAR
     },
-    buttons: {
-        height: 60,
-        display: 'flex',
-        flexDirection: 'row'
-    },
-    selectBoxLabel: {
-        top: -15,
-        zIndex: 2,
-        left: 10,
-        backgroundColor: WHITE,
-        alignSelf: 'flex-start',
-        paddingLeft: 10,
-        paddingRight: 10,
-        fontSize: 15,
-        fontWeight: 'bold',
-        paddingTop: 5,
-    },
-    selectBoxContainer: {
-        borderWidth: 1,
-        borderColor: ORANGE,
-        borderRadius: 5,
-        margin: 10,
-        marginTop: 15
+    label: {
+        color: BLACK,
+        fontSize: FONT_SIZE_12,
+        textAlign: 'center',
     }
 });
