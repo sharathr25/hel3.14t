@@ -25,20 +25,22 @@ const RankIcon = ({ color, size = 20 }: { color: string, size: number }) => <Mat
 
 const RequestButton = ({color}) => {
   const sizeOfbutton = 60;
-  return <View style={{
-    backgroundColor: color === ORANGE ? GREEN : WHITE, 
-    width: sizeOfbutton,
-    height: sizeOfbutton,
-    alignItems: 'center',
-    justifyContent: 'center',
-    borderRadius: sizeOfbutton / 2,
-    borderWidth: 1,
-    borderColor: GREEN,
-    elevation: 10,
-    top: 10
-  }}>
-    <RequestIcon color={color === ORANGE ? WHITE : GREEN } size={sizeOfbutton / 2} />
-  </View>
+  return (
+    <View 
+      style={{
+        backgroundColor: color === ORANGE ? GREEN : WHITE, 
+        width: sizeOfbutton,
+        height: sizeOfbutton,
+        alignItems: 'center',
+        justifyContent: 'center',
+        borderRadius: sizeOfbutton / 2,
+        elevation: 10,
+        top: 0
+      }}
+    >
+      <RequestIcon color={color === ORANGE ? WHITE : GREEN } size={sizeOfbutton / 2} />
+    </View>
+  )
 }
 
 function BottomTabNavigator(props:any) {

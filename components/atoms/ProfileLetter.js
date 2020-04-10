@@ -17,10 +17,10 @@ const ProfileLetter = (props : { letter : String }) => {
 export default ProfileLetter;
 
 const styles = StyleSheet.create({
-  text: { fontSize: 20, color: WHITE },
+  text: { fontSize: 30, color: WHITE },
   textWrapper: {
     position: 'absolute', 
-    top: 0, 
+    top: -6, 
     left: 0, 
     right: 0, 
     bottom: 0, 
@@ -29,9 +29,8 @@ const styles = StyleSheet.create({
   },
   textContainer: {
     backgroundColor: ORANGE,
-    borderRadius: 25,
-    width: 50,
-    height: 50,
-    margin: 5
+    borderRadius: 15,
+    width: 30,
+    height: 30
   }
 });

@@ -4,7 +4,7 @@ import { FlatList, Platform, UIManager, Text } from 'react-native';
 import { getDistanceFromLatLonInKm, sortByDistance } from '../../utils';
 import gql from 'graphql-tag';
 import { useQuery } from 'react-apollo';
-import { HelpRequest } from "../molecules";
+import { HelpRequestCard } from "../molecules";
 import { useLocation } from "../../customHooks";
 
 if (Platform.OS === 'android') {
@@ -36,7 +36,8 @@ const HELPS = gql`
         uid
       },
       noPeopleRequired,
-      creator
+      creator,
+      creatorName
     }
   }
 `;
@@ -90,13 +91,13 @@ const HelpRequestFeed = () => {
         userLatitude: lattitudeOfUser,
         userLongitude: longitudeOfUser,
         distance: dist
-      };
+      };  
       return newObj;
     });
   }
 
   const getHelpRequest = ({ item }) => {
-    return <HelpRequest data={item} key={item._id} />
+    return <HelpRequestCard data={item} />
   }
 
   return (
