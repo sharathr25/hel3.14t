@@ -17,9 +17,10 @@ const NO_OF_LINES_FOR_DESC = Math.ceil(Dimensions.get("window").height / 50);
 const noOfPeopleSelectBoxOptions = [1, 2, 3, 4, 5, 6];
 
 const HELP_REQUEST = gql`
-  mutation CreateHelpRequest($uid:String!,$mobileNo:String!,$lat:Float!,$long:Float!,$desc:String!, $time:Date!, $name:String!, $noPeopleRequired:Int!){
+  mutation CreateHelpRequest($uid:String!,$username: String!, $mobileNo:String!,$lat:Float!,$long:Float!,$desc:String!, $time:Date!, $name:String!, $noPeopleRequired:Int!){
     createHelp(data:{
       creator:$uid,
+      creatorName: $username,
       mobileNo:$mobileNo,
       name:$name,
       latitude:$long,
@@ -49,7 +50,7 @@ const HelpRequestForm = () => {
     const [showModal, setShowModal] = useState(false);
 
     const { user: currentUser } = useContext(Context);
-    const { uid, attributes } = currentUser;
+    const { uid, attributes, username } = currentUser;
     const { name, phone_number: phoneNumber } = attributes;
 
     const { longitude, latitude, locationProviderAvailable, locationErrorMessage } = useLocation();
@@ -81,6 +82,7 @@ const HelpRequestForm = () => {
                     desc: description,
                     time: new Date().getTime(),
                     name,
+                    username
                 }
             });
         }
@@ -137,8 +139,6 @@ const HelpRequestForm = () => {
             <View style={container}>
                 <View style={{backgroundColor: WHITE, borderRadius: 10, elevation: 10, borderWidth: 0.1, borderColor: BLACK }}>
                     <Text style={{...label, padding:10}}>Request will be created for current location</Text>
-                    {/* <View style={{borderColor: BLACK, borderTopWidth: 2, borderLeftWidth: 2, width: CORNER_SIZE, height: CORNER_SIZE, left: 10, position: 'absolute', top: 36, zIndex: 2}}/> */}
-                    {/* <View style={{borderColor: BLACK, borderTopWidth: 2, borderRightWidth: 2,width: CORNER_SIZE, height: CORNER_SIZE, right: 10, position: 'absolute', top: 36, zIndex: 2}}/> */}
                     <Input
                         placeholder="Please describe your help"
                         inputContainerStyle={descriptionContainerStyle}
@@ -148,8 +148,6 @@ const HelpRequestForm = () => {
                         inputStyle={{textAlign: 'center'}}
                         value={state.description}
                     />
-                    {/* <View style={{borderColor: BLACK, borderBottomWidth: 2,borderLeftWidth: 2, width: CORNER_SIZE, height: CORNER_SIZE, left: 10, position: 'absolute', top: NO_OF_LINES_FOR_DESC* 23.5, zIndex: 2}}/> */}
-                    {/* <View style={{borderColor: BLACK, borderBottomWidth: 2,borderRightWidth: 2, width: CORNER_SIZE, height: CORNER_SIZE, right: 10, position: 'absolute', top: NO_OF_LINES_FOR_DESC* 23.5, zIndex: 2}}/> */}
                     <WordLimitStatus />
                     <Text style={label}>Please select number of people required for help</Text>
                     <View style={noPeopleSelector}>

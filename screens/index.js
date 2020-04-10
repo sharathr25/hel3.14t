@@ -13,6 +13,7 @@ import SignUp  from "./SignUp";
 import TermsAndConditions from "./TermsAndConditions";
 import Verification from "./Verification";
 import MainScreen from "./MainScreen";
+import HelpRequestScreen from "./HelpRequest";
 
 export {
     Comments,
@@ -28,5 +29,6 @@ export {
     Main,
     TermsAndConditions,
     Verification,
-    MainScreen
+    MainScreen,
+    HelpRequestScreen
 }

@@ -17,15 +17,15 @@ export const getTimeDiffrence = (time: number) => {
   const inSeconds = inMilliSeconds / 1000;
   const inMinutes = inSeconds / 60;
   if (inMinutes < 60) {
-    return `${getPluralStr(inMinutes, "minute")} ago`;
+    return `${getPluralStr(inMinutes, "Minute")} ago`;
   }
   const inHours = inMinutes / 60;
   if (inHours < 24) {
-    return `${getPluralStr(inHours, "hour")} ago`;
+    return `${getPluralStr(inHours, "Hour")} ago`;
   }
   const inDays = inHours / 24;
   if (inDays < 30) {
-    return `${getPluralStr(inDays, "day")} ago`
+    return `${getPluralStr(inDays, "Day")} ago`
   }
   return "Long time ago";
 };

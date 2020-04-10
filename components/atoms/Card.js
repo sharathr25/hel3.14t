@@ -1,18 +1,13 @@
 // @flow
 import React from "react";
 import { View, StyleSheet, Text } from "react-native";
-import { LIGHT_GRAY } from "../../styles/colors";
+import { LIGHT_GRAY, BLACK } from "../../styles/colors";
 
 function Card(props : { borderLeftColor: string, children: any }) {
   const { borderLeftColor, children } = props;
   return (
-    <View style={styles.outerContanier}>
-      {borderLeftColor && <View style={{ backgroundColor: borderLeftColor, width: 5}}>
-        <Text></Text>
-      </View>}
-      <View style={{display:'flex', flex:1, padding: 10}}>
-        {children}
-      </View>
+    <View style={styles.container}>
+      {children}
     </View>
   );
 }
@@ -20,14 +15,19 @@ function Card(props : { borderLeftColor: string, children: any }) {
 export default Card;
 
 const styles = StyleSheet.create({
-  outerContanier: {
-    display: 'flex',
+  container: {
     flex: 1,
-    flexDirection: 'row',
-    borderBottomColor: LIGHT_GRAY,
-    borderTopColor: LIGHT_GRAY,
-    elevation: 1,
-    borderBottomWidth: 2,
-    borderTopWidth: 2,
+    borderColor: BLACK,
+    borderWidth: 0.1,
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 1,
+    },
+    shadowOpacity: 0.22,
+    shadowRadius: 2.22,
+
+    elevation: 3,
+    margin: 10
   }
 });

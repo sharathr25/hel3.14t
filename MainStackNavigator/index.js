@@ -1,24 +1,22 @@
 // @flow
-import React, { useState } from 'react';
-import { View, Text, Animated } from 'react-native';
-import { createStackNavigator, CardStyleInterpolators } from '@react-navigation/stack';
+import React from 'react';
+import { Text } from 'react-native';
+import { createStackNavigator } from '@react-navigation/stack';
 import { rightToLeft, leftToRight } from "./cardInterpolators";
-import { CustomModal, Header } from '../components/molecules'
+import { Header } from '../components/molecules'
 import { SCREEN_DETAILS } from "../constants/appConstants";
 import { 
-  Comments,
   MyAccount,
-  MyHelpRequests,
   ForgotPassword,
   ResetPassword,
-  HelpRequestForm,
   SignUp,
   LandingScreen,
   LoginScreen,
   TermsAndConditions,
   Notifications,
   Verification,
-  MainScreen
+  MainScreen,
+  HelpRequestScreen
  } from "../screens";
 
 const Stack = createStackNavigator();
@@ -33,13 +31,9 @@ const {
   RESET_PASSWORD,
   TERMS_AND_CONDITIONS,
   NOTIFICATIONS,
-  MY_ACCOUNT
+  MY_ACCOUNT,
+  HELP_REQUEST
 } = SCREEN_DETAILS;
-
-
-const Main = () => {
-  return <View style={{backgroundColor: "white", flex: 1, justifyContent: "center", alignItems:"center"}}><Text>Main</Text></View>
-}
 
 const MainNavigator = (props: { isLogedIn: boolean }) => {
   const { isLogedIn } = props;
@@ -96,6 +90,11 @@ const MainNavigator = (props: { isLogedIn: boolean }) => {
         name={MY_ACCOUNT.screenName} 
         component={MyAccount} 
         options={{ title: MY_ACCOUNT.screenTitle }}>
+      </Stack.Screen>
+      <Stack.Screen 
+        name={HELP_REQUEST.screenName} 
+        component={HelpRequestScreen} 
+        options={{ title: HELP_REQUEST.screenTitle }}>
       </Stack.Screen>
     </Stack.Navigator>
   );
