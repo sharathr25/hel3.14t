@@ -1,18 +1,17 @@
 
 import React from 'react'
-import { Text, View, TouchableOpacity } from 'react-native';
-import { FONT_FAMILY_REGULAR, FONT_SIZE_16,FONT_SIZE_20 } from '../../styles/typography';
-import { WHITE, ORANGE } from '../../styles/colors';
-import Icon from 'react-native-vector-icons/FontAwesome5'
+import { Text, View } from 'react-native';
+import { ORANGE } from '../../styles/colors';
 
 const Curve = ({bottom = 0, width, children = <Text/>, zIndex=0, backgroundColor=ORANGE }) => {
+  const curveRadius = 5
   return (
     <View style={{  
-        borderRadius: width*2.5,
+        borderRadius: width*curveRadius,
         backgroundColor: backgroundColor,
-        width: width * 5,
-        height: width * 5,
-        marginLeft: -(width*2),
+        width: width * curveRadius*2,
+        height: width * curveRadius*2,
+        marginLeft: -(width*(curveRadius - 0.5)),
         position:'absolute' ,
         bottom:bottom,
         overflow: 'hidden',

@@ -1,43 +1,62 @@
 // @flow
 import React from 'react';
-import { createMaterialBottomTabNavigator } from '@react-navigation/material-bottom-tabs';
+import { View } from "react-native";
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import MyHelpRequestsScreen from '../MyHelpRequests';
-import HomeScreenTopNavigator from './homeScreenTopNavigator';
 import NotificationsScreen from '../Notifications';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
-import FontAwesome5Icons from 'react-native-vector-icons/FontAwesome5'
 import HelpRequestFormScreen from '../HelpRequestForm';
-import { ORANGE } from '../../styles/colors';
+import { ORANGE, WHITE, BLACK, GREEN } from '../../styles/colors';
 import { useNotifications } from '../../customHooks';
-import MyAccountScreen from '../MyAccount';
+import Helps from "./Helps";
+import Helpers from "./Helpers";
 
-const Tab = createMaterialBottomTabNavigator();
+const Tab = createBottomTabNavigator();
 
-const ActivityIcon = ({ color, size = 20 }: { color: string, size: number }) => <FontAwesome5Icons name="hands-helping" color={color} size={size} />
+const ActivityIcon = ({ color, size = 20 }: { color: string, size: number }) => <MaterialCommunityIcons name="clipboard-text-outline" color={color} size={size} />
 
-const HomeIcon = ({ color, size = 20 }: { color: string, size: number }) => <MaterialCommunityIcons name="home" color={color} size={size} />
+const HomeIcon = ({ color, size = 20 }: { color: string, size: number }) => <MaterialCommunityIcons name="home-outline" color={color} size={size} />
 
 const RequestIcon = ({ color, size = 20 }: { color: string, size: number }) => <MaterialCommunityIcons name="plus" color={color} size={size} />
 
-const NotificationIcon = ({ color, size = 20 }: { color: string, size: number }) => <MaterialCommunityIcons name="bell" color={color} size={size} />
+const NotificationIcon = ({ color, size = 20 }: { color: string, size: number }) => <MaterialCommunityIcons name="bell-alert" color={color} size={size} />
 
-const AccountIcon = ({ color, size = 20 }: { color: string, size: number }) => <FontAwesome5Icons name="user" color={color} size={size} />
+const RankIcon = ({ color, size = 20 }: { color: string, size: number }) => <MaterialCommunityIcons name="chart-bar" color={color} size={size} />
+
+const RequestButton = ({color}) => {
+  const sizeOfbutton = 60;
+  return <View style={{
+    backgroundColor: color === ORANGE ? GREEN : WHITE, 
+    width: sizeOfbutton,
+    height: sizeOfbutton,
+    alignItems: 'center',
+    justifyContent: 'center',
+    borderRadius: sizeOfbutton / 2,
+    borderWidth: 1,
+    borderColor: GREEN,
+    elevation: 10,
+    top: 10
+  }}>
+    <RequestIcon color={color === ORANGE ? WHITE : GREEN } size={sizeOfbutton / 2} />
+  </View>
+}
 
 function BottomTabNavigator(props:any) {
   const notifications = useNotifications();
-  const noOfNotifications = notifications.length;
+  const noOfNotifications = notifications.length > 0 ? notifications.length : false;
 
   return (
-    <Tab.Navigator screenOptions={{ tabBarColor: ORANGE }}>
-      <Tab.Screen name="Home" children={() => <HomeScreenTopNavigator {...props} />} options={{ tabBarIcon: HomeIcon }} />
-      <Tab.Screen name="Activity" component={MyHelpRequestsScreen} options={{ tabBarIcon: ActivityIcon }} />
-      <Tab.Screen name="Request" component={HelpRequestFormScreen} options={{ tabBarIcon: RequestIcon }} />
-      <Tab.Screen 
-        name="Notification" 
-        options={{ tabBarIcon: NotificationIcon, tabBarBadge: noOfNotifications }} 
-        children={() => <NotificationsScreen notifications={notifications} />}
-      />
-      <Tab.Screen name="Account" component={MyAccountScreen} options={{ tabBarIcon: AccountIcon }} />
+    <Tab.Navigator tabBarOptions={{ activeTintColor: ORANGE, inactiveTintColor: BLACK }}>
+        <Tab.Screen name="Ranks" component={Helpers} options={{ tabBarIcon: RankIcon }} />
+        <Tab.Screen name="Home" children={() => <Helps {...props} />} options={{ tabBarIcon: HomeIcon }} />
+        <Tab.Screen name="Request" component={HelpRequestFormScreen} 
+          options={{ tabBarIcon: RequestButton, tabBarLabel:"", title:"new help" }} />
+        <Tab.Screen name="Activity" component={MyHelpRequestsScreen} options={{ tabBarIcon: ActivityIcon }} />
+        <Tab.Screen 
+          name="Notification" 
+          options={{ tabBarIcon: NotificationIcon, tabBarBadge: noOfNotifications }} 
+          children={() => <NotificationsScreen notifications={notifications} />}
+        />
     </Tab.Navigator>
   );
 }
