@@ -6,5 +6,16 @@ import UserHelpRequest from './UserHelpRequest';
 import Header from './Header';
 import InputComponent from './InputComponent';
 import HelpRequestCard from './HelpRequestCard';
+import ProfileName from './ProfileName';
 
-export { TimeAndDistance, CustomModal, NotificationItem, HelpRequest, UserHelpRequest, Header, InputComponent, HelpRequestCard }
+export { 
+    TimeAndDistance, 
+    CustomModal, 
+    NotificationItem, 
+    HelpRequest, 
+    UserHelpRequest, 
+    Header, 
+    InputComponent,
+    HelpRequestCard,
+    ProfileName
+}

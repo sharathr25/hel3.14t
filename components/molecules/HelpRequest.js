@@ -1,15 +1,15 @@
 // @flow
-import React, { useState, useEffect } from "react";
-import { View, StyleSheet, Text } from "react-native";
+import React from "react";
+import { View, StyleSheet, Text, ScrollView, Dimensions } from "react-native";
 import HelpButton from "./buttons/helpButton";
 import ReferButton from "./buttons/referButton";
 import gql from "graphql-tag";
 import { useSubscription } from "react-apollo";
-import { STATUS_COLOR_MAPPING } from "../../components/atoms/Status";
-import { Status, NoOfHelpers, Card } from "../atoms";
-import { TimeAndDistance } from ".";
-import { FONT_FAMILY_BOLD, FONT_SIZE_16, FONT_WEIGHT_BOLD } from "../../styles/typography";
+import { TimeAndDistance, ProfileName } from ".";
+import { FONT_SIZE_14, FONT_SIZE_20 } from "../../styles/typography";
 import { margin } from "../../styles/mixins";
+import { WHITE, BLACK } from "../../styles/colors";
+import { useAuth } from "../../customHooks"
 
 const HELP_SUBSCRIPTION = gql`
 subscription{
@@ -39,8 +39,14 @@ type HelpRequestProps = {
 
 const HelpRequest = (props: HelpRequestProps) => {
   let { data } = props;
+  const { user } = useAuth();
+  let uid = "";
 
-  const { usersAccepted, description, distance, timeStamp, noPeopleRequired, creator, status, usersRequested, usersRejected } = data;
+  if(user) {
+    uid = user.uid;
+  }
+
+  const { description, distance, timeStamp, status, usersRequested, usersRejected, creatorName } = data;
 
   const subscriptionData = useSubscription(HELP_SUBSCRIPTION, { shouldResubscribe: true });
 
@@ -55,23 +61,28 @@ const HelpRequest = (props: HelpRequestProps) => {
     }
   }
 
-  const { descriptionStyle, buttons, button } = styles;
+  const isUserRequested = () => usersRequested.some((user) => user.uid === uid);
+
+  const { descriptionStyle, buttons } = styles;
+  const heightForDescription = Dimensions.get('screen').height - 330
 
   return (
-    <Card borderLeftColor={STATUS_COLOR_MAPPING[status]}>
-      <Text style={descriptionStyle}>{description}</Text>
-      <Status>{status}</Status>
-      <NoOfHelpers noPeopleAccepted={usersAccepted.length} noPeopleRequired={noPeopleRequired} />
-      <View style={buttons}>
-        <View style={button}>
-          <HelpButton data={data} />
-        </View>
-        <View style={button}>
-          <ReferButton data={data} />
-        </View>
-      </View>
+    <ScrollView style={{backgroundColor: WHITE}}>
+      <View style={{flex: 1, backgroundColor: WHITE, padding: 10 }}>
+      <ProfileName name={creatorName} />
+      <Text style={{...descriptionStyle, minHeight: heightForDescription}}>
+        {description}
+      </Text>
       <TimeAndDistance timeStamp={timeStamp} distance={distance} />
-    </Card>
+      {!isUserRequested()
+        ? <View style={buttons}>
+            <HelpButton data={data} />
+            <ReferButton data={data} />
+          </View>
+        : <Text style={{textAlign: 'center', fontSize: FONT_SIZE_20}}>Authentencation is pending</Text>
+      }
+    </View>
+    </ScrollView>
   );
 }
 
@@ -80,17 +91,20 @@ export default HelpRequest;
 const styles = StyleSheet.create({
   buttons: {
     flexDirection: "row",
-  },
-  button: {
-    ...margin(0, 10, 0, 0)
+    justifyContent: 'space-between',
+    marginTop: 10
   },
   timeAndDistance: {
     flex: 1,
     flexDirection: 'row',
   },
   descriptionStyle: {
-    fontFamily: FONT_FAMILY_BOLD,
-    fontSize: FONT_SIZE_16,
-    fontWeight: FONT_WEIGHT_BOLD
+    color: BLACK,
+    fontSize: FONT_SIZE_14,
+    borderWidth: 1, 
+    borderColor: BLACK, 
+    ...margin(10,0,10,0),
+    padding: 10, 
+    minHeight: 450
   }
 });
