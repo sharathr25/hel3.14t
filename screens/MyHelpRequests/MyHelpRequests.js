@@ -1,5 +1,5 @@
 // @flow
-import React, { useContext } from 'react';
+import React from 'react';
 import { FlatList, View } from 'react-native';
 import { UserHelpRequest } from '../../components/molecules';
 import { useQuery, useSubscription } from 'react-apollo';
@@ -7,7 +7,7 @@ import gql from 'graphql-tag';
 import type { DocumentNode } from 'graphql';
 import { WHITE, ORANGE } from '../../styles/colors';
 import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
-import Context from '../../context';
+import { useAuth } from "../../customHooks";
 
 const REQUESTED_HELPS_QUERY = gql`
 query User($uid: String!) {
@@ -48,7 +48,7 @@ type HelpsProps = {
 }
 
 const Helps = (props:HelpsProps) => {
-    const { user: currentUser } = useContext(Context);
+    const { user: currentUser } = useAuth();
     
     const { uid } = currentUser;
     const { queryGql, subscriptionGql } = props;

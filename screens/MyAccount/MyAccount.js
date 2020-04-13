@@ -1,14 +1,14 @@
 // @flow
-import React, { useEffect, useContext, useState } from 'react';
+import React, { useEffect } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import { useLazyQuery } from 'react-apollo';
 import gql from 'graphql-tag';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { ORANGE, WHITE } from '../../styles/colors';
 import { FullScreenError , FullScreenLoader} from '../../components/atoms';
-import Context from "../../context";
 import { Auth } from "aws-amplify";
 import { SCREEN_DETAILS } from "../../constants/appConstants";
+import { useAuth } from "../../customHooks";
 
 const { LOGIN, VERIFICATION } = SCREEN_DETAILS; 
 
@@ -27,7 +27,7 @@ type MyAccountScreenProps = {
 
 const MyAccountScreen = (props: MyAccountScreenProps) => {
     const { navigation } = props;
-    const { user } = useContext(Context);
+    const { user } = useAuth();
     const { uid, attributes } = user;
     const { name, email, phone_number: phoneNumber, email_verified } = attributes;
     const [getUserData, { error, data, loading }] = useLazyQuery(USER_QUERY);

@@ -1,21 +1,15 @@
 // @flow
-import React, { useEffect, useContext } from 'react';
+import React from 'react';
 import { View, Text, StyleSheet, Alert, Image } from 'react-native';
 import { ORANGE, WHITE } from '../../styles/colors';
 import { TouchableOpacity } from 'react-native-gesture-handler';
-import Icon from 'react-native-vector-icons/FontAwesome';
+// import Icon from 'react-native-vector-icons/FontAwesome';
 import { SCREEN_DETAILS } from '../../constants/appConstants';
-import { Auth } from "aws-amplify";
-import { CustomModal } from "../../components/molecules";
-import { useAuth } from "../../customHooks/";
-import Context from "../../context";
 import { padding, borderRadius, margin } from "../../styles/mixins";
 
 const { SIGNUP, LOGIN } = SCREEN_DETAILS;
 
 const LandingScreen = ({ navigation }: { navigation: Object}) => {
-    const { user } = useContext(Context);
-
     const handleSignUp = () => {
         navigation.navigate(SIGNUP.screenName);
     }
@@ -24,26 +18,27 @@ const LandingScreen = ({ navigation }: { navigation: Object}) => {
         navigation.navigate(LOGIN.screenName);
     }
 
-    const handleFacebookSignIn = () => {
-        Alert.alert("need to implement facebook sign in");
-    }
+    // const handleFacebookSignIn = () => {
+    //     Alert.alert("need to implement facebook sign in");
+    // }
 
-    const handleGoogleSignIn = () => {
-        Alert.alert("need to implement facebook sign in");
-    }
+    // const handleGoogleSignIn = () => {
+    //     Alert.alert("need to implement facebook sign in");
+    // }
 
-    const handleTwitterSignIn = () => {
-        Alert.alert("need to implement facebook sign in");
-    }
+    // const handleTwitterSignIn = () => {
+    //     Alert.alert("need to implement facebook sign in");
+    // }
 
     const {
         container,
-        appNameAndLogoContainer,
-        appName, buttons,
-        socialMediaLoginButton,
-        socialMediaButtonText,
-        separater,
-        buttonContainerStyle,
+        // appNameAndLogoContainer,
+        // appName, 
+        buttons,
+        // socialMediaLoginButton,
+        // socialMediaButtonText,
+        // separater,
+        // buttonContainerStyle,
         buttonText
     } = styles;
 
@@ -72,32 +67,32 @@ const LandingScreen = ({ navigation }: { navigation: Object}) => {
         </TouchableOpacity>  
     )
 
-    const LoginWithFacebook = () => (
-        <TouchableOpacity style={{ ...socialMediaLoginButton, backgroundColor: "#3b5998" }} onPress={handleFacebookSignIn}>
-            <Icon name="facebook" color={WHITE} size={20} />
-            <Text style={socialMediaButtonText}>
-                Sign-in with Facebook
-            </Text>
-        </TouchableOpacity>
-    ) 
+    // const LoginWithFacebook = () => (
+    //     <TouchableOpacity style={{ ...socialMediaLoginButton, backgroundColor: "#3b5998" }} onPress={handleFacebookSignIn}>
+    //         <Icon name="facebook" color={WHITE} size={20} />
+    //         <Text style={socialMediaButtonText}>
+    //             Sign-in with Facebook
+    //         </Text>
+    //     </TouchableOpacity>
+    // ) 
 
-    const LoginWithGoogle = () => (
-        <TouchableOpacity style={{ ...socialMediaLoginButton, backgroundColor: "#4c8bf5" }} onPress={handleGoogleSignIn}>
-            <Icon name="google" color={WHITE} size={20} />
-            <Text style={socialMediaButtonText}>
-                Sign-in with Google
-            </Text>
-        </TouchableOpacity>
-    );
+    // const LoginWithGoogle = () => (
+    //     <TouchableOpacity style={{ ...socialMediaLoginButton, backgroundColor: "#4c8bf5" }} onPress={handleGoogleSignIn}>
+    //         <Icon name="google" color={WHITE} size={20} />
+    //         <Text style={socialMediaButtonText}>
+    //             Sign-in with Google
+    //         </Text>
+    //     </TouchableOpacity>
+    // );
 
-    const LoginWithTwitter = () => (
-        <TouchableOpacity style={{ ...socialMediaLoginButton, backgroundColor: "#1DA1F2" }} onPress={handleTwitterSignIn}>
-            <Icon name="twitter" color={WHITE} size={20} />
-            <Text style={socialMediaButtonText}>
-                Sign in with Twitter
-            </Text>
-        </TouchableOpacity>
-    );
+    // const LoginWithTwitter = () => (
+    //     <TouchableOpacity style={{ ...socialMediaLoginButton, backgroundColor: "#1DA1F2" }} onPress={handleTwitterSignIn}>
+    //         <Icon name="twitter" color={WHITE} size={20} />
+    //         <Text style={socialMediaButtonText}>
+    //             Sign in with Twitter
+    //         </Text>
+    //     </TouchableOpacity>
+    // );
 
     return (
         <View style={container}>

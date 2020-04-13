@@ -1,10 +1,10 @@
 // @flow
-import React, { useState , useContext} from 'react';
+import React, { useState } from 'react';
 import { View, Text } from 'react-native'
 import { WHITE } from '../../styles/colors';
 import { HelpRequestFeed } from '../../components/oraganisms';
 import { CustomModal } from "../../components/molecules";
-import Context from '../../context';
+import { useAuth } from "../../customHooks";
 import { Auth } from "aws-amplify";
 import { SCREEN_DETAILS } from "../../constants/appConstants";
 
@@ -13,7 +13,7 @@ const { LOGIN, VERIFICATION } = SCREEN_DETAILS;
 const Helps = ({navigation, route}:{navigation: Object, route: Object }) => {
 
   const { params } = route;
-  const user = useContext(Context).user || params.user;
+  const user = useAuth().user || params.user;
 
   const { username, attributes } = user;
   const { email_verified, email } = attributes;
