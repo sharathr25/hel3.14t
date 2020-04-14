@@ -8,6 +8,7 @@ import type { DocumentNode } from 'graphql';
 import { WHITE, ORANGE } from '../../styles/colors';
 import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
 import { useAuth } from "../../customHooks";
+import { FullScreenLoader } from '../../components/atoms';
 
 const REQUESTED_HELPS_QUERY = gql`
 query User($uid: String!) {
@@ -44,18 +45,17 @@ subscription{
 `;
 type HelpsProps = {
     queryGql: DocumentNode,
-    subscriptionGql: DocumentNode
+    subscriptionGql: DocumentNode,
+    currentUser: Object
 }
 
 const Helps = (props:HelpsProps) => {
-    const { user: currentUser } = useAuth();
-    
+    const { queryGql, subscriptionGql, currentUser } = props;
+    const subscriptionData = useSubscription(subscriptionGql);
+
     const { uid } = currentUser;
-    const { queryGql, subscriptionGql } = props;
 
     const { data, error } = useQuery(queryGql, { variables: { uid } });
-
-    const subscriptionData = useSubscription(subscriptionGql);
 
     const updatedUser = subscriptionData && subscriptionData.data && subscriptionData.data.onUpdateUser || null;
 
@@ -86,11 +86,13 @@ const Helps = (props:HelpsProps) => {
 const Tab = createMaterialTopTabNavigator();
 
 function MyHelpRequestsScreen() {
+    const { user } = useAuth();
+    if(!user) return <FullScreenLoader /> 
     return (
         <Tab.Navigator tabBarOptions={{ indicatorStyle: { backgroundColor: ORANGE } }}>
-            <Tab.Screen name="Requested" children={() => <Helps queryGql={REQUESTED_HELPS_QUERY} subscriptionGql={REQUESTED_HELPS_SUBSCRPTION} />} />
-            <Tab.Screen name="Helping" children={() => <Helps queryGql={HELPING_HELPS_QUERY} subscriptionGql={HELPING_HELPS_SUBSCRPTION} />} />
-        </Tab.Navigator>
+            <Tab.Screen name="Requested" children={() => <Helps queryGql={REQUESTED_HELPS_QUERY} subscriptionGql={REQUESTED_HELPS_SUBSCRPTION} currentUser={user} />} />
+            <Tab.Screen name="Helping" children={() => <Helps queryGql={HELPING_HELPS_QUERY} subscriptionGql={HELPING_HELPS_SUBSCRPTION} currentUser={user} />} />
+        </Tab.Navigator>                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        
     );
 }
 

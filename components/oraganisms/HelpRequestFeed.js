@@ -24,13 +24,9 @@ const HELPS = gql`
       status,
       usersAccepted{
         uid,
-        name,
-        mobileNo
       },
       usersRequested{
         uid,
-        name,
-        xp
       },
       usersRejected {
         uid

@@ -25,8 +25,8 @@ const SUBSCRIPTION = gql`
         usersRequested {
           uid
           name,
-          xp,
           mobileNo,
+          xp,
           stars
         },
     }
@@ -42,13 +42,14 @@ const SUBSCRIPTION = gql`
           uid
           name
           mobileNo
+          xp
           stars
         },
         usersRequested {
           uid
           name,
-          mobileNo,
           xp,
+          mobileNo,
           stars
         },
         timeStamp,
@@ -57,26 +58,25 @@ const SUBSCRIPTION = gql`
     }
   `;
 
+const getUpdatedData = (newData, oldData, keyOfHelpRequest) => {
+  const { _id } = newData;
+    if (_id === keyOfHelpRequest) {
+      return { ...oldData, ...newData }
+    }
+    return oldData;
+}
+
 const UserHelpRequest = (props) => {
   const { keyOfHelpRequest, showDone = true } = props;
-
   let { data , error } = useQuery(QUERY, { variables: { id: keyOfHelpRequest }});
-
   const subscriptionData = useSubscription(SUBSCRIPTION, { shouldResubscribe: true });
 
-  let updatedData = subscriptionData && subscriptionData.data && subscriptionData.data.onUpdateHelp || null;
-
-  if (updatedData) {
-    const { _id } = updatedData;
-    if (_id === keyOfHelpRequest) {
-      data.help = { ...data.help, ...updatedData }
-    }
+  if (!data) return null;
+  if(subscriptionData.data) {
+    data.help = getUpdatedData(subscriptionData.data.onUpdateHelp, data.help, keyOfHelpRequest);
   }
 
-  if (!data) return null;
-
   const { help } = data;
-
   const { status, usersRequested, usersAccepted, description, timeStamp, noPeopleRequired } = help;
 
   getRequestedUser = ({ item }) => {

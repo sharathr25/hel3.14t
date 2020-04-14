@@ -1,8 +1,8 @@
 // @flow
 import React from "react";
-import { View, Text, TouchableOpacity } from 'react-native';
-import { BLACK, ORANGE } from "../../styles/colors";
-import { Card, ProfileLetter } from "../atoms";
+import { Text, TouchableOpacity } from 'react-native';
+import { BLACK } from "../../styles/colors";
+import { Card } from "../atoms";
 import TimeAndDistance from "./TimeAndDistance";
 import { FONT_SIZE_14 } from "../../styles/typography";
 import { SCREEN_DETAILS } from "../../constants/appConstants";

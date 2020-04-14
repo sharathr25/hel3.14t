@@ -8,16 +8,21 @@ import { useSubscription } from "react-apollo";
 import { TimeAndDistance, ProfileName } from ".";
 import { FONT_SIZE_14, FONT_SIZE_20 } from "../../styles/typography";
 import { margin } from "../../styles/mixins";
-import { WHITE, BLACK } from "../../styles/colors";
+import { WHITE, BLACK, RED } from "../../styles/colors";
 import { useAuth } from "../../customHooks"
+import { FullScreenLoader } from "../atoms";
 
 const HELP_SUBSCRIPTION = gql`
 subscription{
   onUpdateHelp{
     status,
     usersAccepted{
-      _id
+      uid
     }
+    usersRequested{
+      uid
+    }
+    _id
   }
 }
 `;
@@ -37,52 +42,48 @@ type HelpRequestProps = {
   }
 }
 
-const HelpRequest = (props: HelpRequestProps) => {
-  let { data } = props;
-  const { user } = useAuth();
-  let uid = "";
-
-  if(user) {
-    uid = user.uid;
+const getUpdatedData = (newData, oldData) => {
+  const { _id } = newData;
+  if(_id === oldData._id) {
+    return { ...oldData, ...newData }
   }
+  return oldData;
+}
 
-  const { description, distance, timeStamp, status, usersRequested, usersRejected, creatorName } = data;
-
+const HelpRequest = ({data}: HelpRequestProps) => {
   const subscriptionData = useSubscription(HELP_SUBSCRIPTION, { shouldResubscribe: true });
+  const { user } = useAuth();
 
-  if (!data || status !== 'REQUESTED') return null;
+  if(!user) return <FullScreenLoader />
+  const { uid } = user;
 
-  let updatedData = subscriptionData && subscriptionData.data && subscriptionData.data.onUpdateHelp || null;
-
-  if (updatedData) {
-    const { _id } = updatedData;
-    if (_id === data._id) {
-      data = { ...data, ...updatedData }
-    }
+  if (!data) return null;
+  if(subscriptionData.data) {
+    data = getUpdatedData(subscriptionData.data.onUpdateHelp, data);
   }
-
+  const { description, distance, timeStamp, status, usersRequested, usersRejected, creatorName } = data;
+  const { descriptionStyle, buttons, descriptionContainer } = styles;
+  const heightForDescription = Dimensions.get('screen').height - 380
   const isUserRequested = () => usersRequested.some((user) => user.uid === uid);
 
-  const { descriptionStyle, buttons } = styles;
-  const heightForDescription = Dimensions.get('screen').height - 330
-
   return (
-    <ScrollView style={{backgroundColor: WHITE}}>
-      <View style={{flex: 1, backgroundColor: WHITE, padding: 10 }}>
+    <View style={{flex: 1, backgroundColor: WHITE, padding: 10 }}>
       <ProfileName name={creatorName} />
-      <Text style={{...descriptionStyle, minHeight: heightForDescription}}>
-        {description}
-      </Text>
+      <ScrollView style={{height: heightForDescription, ...descriptionContainer}}>
+        <Text style={descriptionStyle}>
+          {description}
+        </Text>
+      </ScrollView>
       <TimeAndDistance timeStamp={timeStamp} distance={distance} />
-      {!isUserRequested()
-        ? <View style={buttons}>
-            <HelpButton data={data} />
-            <ReferButton data={data} />
-          </View>
-        : <Text style={{textAlign: 'center', fontSize: FONT_SIZE_20}}>Authentencation is pending</Text>
+      {
+        !isUserRequested()
+          ? <View style={buttons}>
+              <HelpButton data={data} />
+              <ReferButton data={data} />
+            </View>
+          : <Text style={{textAlign: 'center', fontSize: FONT_SIZE_20}}>Verification is pending</Text>
       }
     </View>
-    </ScrollView>
   );
 }
 
@@ -101,10 +102,15 @@ const styles = StyleSheet.create({
   descriptionStyle: {
     color: BLACK,
     fontSize: FONT_SIZE_14,
-    borderWidth: 1, 
+    // borderWidth: 1, 
+    // borderColor: BLACK, 
+    // ...margin(10,0,10,0),
+    padding: 10,
+  },
+  descriptionContainer: {
+    borderWidth: 0.2, 
     borderColor: BLACK, 
-    ...margin(10,0,10,0),
-    padding: 10, 
-    minHeight: 450
+    ...margin(10,0,20,0),
+    elevation: 2
   }
 });

@@ -32,10 +32,11 @@ type HelpButtonProps = {
 const HelpButton = (props: HelpButtonProps) => {
   const { data } = props;
   const { usersAccepted, usersRequested, creator, _id, usersRejected } = data;
+  const [updateHelp, { loading }] = useMutation(HELP_UPDATE_SCHEMA);
   const { user: currentUser } = useAuth();
+  if(!currentUser) return null;
   const { uid , attributes } = currentUser;
   const { name , phone_number} = attributes;
-  const [updateHelp, { loading }] = useMutation(HELP_UPDATE_SCHEMA);
 
   const handleHelp = () => {
     if (usersAccepted.map((user) => user.uid).indexOf(uid) > -1) {
@@ -49,7 +50,7 @@ const HelpButton = (props: HelpButtonProps) => {
     }
   }
 
-  return <Button onPress={handleHelp} loading={loading} bgColor={ORANGE} textColor={WHITE}>Help</Button>
+  return <Button onPress={handleHelp} loading={loading} bgColor={ORANGE} textColor={WHITE} >Help</Button>
 }
 
 export default HelpButton;

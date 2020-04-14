@@ -9,7 +9,7 @@ import { useAuth } from './customHooks';
 import { NavigationContainer } from '@react-navigation/native';
 import Amplify from 'aws-amplify';
 import awsConfig from './aws-exports';
-import { CustomModal } from "./components/molecules"
+import { FullScreenLoader } from './components/atoms';
 
 Amplify.configure({...awsConfig});
 
@@ -26,7 +26,7 @@ function App() {
       .catch((err) => Alert.alert("GPS can't be accessed"));
   }, []);
 
-  if(initializing) return <CustomModal />
+  if(initializing) return <FullScreenLoader />
   
   return (
     <ApolloProvider client={ApolloClient(token)}>
