@@ -1,15 +1,15 @@
 // @flow
-import React, { useState , useContext } from "react";
+import React, { useState } from "react";
 import { Text, Input } from "react-native-elements";
 import { View, TouchableOpacity, StyleSheet, Alert, Keyboard, ScrollView, Dimensions } from "react-native";
 import { WHITE, ORANGE, BLACK, RED } from "../../styles/colors";
-import { FONT_FAMILY_REGULAR, FONT_SIZE_20, FONT_SIZE_12, FONT_WEIGHT_BOLD } from "../../styles/typography";
+import { FONT_FAMILY_REGULAR, FONT_SIZE_20, FONT_SIZE_12 } from "../../styles/typography";
 import gql from "graphql-tag";
 import { useMutation } from "react-apollo";
-import { useLocation } from "../../customHooks/";
-import Context from "../../context";
+import { useLocation, useAuth } from "../../customHooks/";
 import { CustomModal } from "../../components/molecules";
 import { padding } from "../../styles/mixins";
+import { FullScreenLoader } from "../../components/atoms";
 
 const WORD_LIMIT = 5;
 const CORNER_SIZE = 25;
@@ -48,14 +48,12 @@ const HelpRequestForm = () => {
     });
 
     const [showModal, setShowModal] = useState(false);
-
-    const { user: currentUser } = useContext(Context);
+    const [createHelp, { loading, data, error }] = useMutation(HELP_REQUEST);
+    const { longitude, latitude, locationProviderAvailable, locationErrorMessage } = useLocation();
+    const { user: currentUser } = useAuth();
+    if(!currentUser) return <FullScreenLoader />
     const { uid, attributes, username } = currentUser;
     const { name, phone_number: phoneNumber } = attributes;
-
-    const { longitude, latitude, locationProviderAvailable, locationErrorMessage } = useLocation();
-
-    const [createHelp, { loading, data, error }] = useMutation(HELP_REQUEST);
 
     const handleCheckBox = (val) => {
         setState({ ...state, noPeopleRequired: val, [`checkBox${val}`]: true });

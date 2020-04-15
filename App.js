@@ -7,11 +7,9 @@ import MainStackNavigator from './MainStackNavigator';
 import { PermissionsAndroid, Alert } from "react-native";
 import { useAuth } from './customHooks';
 import { NavigationContainer } from '@react-navigation/native';
-import { FullScreenLoader } from './components/atoms';
-import Amplify,{Auth} from 'aws-amplify';
+import Amplify from 'aws-amplify';
 import awsConfig from './aws-exports';
-import Context from './context';
-import { CustomModal } from "./components/molecules"
+import { FullScreenLoader } from './components/atoms';
 
 Amplify.configure({...awsConfig});
 
@@ -28,15 +26,13 @@ function App() {
       .catch((err) => Alert.alert("GPS can't be accessed"));
   }, []);
 
-  if(initializing) return <CustomModal />
+  if(initializing) return <FullScreenLoader />
   
   return (
     <ApolloProvider client={ApolloClient(token)}>
-      <Context.Provider value={{initializing, user}}>
-        <NavigationContainer>
-          <AppContainer isLogedIn={user ? true : false} />
-        </NavigationContainer>
-      </Context.Provider>
+      <NavigationContainer>
+        <AppContainer isLogedIn={user ? true : false} />
+      </NavigationContainer>
     </ApolloProvider>
   );
 }

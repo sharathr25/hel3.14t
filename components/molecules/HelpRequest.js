@@ -1,23 +1,28 @@
 // @flow
-import React, { useState, useEffect } from "react";
-import { View, StyleSheet, Text } from "react-native";
+import React from "react";
+import { View, StyleSheet, Text, ScrollView, Dimensions } from "react-native";
 import HelpButton from "./buttons/helpButton";
 import ReferButton from "./buttons/referButton";
 import gql from "graphql-tag";
 import { useSubscription } from "react-apollo";
-import { STATUS_COLOR_MAPPING } from "../../components/atoms/Status";
-import { Status, NoOfHelpers, Card } from "../atoms";
-import { TimeAndDistance } from ".";
-import { FONT_FAMILY_BOLD, FONT_SIZE_16, FONT_WEIGHT_BOLD } from "../../styles/typography";
+import { TimeAndDistance, ProfileName } from ".";
+import { FONT_SIZE_14, FONT_SIZE_20 } from "../../styles/typography";
 import { margin } from "../../styles/mixins";
+import { WHITE, BLACK, RED } from "../../styles/colors";
+import { useAuth } from "../../customHooks"
+import { FullScreenLoader, Description } from "../atoms";
 
 const HELP_SUBSCRIPTION = gql`
 subscription{
   onUpdateHelp{
     status,
     usersAccepted{
-      _id
+      uid
     }
+    usersRequested{
+      uid
+    }
+    _id
   }
 }
 `;
@@ -37,41 +42,44 @@ type HelpRequestProps = {
   }
 }
 
-const HelpRequest = (props: HelpRequestProps) => {
-  let { data } = props;
-
-  const { usersAccepted, description, distance, timeStamp, noPeopleRequired, creator, status, usersRequested, usersRejected } = data;
-
-  const subscriptionData = useSubscription(HELP_SUBSCRIPTION, { shouldResubscribe: true });
-
-  if (!data || status !== 'REQUESTED') return null;
-
-  let updatedData = subscriptionData && subscriptionData.data && subscriptionData.data.onUpdateHelp || null;
-
-  if (updatedData) {
-    const { _id } = updatedData;
-    if (_id === data._id) {
-      data = { ...data, ...updatedData }
-    }
+const getUpdatedData = (newData, oldData) => {
+  const { _id } = newData;
+  if(_id === oldData._id) {
+    return { ...oldData, ...newData }
   }
+  return oldData;
+}
 
-  const { descriptionStyle, buttons, button } = styles;
+const HelpRequest = ({data}: HelpRequestProps) => {
+  const subscriptionData = useSubscription(HELP_SUBSCRIPTION, { shouldResubscribe: true });
+  const { user } = useAuth();
+
+  if(!user) return <FullScreenLoader />
+  const { uid } = user;
+
+  if (!data) return null;
+  if(subscriptionData.data) {
+    data = getUpdatedData(subscriptionData.data.onUpdateHelp, data);
+  }
+  const { description, distance, timeStamp, status, usersRequested, usersRejected, creatorName } = data;
+  const { buttons } = styles;
+  const heightForDescription = Dimensions.get('screen').height - 380
+  const isUserRequested = () => usersRequested.some((user) => user.uid === uid);
 
   return (
-    <Card borderLeftColor={STATUS_COLOR_MAPPING[status]}>
-      <Text style={descriptionStyle}>{description}</Text>
-      <Status>{status}</Status>
-      <NoOfHelpers noPeopleAccepted={usersAccepted.length} noPeopleRequired={noPeopleRequired} />
-      <View style={buttons}>
-        <View style={button}>
-          <HelpButton data={data} />
-        </View>
-        <View style={button}>
-          <ReferButton data={data} />
-        </View>
-      </View>
+    <View style={{flex: 1, backgroundColor: WHITE, padding: 10 }}>
+      <ProfileName name={creatorName} />
+      <Description height={heightForDescription}>{description}</Description>
       <TimeAndDistance timeStamp={timeStamp} distance={distance} />
-    </Card>
+      {
+        !isUserRequested()
+          ? <View style={buttons}>
+              <HelpButton data={data} />
+              <ReferButton data={data} />
+            </View>
+          : <Text style={{textAlign: 'center', fontSize: FONT_SIZE_20}}>Verification is pending</Text>
+      }
+    </View>
   );
 }
 
@@ -80,17 +88,11 @@ export default HelpRequest;
 const styles = StyleSheet.create({
   buttons: {
     flexDirection: "row",
-  },
-  button: {
-    ...margin(0, 10, 0, 0)
+    justifyContent: 'space-between',
+    marginTop: 10
   },
   timeAndDistance: {
     flex: 1,
     flexDirection: 'row',
   },
-  descriptionStyle: {
-    fontFamily: FONT_FAMILY_BOLD,
-    fontSize: FONT_SIZE_16,
-    fontWeight: FONT_WEIGHT_BOLD
-  }
 });

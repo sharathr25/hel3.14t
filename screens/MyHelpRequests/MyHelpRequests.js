@@ -1,13 +1,14 @@
 // @flow
-import React, { useContext } from 'react';
+import React from 'react';
 import { FlatList, View } from 'react-native';
-import { UserHelpRequest } from '../../components/molecules';
+import { UserHelpRequest, UserHelpRequestCard } from '../../components/molecules';
 import { useQuery, useSubscription } from 'react-apollo';
 import gql from 'graphql-tag';
 import type { DocumentNode } from 'graphql';
 import { WHITE, ORANGE } from '../../styles/colors';
 import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
-import Context from '../../context';
+import { useAuth } from "../../customHooks";
+import { FullScreenLoader } from '../../components/atoms';
 
 const REQUESTED_HELPS_QUERY = gql`
 query User($uid: String!) {
@@ -44,18 +45,17 @@ subscription{
 `;
 type HelpsProps = {
     queryGql: DocumentNode,
-    subscriptionGql: DocumentNode
+    subscriptionGql: DocumentNode,
+    currentUser: Object
 }
 
 const Helps = (props:HelpsProps) => {
-    const { user: currentUser } = useContext(Context);
-    
+    const { queryGql, subscriptionGql, currentUser } = props;
+    const subscriptionData = useSubscription(subscriptionGql);
+
     const { uid } = currentUser;
-    const { queryGql, subscriptionGql } = props;
 
     const { data, error } = useQuery(queryGql, { variables: { uid } });
-
-    const subscriptionData = useSubscription(subscriptionGql);
 
     const updatedUser = subscriptionData && subscriptionData.data && subscriptionData.data.onUpdateUser || null;
 
@@ -70,7 +70,7 @@ const Helps = (props:HelpsProps) => {
     }
     let { createdHelpRequests, helpedHelpRequests } = user;
 
-    const getHelpRequest = ({ item }) => <UserHelpRequest keyOfHelpRequest={item} showDone={createdHelpRequests ? true : false} />
+    const getHelpRequest = ({ item }) => <UserHelpRequestCard keyOfHelpRequest={item} />
 
     return (
         <View style={{ flex: 1, backgroundColor: WHITE }}>
@@ -86,11 +86,13 @@ const Helps = (props:HelpsProps) => {
 const Tab = createMaterialTopTabNavigator();
 
 function MyHelpRequestsScreen() {
+    const { user } = useAuth();
+    if(!user) return <FullScreenLoader /> 
     return (
         <Tab.Navigator tabBarOptions={{ indicatorStyle: { backgroundColor: ORANGE } }}>
-            <Tab.Screen name="Requested" children={() => <Helps queryGql={REQUESTED_HELPS_QUERY} subscriptionGql={REQUESTED_HELPS_SUBSCRPTION} />} />
-            <Tab.Screen name="Helping" children={() => <Helps queryGql={HELPING_HELPS_QUERY} subscriptionGql={HELPING_HELPS_SUBSCRPTION} />} />
-        </Tab.Navigator>
+            <Tab.Screen name="Requested" children={() => <Helps queryGql={REQUESTED_HELPS_QUERY} subscriptionGql={REQUESTED_HELPS_SUBSCRPTION} currentUser={user} />} />
+            {/* <Tab.Screen name="Helping" children={() => <Helps queryGql={HELPING_HELPS_QUERY} subscriptionGql={HELPING_HELPS_SUBSCRPTION} currentUser={user} />} /> */}
+        </Tab.Navigator>                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        
     );
 }
 

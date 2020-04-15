@@ -1,7 +1,7 @@
 // @flow
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { Text, CheckBox } from 'react-native-elements';
-import { View, Alert, StyleSheet, TouchableOpacity, ActivityIndicator, Picker } from 'react-native';
+import { View, Alert, StyleSheet } from 'react-native';
 import { ScrollView } from 'react-native-gesture-handler';
 import { SIGN_UP_SCREEN , SCREEN_DETAILS} from '../../constants/appConstants';
 import { ORANGE, WHITE, BLACK } from '../../styles/colors';
@@ -11,9 +11,8 @@ import { getAge } from '../../utils';
 import gql from 'graphql-tag';
 import { useMutation } from 'react-apollo';
 import { CustomModal, InputComponent } from '../../components/molecules';
-import { CustomDatePicker, ErrorMessage, Selector, Button, Link, PasswordIcon } from '../../components/atoms';
+import { CustomDatePicker, Selector, Button, Link } from '../../components/atoms';
 import { padding } from "../../styles/mixins";
-import { FONT_WEIGHT_REGULAR } from "../../styles/typography"
 import { Auth } from "aws-amplify";
 
 const { VERIFICATION, LOGIN, TERMS_AND_CONDITIONS } = SCREEN_DETAILS;
@@ -32,8 +31,8 @@ const {
 const AGE_LIMIT = 15;
 
 const CREATE_USER = gql`
-mutation CreateUser($uid:String!) {
-    createUser(uid:$uid){
+mutation CreateUser($uid:String!, $username:String!) {
+    createUser(uid:$uid, username:$username) {
       uid
     }
   }
@@ -73,7 +72,7 @@ function SignUpScreen({navigation}: { navigation: Object }) {
 
   const [err, setErr] = useState('');
 
-  const [createUser, { loading }] = useMutation(CREATE_USER);
+  const [createUser, { loading, data, error }] = useMutation(CREATE_USER);
 
   const handleTermsAndConditions = () => {
     navigation.navigate(TERMS_AND_CONDITIONS.screenName);
@@ -128,8 +127,7 @@ function SignUpScreen({navigation}: { navigation: Object }) {
     return await Auth.resendSignUp(username)
   }
 
-  const handleSignUp = async () => {
-    const age = dob ? getAge(dob.value) : 0
+  const handleSignUp = async () => {  
     if(isValid())
       try {
         setIsLoading(true);
@@ -146,8 +144,9 @@ function SignUpScreen({navigation}: { navigation: Object }) {
           }
         );
         setErr('');
-        const { userSub } = data;
-        createUser({ variables: { uid : userSub } });
+        const { userSub, user } = data;
+        const { username : userName } = user;
+        createUser({ variables: { uid : userSub, username: userName } });
         const paramsForVerificationScreen = { verify, redirectTo, resend, message: `Enter OTP sent to xxxxxxxx${mobileNumber.substr(8)}` };
         navigation.navigate(VERIFICATION.screenName, paramsForVerificationScreen);
       } catch (error) {

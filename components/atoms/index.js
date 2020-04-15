@@ -19,7 +19,8 @@ import Selector from './Selector';
 import Link from './Link';
 import HeaderTitle from './HeaderTitle'
 import Curve from "./Curve";
-import PasswordIcon from "./PasswordIcon"
+import PasswordIcon from "./PasswordIcon";
+import Description from "./Description";
 
 export {
     Status,
@@ -43,5 +44,6 @@ export {
     Link,
     HeaderTitle,
     Curve,
-    PasswordIcon
+    PasswordIcon,
+    Description
 };

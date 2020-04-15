@@ -14,6 +14,8 @@ const wsEndPoint = process.env.NODE_ENV === "development" ? dev.SERVER_WEB_SOCKE
 // const httpEndPoint = prod.SERVER_HTTP_END_POINT;
 // const wsEndPoint = prod.SERVER_WEB_SOCKET_END_POINT;
 
+console.log(httpEndPoint, wsEndPoint);
+
 const withAuthToken = (token = "") => {
   // Create an http link:
   const httpLink = new HttpLink({
