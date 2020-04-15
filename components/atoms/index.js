@@ -21,6 +21,7 @@ import HeaderTitle from './HeaderTitle'
 import Curve from "./Curve";
 import PasswordIcon from "./PasswordIcon";
 import Description from "./Description";
+import AccountButton from "./AccountButton";
 
 export {
     Status,
@@ -45,5 +46,6 @@ export {
     HeaderTitle,
     Curve,
     PasswordIcon,
-    Description
+    Description,
+    AccountButton
 };

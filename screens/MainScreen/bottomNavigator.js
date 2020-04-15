@@ -49,9 +49,9 @@ function BottomTabNavigator(props:any) {
 
   return (
     <Tab.Navigator tabBarOptions={{ activeTintColor: ORANGE, inactiveTintColor: BLACK }}>
-        <Tab.Screen name="Ranks" component={Helpers} options={{ tabBarIcon: RankIcon }} />
+        <Tab.Screen name="Top Ranks" component={Helpers} options={{ tabBarIcon: RankIcon }} />
         <Tab.Screen name="Home" children={() => <Helps {...props} />} options={{ tabBarIcon: HomeIcon }} />
-        <Tab.Screen name="Request" component={HelpRequestFormScreen} 
+        <Tab.Screen name="New Help Request" component={HelpRequestFormScreen} 
           options={{ tabBarIcon: RequestButton, tabBarLabel:"", title:"new help" }} />
         <Tab.Screen name="Activity" component={MyHelpRequestsScreen} options={{ tabBarIcon: ActivityIcon }} />
         <Tab.Screen 

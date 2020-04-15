@@ -1,10 +1,12 @@
 // @flow
 import React from 'react';
-import { Text } from 'react-native';
+import { TouchableOpacity, Dimensions } from 'react-native';
 import { createStackNavigator } from '@react-navigation/stack';
 import { rightToLeft, leftToRight } from "./cardInterpolators";
 import { Header } from '../components/molecules'
 import { SCREEN_DETAILS } from "../constants/appConstants";
+import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+
 import { 
   MyAccount,
   ForgotPassword,
@@ -19,6 +21,8 @@ import {
   HelpRequestScreen,
   UserHelpRequestScreen
  } from "../screens";
+import { useNavigation } from '@react-navigation/native';
+import { AccountButton } from '../components/atoms';
 
 const Stack = createStackNavigator();
 
@@ -37,6 +41,8 @@ const {
   USER_HELP_REQUEST
 } = SCREEN_DETAILS;
 
+
+
 const MainNavigator = (props: { isLogedIn: boolean }) => {
   const { isLogedIn } = props;
   const initialScreen = isLogedIn ? MAIN.screenName : APP_LANDING_SCREEN.screenName;
@@ -51,7 +57,7 @@ const MainNavigator = (props: { isLogedIn: boolean }) => {
       <Stack.Screen 
         name={MAIN.screenName} 
         component={MainScreen} 
-        options={{ headerLeft: <Text/> }}>
+        options={{ headerLeft: <AccountButton />}}>
       </Stack.Screen> 
       <Stack.Screen 
         name={NOTIFICATIONS.screenName} 

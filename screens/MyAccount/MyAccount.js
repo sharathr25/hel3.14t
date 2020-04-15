@@ -25,14 +25,35 @@ type MyAccountScreenProps = {
     navigation: Object
 }
 
+const VerfifyButton = ({onPress}) => (
+    <TouchableOpacity onPress={onPress}>
+        <Text style={{ borderColor: ORANGE, borderWidth: 1, color: ORANGE, padding: 5, margin: 5, borderRadius: 5 }}>
+            Verify
+        </Text>
+    </TouchableOpacity>
+);
+
+const EmailVerifyMessage = ({handleVerify}) => (
+    <View style={{ flexDirection: 'row', ...text, alignItems: 'center'}}>
+        <Text>Email is not verified</Text>
+        <VerfifyButton onPress={handleVerify} />
+    </View>
+);
+
 const MyAccountScreen = (props: MyAccountScreenProps) => {
     const { navigation } = props;
+    
+    const [getUserData, { error, data, loading }] = useLazyQuery(USER_QUERY);
     const { user } = useAuth();
+    useEffect(() => {
+        if(user)
+            getUserData({ variables: { uid : user.uid } })
+    }, [user])
+
+    if(!user) return <FullScreenLoader />
+
     const { uid, attributes } = user;
     const { name, email, phone_number: phoneNumber, email_verified } = attributes;
-    const [getUserData, { error, data, loading }] = useLazyQuery(USER_QUERY);
-
-    console.log(error);
 
     const verify = async (otp) => {
         await Auth.verifyCurrentUserAttributeSubmit('email', otp)
@@ -53,30 +74,11 @@ const MyAccountScreen = (props: MyAccountScreenProps) => {
     navigation.navigate(VERIFICATION.screenName, paramsForVerificationScreen);
   }
 
-    useEffect(() => {
-        getUserData({ variables: { uid } })
-    }, [uid])
-
     const handleLogOut = () => {
         console.log(navigation);
     }
 
-    const VerfifyButton = () => (
-        <TouchableOpacity onPress={handleVerify}>
-            <Text style={{ borderColor: ORANGE, borderWidth: 1, color: ORANGE, padding: 5, margin: 5, borderRadius: 5 }}>
-                Verify
-            </Text>
-        </TouchableOpacity>
-    );
-
-    const EmailVerifyMessage = () => (
-        <View style={{ flexDirection: 'row', ...text, alignItems: 'center'}}>
-            <Text>Email is not verified</Text>
-            <VerfifyButton />
-        </View>
-    );
-
-    if (loading) {
+    if (loading || !uid) {
         return <FullScreenLoader />
     }
     if (error) {
@@ -103,7 +105,7 @@ const MyAccountScreen = (props: MyAccountScreenProps) => {
                     </View>
                     <View>
                         <Text style={text}>{email}</Text>
-                        {!email_verified && <EmailVerifyMessage />}
+                        {!email_verified && <EmailVerifyMessage handleVerify={handleVerify} />}
                     </View>
                 </View>
                 <View style={detailRow}>

@@ -3,29 +3,19 @@ import { Text, View, FlatList } from "react-native";
 import { WHITE, GREEN, ORANGE } from "../../styles/colors";
 import { ListItem } from "react-native-elements";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons"
+import gql from "graphql-tag";
+import { useQuery } from "react-apollo";
+import { FullScreenError, FullScreenLoader } from "../../components/atoms";
 
-const dummtData = [
-    {
-        name: "Sharath",
-        xp: 100,
-        rating: 90
-    },
-    {
-        name: "Trisha",
-        xp: 90,
-        rating: 90
-    },
-    {
-        name: "Pradeep",
-        xp: 80,
-        rating: 90
-    },
-    {
-        name: "Sathish",
-        xp: 70,
-        rating: 90
+const TOP_HELPERS_QUERY = gql`
+    query {
+        topHelpers{
+            username
+            xp,
+            stars
     }
-];
+  }
+`
 
 const colors = [undefined, "#ffd700", "#aaa9ad", "#b08d57"];
 
@@ -48,18 +38,27 @@ const RankDetails = ({rank, name, xp, rating}) => {
 }
 
 const Helpers = () => {
+    const { data, loading, error } = useQuery(TOP_HELPERS_QUERY);
+
     const getListItem = ({item, index}) => {
-        const { name, xp, rating } = item;
+        const { username, xp, stars } = item;
         const rank = index + 1;
         return <ListItem 
-            title={<RankDetails rank={rank} name={name} xp={xp} rating={rating} />} 
+            title={<RankDetails rank={rank} name={username} xp={xp} rating={stars} />} 
             bottomDivider 
         />
     }
+
+    if(loading) return <FullScreenLoader />
+
+    if(error) return <FullScreenError />
+
+    const { topHelpers } = data;
+
     return (
         <FlatList 
             renderItem={getListItem}
-            data={dummtData}
+            data={topHelpers}
             keyExtractor={(_, i) => i.toString()}
             style={{backgroundColor :WHITE}}
         />
