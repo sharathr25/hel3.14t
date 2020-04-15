@@ -7,6 +7,7 @@ import Header from './Header';
 import InputComponent from './InputComponent';
 import HelpRequestCard from './HelpRequestCard';
 import ProfileName from './ProfileName';
+import UserHelpRequestCard from "./UserHelpRequestCard";
 
 export { 
     TimeAndDistance, 
@@ -17,5 +18,6 @@ export {
     Header, 
     InputComponent,
     HelpRequestCard,
-    ProfileName
+    ProfileName,
+    UserHelpRequestCard
 }

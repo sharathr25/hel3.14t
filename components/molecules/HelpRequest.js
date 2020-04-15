@@ -10,7 +10,7 @@ import { FONT_SIZE_14, FONT_SIZE_20 } from "../../styles/typography";
 import { margin } from "../../styles/mixins";
 import { WHITE, BLACK, RED } from "../../styles/colors";
 import { useAuth } from "../../customHooks"
-import { FullScreenLoader } from "../atoms";
+import { FullScreenLoader, Description } from "../atoms";
 
 const HELP_SUBSCRIPTION = gql`
 subscription{
@@ -62,18 +62,14 @@ const HelpRequest = ({data}: HelpRequestProps) => {
     data = getUpdatedData(subscriptionData.data.onUpdateHelp, data);
   }
   const { description, distance, timeStamp, status, usersRequested, usersRejected, creatorName } = data;
-  const { descriptionStyle, buttons, descriptionContainer } = styles;
+  const { buttons } = styles;
   const heightForDescription = Dimensions.get('screen').height - 380
   const isUserRequested = () => usersRequested.some((user) => user.uid === uid);
 
   return (
     <View style={{flex: 1, backgroundColor: WHITE, padding: 10 }}>
       <ProfileName name={creatorName} />
-      <ScrollView style={{height: heightForDescription, ...descriptionContainer}}>
-        <Text style={descriptionStyle}>
-          {description}
-        </Text>
-      </ScrollView>
+      <Description height={heightForDescription}>{description}</Description>
       <TimeAndDistance timeStamp={timeStamp} distance={distance} />
       {
         !isUserRequested()
@@ -99,18 +95,4 @@ const styles = StyleSheet.create({
     flex: 1,
     flexDirection: 'row',
   },
-  descriptionStyle: {
-    color: BLACK,
-    fontSize: FONT_SIZE_14,
-    // borderWidth: 1, 
-    // borderColor: BLACK, 
-    // ...margin(10,0,10,0),
-    padding: 10,
-  },
-  descriptionContainer: {
-    borderWidth: 0.2, 
-    borderColor: BLACK, 
-    ...margin(10,0,20,0),
-    elevation: 2
-  }
 });

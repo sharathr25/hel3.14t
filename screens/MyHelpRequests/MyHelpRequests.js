@@ -1,7 +1,7 @@
 // @flow
 import React from 'react';
 import { FlatList, View } from 'react-native';
-import { UserHelpRequest } from '../../components/molecules';
+import { UserHelpRequest, UserHelpRequestCard } from '../../components/molecules';
 import { useQuery, useSubscription } from 'react-apollo';
 import gql from 'graphql-tag';
 import type { DocumentNode } from 'graphql';
@@ -70,7 +70,7 @@ const Helps = (props:HelpsProps) => {
     }
     let { createdHelpRequests, helpedHelpRequests } = user;
 
-    const getHelpRequest = ({ item }) => <UserHelpRequest keyOfHelpRequest={item} showDone={createdHelpRequests ? true : false} />
+    const getHelpRequest = ({ item }) => <UserHelpRequestCard keyOfHelpRequest={item} />
 
     return (
         <View style={{ flex: 1, backgroundColor: WHITE }}>
@@ -91,7 +91,7 @@ function MyHelpRequestsScreen() {
     return (
         <Tab.Navigator tabBarOptions={{ indicatorStyle: { backgroundColor: ORANGE } }}>
             <Tab.Screen name="Requested" children={() => <Helps queryGql={REQUESTED_HELPS_QUERY} subscriptionGql={REQUESTED_HELPS_SUBSCRPTION} currentUser={user} />} />
-            <Tab.Screen name="Helping" children={() => <Helps queryGql={HELPING_HELPS_QUERY} subscriptionGql={HELPING_HELPS_SUBSCRPTION} currentUser={user} />} />
+            {/* <Tab.Screen name="Helping" children={() => <Helps queryGql={HELPING_HELPS_QUERY} subscriptionGql={HELPING_HELPS_SUBSCRPTION} currentUser={user} />} /> */}
         </Tab.Navigator>                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        
     );
 }

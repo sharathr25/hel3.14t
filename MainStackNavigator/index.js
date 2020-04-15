@@ -16,7 +16,8 @@ import {
   Notifications,
   Verification,
   MainScreen,
-  HelpRequestScreen
+  HelpRequestScreen,
+  UserHelpRequestScreen
  } from "../screens";
 
 const Stack = createStackNavigator();
@@ -32,7 +33,8 @@ const {
   TERMS_AND_CONDITIONS,
   NOTIFICATIONS,
   MY_ACCOUNT,
-  HELP_REQUEST
+  HELP_REQUEST,
+  USER_HELP_REQUEST
 } = SCREEN_DETAILS;
 
 const MainNavigator = (props: { isLogedIn: boolean }) => {
@@ -95,6 +97,11 @@ const MainNavigator = (props: { isLogedIn: boolean }) => {
         name={HELP_REQUEST.screenName} 
         component={HelpRequestScreen} 
         options={{ title: HELP_REQUEST.screenTitle }}>
+      </Stack.Screen>
+      <Stack.Screen 
+        name={USER_HELP_REQUEST.screenName} 
+        component={UserHelpRequestScreen} 
+        options={{ title: USER_HELP_REQUEST.screenTitle }}>
       </Stack.Screen>
     </Stack.Navigator>
   );

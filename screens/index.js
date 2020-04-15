@@ -14,6 +14,7 @@ import TermsAndConditions from "./TermsAndConditions";
 import Verification from "./Verification";
 import MainScreen from "./MainScreen";
 import HelpRequestScreen from "./HelpRequest";
+import UserHelpRequestScreen from "./UserHelpRequestScreen";
 
 export {
     Comments,
@@ -30,5 +31,6 @@ export {
     TermsAndConditions,
     Verification,
     MainScreen,
-    HelpRequestScreen
+    HelpRequestScreen,
+    UserHelpRequestScreen
 }
