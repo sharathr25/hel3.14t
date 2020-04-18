@@ -87,5 +87,6 @@ export const SCREEN_DETAILS = {
   NOTIFICATIONS: { screenTitle: "Notifications", screenName: "Notifications"},
   MY_ACCOUNT: { screenTitle: "My Account", screenName: "MyAccount" },
   HELP_REQUEST: { screenTitle: "Help Request", screenName: "HelpRequest" },
-  USER_HELP_REQUEST: { screenTitle: "Your Help Request", screenName: "UserHelpRequest"}
+  USER_HELP_REQUEST: { screenTitle: "Your Help Request", screenName: "UserHelpRequest" },
+  UPDATE_ACCOUNT: { screenTitle: "Update Account Details", screenName: "UpdateAccount" }
 }

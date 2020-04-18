@@ -19,9 +19,9 @@ import {
   Verification,
   MainScreen,
   HelpRequestScreen,
-  UserHelpRequestScreen
+  UserHelpRequestScreen,
+  UpdateAccount
  } from "../screens";
-import { useNavigation } from '@react-navigation/native';
 import { AccountButton } from '../components/atoms';
 
 const Stack = createStackNavigator();
@@ -38,7 +38,8 @@ const {
   NOTIFICATIONS,
   MY_ACCOUNT,
   HELP_REQUEST,
-  USER_HELP_REQUEST
+  USER_HELP_REQUEST,
+  UPDATE_ACCOUNT
 } = SCREEN_DETAILS;
 
 
@@ -108,6 +109,11 @@ const MainNavigator = (props: { isLogedIn: boolean }) => {
         name={USER_HELP_REQUEST.screenName} 
         component={UserHelpRequestScreen} 
         options={{ title: USER_HELP_REQUEST.screenTitle }}>
+      </Stack.Screen>
+      <Stack.Screen 
+        name={UPDATE_ACCOUNT.screenName} 
+        component={UpdateAccount} 
+        options={{ title: UPDATE_ACCOUNT.screenTitle }}>
       </Stack.Screen>
     </Stack.Navigator>
   );

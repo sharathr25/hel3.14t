@@ -1,13 +1,12 @@
 import React, {useState} from "react";
-import { View, Alert, StyleSheet, TouchableOpacity, ActivityIndicator, Picker, Text } from 'react-native';
+import { View, Alert, StyleSheet, Picker, Text } from 'react-native';
 import { WHITE, BLACK, ORANGE } from "../../styles/colors";
 import { FONT_WEIGHT_REGULAR } from "../../styles/typography";
 import { margin } from "../../styles/mixins";
-import Icon from "react-native-vector-icons/MaterialCommunityIcons"
 
 const Selector = (props) => {
-    const { options, label="", onValueChange } = props;
-    const [selectedValue, setSelectedValue] = useState(options[0].value);
+    const { options, label="", onValueChange, defaultValue = options[0].value } = props;
+    const [selectedValue, setSelectedValue] = useState(defaultValue);
     const { labelStyle, pickerContainerStyle } = styles;
     
     const _onValueChange = (value, index) => {

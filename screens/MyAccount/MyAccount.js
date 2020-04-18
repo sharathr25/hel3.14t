@@ -10,7 +10,7 @@ import { SCREEN_DETAILS } from "../../constants/appConstants";
 import { useAuth } from "../../customHooks";
 import { FONT_BOLD, FONT_SIZE_20 } from '../../styles/typography';
 
-const { LOGIN, VERIFICATION } = SCREEN_DETAILS; 
+const { LOGIN, VERIFICATION, UPDATE_ACCOUNT } = SCREEN_DETAILS; 
 
 const USER_QUERY = gql`
     query User($uid:String!) {
@@ -110,7 +110,7 @@ const MyAccountScreen = ({ navigation }: MyAccountScreenProps) => {
     }
 
     const handleEdit = () => {
-        console.log("edit clicked");
+        navigation.navigate(UPDATE_ACCOUNT.screenName, { user })
     }
 
     if (loading) {

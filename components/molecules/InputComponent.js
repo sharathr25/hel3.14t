@@ -22,7 +22,7 @@ const InputComponent = (props: InputComponentProps) => {
     setShowPassword(!showPassword);
   }
 
-  const { label = "", secureTextEntry = false, updateParentState, errMsg = "", rightIcon = null, showPasswordIcon = false } = props;
+  const { label = "", updateParentState, errMsg = "", showPasswordIcon = false, defaultValue = "" } = props;
   const { labelStyle, containerStyle, inputContainerStyle, inputStyle } = styles;
   return (
     <Input
@@ -36,6 +36,7 @@ const InputComponent = (props: InputComponentProps) => {
       errorMessage={errMsg}
       rightIcon={showPasswordIcon ? <PasswordIcon showPassword={showPassword} setShowPassword={_setShowPassword} /> : null}
       rightIconContainerStyle={{ right: 8 }}
+      defaultValue={defaultValue}
     />
   );
 }
