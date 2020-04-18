@@ -7,7 +7,7 @@ import { StyleSheet, View, Text, TouchableOpacity } from 'react-native';
 import Icon from "react-native-vector-icons/MaterialCommunityIcons"
 import { padding } from "../../styles/mixins";
 
-const CustomDatePicker = (props: { date: string , updateParentState: Function, label: string }) => {
+const CustomDatePicker = (props: { date: string , updateParentState: Function, label: string, value: string }) => {
   const datePickerRef = useRef(null);
   const { date, updateParentState, label } = props;
   const { dateInput, labelStyle, container, datePickerContainer, dateStyle } = styles;
@@ -26,7 +26,7 @@ const CustomDatePicker = (props: { date: string , updateParentState: Function, l
           cancelBtnText="Cancel"
           onDateChange={(date) => { updateParentState(date) }}
           showIcon={false}
-          ref={datePickerRef} 
+          ref={datePickerRef}
         />
         {/* <TouchableOpacity onPress={() => datePickerRef.current && datePickerRef.current.onPressDate()} style={{justifyContent: 'center'}}>
           <Icon name="arrow-down-drop-circle" size={25} color={ORANGE} />
@@ -57,7 +57,6 @@ const styles = StyleSheet.create({
     borderWidth: 0,
   },
   container: {
-    flex: 1,
     borderColor: ORANGE, 
     borderWidth: 1.2,
     borderRadius: 10, 

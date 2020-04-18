@@ -1,10 +1,12 @@
 // @flow
 import React from 'react';
-import { Text } from 'react-native';
+import { TouchableOpacity, Dimensions } from 'react-native';
 import { createStackNavigator } from '@react-navigation/stack';
 import { rightToLeft, leftToRight } from "./cardInterpolators";
 import { Header } from '../components/molecules'
 import { SCREEN_DETAILS } from "../constants/appConstants";
+import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+
 import { 
   MyAccount,
   ForgotPassword,
@@ -17,8 +19,10 @@ import {
   Verification,
   MainScreen,
   HelpRequestScreen,
-  UserHelpRequestScreen
+  UserHelpRequestScreen,
+  UpdateAccount
  } from "../screens";
+import { AccountButton } from '../components/atoms';
 
 const Stack = createStackNavigator();
 
@@ -34,8 +38,11 @@ const {
   NOTIFICATIONS,
   MY_ACCOUNT,
   HELP_REQUEST,
-  USER_HELP_REQUEST
+  USER_HELP_REQUEST,
+  UPDATE_ACCOUNT
 } = SCREEN_DETAILS;
+
+
 
 const MainNavigator = (props: { isLogedIn: boolean }) => {
   const { isLogedIn } = props;
@@ -51,7 +58,7 @@ const MainNavigator = (props: { isLogedIn: boolean }) => {
       <Stack.Screen 
         name={MAIN.screenName} 
         component={MainScreen} 
-        options={{ headerLeft: <Text/> }}>
+        options={{ headerLeft: <AccountButton />}}>
       </Stack.Screen> 
       <Stack.Screen 
         name={NOTIFICATIONS.screenName} 
@@ -102,6 +109,11 @@ const MainNavigator = (props: { isLogedIn: boolean }) => {
         name={USER_HELP_REQUEST.screenName} 
         component={UserHelpRequestScreen} 
         options={{ title: USER_HELP_REQUEST.screenTitle }}>
+      </Stack.Screen>
+      <Stack.Screen 
+        name={UPDATE_ACCOUNT.screenName} 
+        component={UpdateAccount} 
+        options={{ title: UPDATE_ACCOUNT.screenTitle }}>
       </Stack.Screen>
     </Stack.Navigator>
   );
