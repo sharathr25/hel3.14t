@@ -1,12 +1,13 @@
 import React from "react";
 import { Text, View, FlatList } from "react-native";
-import { WHITE, GREEN, ORANGE } from "../../styles/colors";
+import { WHITE, GREEN, ORANGE, BLACK } from "../../styles/colors";
 import { ListItem } from "react-native-elements";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons"
 import gql from "graphql-tag";
 import { useQuery } from "react-apollo";
 import { FullScreenError, FullScreenLoader } from "../../components/atoms";
 
+const colors = [undefined, "#ffd700", "#aaa9ad", "#b08d57"];
 const TOP_HELPERS_QUERY = gql`
     query {
         topHelpers{
@@ -17,19 +18,18 @@ const TOP_HELPERS_QUERY = gql`
   }
 `
 
-const colors = [undefined, "#ffd700", "#aaa9ad", "#b08d57"];
-
 const RankDetails = ({rank, name, xp, rating}) => {
     const rankColor = colors[rank];
     return (
-        <View style={{flex: 1, flexDirection: 'row', justifyContent: 'space-evenly'}}>
-            <Text style={{flex: 1}}>{rank}</Text>
-            <View style={{flex: 5, flexDirection: 'row', alignItems: 'center'}}>
-                <Text >{name}</Text> 
-                {rankColor && <Icon name="trophy-variant" color={rankColor} size={20} />}
-            </View>
+        <View style={{flex: 1, flexDirection: 'row' }}>
+            {
+                rankColor 
+                    ? <Icon name="trophy-variant" color={rankColor} size={20} style={{flex: 1}} /> 
+                    : <Text style={{flex: 1}}>{rank}</Text>
+            }
+            <Text style={{color: BLACK, flex: 6 }}>{name}</Text> 
             <View style={{flex: 2, flexDirection: 'row', alignItems: 'center'}}>
-                <Text style={{color: ORANGE}}>{rating}</Text>
+                <Text style={{color: ORANGE}}>{rating} </Text>
                 <Icon name="star-circle-outline" color={ORANGE} size={20} />
             </View>
             <Text style={{flex: 2, color: GREEN}}>{xp} XP</Text>

@@ -1,10 +1,10 @@
 // @flow
 import React from "react";
-import { View, StyleSheet, Text } from "react-native";
-import { LIGHT_GRAY, BLACK } from "../../styles/colors";
+import { View, StyleSheet } from "react-native";
+import { BLACK } from "../../styles/colors";
 
-function Card(props : { borderLeftColor: string, children: any }) {
-  const { borderLeftColor, children } = props;
+function Card(props : { children: any }) {
+  const { children } = props;
   return (
     <View style={styles.container}>
       {children}
@@ -17,17 +17,12 @@ export default Card;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    elevation: 2,
+    shadowColor: BLACK,
+    shadowOffset: { width: 0, height: 10 },
+    shadowOpacity: 0.8,
+    shadowRadius: 2,
     borderColor: BLACK,
-    borderWidth: 0.1,
-    shadowColor: "#000",
-    shadowOffset: {
-      width: 0,
-      height: 1,
-    },
-    shadowOpacity: 0.22,
-    shadowRadius: 2.22,
-
-    elevation: 3,
     margin: 10
   }
 });

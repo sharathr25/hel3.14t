@@ -1,14 +1,15 @@
 // @flow
 import React from "react";
 import { Text, TouchableOpacity, View } from 'react-native';
-import { BLACK } from "../../styles/colors";
-import { Card, Time, Status } from "../atoms";
+import { BLACK, LIGHT_GRAY } from "../../styles/colors";
+import { Card, Time, Status, DescriptionFixed } from "../atoms";
 import { FONT_SIZE_14 } from "../../styles/typography";
 import { SCREEN_DETAILS } from "../../constants/appConstants";
 import { useNavigation } from '@react-navigation/native';
-import { ProfileName } from ".";
 import gql from "graphql-tag";
 import { useQuery, useSubscription } from "react-apollo";
+import { TimeAndStatus } from "../molecules";
+import { margin } from "../../styles/mixins";
 
 const { USER_HELP_REQUEST } = SCREEN_DETAILS;
 
@@ -90,14 +91,11 @@ const UserHelpRequestCard = (props) => {
 
     return (
       <Card>
-          <TouchableOpacity style={{height: CARD_HEIGHT, padding: 10 }} onPress={_onPress}>
-            <Text style={{color: BLACK, fontSize: FONT_SIZE_14, marginTop: 10, marginBottom: 10, height: 85 }} numberOfLines={5}>
-                {description}
-            </Text>
-            <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
-                <Time time={timeStamp} />
-                <Status>{status}</Status>
+          <TouchableOpacity style={{ padding: 10 }} onPress={_onPress}>
+            <View style={{ ...margin(5, 0, 5, 0)}}>
+              <DescriptionFixed>{description}</DescriptionFixed>
             </View>
+            <TimeAndStatus timeStamp={timeStamp} status={status} />
           </TouchableOpacity>
       </Card>
     );

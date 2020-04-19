@@ -1,7 +1,7 @@
 // @flow
 import React from 'react';
 import { FlatList, View } from 'react-native';
-import { UserHelpRequest, UserHelpRequestCard } from '../../components/molecules';
+import { UserHelpRequestCard } from '../../components/oraganisms';
 import { useQuery, useSubscription } from 'react-apollo';
 import gql from 'graphql-tag';
 import type { DocumentNode } from 'graphql';

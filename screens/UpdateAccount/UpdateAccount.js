@@ -1,35 +1,32 @@
 // @flow
 import React, { useState } from 'react';
 import { View, ScrollView, Alert } from 'react-native';
-import { ORANGE, WHITE } from '../../styles/colors';
+import { ORANGE, WHITE, LIGHTEST_GRAY } from '../../styles/colors';
 import { Button, CustomDatePicker, Selector} from '../../components/atoms';
 import { Auth } from "aws-amplify";
 import { SCREEN_DETAILS, SIGN_UP_SCREEN } from "../../constants/appConstants";
-import { InputComponent } from '../../components/molecules';
+import { InputComponent, CustomModal } from '../../components/molecules';
 import { padding } from '../../styles/mixins';
 import { regex, getAge } from '../../utils';
 
+const AGE_LIMIT = 15;
 const GENDER_OPTIONS = [
     {label:"Male", value: "male"}, 
     {label:"Female", value:"female"}
 ];
-
 const { ERRORS } = SIGN_UP_SCREEN;
-
-const AGE_LIMIT = 15;
-
 const {
   EMPTY_EMAIL_ERROR, 
   INVALID_EMAIL_ERROR, 
   EMPTY_MOBILE_NUMBER_ERROR, 
   INVALID_MOBILE_NUMBER_ERROR,
 } = ERRORS;
-
+const { LOGIN, VERIFICATION, MY_ACCOUNT } = SCREEN_DETAILS;
 
 const UpdateAccount = ({ navigation, route }) => {
     const { params } = route;
     const { user } = params;
-    const { attributes, username } = user;
+    const { attributes } = user;
     const { email, phone_number: phoneNumber, gender, birthdate } = attributes;
     const phoneNumberWithoutCountryCode = phoneNumber.replace("+91", "");
 
@@ -39,6 +36,7 @@ const UpdateAccount = ({ navigation, route }) => {
     const [ genderForUpdate, setGender ] = useState(gender);
     const [ emailErr, setEmailErr ] = useState('');
     const [ mobileNumberErr, setMobileNumberErr ] = useState('');
+    const [ loading, setLoading] = useState(false);
 
     const isValid = () => {
         let valid = false;
@@ -68,40 +66,45 @@ const UpdateAccount = ({ navigation, route }) => {
     
       const redirectTo = async (otp) => {
         await Auth.signOut();
-        navigation.navigate(SCREEN_DETAILS.LOGIN.screenName);
+        navigation.navigate(LOGIN.screenName);
       }
     
       const resend = async () => {
-        // return await Auth.resendSignUp(username)
+        return await Auth.verifyCurrentUserAttribute('phone_number')
       }
     
     const handleUpdate = async () => {
         if(isValid()) {
             const phoneNumberWithCountryCode = `+91${phoneNumberForUpdate}`;
             try {
+              setLoading(true);
               const user = await Auth.currentAuthenticatedUser();
-              const data = await Auth.updateUserAttributes(user, { 
+              await Auth.updateUserAttributes(user, { 
                 "email" : emailForUpdate,
                 "phone_number": phoneNumberWithCountryCode,
                 "birthdate" : birthdateForUpdate,
                 "gender": genderForUpdate 
               });
+              setLoading(false);
               if(phoneNumberForUpdate !== phoneNumberWithoutCountryCode){
                 const paramsForVerificationScreen = { verify, redirectTo, resend, message: `Enter OTP sent to xxxxxxxx${phoneNumberForUpdate.substr(8)}`};
-                navigation.navigate(SCREEN_DETAILS.VERIFICATION.screenName, paramsForVerificationScreen);
+                navigation.navigate(VERIFICATION.screenName, paramsForVerificationScreen);
               } else {
                 await Auth.signOut();
-                navigation.navigate(SCREEN_DETAILS.LOGIN.screenName);
+                navigation.navigate(LOGIN.screenName);
               }
             } catch (error) {
+              setLoading(false);
               console.log(error); 
             }
         }
     }
 
     const handleCancel = () => {
-        navigation.navigate(SCREEN_DETAILS.MY_ACCOUNT.screenName);
+        navigation.navigate(MY_ACCOUNT.screenName);
     }
+
+    if(loading) return <CustomModal variant="loading" desc="Please wait" />
 
     return (
         <ScrollView style={{ backgroundColor: WHITE }} contentContainerStyle={{ flexGrow: 1 }}>
@@ -129,12 +132,13 @@ const UpdateAccount = ({ navigation, route }) => {
                 </View>
                 <View style={{flex: 1}}>
                     <Selector options={GENDER_OPTIONS} label="Gender" onValueChange={setGender} defaultValue={gender} />
-                </View>
-                <View style={{felx: 1, flexDirection: 'row', justifyContent: 'space-between', ...padding(0, 10,0, 10) }}>
-                    <Button onPress={handleCancel}>Cancel</Button>    
+                </View>  
+            </View>
+            <View style={{felx: 1, flexDirection: 'row', justifyContent: 'flex-end', padding: 10, backgroundColor: LIGHTEST_GRAY }}>
+                    <Button onPress={handleCancel} bgColor={LIGHTEST_GRAY}>Cancel</Button>
+                    <View style={{width: 10 }} />    
                     <Button bgColor={ORANGE} textColor={WHITE} onPress={handleUpdate}>Update</Button>
                 </View>
-            </View>
         </ScrollView>
     ); 
 }

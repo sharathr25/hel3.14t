@@ -1,13 +1,14 @@
 import TimeAndDistance from './TimeAndDistance';
 import CustomModal from './CustomModal';
 import NotificationItem from './NotificationItem';
-import HelpRequest from './HelpRequest';
-import UserHelpRequest from './UserHelpRequest';
+import HelpRequest from '../oraganisms/HelpRequest';
+import UserHelpRequest from '../oraganisms/UserHelpRequest';
 import Header from './Header';
 import InputComponent from './InputComponent';
-import HelpRequestCard from './HelpRequestCard';
+import HelpRequestCard from '../oraganisms/HelpRequestCard';
 import ProfileName from './ProfileName';
-import UserHelpRequestCard from "./UserHelpRequestCard";
+import UserHelpRequestCard from "../oraganisms/UserHelpRequestCard";
+import TimeAndStatus from './TimeAndStatus';
 
 export { 
     TimeAndDistance, 
@@ -19,5 +20,6 @@ export {
     InputComponent,
     HelpRequestCard,
     ProfileName,
-    UserHelpRequestCard
+    UserHelpRequestCard,
+    TimeAndStatus
 }

@@ -2,8 +2,7 @@
 import React, { useState } from 'react';
 import { View, StyleSheet, Text } from 'react-native';
 import { ORANGE, WHITE, BLACK, LIGHT_GRAY } from '../../styles/colors';
-import { ErrorMessage, Button } from '../../components/atoms';
-import { regex } from '../../utils/index';
+import { Button } from '../../components/atoms';
 import { CustomModal, InputComponent } from '../../components/molecules';
 import { margin } from '../../styles/mixins';
 import { FONT_SIZE_12, FONT_SIZE_16 } from "../../styles/typography";
@@ -88,8 +87,8 @@ const ResetPassowrdScreen = ({navigation}: ResetPassowrdScreenProps) => {
             label="Email or Username"
             secureTextEntry={false}
             updateParentState={value => {setUsername(value); setUsernameErrorMessage('')}}
+            errMsg={usernameErrorMessage}
           />
-          {usernameErrorMessage.length !== 0 && <ErrorMessage message={usernameErrorMessage} />}
           <View>
             <Button bgColor={ORANGE} textColor={WHITE} onPress={handleSendOTP}>Send OTP</Button>
           </View>

@@ -5,7 +5,7 @@ import Icon from 'react-native-vector-icons/FontAwesome';
 import { GREEN, BLACK } from "../../styles/colors";
 
 const Success = ({ desc = "" } : { desc: string }) => {
-    const { content, textStyle, descStyle } = styles;
+    const { content, descStyle } = styles;
     return (
         <View style={content}>
             <Icon name="check-circle" color={GREEN} size={50}></Icon>

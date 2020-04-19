@@ -3,7 +3,7 @@ import React, { useEffect } from 'react';
 import { View, Text, StyleSheet, Dimensions, ScrollView } from 'react-native';
 import { useLazyQuery } from 'react-apollo';
 import gql from 'graphql-tag';
-import { ORANGE, WHITE, BLACK } from '../../styles/colors';
+import { ORANGE, WHITE, BLACK, LIGHTEST_GRAY } from '../../styles/colors';
 import { FullScreenError , FullScreenLoader, ProfileLetter, Button, Link} from '../../components/atoms';
 import { Auth } from "aws-amplify";
 import { SCREEN_DETAILS } from "../../constants/appConstants";
@@ -121,7 +121,7 @@ const MyAccountScreen = ({ navigation }: MyAccountScreenProps) => {
     }
 
     return (
-        <ScrollView style={{ backgroundColor: "#f6f6f6" }}>
+        <ScrollView style={{ backgroundColor: LIGHTEST_GRAY }}>
         <View style={container}>
             <View style={{ ...column, backgroundColor: WHITE }}>
                 <ProfileName username={username} />
@@ -147,7 +147,7 @@ const styles = StyleSheet.create({
         backgroundColor: WHITE,
     },
     column: {
-        backgroundColor: "#f6f6f6",
+        backgroundColor: LIGHTEST_GRAY,
         alignItems: 'center',
         padding: 20
     },

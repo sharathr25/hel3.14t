@@ -1,9 +1,8 @@
 // @flow
 import React, { useState } from 'react';
-import { View, StyleSheet, Text } from 'react-native';
+import { View, Text } from 'react-native';
 import { ORANGE, WHITE, BLACK, LIGHT_GRAY } from '../../styles/colors';
-import { ErrorMessage, Button } from '../../components/atoms';
-import { regex } from '../../utils/index';
+import { Button } from '../../components/atoms';
 import { CustomModal, InputComponent } from '../../components/molecules';
 import { margin } from '../../styles/mixins';
 import { Auth } from 'aws-amplify';

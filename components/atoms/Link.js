@@ -6,7 +6,6 @@ import { LIGHT_BLUE } from "../../styles/colors";
 
 const Link = (props: {onPress : Function, children: any, style: Object }) => {
   const { onPress , children , style = {}} = props;
-  const { text } = styles;
   return (
     <TouchableOpacity onPress={onPress} style={{...style}}>
         <Text style={{ color: LIGHT_BLUE }}>{children}</Text>
