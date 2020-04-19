@@ -11,7 +11,7 @@ const ProfileName = (props : { name : String }) => {
   return (
     <View style={{flexDirection: 'row', alignItems: 'center'}}>
         <ProfileLetter letter={letter} />
-      <Text style={{color: ORANGE, paddingLeft: 10, fontSize: FONT_SIZE_14}}>{name}</Text>
+        <Text style={{color: ORANGE, paddingLeft: 10, fontSize: FONT_SIZE_14}}>{name}</Text>
     </View>
   );
 };

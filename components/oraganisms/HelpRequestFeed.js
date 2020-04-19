@@ -4,7 +4,7 @@ import { FlatList, Platform, UIManager, Text } from 'react-native';
 import { getDistanceFromLatLonInKm, sortByDistance } from '../../utils';
 import gql from 'graphql-tag';
 import { useQuery } from 'react-apollo';
-import { HelpRequestCard } from "../molecules";
+import { HelpRequestCard } from "../oraganisms";
 import { useLocation } from "../../customHooks";
 
 if (Platform.OS === 'android') {

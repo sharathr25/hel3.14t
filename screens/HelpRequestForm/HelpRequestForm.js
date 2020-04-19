@@ -2,7 +2,7 @@
 import React, { useState } from "react";
 import { Text, Input } from "react-native-elements";
 import { View, TouchableOpacity, StyleSheet, Alert, Keyboard, ScrollView, Dimensions } from "react-native";
-import { WHITE, ORANGE, BLACK, RED } from "../../styles/colors";
+import { WHITE, ORANGE, BLACK, RED, LIGHT_GRAY } from "../../styles/colors";
 import { FONT_FAMILY_REGULAR, FONT_SIZE_20, FONT_SIZE_12 } from "../../styles/typography";
 import gql from "graphql-tag";
 import { useMutation } from "react-apollo";
@@ -12,7 +12,6 @@ import { padding } from "../../styles/mixins";
 import { FullScreenLoader } from "../../components/atoms";
 
 const WORD_LIMIT = 5;
-const CORNER_SIZE = 25;
 const NO_OF_LINES_FOR_DESC = Math.ceil(Dimensions.get("window").height / 50);
 const noOfPeopleSelectBoxOptions = [1, 2, 3, 4, 5, 6];
 
@@ -54,14 +53,19 @@ const HelpRequestForm = () => {
     if(!currentUser) return <FullScreenLoader />
     const { uid, attributes, username } = currentUser;
     const { name, phone_number: phoneNumber } = attributes;
+    const { defaultCheckBoxStyle, activeCheckBox, 
+        inActiveCheckBox, activeText, inActiveText,
+        requestHelpStyle, requestButtonText, container, innerContainer,
+        label, descriptionContainerStyle, noPeopleSelector , WordLimitStatusText
+    } = styles;
 
     const handleCheckBox = (val) => {
         setState({ ...state, noPeopleRequired: val, [`checkBox${val}`]: true });
     }
 
-    const getCheckBoxStyle = (val) => [styles.defaultCheckBoxStyle, state.noPeopleRequired === val ? styles.activeCheckBox : styles.inActiveCheckBox];
+    const getCheckBoxStyle = (val) => [defaultCheckBoxStyle, state.noPeopleRequired === val ? activeCheckBox : inActiveCheckBox];
 
-    const getCheckBoxTextStyle = (val) => state.noPeopleRequired === val ? styles.activeText : styles.inActiveText;
+    const getCheckBoxTextStyle = (val) => state.noPeopleRequired === val ? activeText : inActiveText;
 
     const requestHelp = () => {
         const { description, noPeopleRequired } = state;
@@ -86,8 +90,6 @@ const HelpRequestForm = () => {
         }
     }
 
-    const { requestHelpStyle, requestButtonText, container, label, descriptionContainerStyle, noPeopleSelector } = styles;
-
     const Option = ({ val }) => (
         <TouchableOpacity onPress={() => handleCheckBox(val)} style={getCheckBoxStyle(val)} key={val}>
             <Text style={getCheckBoxTextStyle(val)}>{val}</Text>
@@ -107,10 +109,18 @@ const HelpRequestForm = () => {
     const WordLimitStatus = () => {
         const { description } = state;
         const wordsThreshold = getWordsLeft(description);
-        if(wordsThreshold <= 0) {
-            return <Text style={{...label, color: RED, textAlign: 'right', right: 10}}>Limit reached</Text>
+        const textColor = wordsThreshold <= 0 ? RED : LIGHT_GRAY;
+        const text = wordsThreshold <= 0 ? "Limit Reached" : `${wordsThreshold} words left`;
+        return <Text style={{...WordLimitStatusText, color: textColor }}>{text}</Text>
+    }
+
+    const _onChangeText = (value) => {
+        const temp = state.description;
+        if(getWordsLeft(value) <= 0 && value[value.length - 1] !== ' ') {
+            setState({...state, description: temp});
+        } else {
+            setState({ ...state, description: value })
         }
-        return <Text style={{...label, color: "#979797", textAlign: 'right', right: 10}}>{wordsThreshold} words left</Text>
     }
 
     if (showModal) {
@@ -123,19 +133,10 @@ const HelpRequestForm = () => {
         }
     }
 
-    const _onChangeText = (value) => {
-        const temp = state.description;
-        if(getWordsLeft(value) <= 0 && value[value.length - 1] !== ' ') {
-            setState({...state, description: temp});
-        } else {
-            setState({ ...state, description: value })
-        }
-    }
-
     return (
         <ScrollView style={{backgroundColor: WHITE}}>
             <View style={container}>
-                <View style={{backgroundColor: WHITE, borderRadius: 10, elevation: 10, borderWidth: 0.1, borderColor: BLACK }}>
+                <View style={innerContainer}>
                     <Text style={{...label, padding:10}}>Request will be created for current location</Text>
                     <Input
                         placeholder="Please describe your help"
@@ -166,6 +167,13 @@ const styles = StyleSheet.create({
         justifyContent: "center",
         backgroundColor: WHITE,
         padding: 20,
+    },
+    innerContainer: {
+        backgroundColor: WHITE, 
+        borderRadius: 10, 
+        elevation: 10, 
+        borderWidth: 0.1, 
+        borderColor: BLACK
     },
     requestHelpStyle: {
         margin: 10,
@@ -224,5 +232,12 @@ const styles = StyleSheet.create({
         color: BLACK,
         fontSize: FONT_SIZE_12,
         textAlign: 'center',
+    },
+    WordLimitStatusText: {
+        color: BLACK,
+        fontSize: FONT_SIZE_12,
+        textAlign: 'center', 
+        textAlign: 'right', 
+        right: 10
     }
 });

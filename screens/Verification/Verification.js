@@ -1,14 +1,9 @@
 // @flow
-import React, { useState, useEffect } from 'react';
-import { View, Alert, StyleSheet, TouchableOpacity, Text } from 'react-native';
-import { ScrollView } from 'react-native-gesture-handler';
-import { SIGN_UP_SCREEN, APP_TITLE } from '../../constants/appConstants';
+import React, { useState } from 'react';
+import { View, TouchableOpacity, Text } from 'react-native';
 import { ORANGE, WHITE, BLACK, LIGHT_BLUE } from '../../styles/colors';
-import { ErrorMessage } from '../../components/atoms';
-import { regex } from '../../utils/index';
 import { CustomModal, InputComponent } from '../../components/molecules';
 import { Button } from '../../components/atoms'; 
-import { Auth } from "aws-amplify";
 import { margin } from "../../styles/mixins";
 
 type VerificationProps = {
@@ -105,16 +100,16 @@ const Verification = (props: VerificationProps) => {
   }
 
   return (
-      <View style={{ backgroundColor: WHITE, flex: 1, paddingTop: 30 }}>
-        <NotificationMessage />
-        <View style={{flex: 1, justifyContent: 'space-evenly', ...margin(0,30,0,30)}}>
-        <View>
-          <InputComponent label="OTP" showPasswordIcon={true} updateParentState={setOTP} />
-          <ResendLink />
-        </View>
-        <VerifyButton />
-        </View>
+    <View style={{ backgroundColor: WHITE, flex: 1, paddingTop: 30 }}>
+      <NotificationMessage />
+      <View style={{flex: 1, justifyContent: 'space-evenly', ...margin(0,30,0,30)}}>
+      <View>
+        <InputComponent label="OTP" showPasswordIcon={true} updateParentState={setOTP} />
+        <ResendLink />
       </View>
+      <VerifyButton />
+      </View>
+    </View>
   );
 }
 

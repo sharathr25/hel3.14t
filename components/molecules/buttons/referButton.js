@@ -1,10 +1,10 @@
 // @flow
 import React from "react";
 import { Button } from '../../atoms';
-import { ORANGE, WHITE } from "../../../styles/colors";
+import { LIGHTEST_GRAY } from "../../../styles/colors";
 
 const ReferButton = () => {
-  return <Button bgColor={ORANGE} textColor={WHITE}>Refer</Button>;
+  return <Button bgColor={LIGHTEST_GRAY} >Refer</Button>;
 };
 
 export default ReferButton;

@@ -1,13 +1,12 @@
 // @flow
 import React, { useState } from 'react';
-import { View, Alert, ActivityIndicator, Text, StyleSheet } from 'react-native';
-import { APP_TITLE } from '../../constants/appConstants';
+import { View, Text, StyleSheet } from 'react-native';
 import { WHITE, ORANGE, BLACK } from '../../styles/colors';
 import { regex } from '../../utils/index';
-import { ErrorMessage , Link, Button, PasswordIcon } from '../../components/atoms';
+import { Link, Button } from '../../components/atoms';
 import { CustomModal,InputComponent } from '../../components/molecules';
-import { TouchableOpacity, ScrollView } from 'react-native-gesture-handler';
-import { LIGHT_BLUE, LIGHT_GRAY } from '../../styles/colors';
+import { ScrollView } from 'react-native-gesture-handler';
+import { LIGHT_GRAY } from '../../styles/colors';
 import { margin } from '../../styles/mixins';
 import { FONT_SIZE_12 } from "../../styles/typography";
 import { Auth } from "aws-amplify";

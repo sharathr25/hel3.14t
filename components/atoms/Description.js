@@ -1,7 +1,7 @@
 // @flow
 import React from "react";
 import { Text, StyleSheet, ScrollView } from "react-native";
-import { FONT_SIZE_14 } from "../../styles/typography";
+import { FONT_SIZE_14, FONT_SIZE_18 } from "../../styles/typography";
 import { BLACK } from "../../styles/colors";
 import { margin } from "../../styles/mixins";
 
@@ -20,13 +20,10 @@ const styles = StyleSheet.create({
     descriptionStyle: {
         color: BLACK,
         fontSize: FONT_SIZE_14,
-        // borderWidth: 1, 
-        // borderColor: BLACK, 
-        // ...margin(10,0,10,0),
+        lineHeight: FONT_SIZE_18,
         padding: 10,
       },
       descriptionContainer: {
-        borderWidth: 0.2, 
         borderColor: BLACK, 
         ...margin(10,0,20,0),
         elevation: 2

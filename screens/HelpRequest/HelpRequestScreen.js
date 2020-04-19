@@ -1,6 +1,6 @@
 // @flow
 import React from 'react';
-import { HelpRequest } from '../../components/molecules';
+import { HelpRequest } from '../../components/oraganisms';
 
 const HelpRequestScreen = ({ route } : { route:Object }) => {
     const { params } = route;
