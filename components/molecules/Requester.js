@@ -1,10 +1,13 @@
 // @flow
 import React from 'react';
 import { Text, View, StyleSheet, Alert } from 'react-native';
-import { ProfileLetter, RightButton, WrongButton } from '../atoms';
+import { BoxButton, Heading } from '../atoms';
 import { useMutation } from 'react-apollo';
 import gql from 'graphql-tag';
-import { FONT_SIZE_16, FONT_WEIGHT_BOLD } from '../../styles/typography';
+import { FONT_BOLD } from '../../styles/typography';
+import { ORANGE, BLACK, GREEN, LIGHT_GREEN, RED, LIGHT_RED, LIGHTEST_GRAY } from '../../styles/colors';
+import { margin } from '../../styles/mixins';
+import Icon from "react-native-vector-icons/FontAwesome";
 
 type RequesterProps = {
   uidOfRequester: string, 
@@ -45,27 +48,37 @@ const Requester = (props: RequesterProps) => {
     updateHelpForReject({ variables: { key: "usersRejected", value: { uid: uidOfRequester }, operation: "push", type: "array" } });
   };
 
-  const firstLetterOfName = name.substring(0, 1);
-
-  const { container, content, details, nameStyle, buttons } = styles;
+  const { container, content, details, buttons } = styles;
 
   return (
     <View style={container}>
       <View style={content}>
-        <ProfileLetter letter={firstLetterOfName} />
         <View style={details}>
-          <Text style={nameStyle}>{name}</Text>
-          <Text>{xp} XP</Text>
-          <Text>{stars} Stars</Text>
-          <Text></Text>
+          <Heading color={ORANGE}>{name}</Heading>
+          <Text><Text style={{...FONT_BOLD , color:BLACK }}>{xp}</Text> Earned XP</Text>
+          <Text><Text style={{...FONT_BOLD , color:BLACK }}>{stars}</Text> Average rating</Text>
         </View>
       </View>
       <View style={buttons}>
-        <WrongButton onPress={handleReject} loading={loadingForReject} />
-        <RightButton onPress={handleAccept} loading={loadingForAccept} />
+        <BoxButton 
+          title="Accept" 
+          titleColor={GREEN} 
+          bgColor={LIGHT_GREEN} 
+          onPress={handleAccept} 
+          loading={loadingForAccept} 
+          iconName="check"
+        />
+        <BoxButton 
+          title="Reject" 
+          titleColor={RED} 
+          bgColor={LIGHT_RED} 
+          onPress={handleReject} 
+          loading={loadingForReject} 
+          iconName="remove"  
+        />
       </View>
     </View>
-  );
+   );
 };
 
 export default Requester;
@@ -74,23 +87,19 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     flexDirection: 'row',
-    alignItems: 'center'
+    backgroundColor: LIGHTEST_GRAY,
+    justifyContent: 'space-between',
+    ...margin(5,0,5,0)
   },
   content: {
     display: 'flex',
-    flex: 5,
     flexDirection: 'row',
+    padding: 5
   },
   details: {
     flexDirection: 'column',
   },
-  nameStyle: {
-    fontSize: FONT_SIZE_16,
-    fontWeight: FONT_WEIGHT_BOLD,
-  },
   buttons: {
-    flex: 2,
     flexDirection: 'row',
-    justifyContent: 'space-between'
   },
 });

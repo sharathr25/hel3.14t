@@ -3,7 +3,7 @@ import React from "react";
 import { View, StyleSheet } from "react-native";
 import { Time, Status } from "../atoms";
 
-const TimeAndStatus = ({ timeStamp, status } : { timeStamp: number, distance: number }) => {
+const TimeAndStatus = ({ timeStamp, status } : { timeStamp: number, status: string }) => {
     const { timeAndDistance } = styles;
 
     return (
@@ -22,5 +22,6 @@ const styles = StyleSheet.create({
         flex: 1,
         flexDirection: 'row',
         justifyContent: 'space-between',
+        paddingTop: 5
     }
 });

@@ -1,8 +1,21 @@
 // @flow
-import React from 'react';
-import { Text, View, StyleSheet } from 'react-native';
-import Stars from './buttons/starsButton';
-import { ProfileLetter } from '../atoms';
+import React, { useState } from 'react';
+import { Text, View, StyleSheet, Alert } from 'react-native';
+import { Heading, BoxButton } from '../atoms';
+import { ORANGE, LIGHTEST_GRAY, GREEN, LIGHT_GREEN } from "../../styles/colors";
+import { margin } from "../../styles/mixins";
+import gql from 'graphql-tag';
+import { callPhone } from '../../utils';
+import { useMutation } from 'react-apollo';
+import { Slider } from 'react-native-elements';
+
+const UPDATE_HELP = gql`
+    mutation UpdateHelp($id:String!, $key:String!,$value:Any, $type:String!, $operation:String!){
+        updateHelp(id:$id, key:$key, value:$value, type:$type, operation:$operation){
+            _id
+        }
+    }
+`;
 
 type AccepterProps = {
   status: string, 
@@ -15,24 +28,74 @@ type AccepterProps = {
 
 const Accepter = (props: AccepterProps) => {
   const { status, name, mobileNo, stars, keyOfHelpRequest, uidOfAccepter } = props;
-  const firstLetterOfName = name.substring(0, 1);
-  const mobileNoWithoutCountryCode = mobileNo.replace("+91", "");
+  const [starsGivenByUser, setStarsGivenByUser] = useState(0);
+  const [updateHelp] = useMutation(UPDATE_HELP);
+  const { container, details } = styles;
+  const mobileNoWithoutCountryCode = mobileNo.replace(/^(\+91\d{6})(\d{4})/, "xxxxxx$2");
+
+  const call = () => {
+    callPhone(mobileNo)
+  }
+
+  const handleSubmit = () => {
+    if(starsGivenByUser !== 0) {
+      updateHelp({
+        variables: {
+            id: keyOfHelpRequest,
+            key: "usersAccepted",
+            value: { [uidOfAccepter]: { stars: starsGivenByUser } },
+            type: "array",
+            operation: "update"
+        }
+      })
+    } else {
+        Alert.alert("You need give some rating");
+        return;
+    }
+  }
+
+  const StarsSlider = () => {
+    return (
+      <View style={{flex: 1, alignItems: 'stretch', justifyContent: 'center'}}>
+        <Slider 
+          value={starsGivenByUser} 
+          onSlidingComplete={setStarsGivenByUser} 
+          maximumValue={100} step={1} 
+          minimumTrackTintColor={ORANGE}
+          thumbTintColor={ORANGE}
+        />
+      </View>
+    );
+  }
+
+  const StarsAndCTA = () => {
+    return (
+      <View style={{flexDirection: 'row'}}>
+        <BoxButton title={stars ? stars : starsGivenByUser} onPress={() => {}} iconName="star" />
+        {!stars ? <BoxButton title="Submit" onPress={handleSubmit} bgColor={LIGHT_GREEN} titleColor={GREEN} iconName="check-circle-o" /> : null}
+      </View>
+    );
+  }
 
   if (!status) return null;
 
-  const { container, nameStyle, details } = styles;
+  const statusToDetailsMapping = {
+    "ON_GOING" : mobileNo && <Text>{mobileNoWithoutCountryCode}</Text>,
+    "COMPLETED" : stars ? null : <StarsSlider />
+  }
+
+  const statusToCTAMapping = {
+    "ON_GOING" : <BoxButton title="Call" onPress={call} iconName="phone" /> ,
+    "COMPLETED" : <StarsAndCTA />
+  }
 
   return (
     <View style={container}>
-      <ProfileLetter letter={firstLetterOfName} />
       <View style={details}>
-        <Text style={nameStyle}>{name}</Text>
-        {
-          status === 'COMPLETED'
-            ? stars === 0 && <Stars uidOfUser={uidOfAccepter} stars={stars} keyOfHelpRequest={keyOfHelpRequest} />
-            : mobileNo && <Text>{mobileNoWithoutCountryCode}</Text>
-        }
+        <Heading color={ORANGE}>{name}</Heading>
+        {statusToDetailsMapping[status]}
       </View>
+      {statusToCTAMapping[status]}
     </View>
   );
 }
@@ -44,15 +107,15 @@ const styles = StyleSheet.create({
     display: 'flex',
     flex: 1,
     flexDirection: 'row',
-    alignItems: 'center'
-  },
-  nameStyle: {
-    fontSize: 18,
-    fontWeight: 'bold',
+    alignItems: 'center',
+    backgroundColor: LIGHTEST_GRAY,
+    ...margin(5,0,5,0),
+    justifyContent: 'space-between'
   },
   details: {
     flex: 1,
     display: 'flex',
     flexDirection: 'column',
+    padding: 5
   },
 });

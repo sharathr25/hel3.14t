@@ -21,6 +21,8 @@ import PasswordIcon from "./PasswordIcon";
 import Description from "./Description";
 import AccountButton from "./AccountButton";
 import DescriptionFixed from "./DescriptionFixed";
+import Heading from "./Heading";
+import BoxButton from "./BoxButton";
 
 export {
     Status,
@@ -45,5 +47,7 @@ export {
     PasswordIcon,
     Description,
     AccountButton,
-    DescriptionFixed
+    DescriptionFixed,
+    Heading,
+    BoxButton
 };

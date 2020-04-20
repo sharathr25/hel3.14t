@@ -61,7 +61,6 @@ const HelpRequest = ({data}: HelpRequestProps) => {
   if(subscriptionData.data) {
     data = getUpdatedData(subscriptionData.data.onUpdateHelp, data);
   }
-  console.log(subscriptionData);
   const { description, distance, timeStamp, usersRequested, creatorName } = data;
   const { buttons } = styles;
   const heightForDescription = Dimensions.get('screen').height - 380
