@@ -33,7 +33,8 @@ const HelpRequestFeed = () => {
     variables: {
       offset: 0
     },
-    fetchPolicy: "cache-and-network"
+    fetchPolicy: "cache-and-network",
+    pollInterval: 100
   });
 
   const getHelps = () => {
@@ -90,7 +91,6 @@ const HelpRequestFeed = () => {
       data={gethelpRequestsSortedByDistance(data ? data.helps : [])}
       renderItem={getHelpRequest}
       keyExtractor={(_, index) => index.toString()}
-      refreshing={loading}
       onRefresh={getHelps}
     />
   );
