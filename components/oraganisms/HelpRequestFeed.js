@@ -34,7 +34,6 @@ const HelpRequestFeed = () => {
       offset: 0
     },
     fetchPolicy: "cache-and-network",
-    pollInterval: 100
   });
 
   const getHelps = () => {
@@ -82,8 +81,12 @@ const HelpRequestFeed = () => {
     });
   }
 
+  removeHelpRequest = (idOfHelpRequest) => {
+    data.helps = data.helps.filter(({_id}) => idOfHelpRequest !== _id)
+  }
+
   const getHelpRequest = ({ item }) => {
-    return <HelpRequestCard data={item} />
+    return <HelpRequestCard helpRequestDetails={item} removeMe={removeHelpRequest} />
   }
 
   return (
@@ -92,6 +95,7 @@ const HelpRequestFeed = () => {
       renderItem={getHelpRequest}
       keyExtractor={(_, index) => index.toString()}
       onRefresh={getHelps}
+      refreshing={loading}
     />
   );
 }
