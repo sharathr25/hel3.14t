@@ -15,10 +15,10 @@ const { HELP_REQUEST } = SCREEN_DETAILS;
 const CARD_HEIGHT = 180;
 const HelpRequestCard = ({data} : { data: Object }) => {
     const navigation = useNavigation();
-    const { description, creatorName, timeStamp, distance } = data;
+    const { description, creatorName, timeStamp, distance, _id } = data;
 
     const _onPress = () => {
-        navigation.navigate(HELP_REQUEST.screenName, { data });
+        navigation.navigate(HELP_REQUEST.screenName, { idOfHelpRequest: _id });
     }
 
     return (

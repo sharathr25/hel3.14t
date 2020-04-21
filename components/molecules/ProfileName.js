@@ -1,9 +1,8 @@
 // @flow
 import React from 'react';
-import { Text, View } from 'react-native';
+import { View } from 'react-native';
 import { ORANGE } from '../../styles/colors';
-import { ProfileLetter } from '../atoms';
-import { FONT_SIZE_14 } from '../../styles/typography';
+import { ProfileLetter, Heading } from '../atoms';
 
 const ProfileName = (props : { name : String }) => {
   const { name } = props;
@@ -11,7 +10,8 @@ const ProfileName = (props : { name : String }) => {
   return (
     <View style={{flexDirection: 'row', alignItems: 'center'}}>
         <ProfileLetter letter={letter} />
-        <Text style={{color: ORANGE, paddingLeft: 10, fontSize: FONT_SIZE_14}}>{name}</Text>
+        <View style={{ width: 10 }} />
+        <Heading color={ORANGE}>{name}</Heading>
     </View>
   );
 };

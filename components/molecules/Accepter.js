@@ -18,16 +18,22 @@ const UPDATE_HELP = gql`
 `;
 
 type AccepterProps = {
-  status: string, 
-  name: string, 
-  mobileNo: string,
-  stars: number, 
-  keyOfHelpRequest: string, 
-  uidOfAccepter: string
+  userDetails: {
+    name: string, 
+    mobileNo: string,
+    stars: number, 
+    uidOfAccepter: string
+  },
+  helpRequestDetails: {
+    keyOfHelpRequest: string,
+    status: string, 
+  }
 };
 
 const Accepter = (props: AccepterProps) => {
-  const { status, name, mobileNo, stars, keyOfHelpRequest, uidOfAccepter } = props;
+  const { userDetails, helpRequestDetails } = props;
+  const { mobileNo, stars, uidOfAccepter, username } = userDetails;
+  const { status, keyOfHelpRequest } = helpRequestDetails;
   const [starsGivenByUser, setStarsGivenByUser] = useState(0);
   const [updateHelp] = useMutation(UPDATE_HELP);
   const { container, details } = styles;
@@ -92,7 +98,7 @@ const Accepter = (props: AccepterProps) => {
   return (
     <View style={container}>
       <View style={details}>
-        <Heading color={ORANGE}>{name}</Heading>
+        <Heading color={ORANGE}>{username}</Heading>
         {statusToDetailsMapping[status]}
       </View>
       {statusToCTAMapping[status]}

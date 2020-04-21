@@ -11,8 +11,6 @@ import CustomDatePicker from './CustomDatePicker';
 import ProfileLetter from './ProfileLetter';
 import FullScreenError from './FullScreenError';
 import FullScreenLoader from './FullScreenLoader';
-import RightButton from './RightButton';
-import WrongButton from './WrongButton';
 import Selector from './Selector';
 import Link from './Link';
 import HeaderTitle from './HeaderTitle'
@@ -38,8 +36,6 @@ export {
     ProfileLetter,
     FullScreenError,
     FullScreenLoader,
-    RightButton,
-    WrongButton,
     Selector,
     Link,
     HeaderTitle,

@@ -22,17 +22,6 @@ const HELPS = gql`
       timeStamp,
       description,
       status,
-      usersAccepted{
-        uid,
-      },
-      usersRequested{
-        uid,
-      },
-      usersRejected {
-        uid
-      },
-      noPeopleRequired,
-      creator,
       creatorName
     }
   }

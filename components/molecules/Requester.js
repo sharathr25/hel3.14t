@@ -7,21 +7,20 @@ import gql from 'graphql-tag';
 import { FONT_BOLD } from '../../styles/typography';
 import { ORANGE, BLACK, GREEN, LIGHT_GREEN, RED, LIGHT_RED, LIGHTEST_GRAY } from '../../styles/colors';
 import { margin } from '../../styles/mixins';
-import Icon from "react-native-vector-icons/FontAwesome";
 
 type RequesterProps = {
-  uidOfRequester: string, 
-  keyOfHelpRequest: string,
-  usersAccepted: Array<Object>, 
-  noPeopleRequired: number, 
-  xp: number, 
-  name: string, 
-  stars: number,
-  mobileNo: String
+  userDetails: {
+    username:string, xp: Number, stars:Number, mobileNo:string, uidOfRequester: string
+  },
+  helpRequestDetails: {
+    keyOfHelpRequest: string, noPeopleRequired: Number, usersAccepted: Array<Object>
+  }
 }
 
 const Requester = (props: RequesterProps) => {
-  const { uidOfRequester, keyOfHelpRequest, usersAccepted, noPeopleRequired, xp, name, mobileNo, stars } = props;
+  const { userDetails, helpRequestDetails } = props;
+  const { keyOfHelpRequest, usersAccepted, noPeopleRequired } = helpRequestDetails;
+  const { uidOfRequester, xp, name, mobileNo, stars, username } = userDetails;
 
   const QUERY = gql`
     mutation UpdateHelp($key:String!, $value:Any, $operation:String!){
@@ -40,7 +39,7 @@ const Requester = (props: RequesterProps) => {
     } else if (usersAccepted.indexOf(uidOfRequester) > -1) {
       Alert.alert("You are already helping....");
     } else {
-      updateHelpForAccept({ variables: { key: "usersAccepted", value: { uid: uidOfRequester, name, mobileNo }, operation: "push" } });
+      updateHelpForAccept({ variables: { key: "usersAccepted", value: { uid: uidOfRequester, name, mobileNo, username }, operation: "push" } });
     }
   };
 
@@ -54,7 +53,7 @@ const Requester = (props: RequesterProps) => {
     <View style={container}>
       <View style={content}>
         <View style={details}>
-          <Heading color={ORANGE}>{name}</Heading>
+          <Heading color={ORANGE}>{username}</Heading>
           <Text><Text style={{...FONT_BOLD , color:BLACK }}>{xp}</Text> Earned XP</Text>
           <Text><Text style={{...FONT_BOLD , color:BLACK }}>{stars}</Text> Average rating</Text>
         </View>
