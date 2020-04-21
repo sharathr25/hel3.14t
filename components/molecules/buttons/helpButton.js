@@ -35,7 +35,7 @@ const HelpButton = (props: HelpButtonProps) => {
   const [updateHelp, { loading }] = useMutation(HELP_UPDATE_SCHEMA);
   const { user: currentUser } = useAuth();
   if(!currentUser) return null;
-  const { uid , attributes } = currentUser;
+  const { uid , attributes, username } = currentUser;
   const { name , phone_number} = attributes;
 
   const handleHelp = () => {
@@ -46,7 +46,7 @@ const HelpButton = (props: HelpButtonProps) => {
     } else if (usersRejected.map((user) => user.uid).indexOf(uid) > -1) {
       Alert.alert(REJECTED_ERROR);
     } else {
-      updateHelp({ variables: { id: _id, key: "usersRequested", value: { uid, name , xp: 0, mobileNo: phone_number , stars: 0 } } });
+      updateHelp({ variables: { id: _id, key: "usersRequested", value: { uid, name , xp: 0, mobileNo: phone_number , stars: 0, username } } });
     }
   }
 

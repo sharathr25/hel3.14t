@@ -24,8 +24,7 @@ const styles = StyleSheet.create({
         padding: 10,
       },
       descriptionContainer: {
-        borderColor: BLACK, 
-        ...margin(10,0,20,0),
+        borderColor: BLACK,
         elevation: 2
       }
 });

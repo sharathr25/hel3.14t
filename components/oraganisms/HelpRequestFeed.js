@@ -22,17 +22,6 @@ const HELPS = gql`
       timeStamp,
       description,
       status,
-      usersAccepted{
-        uid,
-      },
-      usersRequested{
-        uid,
-      },
-      usersRejected {
-        uid
-      },
-      noPeopleRequired,
-      creator,
       creatorName
     }
   }
@@ -81,7 +70,7 @@ const HelpRequestFeed = () => {
       const longitudeOfUser = longitude;
       const lattitudeOfHelpRequest = helpRequest.latitude;
       const longitudeOfHelpRequest = helpRequest.longitude;
-      const dist = getDistanceFromLatLonInKm(lattitudeOfUser, longitudeOfUser, longitudeOfHelpRequest, lattitudeOfHelpRequest);
+      const dist = getDistanceFromLatLonInKm(lattitudeOfUser, longitudeOfUser, lattitudeOfHelpRequest, longitudeOfHelpRequest );
       const newObj = {
         ...helpRequest,
         userLatitude: lattitudeOfUser,

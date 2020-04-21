@@ -11,8 +11,6 @@ import CustomDatePicker from './CustomDatePicker';
 import ProfileLetter from './ProfileLetter';
 import FullScreenError from './FullScreenError';
 import FullScreenLoader from './FullScreenLoader';
-import RightButton from './RightButton';
-import WrongButton from './WrongButton';
 import Selector from './Selector';
 import Link from './Link';
 import HeaderTitle from './HeaderTitle'
@@ -21,6 +19,8 @@ import PasswordIcon from "./PasswordIcon";
 import Description from "./Description";
 import AccountButton from "./AccountButton";
 import DescriptionFixed from "./DescriptionFixed";
+import Heading from "./Heading";
+import BoxButton from "./BoxButton";
 
 export {
     Status,
@@ -36,8 +36,6 @@ export {
     ProfileLetter,
     FullScreenError,
     FullScreenLoader,
-    RightButton,
-    WrongButton,
     Selector,
     Link,
     HeaderTitle,
@@ -45,5 +43,7 @@ export {
     PasswordIcon,
     Description,
     AccountButton,
-    DescriptionFixed
+    DescriptionFixed,
+    Heading,
+    BoxButton
 };
