@@ -33,7 +33,7 @@ const Verification = (props: VerificationProps) => {
   }
 
   const onError = (error, msg) => {
-    if(setShowModal(true)) {
+    if(showStatus) {
       setShowModal(true);
       setSuccessDesc('');
       setErrorDesc(msg);
@@ -45,6 +45,10 @@ const Verification = (props: VerificationProps) => {
     setShowModal(false);
     setSuccessDesc('');
     setErrorDesc('');
+  }
+
+  const hideModalAndRedirect = () => {
+    hideModal();
     redirectTo(OTP);
   }
 
@@ -89,11 +93,13 @@ const Verification = (props: VerificationProps) => {
     </View>
   );
 
+  console.log(successDesc.length, errorDesc.length);
+
   if(showModal) {
     if(successDesc.length === 0 && errorDesc.length === 0) {
       return <CustomModal variant="loading" /> 
     } else if(successDesc.length != 0) {
-      return <CustomModal variant="success" desc={successDesc} onClose={hideModal} />
+      return <CustomModal variant="success" desc={successDesc} onClose={hideModalAndRedirect} />
     } else {
       return <CustomModal variant="error" desc={errorDesc} onClose={hideModal} />
     }

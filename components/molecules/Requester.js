@@ -1,7 +1,7 @@
 // @flow
 import React from 'react';
 import { Text, View, StyleSheet, Alert } from 'react-native';
-import { BoxButton, Heading } from '../atoms';
+import { BoxButton, Heading, InlineLoader } from '../atoms';
 import { useMutation } from 'react-apollo';
 import gql from 'graphql-tag';
 import { FONT_BOLD } from '../../styles/typography';
@@ -48,6 +48,14 @@ const Requester = (props: RequesterProps) => {
   };
 
   const { container, content, details, buttons } = styles;
+
+  if(loadingForAccept || loadingForReject) {
+    return (
+      <View style={{...container, padding: 25 }}>
+        <InlineLoader />
+      </View>
+    )
+  }
 
   return (
     <View style={container}>

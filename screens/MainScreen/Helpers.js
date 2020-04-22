@@ -5,7 +5,7 @@ import { ListItem } from "react-native-elements";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons"
 import gql from "graphql-tag";
 import { useQuery } from "react-apollo";
-import { FullScreenError, FullScreenLoader } from "../../components/atoms";
+import { CustomModal } from "../../components/molecules";
 
 const colors = [undefined, "#ffd700", "#aaa9ad", "#b08d57"];
 const TOP_HELPERS_QUERY = gql`
@@ -49,9 +49,9 @@ const Helpers = () => {
         />
     }
 
-    if(loading) return <FullScreenLoader />
+    if(loading) return <CustomModal variant="loading" />
 
-    if(error) return <FullScreenError />
+    if(error) return <CustomModal variant="error" />
 
     const { topHelpers } = data;
 

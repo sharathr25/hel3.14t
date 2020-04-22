@@ -7,7 +7,6 @@ import { CustomModal } from "../../components/molecules";
 import { useAuth } from "../../customHooks";
 import { Auth } from "aws-amplify";
 import { SCREEN_DETAILS } from "../../constants/appConstants";
-import { FullScreenLoader } from '../../components/atoms';
 
 const { LOGIN, VERIFICATION } = SCREEN_DETAILS;
 
@@ -25,7 +24,7 @@ const Helps = ({navigation, route}:{navigation: Object, route: Object }) => {
     }
   }, [user])
 
-  if(!user) return <FullScreenLoader text="Loading" />
+  if(!user) return <CustomModal variant="loading" />
 
   const verify = async (otp) => {
     await Auth.verifyCurrentUserAttributeSubmit('email', otp)

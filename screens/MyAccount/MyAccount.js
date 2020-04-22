@@ -4,11 +4,12 @@ import { View, Text, StyleSheet, Dimensions, ScrollView } from 'react-native';
 import { useLazyQuery } from 'react-apollo';
 import gql from 'graphql-tag';
 import { ORANGE, WHITE, BLACK, LIGHTEST_GRAY } from '../../styles/colors';
-import { FullScreenError , FullScreenLoader, ProfileLetter, Button, Link} from '../../components/atoms';
+import { ProfileLetter, Button, Link} from '../../components/atoms';
 import { Auth } from "aws-amplify";
 import { SCREEN_DETAILS } from "../../constants/appConstants";
 import { useAuth } from "../../customHooks";
 import { FONT_BOLD, FONT_SIZE_20 } from '../../styles/typography';
+import { CustomModal } from '../../components/molecules';
 
 const { LOGIN, VERIFICATION, UPDATE_ACCOUNT } = SCREEN_DETAILS; 
 
@@ -75,14 +76,19 @@ const ProgressDetails = ({ xp, stars }) => {
 }
 
 const MyAccountScreen = ({ navigation }: MyAccountScreenProps) => {
-    const [getUserData, { error, data, loading }] = useLazyQuery(USER_QUERY);
+    const [getUserData, { error, data, loading }] = useLazyQuery(USER_QUERY, { pollInterval: 100 });
     const { user } = useAuth();
     useEffect(() => {
         if(user)
             getUserData({ variables: { uid : user.uid } })
     }, [user])
 
-    if(!user) return <FullScreenLoader />
+    if (!user || loading) {
+        return <CustomModal variant="loading" />
+    }
+    if (error) {
+        return <CustomModal variant="error" />
+    }
 
     const { attributes, username } = user;
     const { email, phone_number: phoneNumber, email_verified, gender, birthdate } = attributes;
@@ -111,13 +117,6 @@ const MyAccountScreen = ({ navigation }: MyAccountScreenProps) => {
 
     const handleEdit = () => {
         navigation.navigate(UPDATE_ACCOUNT.screenName, { user })
-    }
-
-    if (loading) {
-        return <FullScreenLoader />
-    }
-    if (error) {
-        return <FullScreenError />
     }
 
     return (
