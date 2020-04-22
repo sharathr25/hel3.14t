@@ -75,7 +75,7 @@ const ProgressDetails = ({ xp, stars }) => {
 }
 
 const MyAccountScreen = ({ navigation }: MyAccountScreenProps) => {
-    const [getUserData, { error, data, loading }] = useLazyQuery(USER_QUERY);
+    const [getUserData, { error, data, loading }] = useLazyQuery(USER_QUERY, { pollInterval: 100 });
     const { user } = useAuth();
     useEffect(() => {
         if(user)

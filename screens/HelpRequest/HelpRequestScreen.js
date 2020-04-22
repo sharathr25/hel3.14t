@@ -4,7 +4,7 @@ import { Dimensions, View } from 'react-native';
 import gql from 'graphql-tag';
 import { useQuery, useMutation } from 'react-apollo';
 import { useAuth } from '../../customHooks';
-import { FullScreenLoader, Description, Button, Heading } from '../../components/atoms';
+import { FullScreenLoader, Description, Button, Heading, InlineLoader } from '../../components/atoms';
 import { WHITE, LIGHTEST_GRAY, ORANGE, LIGHT_GRAY } from '../../styles/colors';
 import { ProfileName, TimeAndDistance } from '../../components/molecules';
 import { margin } from '../../styles/mixins';
@@ -51,6 +51,7 @@ const HELP_UPDATE_SCHEMA = gql`
   }
 `;
 
+
 const FooterMessage = ({children}) => {
     return (
         <View style={{alignItems: 'center' }}>
@@ -82,7 +83,9 @@ const HelpRequestScreen = ({ route } : { route: Object }) => {
     }
 
     let footer;
-    if(isUserIsThereInUsers(usersRequested, uid)) {
+    if(loadingForUpdateHelp) {
+        footer = <InlineLoader />
+    } else if(isUserIsThereInUsers(usersRequested, uid)) {
         footer = <FooterMessage>Verification pending</FooterMessage>
     } else if(isUserIsThereInUsers(usersRejected, uid)) {
         footer = <FooterMessage>You can't help(Rejected)</FooterMessage>

@@ -1,7 +1,7 @@
 // @flow
 import React, { useState } from 'react';
 import { Text, View, StyleSheet, Alert } from 'react-native';
-import { Heading, BoxButton } from '../atoms';
+import { Heading, BoxButton, InlineLoader } from '../atoms';
 import { ORANGE, LIGHTEST_GRAY, GREEN, LIGHT_GREEN } from "../../styles/colors";
 import { margin } from "../../styles/mixins";
 import gql from 'graphql-tag';
@@ -35,7 +35,7 @@ const Accepter = (props: AccepterProps) => {
   const { mobileNo, stars, uidOfAccepter, username } = userDetails;
   const { status, keyOfHelpRequest } = helpRequestDetails;
   const [starsGivenByUser, setStarsGivenByUser] = useState(0);
-  const [updateHelp] = useMutation(UPDATE_HELP);
+  const [updateHelp, { loading }] = useMutation(UPDATE_HELP);
   const { container, details } = styles;
   const mobileNoWithoutCountryCode = mobileNo.replace(/^(\+91\d{6})(\d{4})/, "xxxxxx$2");
 
@@ -93,6 +93,14 @@ const Accepter = (props: AccepterProps) => {
   const statusToCTAMapping = {
     "ON_GOING" : <BoxButton title="Call" onPress={call} iconName="phone" /> ,
     "COMPLETED" : <StarsAndCTA />
+  }
+
+  if(loading) {
+    return (
+      <View style={{...container, padding: 25 }}>
+        <InlineLoader />
+      </View>
+    )
   }
 
   return (

@@ -21,6 +21,7 @@ import AccountButton from "./AccountButton";
 import DescriptionFixed from "./DescriptionFixed";
 import Heading from "./Heading";
 import BoxButton from "./BoxButton";
+import InlineLoader from "./InlineLoader";
 
 export {
     Status,
@@ -45,5 +46,6 @@ export {
     AccountButton,
     DescriptionFixed,
     Heading,
-    BoxButton
+    BoxButton,
+    InlineLoader
 };

@@ -2,7 +2,7 @@ import React from 'react';
 import { View, ScrollView, StyleSheet } from 'react-native';
 import { useQuery, useMutation } from 'react-apollo';
 import gql from 'graphql-tag';
-import { Description, Heading, Button } from '../../components/atoms';
+import { Description, Heading, Button, InlineLoader } from '../../components/atoms';
 import { TimeAndStatus, UsersAccepted, UsersRequested } from "../../components/molecules";
 import { WHITE, LIGHTEST_GRAY, GREEN, RED } from '../../styles/colors';
 import { margin } from '../../styles/mixins';
@@ -55,8 +55,8 @@ const UserHelpRequestScreen = ({ route } : { route: Object }) => {
     const { params } = route;
     const { keyOfHelpRequest } = params;
     let { data , error } = useQuery(QUERY, { variables: { id: keyOfHelpRequest }, pollInterval: 100 });
-    const [updateHelp, { }] = useMutation(UPDATE_HELP_QUERY);
-    const [incrementXpForUser, { }] = useMutation(INCREMENT_XP_FOR_USER);
+    const [updateHelp, { loading: loadingForUpdateHelp }] = useMutation(UPDATE_HELP_QUERY);
+    const [incrementXpForUser] = useMutation(INCREMENT_XP_FOR_USER);
 
     if (!data) return null;
 
@@ -113,17 +113,17 @@ const UserHelpRequestScreen = ({ route } : { route: Object }) => {
 
     return (
         <ScrollView style={{ backgroundColor: WHITE }}>
-        <View style={{ margin: 10 }}>
+          <View style={{ margin: 10 }}>
             <Description height={200}>{description}</Description>
             <TimeAndStatus timeStamp={timeStamp} status={status} />
             <View style={CTAContainerStyle}>
-            <Heading>Event Location</Heading>
-            <Button bgColor={LIGHTEST_GRAY} onPress={handleNavigate}>Navigate</Button>
+              <Heading>Event Location</Heading>
+              <Button bgColor={LIGHTEST_GRAY} onPress={handleNavigate}>Navigate</Button>
             </View>
-            {statusToCTAMapping[status]}
+            {loadingForUpdateHelp ?  <View style={{...CTAContainerStyle, padding: 20 }}><InlineLoader /></View> : statusToCTAMapping[status]}
             <UsersRequested usersRequested={usersRequested} keyOfHelpRequest={keyOfHelpRequest} noPeopleRequired={noPeopleRequired} usersAccepted={usersAccepted} />
             <UsersAccepted usersAccepted={usersAccepted} keyOfHelpRequest={keyOfHelpRequest} status={status} />
-        </View>
+          </View>
         </ScrollView>
     );
 }

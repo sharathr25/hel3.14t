@@ -1,7 +1,7 @@
 // @flow
 import { useEffect } from "react";
 import gql from "graphql-tag";
-import { useLazyQuery, useSubscription } from "react-apollo";
+import { useLazyQuery } from "react-apollo";
 import { useAuth } from "../customHooks";
 
 const USER_NOTIFICATIONS_QUERY = gql`
@@ -16,46 +16,16 @@ const USER_NOTIFICATIONS_QUERY = gql`
     }
 `;
 
-const SUBSCRPTION = gql`
-    subscription {
-        onUpdateUser{
-            uid,
-            notifications{
-                _id,
-                message,
-                timeStamp
-            }
-        } 
-    }
-`;
-
 const useNotifications = () => {
     const { user } = useAuth();
-    const [getNotifcations, { data: initialData }] = useLazyQuery(USER_NOTIFICATIONS_QUERY);
-    let { data: subscriptionData } = useSubscription(SUBSCRPTION);
-    let uid = null;
-
+    const [getNotifications, { data, loading, error }] = useLazyQuery(USER_NOTIFICATIONS_QUERY, { pollInterval: 100 });
     useEffect(() => {
-        if (uid) {
-            getNotifcations({ variables: { uid } });
-        }
-    }, [uid]);
+        if(user) 
+            getNotifications({ variables: { uid:user.uid } })
+    }, [user])
 
-    if(user) {
-        ({ uid } = user);
-    }
-
-    if (subscriptionData) {
-        const { onUpdateUser } = subscriptionData;
-        const { uid: newUid, notifications: notificationsFromSubscription } = onUpdateUser;
-        if (newUid === uid) {
-            subscriptionData = null;
-            return notificationsFromSubscription;
-        }
-    }
-
-    if (initialData) {
-        const { user: { notifications } } = initialData;
+    if (data) {
+        const { user: { notifications } } = data;
         return notifications;
     }
 
