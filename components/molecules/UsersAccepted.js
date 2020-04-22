@@ -1,3 +1,4 @@
+// @flow
 import React from 'react';
 import { View, FlatList, StyleSheet } from 'react-native';
 import Accepter from '../molecules/Accepter';
@@ -5,7 +6,13 @@ import { Heading } from '../atoms';
 import { LIGHTEST_GRAY } from '../../styles/colors';
 import { margin } from '../../styles/mixins';
 
-const UsersAccepted = ({usersAccepted, keyOfHelpRequest, status }) => {
+type UsersAcceptedProps = {
+  usersAccepted: [Object],
+  keyOfHelpRequest: String,
+  status: String
+}
+
+const UsersAccepted = ({usersAccepted, keyOfHelpRequest, status }:UsersAcceptedProps) => {
   getAcceptedUser = ({ item }) => {
     const { mobileNo, stars, uid, username } = item;
     const userDetails = { username, mobileNo, stars, uidOfAccepter: uid }
@@ -17,6 +24,8 @@ const UsersAccepted = ({usersAccepted, keyOfHelpRequest, status }) => {
     return "acceptedusers" + item.key + index.toString() + new Date().getTime();
   }
 
+  const heading = status === "COMPLETED" ? "People who helped you" : "People who are helping you"
+
   return (
     <View>
         <FlatList
@@ -24,7 +33,7 @@ const UsersAccepted = ({usersAccepted, keyOfHelpRequest, status }) => {
             renderItem={getAcceptedUser}
             keyExtractor={getAcceptedUserKey}
             listKey={getAcceptedUserKey}
-            ListHeaderComponent={usersAccepted.length ? <Heading>People who are helping</Heading> : null}
+            ListHeaderComponent={usersAccepted.length ? <Heading>{heading}</Heading> : null}
         />
     </View>
   );
