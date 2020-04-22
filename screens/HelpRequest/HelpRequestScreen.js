@@ -4,9 +4,9 @@ import { Dimensions, View } from 'react-native';
 import gql from 'graphql-tag';
 import { useQuery, useMutation } from 'react-apollo';
 import { useAuth } from '../../customHooks';
-import { FullScreenLoader, Description, Button, Heading, InlineLoader } from '../../components/atoms';
+import { Description, Button, Heading, InlineLoader } from '../../components/atoms';
 import { WHITE, LIGHTEST_GRAY, ORANGE, LIGHT_GRAY } from '../../styles/colors';
-import { ProfileName, TimeAndDistance } from '../../components/molecules';
+import { ProfileName, TimeAndDistance, CustomModal } from '../../components/molecules';
 import { margin } from '../../styles/mixins';
 import { FONT_SIZE_20 } from '../../styles/typography';
 
@@ -66,14 +66,12 @@ const HelpRequestScreen = ({ route } : { route: Object }) => {
     const { params } = route;
     const { idOfHelpRequest } = params;
     const { data, loading, error } = useQuery(QUERY, { variables: { id: idOfHelpRequest }, pollInterval: 100 });
-    const [updateHelp, { loading: loadingForUpdateHelp }] = useMutation(HELP_UPDATE_SCHEMA);
+    const [updateHelp, { loading: loadingForUpdateHelp, error: errorForUpdateHelp }] = useMutation(HELP_UPDATE_SCHEMA);
     const { user } = useAuth();
 
-    if(!user) return <FullScreenLoader />
+    if(!user || !data) return <CustomModal variant="loading" />
     const { uid, attributes, username } = user;
     const { name , phone_number} = attributes;
-
-    if (!data) return null;
     const { help } = data;
     const { description, distance, timeStamp, usersRequested, creatorName, usersRejected, usersAccepted } = help;
     
@@ -83,7 +81,9 @@ const HelpRequestScreen = ({ route } : { route: Object }) => {
     }
 
     let footer;
-    if(loadingForUpdateHelp) {
+    if(errorForUpdateHelp) {
+        footer = <InlineLoader variant="error" message="something went wrong" />
+    } else if(loadingForUpdateHelp) {
         footer = <InlineLoader />
     } else if(isUserIsThereInUsers(usersRequested, uid)) {
         footer = <FooterMessage>Verification pending</FooterMessage>

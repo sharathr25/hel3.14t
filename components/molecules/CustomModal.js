@@ -1,8 +1,10 @@
 // @flow
 import React from "react";
-import { StyleSheet, Modal, View, Text, TouchableOpacity } from "react-native";
-import { ORANGE, WHITE } from "../../styles/colors";
-import { Loading, Failed, Success, Button } from "../atoms";
+import { StyleSheet, View, TouchableOpacity, ActivityIndicator } from "react-native";
+import { ORANGE, WHITE, LIGHT_ORANGE, LIGHT_GREEN, GREEN, LIGHT_RED, RED } from "../../styles/colors";
+import { Heading } from "../atoms";
+import { FONT_SIZE_20 } from "../../styles/typography";
+import Icon from 'react-native-vector-icons/FontAwesome';
 
 type CustomModalProps = {
     onClose: Function, 
@@ -13,23 +15,60 @@ type CustomModalProps = {
 
 const CustomModal = (props: CustomModalProps) => {
     const { onClose, variant = "loading", desc, buttonText="close" } = props;
-    const { outerContainer, innerContainer, closeButton, closeButtonText } = styles;
+    const { outerContainer, content, variantContainer } = styles;
+    const message = desc ? <Heading size={FONT_SIZE_20}>{desc}</Heading> : null
 
     const variants = {
-        loading: <Loading desc={desc}/>,
-        success: <Success desc={desc} />,
-        error: <Failed desc={desc} />,
+        loading: {
+            icon: (
+                <View style={{...variantContainer, backgroundColor: LIGHT_ORANGE }}>
+                    <ActivityIndicator color={ORANGE} size={80} />
+                </View>
+            ) ,
+            CTA: null
+        },
+        success: {
+            icon: (
+                <View style={{ ...variantContainer, backgroundColor: LIGHT_GREEN }}>
+                    <View style={{ ...variantContainer, width: 80, height: 80, backgroundColor: GREEN, borderRadius: 40 }}>
+                        <Icon name="check" color={WHITE} size={50}></Icon>
+                    </View>
+                </View>
+            ) ,
+            CTA: (
+                <TouchableOpacity onPress={onClose} style={{backgroundColor: GREEN, alignItems: 'center', justifyContent: 'center', padding: 20 }}>
+                    <Heading color={WHITE} size={20}>{buttonText}</Heading>
+                </TouchableOpacity>
+            )
+        },
+        error: {
+            icon: (
+                <View style={{ ...variantContainer, backgroundColor: LIGHT_RED}}>
+                    <View style={{ ...variantContainer, width: 80, height: 80, backgroundColor: RED, borderRadius: 40 }}>
+                        <Icon name="check" color={WHITE} size={50}></Icon>
+                    </View>
+                </View>
+            ) ,
+            CTA: (
+                <TouchableOpacity onPress={onClose} style={{backgroundColor: RED, alignItems: 'center', justifyContent: 'center', padding: 20 }}>
+                    <Heading color={WHITE} size={20}>{buttonText}</Heading>
+                </TouchableOpacity>
+            )
+        },
     }
 
     return (
-        <Modal>
-            <View style={outerContainer}>
-                <View style={innerContainer}>
-                    {variants[variant]}
-                    {onClose && <Button bgColor={ORANGE} textColor={WHITE} onPress={onClose}>{buttonText}</Button>}
+        <View style={outerContainer}>
+                <View style={content}>
+                    {variants[variant].icon}
+                    <View style={{ marginTop: 30 }}>
+                        {message}
+                    </View>
+                </View>
+                <View style={{flex: 1, padding: 20 }}>
+                    {onClose && variants[variant].CTA}
                 </View>
             </View>
-        </Modal>
     );
 }
 
@@ -37,31 +76,19 @@ export default CustomModal;
 
 const styles = StyleSheet.create({
     outerContainer: {
-        backgroundColor: "#636363",
+        backgroundColor: WHITE,
         flex: 1,
-        display: 'flex',
-        justifyContent: 'center',
+    },
+    content: {
+        flex: 8, 
+        justifyContent: 'center', 
         alignItems: 'center'
     },
-    innerContainer: {
-        backgroundColor: 'white',
-        display: 'flex',
-        justifyContent: 'center',
-        alignItems: 'center',
-        borderRadius: 20,
-        padding: 10
-    },
-    closeButton: {
-        backgroundColor: ORANGE,
-        alignSelf: 'stretch',
-        borderBottomLeftRadius: 20,
-        borderBottomRightRadius: 20,
-        padding: 10,
-        marginTop: 10
-    },
-    closeButtonText: {
-        color: WHITE,
-        textAlign: 'center',
-        fontSize: 20
-    },
+    variantContainer: {
+        width: 100, 
+        height: 100, 
+        borderRadius: 50, 
+        justifyContent: 'center', 
+        alignItems: 'center'
+    }
 });

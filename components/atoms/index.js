@@ -4,13 +4,8 @@ import Distance from './Distance';
 import Button from './Button';
 import Map from './Map';
 import Card from './Card';
-import Loading from './Loading';
-import Success from './Success';
-import Failed from './Failed';
 import CustomDatePicker from './CustomDatePicker';
 import ProfileLetter from './ProfileLetter';
-import FullScreenError from './FullScreenError';
-import FullScreenLoader from './FullScreenLoader';
 import Selector from './Selector';
 import Link from './Link';
 import HeaderTitle from './HeaderTitle'
@@ -30,13 +25,8 @@ export {
     Button,
     Map,
     Card,
-    Loading,
-    Success,
-    Failed,
     CustomDatePicker,
     ProfileLetter,
-    FullScreenError,
-    FullScreenLoader,
     Selector,
     Link,
     HeaderTitle,

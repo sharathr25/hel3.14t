@@ -8,7 +8,7 @@ import type { DocumentNode } from 'graphql';
 import { WHITE, ORANGE } from '../../styles/colors';
 import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
 import { useAuth } from "../../customHooks";
-import { FullScreenLoader } from '../../components/atoms';
+import { CustomModal } from '../../components/molecules';
 
 const REQUESTED_HELPS_QUERY = gql`
 query User($uid: String!) {
@@ -58,7 +58,7 @@ const Tab = createMaterialTopTabNavigator();
 
 function MyHelpRequestsScreen() {
     const { user } = useAuth();
-    if(!user) return <FullScreenLoader /> 
+    if(!user) return <CustomModal variant="loading" /> 
     return (
         <Tab.Navigator tabBarOptions={{ indicatorStyle: { backgroundColor: ORANGE } }}>
             <Tab.Screen name="Requested" children={() => <Helps queryGql={REQUESTED_HELPS_QUERY} currentUser={user} />} />

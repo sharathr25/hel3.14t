@@ -9,7 +9,6 @@ import { useMutation } from "react-apollo";
 import { useLocation, useAuth } from "../../customHooks/";
 import { CustomModal } from "../../components/molecules";
 import { padding } from "../../styles/mixins";
-import { FullScreenLoader } from "../../components/atoms";
 
 const WORD_LIMIT = 5;
 const NO_OF_LINES_FOR_DESC = Math.ceil(Dimensions.get("window").height / 50);
@@ -50,7 +49,7 @@ const HelpRequestForm = () => {
     const [createHelp, { loading, data, error }] = useMutation(HELP_REQUEST);
     const { longitude, latitude, locationProviderAvailable, locationErrorMessage } = useLocation();
     const { user: currentUser } = useAuth();
-    if(!currentUser) return <FullScreenLoader />
+    if(!currentUser) return <CustomModal variant="loading" />
     const { uid, attributes, username } = currentUser;
     const { name, phone_number: phoneNumber } = attributes;
     const { defaultCheckBoxStyle, activeCheckBox, 
