@@ -46,7 +46,6 @@ const UserContributionCard = (props) => {
 
     const { help } = data;
     const { status, description, timeStamp } = help;
-    console.log(data);
 
     const _onPress = () => {
         navigation.navigate(USER_CONTRIBUTION.screenName, { keyOfHelpRequest });

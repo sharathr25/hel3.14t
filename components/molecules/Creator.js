@@ -19,7 +19,7 @@ const UPDATE_HELP = gql`
 
 type CreatorProps = {
   userDetails: {
-    username: string, 
+    creatorName: string, 
     mobileNo: string,
     stars: number, 
     uid: string
@@ -32,7 +32,7 @@ type CreatorProps = {
 
 const Creator = (props: CreatorProps) => {
   const { userDetails, helpRequestDetails } = props;
-  const { mobileNo, stars, uid, username } = userDetails;
+  const { mobileNo, stars, uidOfCreator,uidOfAccepter, creatorName } = userDetails;
   const { status, keyOfHelpRequest } = helpRequestDetails;
   const [starsGivenByUser, setStarsGivenByUser] = useState(0);
   const [updateHelp, { loading }] = useMutation(UPDATE_HELP);
@@ -42,6 +42,24 @@ const Creator = (props: CreatorProps) => {
   const call = () => {
     callPhone(mobileNo)
   }
+
+  const handleSubmit = () => {
+    if(starsGivenByUser !== 0) {
+      updateHelp({
+        variables: {
+            id: keyOfHelpRequest,
+            key: "usersAccepted",
+            value: { [uidOfAccepter]: { starsForCreator: starsGivenByUser }, creatorUid: uidOfCreator },
+            type: "array",
+            operation: "update"
+        }
+      })
+    } else {
+        Alert.alert("You need give some rating");
+        return;
+    }
+  }
+
 
   const StarsSlider = () => {
     return (
@@ -70,10 +88,12 @@ const Creator = (props: CreatorProps) => {
 
   const statusToDetailsMapping = {
     "ON_GOING" : mobileNo && <Text>{mobileNoWithoutCountryCode}</Text>,
+    "COMPLETED" : stars ? null : <StarsSlider />
   }
 
   const statusToCTAMapping = {
     "ON_GOING" : <BoxButton title="Call" onPress={call} iconName="phone" /> ,
+    "COMPLETED" : <StarsAndCTA />
   }
 
   if(loading) {
@@ -87,7 +107,7 @@ const Creator = (props: CreatorProps) => {
   return (
     <View style={container}>
       <View style={details}>
-        <Heading color={ORANGE}>{username}</Heading>
+        <Heading color={ORANGE}>{creatorName}</Heading>
         {statusToDetailsMapping[status]}
       </View>
       {statusToCTAMapping[status]}
