@@ -17,12 +17,12 @@ const UPDATE_HELP = gql`
     }
 `;
 
-type AccepterProps = {
+type CreatorProps = {
   userDetails: {
     username: string, 
     mobileNo: string,
     stars: number, 
-    uidOfAccepter: string
+    uid: string
   },
   helpRequestDetails: {
     keyOfHelpRequest: string,
@@ -30,9 +30,9 @@ type AccepterProps = {
   }
 };
 
-const Accepter = (props: AccepterProps) => {
+const Creator = (props: CreatorProps) => {
   const { userDetails, helpRequestDetails } = props;
-  const { mobileNo, stars, uidOfAccepter, username } = userDetails;
+  const { mobileNo, stars, uid, username } = userDetails;
   const { status, keyOfHelpRequest } = helpRequestDetails;
   const [starsGivenByUser, setStarsGivenByUser] = useState(0);
   const [updateHelp, { loading }] = useMutation(UPDATE_HELP);
@@ -41,23 +41,6 @@ const Accepter = (props: AccepterProps) => {
 
   const call = () => {
     callPhone(mobileNo)
-  }
-
-  const handleSubmit = () => {
-    if(starsGivenByUser !== 0) {
-      updateHelp({
-        variables: {
-            id: keyOfHelpRequest,
-            key: "usersAccepted",
-            value: { [uidOfAccepter]: { stars: starsGivenByUser } },
-            type: "array",
-            operation: "update"
-        }
-      })
-    } else {
-        Alert.alert("You need give some rating");
-        return;
-    }
   }
 
   const StarsSlider = () => {
@@ -87,12 +70,10 @@ const Accepter = (props: AccepterProps) => {
 
   const statusToDetailsMapping = {
     "ON_GOING" : mobileNo && <Text>{mobileNoWithoutCountryCode}</Text>,
-    "COMPLETED" : stars ? null : <StarsSlider />
   }
 
   const statusToCTAMapping = {
     "ON_GOING" : <BoxButton title="Call" onPress={call} iconName="phone" /> ,
-    "COMPLETED" : <StarsAndCTA />
   }
 
   if(loading) {
@@ -114,7 +95,7 @@ const Accepter = (props: AccepterProps) => {
   );
 }
 
-export default Accepter;
+export default Creator;
 
 const styles = StyleSheet.create({
   container: {

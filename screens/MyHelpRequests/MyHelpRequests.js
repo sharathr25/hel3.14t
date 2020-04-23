@@ -1,10 +1,9 @@
 // @flow
 import React from 'react';
 import { FlatList, View } from 'react-native';
-import { UserHelpRequestCard } from '../../components/oraganisms';
-import { useQuery, useSubscription } from 'react-apollo';
+import { UserHelpRequestCard, UserContributionCard } from '../../components/oraganisms';
+import { useQuery } from 'react-apollo';
 import gql from 'graphql-tag';
-import type { DocumentNode } from 'graphql';
 import { WHITE, ORANGE } from '../../styles/colors';
 import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
 import { useAuth } from "../../customHooks";
@@ -27,14 +26,18 @@ query User($uid: String!){
 `;
 
 type HelpsProps = {
-    queryGql: DocumentNode,
     currentUser: Object
 }
 
+
+type ContributionsProps = {
+    currentUser: Object
+};
+
 const Helps = (props:HelpsProps) => {
-    const { queryGql, currentUser } = props;
+    const { currentUser } = props;
     const { uid } = currentUser;
-    const { data, error, loading, refetch } = useQuery(queryGql, { variables: { uid }, pollInterval: 100 });
+    const { data, error, loading, refetch } = useQuery(REQUESTED_HELPS_QUERY, { variables: { uid }, pollInterval: 100 });
     if (!data) return null;
     let { user } = data;
     let { createdHelpRequests } = user;
@@ -54,6 +57,29 @@ const Helps = (props:HelpsProps) => {
     );
 }
 
+const Contributions = (props: ContributionsProps) => {
+    const { currentUser } = props;
+    const { uid } = currentUser;
+    const { data, error, loading, refetch } = useQuery(HELPING_HELPS_QUERY, { variables: { uid }, pollInterval: 100 });
+    if (!data) return null;
+    let { user } = data;
+    let { helpedHelpRequests } = user;
+
+    const getHelpRequest = ({ item }) => <UserContributionCard keyOfHelpRequest={item} />
+
+    return (
+        <View style={{ flex: 1, backgroundColor: WHITE }}>
+            <FlatList
+                data={helpedHelpRequests}
+                renderItem={getHelpRequest}
+                keyExtractor={(item, index) => item.key + index.toString()}
+                refreshing={loading}
+                onRefresh={refetch}
+            />
+        </View>
+    );
+}   
+
 const Tab = createMaterialTopTabNavigator();
 
 function MyHelpRequestsScreen() {
@@ -61,8 +87,8 @@ function MyHelpRequestsScreen() {
     if(!user) return <CustomModal variant="loading" /> 
     return (
         <Tab.Navigator tabBarOptions={{ indicatorStyle: { backgroundColor: ORANGE } }}>
-            <Tab.Screen name="Requested" children={() => <Helps queryGql={REQUESTED_HELPS_QUERY} currentUser={user} />} />
-            {/* <Tab.Screen name="Helping" children={() => <Helps queryGql={HELPING_HELPS_QUERY} currentUser={user} />} /> */}
+            <Tab.Screen name="Requested" children={() => <Helps currentUser={user} />} />
+            <Tab.Screen name="Helping" children={() => <Contributions currentUser={user} />} />
         </Tab.Navigator>                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        
     );
 }

@@ -45,7 +45,7 @@ const CustomModal = (props: CustomModalProps) => {
             icon: (
                 <View style={{ ...variantContainer, backgroundColor: LIGHT_RED}}>
                     <View style={{ ...variantContainer, width: 80, height: 80, backgroundColor: RED, borderRadius: 40 }}>
-                        <Icon name="check" color={WHITE} size={50}></Icon>
+                        <Icon name="remove" color={WHITE} size={50}></Icon>
                     </View>
                 </View>
             ) ,

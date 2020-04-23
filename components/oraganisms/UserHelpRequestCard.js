@@ -1,13 +1,11 @@
 // @flow
 import React from "react";
-import { Text, TouchableOpacity, View } from 'react-native';
-import { BLACK, LIGHT_GRAY } from "../../styles/colors";
-import { Card, Time, Status, DescriptionFixed } from "../atoms";
-import { FONT_SIZE_14 } from "../../styles/typography";
+import { TouchableOpacity, View } from 'react-native';
+import { Card, DescriptionFixed } from "../atoms";
 import { SCREEN_DETAILS } from "../../constants/appConstants";
 import { useNavigation } from '@react-navigation/native';
 import gql from "graphql-tag";
-import { useQuery, useSubscription } from "react-apollo";
+import { useQuery } from "react-apollo";
 import { TimeAndStatus } from "../molecules";
 import { margin } from "../../styles/mixins";
 

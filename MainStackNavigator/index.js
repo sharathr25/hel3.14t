@@ -1,11 +1,9 @@
 // @flow
 import React from 'react';
-import { TouchableOpacity, Dimensions } from 'react-native';
 import { createStackNavigator } from '@react-navigation/stack';
 import { rightToLeft, leftToRight } from "./cardInterpolators";
 import { Header } from '../components/molecules'
 import { SCREEN_DETAILS } from "../constants/appConstants";
-import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
 import { 
   MyAccount,
@@ -20,11 +18,13 @@ import {
   MainScreen,
   HelpRequestScreen,
   UserHelpRequestScreen,
-  UpdateAccount
+  UpdateAccount,
+  UserContributionScreen
  } from "../screens";
 import { AccountButton } from '../components/atoms';
 
 const Stack = createStackNavigator();
+
 
 const {
   MAIN,
@@ -39,9 +39,9 @@ const {
   MY_ACCOUNT,
   HELP_REQUEST,
   USER_HELP_REQUEST,
-  UPDATE_ACCOUNT
+  UPDATE_ACCOUNT,
+  USER_CONTRIBUTION
 } = SCREEN_DETAILS;
-
 
 
 const MainNavigator = (props: { isLogedIn: boolean }) => {
@@ -109,6 +109,11 @@ const MainNavigator = (props: { isLogedIn: boolean }) => {
         name={USER_HELP_REQUEST.screenName} 
         component={UserHelpRequestScreen} 
         options={{ title: USER_HELP_REQUEST.screenTitle }}>
+      </Stack.Screen>
+      <Stack.Screen 
+        name={USER_CONTRIBUTION.screenName} 
+        component={UserContributionScreen} 
+        options={{ title: USER_CONTRIBUTION.screenTitle }}>
       </Stack.Screen>
       <Stack.Screen 
         name={UPDATE_ACCOUNT.screenName} 

@@ -36,6 +36,8 @@ const HelpRequestFeed = () => {
     fetchPolicy: "cache-and-network",
   });
 
+  if(error) return <CustomModal variant="error" />
+
   const getHelps = () => {
     fetchMore({
       variables: {
