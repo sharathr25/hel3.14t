@@ -1,10 +1,10 @@
 import React from 'react';
 import { View, ScrollView, StyleSheet } from 'react-native';
-import { useQuery } from 'react-apollo';
+import { useQuery, useMutation } from 'react-apollo';
 import gql from 'graphql-tag';
-import { Description, Heading, Button } from '../../components/atoms';
+import { Description, Heading, Button, InlineLoader } from '../../components/atoms';
 import { TimeAndStatus, Creator, CustomModal } from "../../components/molecules";
-import { WHITE, LIGHTEST_GRAY, LIGHT_GRAY } from '../../styles/colors';
+import { WHITE, LIGHTEST_GRAY, LIGHT_GRAY, RED } from '../../styles/colors';
 import { margin } from '../../styles/mixins';
 import { openMapsAppWithLatLng } from '../../utils';
 import { FONT_SIZE_20 } from '../../styles/typography';
@@ -35,6 +35,9 @@ const QUERY = gql`
       },
       usersRejected {
         uid
+      },
+      usersCancelled {
+        uid
       }
       timeStamp,
       noPeopleRequired,
@@ -44,12 +47,21 @@ const QUERY = gql`
   }
 `;
 
+const UPDATE_HELP_QUERY = gql`
+  mutation UpdateHelp($key:String!, $value:Any, $type:String!, $operation:String!, $id: String!){
+      updateHelp(id:$id, key:$key, value:$value, type:$type, operation:$operation){
+          _id
+      }
+  }
+`;
+
 const isUserIsThereInUsers = (users, userUid) => users.some((user) => user.uid === userUid);
 
 const UserContributionScreen = ({ route } : { route: Object }) => {
     const { params } = route;
     const { keyOfHelpRequest } = params;
     const { user } = useAuth();
+    const [updateHelp, { loading: loadingForUpdateHelp }] = useMutation(UPDATE_HELP_QUERY);
     let { data , error } = useQuery(QUERY, { variables: { id: keyOfHelpRequest }, pollInterval: 100 });
 
     if (!data || !user) return <CustomModal variant="loading" />;
@@ -61,6 +73,7 @@ const UserContributionScreen = ({ route } : { route: Object }) => {
       usersRequested, 
       usersRejected,
       usersAccepted, 
+      usersCancelled,
       description, 
       timeStamp, 
       creator,
@@ -78,6 +91,29 @@ const UserContributionScreen = ({ route } : { route: Object }) => {
       return 0
     } 
 
+    const getMessage = () => {
+      if(status === "COMPLETED") return "Awesome, Help satisfied"
+      else if(isUserIsThereInUsers(usersRequested, user.uid)) return "Your are in waiting list"
+      else if(isUserIsThereInUsers(usersAccepted, user.uid)) return "You got accepted, You can help him"
+      else if(isUserIsThereInUsers(usersRejected, user.uid)) return "You got rejected, Sorry"
+      else if(isUserIsThereInUsers(usersCancelled, user.uid)) return "You rejected to help this guy"
+      return "";
+    }
+    const handleNavigate = () => {
+        openMapsAppWithLatLng(latitude, longitude)
+    }
+
+    const handleCancel = () => {
+      const key = isUserIsThereInUsers(usersAccepted, user.uid) ? "usersAccepted" : "usersRequested"
+      updateHelp({ variables: {
+        id: keyOfHelpRequest,
+        key,
+        operation: "pull",
+        type: "array",
+        value: { uid: user.uid }
+      }})
+    }
+
     const userDetails = {
       creatorName, 
       mobileNo,
@@ -86,18 +122,6 @@ const UserContributionScreen = ({ route } : { route: Object }) => {
       uidOfAccepter : user.uid
     }
     const helpRequestDetails = { keyOfHelpRequest, status }
-
-    const getMessage = () => {
-      if(status === "COMPLETED") return "Awesome, Help satisfied"
-      else if(isUserIsThereInUsers(usersRequested, user.uid)) return "Your are in waiting list"
-      else if(isUserIsThereInUsers(usersAccepted, user.uid)) return "You got accepted, You can help him"
-      else if(isUserIsThereInUsers(usersRejected, user.uid)) return "You got rejected, Sorry"
-      return "";
-    }
-    const handleNavigate = () => {
-        openMapsAppWithLatLng(latitude, longitude)
-    }
-
     const { CTAContainerStyle } = styles;
 
     return (
@@ -109,9 +133,20 @@ const UserContributionScreen = ({ route } : { route: Object }) => {
               <Heading>Event Location</Heading>
               <Button bgColor={LIGHTEST_GRAY} onPress={handleNavigate}>Navigate</Button>
             </View>
-            <View style={{alignItems: 'center', backgroundColor: LIGHTEST_GRAY, padding: 10 }}>
+            <View style={CTAContainerStyle}>
               <Heading color={LIGHT_GRAY} size={FONT_SIZE_20}>{getMessage()}</Heading>
             </View>
+            {
+              (status === "REQUESTED" && !isUserIsThereInUsers(usersCancelled, user.uid)) 
+              ?
+                loadingForUpdateHelp 
+                  ? <View style={{...CTAContainerStyle, padding: 20}}><InlineLoader /></View>
+                  : <View style={CTAContainerStyle}>
+                      <Heading color={LIGHT_GRAY} size={FONT_SIZE_20}>Change of mind</Heading>
+                      <Button onPress={handleCancel} bgColor={LIGHTEST_GRAY} textColor={RED}>Cancel</Button>
+                    </View>
+              : null
+            }
             <Heading>Creator Details</Heading>
             <Creator userDetails={userDetails} helpRequestDetails={helpRequestDetails} />
           </View>

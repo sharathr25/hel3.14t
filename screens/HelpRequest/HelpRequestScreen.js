@@ -34,6 +34,9 @@ query Help($id: String!){
     usersRejected {
         uid
     },
+    usersCancelled {
+        uid
+    }
     timeStamp,
     noPeopleRequired,
     latitude,
@@ -73,7 +76,7 @@ const HelpRequestScreen = ({ route } : { route: Object }) => {
     const { uid, attributes, username } = user;
     const { name , phone_number} = attributes;
     const { help } = data;
-    const { description, distance, timeStamp, usersRequested, creatorName, usersRejected, usersAccepted } = help;
+    const { description, distance, timeStamp, usersRequested, creatorName, usersRejected, usersAccepted, usersCancelled } = help;
     
     const handleHelp = () => {
         if(!loadingForUpdateHelp)
@@ -91,6 +94,8 @@ const HelpRequestScreen = ({ route } : { route: Object }) => {
         footer = <FooterMessage>You can't help(Rejected)</FooterMessage>
     } else if((isUserIsThereInUsers(usersAccepted, uid))) {
         footer = <FooterMessage>Your already helping this guy</FooterMessage>
+    } else if(isUserIsThereInUsers(usersCancelled, uid)) {
+        footer = <FooterMessage>You Rejected to help this guy</FooterMessage>
     } else {
         footer = (
             <View style={{flexDirection: "row", justifyContent: 'flex-end' }}>
