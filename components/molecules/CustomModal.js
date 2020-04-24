@@ -22,7 +22,7 @@ const CustomModal = (props: CustomModalProps) => {
         loading: {
             icon: (
                 <View style={{...variantContainer, backgroundColor: LIGHT_ORANGE }}>
-                    <ActivityIndicator color={ORANGE} size={80} />
+                    <ActivityIndicator color={ORANGE} size={50} />
                 </View>
             ) ,
             CTA: null
@@ -36,7 +36,7 @@ const CustomModal = (props: CustomModalProps) => {
                 </View>
             ) ,
             CTA: (
-                <TouchableOpacity onPress={onClose} style={{backgroundColor: GREEN, alignItems: 'center', justifyContent: 'center', padding: 20 }}>
+                <TouchableOpacity onPress={onClose} style={{backgroundColor: GREEN, alignItems: 'center', justifyContent: 'center', padding: 10 }}>
                     <Heading color={WHITE} size={20}>{buttonText}</Heading>
                 </TouchableOpacity>
             )
@@ -45,12 +45,12 @@ const CustomModal = (props: CustomModalProps) => {
             icon: (
                 <View style={{ ...variantContainer, backgroundColor: LIGHT_RED}}>
                     <View style={{ ...variantContainer, width: 80, height: 80, backgroundColor: RED, borderRadius: 40 }}>
-                        <Icon name="check" color={WHITE} size={50}></Icon>
+                        <Icon name="remove" color={WHITE} size={50}></Icon>
                     </View>
                 </View>
             ) ,
             CTA: (
-                <TouchableOpacity onPress={onClose} style={{backgroundColor: RED, alignItems: 'center', justifyContent: 'center', padding: 20 }}>
+                <TouchableOpacity onPress={onClose} style={{backgroundColor: RED, alignItems: 'center', justifyContent: 'center', padding: 10 }}>
                     <Heading color={WHITE} size={20}>{buttonText}</Heading>
                 </TouchableOpacity>
             )
@@ -61,7 +61,7 @@ const CustomModal = (props: CustomModalProps) => {
         <View style={outerContainer}>
                 <View style={content}>
                     {variants[variant].icon}
-                    <View style={{ marginTop: 30 }}>
+                    <View style={{ margin: 30, alignItems: 'center', justifyContent: 'center' }}>
                         {message}
                     </View>
                 </View>

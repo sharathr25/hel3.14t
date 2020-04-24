@@ -6,7 +6,7 @@ import { useQuery, useMutation } from 'react-apollo';
 import { useAuth } from '../../customHooks';
 import { Description, Button, Heading, InlineLoader } from '../../components/atoms';
 import { WHITE, LIGHTEST_GRAY, ORANGE, LIGHT_GRAY } from '../../styles/colors';
-import { ProfileName, TimeAndDistance, CustomModal } from '../../components/molecules';
+import { ProfileName, TimeAndDistance, CustomModal, Message } from '../../components/molecules';
 import { margin } from '../../styles/mixins';
 import { FONT_SIZE_20 } from '../../styles/typography';
 
@@ -34,6 +34,9 @@ query Help($id: String!){
     usersRejected {
         uid
     },
+    usersCancelled {
+        uid
+    }
     timeStamp,
     noPeopleRequired,
     latitude,
@@ -51,15 +54,6 @@ const HELP_UPDATE_SCHEMA = gql`
   }
 `;
 
-
-const FooterMessage = ({children}) => {
-    return (
-        <View style={{alignItems: 'center' }}>
-            <Heading color={LIGHT_GRAY} size={FONT_SIZE_20}>{children}</Heading>
-        </View>
-    );
-}
-
 const isUserIsThereInUsers = (users, userUid) => users.some((user) => user.uid === userUid);
 
 const HelpRequestScreen = ({ route } : { route: Object }) => {
@@ -73,7 +67,7 @@ const HelpRequestScreen = ({ route } : { route: Object }) => {
     const { uid, attributes, username } = user;
     const { name , phone_number} = attributes;
     const { help } = data;
-    const { description, distance, timeStamp, usersRequested, creatorName, usersRejected, usersAccepted } = help;
+    const { description, distance, timeStamp, usersRequested, creatorName, usersRejected, usersAccepted, usersCancelled } = help;
     
     const handleHelp = () => {
         if(!loadingForUpdateHelp)
@@ -86,14 +80,16 @@ const HelpRequestScreen = ({ route } : { route: Object }) => {
     } else if(loadingForUpdateHelp) {
         footer = <InlineLoader />
     } else if(isUserIsThereInUsers(usersRequested, uid)) {
-        footer = <FooterMessage>Verification pending</FooterMessage>
+        footer = <Message>Verification pending</Message>
     } else if(isUserIsThereInUsers(usersRejected, uid)) {
-        footer = <FooterMessage>You can't help(Rejected)</FooterMessage>
+        footer = <Message>You can't help(Rejected)</Message>
     } else if((isUserIsThereInUsers(usersAccepted, uid))) {
-        footer = <FooterMessage>Your already helping this guy</FooterMessage>
+        footer = <Message>Your already helping this guy</Message>
+    } else if(isUserIsThereInUsers(usersCancelled, uid)) {
+        footer = <Message>You Rejected to help this guy</Message>
     } else {
         footer = (
-            <View style={{flexDirection: "row", justifyContent: 'flex-end' }}>
+            <View style={{flexDirection: "row", justifyContent: 'flex-end', padding: 10 }}>
                 <Button bgColor={LIGHTEST_GRAY}>Refer</Button>
                 <View style={{width: 10}} />
                 <Button onPress={handleHelp} loading={loadingForUpdateHelp} bgColor={ORANGE} textColor={WHITE}>Help</Button>
@@ -109,9 +105,7 @@ const HelpRequestScreen = ({ route } : { route: Object }) => {
                 <Description height={heightForDescription}>{description}</Description>
                 <TimeAndDistance timeStamp={timeStamp} distance={distance} />
             </View>
-            <View style={{backgroundColor: LIGHTEST_GRAY, ...margin(10,20,10,20) }}>
-                {footer}
-            </View>
+            {footer}
         </View>
     );
 }

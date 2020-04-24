@@ -93,8 +93,6 @@ const Verification = (props: VerificationProps) => {
     </View>
   );
 
-  console.log(successDesc.length, errorDesc.length);
-
   if(showModal) {
     if(successDesc.length === 0 && errorDesc.length === 0) {
       return <CustomModal variant="loading" /> 

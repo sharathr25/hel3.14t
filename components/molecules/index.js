@@ -8,7 +8,10 @@ import ProfileName from './ProfileName';
 import UserHelpRequestCard from "../oraganisms/UserHelpRequestCard";
 import TimeAndStatus from './TimeAndStatus';
 import UsersAccepted from './UsersAccepted';
-import UsersRequested from './UsersRequested'
+import UsersRequested from './UsersRequested';
+import Creator from './Creator';
+import EventLocation from "./EventLocation";
+import Message from "./Message";
 
 export { 
     TimeAndDistance, 
@@ -21,5 +24,8 @@ export {
     UserHelpRequestCard,
     TimeAndStatus,
     UsersAccepted,
-    UsersRequested
+    UsersRequested,
+    Creator,
+    EventLocation,
+    Message
 }

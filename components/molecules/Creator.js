@@ -17,12 +17,12 @@ const UPDATE_HELP = gql`
     }
 `;
 
-type AccepterProps = {
+type CreatorProps = {
   userDetails: {
-    username: string, 
+    creatorName: string, 
     mobileNo: string,
     stars: number, 
-    uidOfAccepter: string
+    uid: string
   },
   helpRequestDetails: {
     keyOfHelpRequest: string,
@@ -30,9 +30,9 @@ type AccepterProps = {
   }
 };
 
-const Accepter = (props: AccepterProps) => {
+const Creator = (props: CreatorProps) => {
   const { userDetails, helpRequestDetails } = props;
-  const { mobileNo, stars, uidOfAccepter, username } = userDetails;
+  const { mobileNo, stars, uidOfCreator,uidOfAccepter, creatorName } = userDetails;
   const { status, keyOfHelpRequest } = helpRequestDetails;
   const [starsGivenByUser, setStarsGivenByUser] = useState(0);
   const [updateHelp, { loading }] = useMutation(UPDATE_HELP);
@@ -49,7 +49,7 @@ const Accepter = (props: AccepterProps) => {
         variables: {
             id: keyOfHelpRequest,
             key: "usersAccepted",
-            value: { [uidOfAccepter]: { stars: starsGivenByUser } },
+            value: { [uidOfAccepter]: { starsForCreator: starsGivenByUser }, creatorUid: uidOfCreator },
             type: "array",
             operation: "update"
         }
@@ -59,6 +59,7 @@ const Accepter = (props: AccepterProps) => {
         return;
     }
   }
+
 
   const StarsSlider = () => {
     return (
@@ -104,17 +105,20 @@ const Accepter = (props: AccepterProps) => {
   }
 
   return (
-    <View style={container}>
-      <View style={details}>
-        <Heading color={ORANGE}>{username}</Heading>
-        {statusToDetailsMapping[status]}
+    <View style={{marginTop: 10 }}>
+      <Heading>Creator details</Heading>
+      <View style={container}>
+        <View style={details}>
+          <Heading color={ORANGE}>{creatorName}</Heading>
+          {statusToDetailsMapping[status]}
+        </View>
+        {statusToCTAMapping[status]}
       </View>
-      {statusToCTAMapping[status]}
     </View>
   );
 }
 
-export default Accepter;
+export default Creator;
 
 const styles = StyleSheet.create({
   container: {

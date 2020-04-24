@@ -10,6 +10,6 @@ export const config = {
     // },
     prod : {
         SERVER_HTTP_END_POINT : 'https://help-app-v1.herokuapp.com/graphql',
-        SERVER_WEB_SOCKET_END_POINT : 'wss://help-app-v1.herokuapp.com/graphql'
+        SERVER_WEB_SOCKET_END_POINT : 'ws://help-app-v1.herokuapp.com/graphql'
     }
 }

@@ -6,7 +6,6 @@ import { Button, CustomDatePicker, Selector} from '../../components/atoms';
 import { Auth } from "aws-amplify";
 import { SCREEN_DETAILS, SIGN_UP_SCREEN } from "../../constants/appConstants";
 import { InputComponent, CustomModal } from '../../components/molecules';
-import { padding } from '../../styles/mixins';
 import { regex, getAge } from '../../utils';
 
 const AGE_LIMIT = 15;
@@ -135,10 +134,10 @@ const UpdateAccount = ({ navigation, route }) => {
                 </View>  
             </View>
             <View style={{felx: 1, flexDirection: 'row', justifyContent: 'flex-end', padding: 10, backgroundColor: LIGHTEST_GRAY }}>
-                    <Button onPress={handleCancel} bgColor={LIGHTEST_GRAY}>Cancel</Button>
-                    <View style={{width: 10 }} />    
-                    <Button bgColor={ORANGE} textColor={WHITE} onPress={handleUpdate}>Update</Button>
-                </View>
+              <Button onPress={handleCancel} bgColor={LIGHTEST_GRAY}>Cancel</Button>
+              <View style={{width: 10 }} />    
+            <Button bgColor={ORANGE} textColor={WHITE} onPress={handleUpdate}>Update</Button>
+          </View>
         </ScrollView>
     ); 
 }
