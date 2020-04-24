@@ -10,6 +10,8 @@ import TimeAndStatus from './TimeAndStatus';
 import UsersAccepted from './UsersAccepted';
 import UsersRequested from './UsersRequested';
 import Creator from './Creator';
+import EventLocation from "./EventLocation";
+import Message from "./Message";
 
 export { 
     TimeAndDistance, 
@@ -23,5 +25,7 @@ export {
     TimeAndStatus,
     UsersAccepted,
     UsersRequested,
-    Creator
+    Creator,
+    EventLocation,
+    Message
 }

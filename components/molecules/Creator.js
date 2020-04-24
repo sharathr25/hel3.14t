@@ -105,12 +105,15 @@ const Creator = (props: CreatorProps) => {
   }
 
   return (
-    <View style={container}>
-      <View style={details}>
-        <Heading color={ORANGE}>{creatorName}</Heading>
-        {statusToDetailsMapping[status]}
+    <View style={{marginTop: 10 }}>
+      <Heading>Creator details</Heading>
+      <View style={container}>
+        <View style={details}>
+          <Heading color={ORANGE}>{creatorName}</Heading>
+          {statusToDetailsMapping[status]}
+        </View>
+        {statusToCTAMapping[status]}
       </View>
-      {statusToCTAMapping[status]}
     </View>
   );
 }

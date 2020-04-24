@@ -34,7 +34,7 @@ type ContributionsProps = {
     currentUser: Object
 };
 
-const Helps = (props:HelpsProps) => {
+const MyHelps = (props:HelpsProps) => {
     const { currentUser } = props;
     const { uid } = currentUser;
     const { data, error, loading, refetch } = useQuery(REQUESTED_HELPS_QUERY, { variables: { uid }, pollInterval: 100 });
@@ -57,7 +57,7 @@ const Helps = (props:HelpsProps) => {
     );
 }
 
-const Contributions = (props: ContributionsProps) => {
+const MyContributions = (props: ContributionsProps) => {
     const { currentUser } = props;
     const { uid } = currentUser;
     const { data, error, loading, refetch } = useQuery(HELPING_HELPS_QUERY, { variables: { uid }, pollInterval: 100 });
@@ -87,8 +87,8 @@ function MyHelpRequestsScreen() {
     if(!user) return <CustomModal variant="loading" /> 
     return (
         <Tab.Navigator tabBarOptions={{ indicatorStyle: { backgroundColor: ORANGE } }}>
-            <Tab.Screen name="Requested" children={() => <Helps currentUser={user} />} />
-            <Tab.Screen name="Helping" children={() => <Contributions currentUser={user} />} />
+            <Tab.Screen name="Requested" children={() => <MyHelps currentUser={user} />} />
+            <Tab.Screen name="Helping" children={() => <MyContributions currentUser={user} />} />
         </Tab.Navigator>                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        
     );
 }

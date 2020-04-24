@@ -3,10 +3,9 @@ import { View, ScrollView, StyleSheet } from 'react-native';
 import { useQuery, useMutation } from 'react-apollo';
 import gql from 'graphql-tag';
 import { Description, Heading, Button, InlineLoader } from '../../components/atoms';
-import { TimeAndStatus, UsersAccepted, UsersRequested } from "../../components/molecules";
+import { TimeAndStatus, UsersAccepted, UsersRequested, EventLocation } from "../../components/molecules";
 import { WHITE, LIGHTEST_GRAY, GREEN, RED } from '../../styles/colors';
 import { margin } from '../../styles/mixins';
-import { openMapsAppWithLatLng } from '../../utils';
 
 const UPDATE_HELP_QUERY = gql`
   mutation UpdateHelp($key:String!, $value:Any, $type:String!, $operation:String!, $id: String!){
@@ -84,10 +83,6 @@ const UserHelpRequestScreen = ({ route } : { route: Object }) => {
         await updateHelpRequestAndUsers();
     }
 
-    const handleNavigate = () => {
-        openMapsAppWithLatLng(latitude, longitude)
-    }
-
     const { CTAContainerStyle } = styles;
     const statusToCTAMapping = {
         'REQUESTED': (
@@ -116,10 +111,7 @@ const UserHelpRequestScreen = ({ route } : { route: Object }) => {
           <View style={{ margin: 10 }}>
             <Description height={200}>{description}</Description>
             <TimeAndStatus timeStamp={timeStamp} status={status} />
-            <View style={CTAContainerStyle}>
-              <Heading>Event Location</Heading>
-              <Button bgColor={LIGHTEST_GRAY} onPress={handleNavigate}>Navigate</Button>
-            </View>
+            <EventLocation latitude={latitude} longitude={longitude} />
             {loadingForUpdateHelp ?  <View style={{...CTAContainerStyle, padding: 20 }}><InlineLoader /></View> : statusToCTAMapping[status]}
             <UsersRequested usersRequested={usersRequested} keyOfHelpRequest={keyOfHelpRequest} noPeopleRequired={noPeopleRequired} usersAccepted={usersAccepted} />
             <UsersAccepted usersAccepted={usersAccepted} keyOfHelpRequest={keyOfHelpRequest} status={status} />

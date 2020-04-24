@@ -3,10 +3,9 @@ import { View, ScrollView, StyleSheet } from 'react-native';
 import { useQuery, useMutation } from 'react-apollo';
 import gql from 'graphql-tag';
 import { Description, Heading, Button, InlineLoader } from '../../components/atoms';
-import { TimeAndStatus, Creator, CustomModal } from "../../components/molecules";
+import { TimeAndStatus, Creator, CustomModal, EventLocation, Message } from "../../components/molecules";
 import { WHITE, LIGHTEST_GRAY, LIGHT_GRAY, RED } from '../../styles/colors';
 import { margin } from '../../styles/mixins';
-import { openMapsAppWithLatLng } from '../../utils';
 import { FONT_SIZE_20 } from '../../styles/typography';
 import { useAuth } from '../../customHooks';
 
@@ -99,9 +98,6 @@ const UserContributionScreen = ({ route } : { route: Object }) => {
       else if(isUserIsThereInUsers(usersCancelled, user.uid)) return "You rejected to help this guy"
       return "";
     }
-    const handleNavigate = () => {
-        openMapsAppWithLatLng(latitude, longitude)
-    }
 
     const handleCancel = () => {
       const key = isUserIsThereInUsers(usersAccepted, user.uid) ? "usersAccepted" : "usersRequested"
@@ -129,13 +125,8 @@ const UserContributionScreen = ({ route } : { route: Object }) => {
           <View style={{ margin: 10 }}>
             <Description height={200}>{description}</Description>
             <TimeAndStatus timeStamp={timeStamp} status={status} />
-            <View style={CTAContainerStyle}>
-              <Heading>Event Location</Heading>
-              <Button bgColor={LIGHTEST_GRAY} onPress={handleNavigate}>Navigate</Button>
-            </View>
-            <View style={CTAContainerStyle}>
-              <Heading color={LIGHT_GRAY} size={FONT_SIZE_20}>{getMessage()}</Heading>
-            </View>
+            <EventLocation latitude={latitude} longitude={longitude} />
+            <Message>{getMessage()}</Message>
             {
               (status === "REQUESTED" && !isUserIsThereInUsers(usersCancelled, user.uid)) 
               ?
@@ -147,7 +138,6 @@ const UserContributionScreen = ({ route } : { route: Object }) => {
                     </View>
               : null
             }
-            <Heading>Creator Details</Heading>
             <Creator userDetails={userDetails} helpRequestDetails={helpRequestDetails} />
           </View>
         </ScrollView>
