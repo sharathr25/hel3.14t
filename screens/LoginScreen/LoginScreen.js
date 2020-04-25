@@ -3,12 +3,11 @@ import React, { useState } from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import { WHITE, ORANGE, BLACK } from '../../styles/colors';
 import { regex } from '../../utils/index';
-import { Link, Button } from '../../components/atoms';
+import { Link, Button, NotificationMessage } from '../../components/atoms';
 import { CustomModal,InputComponent } from '../../components/molecules';
 import { ScrollView } from 'react-native-gesture-handler';
 import { LIGHT_GRAY } from '../../styles/colors';
 import { margin } from '../../styles/mixins';
-import { FONT_SIZE_12 } from "../../styles/typography";
 import { Auth } from "aws-amplify";
 import { LOGIN_SCREEN, SCREEN_DETAILS } from "../../constants/appConstants";
 
@@ -59,7 +58,7 @@ const LoginScreen = ({navigation}: LoginScreenProps) => {
       try {
         setLoaderVisible(true);
         const uname = userName.match(emailRegex) ? userName : `+91${userName}`
-        const user = await Auth.signIn({username: uname , password });
+        await Auth.signIn({username: uname , password });
         navigation.replace(MAIN.screenName);
       } catch (error) {
         console.log(error);
@@ -72,12 +71,11 @@ const LoginScreen = ({navigation}: LoginScreenProps) => {
 
   const { registerContainer } = styles;
 
-  const NotificationMessage = () => (
-    <View style={{ backgroundColor: LIGHT_GRAY, marginTop: 30, justifyContent: 'center', alignItems: 'center', padding: 15 }}>
-      <Text style={{ color: BLACK }}>
-        Enter Registered email or mobile number
-      </Text>
-      <Text style={{ color: BLACK,fontSize : FONT_SIZE_12 }}>If Email is not verified then you can't use it for Log in</Text>
+  const HeadingTitle = () => (
+    <View style={{...margin(30,0,30,0)}}>
+      <NotificationMessage>
+        Enter email(Verified) or mobile number
+      </NotificationMessage>
     </View>
   );
 
@@ -115,7 +113,7 @@ const LoginScreen = ({navigation}: LoginScreenProps) => {
   return (
     <ScrollView contentContainerStyle={{ flex: 1, backgroundColor: WHITE, }}>
       <View style={{flex: 1}}>
-        <NotificationMessage />
+        <HeadingTitle />
         <View style={{flex: 1,justifyContent:'space-evenly', ...margin(0,30,0,30)}}>
           <InputComponent label="Email or Mobile Number" updateParentState={onUsernameChange} errMsg={userNameErrorMessage} />
           <View>

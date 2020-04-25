@@ -17,6 +17,7 @@ import DescriptionFixed from "./DescriptionFixed";
 import Heading from "./Heading";
 import BoxButton from "./BoxButton";
 import InlineLoader from "./InlineLoader";
+import NotificationMessage from "./NotificationMessage";
 
 export {
     Status,
@@ -37,5 +38,6 @@ export {
     DescriptionFixed,
     Heading,
     BoxButton,
-    InlineLoader
+    InlineLoader,
+    NotificationMessage
 };

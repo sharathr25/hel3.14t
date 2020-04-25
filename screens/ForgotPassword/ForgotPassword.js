@@ -2,10 +2,10 @@
 import React, { useState } from 'react';
 import { View, StyleSheet, Text } from 'react-native';
 import { ORANGE, WHITE, BLACK, LIGHT_GRAY } from '../../styles/colors';
-import { Button } from '../../components/atoms';
-import { CustomModal, InputComponent } from '../../components/molecules';
+import { Button, NotificationMessage } from '../../components/atoms';
+import { CustomModal, InputComponent, Message } from '../../components/molecules';
 import { margin } from '../../styles/mixins';
-import { FONT_SIZE_12, FONT_SIZE_16 } from "../../styles/typography";
+import { FONT_SIZE_14 } from "../../styles/typography";
 import { Auth } from 'aws-amplify';
 import { SCREEN_DETAILS } from "../../constants/appConstants";
 
@@ -78,9 +78,10 @@ const ResetPassowrdScreen = ({navigation}: ResetPassowrdScreenProps) => {
 
   return (
       <View style={{ flex: 1, backgroundColor: WHITE }}>
-        <View style={{backgroundColor:LIGHT_GRAY, display:'flex', alignItems:'center', padding: 10, marginTop: 30}}>
-          <Text style={{color: BLACK, fontSize: FONT_SIZE_16 }}>Enter you Registered email or Username</Text>
-          <Text style={{color: BLACK, fontSize: FONT_SIZE_12 }}>If Email is not verified then you can't use it for Password Reset</Text>
+        <View style={{...margin(30,0,30,0)}}>
+          <NotificationMessage>
+            Enter registered Email(Verified) or Username
+          </NotificationMessage>
         </View>
         <View style={{ flex: 1, justifyContent: 'space-evenly', ...margin(0,30,0,30)}}>
           <InputComponent

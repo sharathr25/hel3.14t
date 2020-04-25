@@ -6,6 +6,7 @@ import { TouchableOpacity } from 'react-native-gesture-handler';
 // import Icon from 'react-native-vector-icons/FontAwesome';
 import { SCREEN_DETAILS } from '../../constants/appConstants';
 import { padding, borderRadius, margin } from "../../styles/mixins";
+import { FONT_SIZE_20 } from "../../styles/typography";
 
 const { SIGNUP, LOGIN } = SCREEN_DETAILS;
 
@@ -159,7 +160,7 @@ const styles = StyleSheet.create({
     buttonText: {
         textAlign: 'center',
         color: WHITE,
-        fontSize: 18
+        fontSize: FONT_SIZE_20
     },
 });
 

@@ -2,7 +2,7 @@
 import React, { useState } from 'react';
 import { View, Text } from 'react-native';
 import { ORANGE, WHITE, BLACK, LIGHT_GRAY } from '../../styles/colors';
-import { Button } from '../../components/atoms';
+import { Button, NotificationMessage } from '../../components/atoms';
 import { CustomModal, InputComponent } from '../../components/molecules';
 import { margin } from '../../styles/mixins';
 import { Auth } from 'aws-amplify';
@@ -90,8 +90,8 @@ const ResetPassowrdScreen = ({ navigation,route }: ResetPassowrdScreenProps) => 
 
   return (
     <View style={{flex: 1, backgroundColor: WHITE }}>
-      <View style={{backgroundColor: LIGHT_GRAY, display:'flex', alignItems:'center', padding: 10, marginTop: 30}}>
-        <Text style={{color: BLACK, fontSize: 15 }}>Enter New password</Text>
+      <View style={{ ...margin(30,0,30,0) }}>
+        <NotificationMessage>Enter New password</NotificationMessage>
       </View>
       <View style={{ flex: 1, justifyContent: 'space-evenly' , ...margin(0,30,0,30) }}>
         <InputComponent

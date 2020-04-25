@@ -3,7 +3,7 @@ import React, { useState } from 'react';
 import { View, TouchableOpacity, Text } from 'react-native';
 import { ORANGE, WHITE, BLACK, LIGHT_BLUE } from '../../styles/colors';
 import { CustomModal, InputComponent } from '../../components/molecules';
-import { Button } from '../../components/atoms'; 
+import { Button, NotificationMessage } from '../../components/atoms'; 
 import { margin } from "../../styles/mixins";
 
 type VerificationProps = {
@@ -52,14 +52,6 @@ const Verification = (props: VerificationProps) => {
     redirectTo(OTP);
   }
 
-  const NotificationMessage = () => (
-    <View style={{ backgroundColor: '#C4C4C4', marginBottom: 10, justifyContent: 'center', alignItems: 'center', padding: 15 }}>
-      <Text style={{ color: BLACK }}>
-        {message}
-      </Text>
-    </View>
-  );
-
   const _resend = async () => {
     try {
       await resend();
@@ -105,7 +97,9 @@ const Verification = (props: VerificationProps) => {
 
   return (
     <View style={{ backgroundColor: WHITE, flex: 1, paddingTop: 30 }}>
-      <NotificationMessage />
+      <View style={{ ...margin(30,0,30,0) }}>
+        <NotificationMessage>{message}</NotificationMessage>
+      </View>
       <View style={{flex: 1, justifyContent: 'space-evenly', ...margin(0,30,0,30)}}>
       <View>
         <InputComponent label="OTP" showPasswordIcon={true} updateParentState={setOTP} />

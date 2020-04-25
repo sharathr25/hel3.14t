@@ -47,9 +47,6 @@ function SignUpScreen({navigation}: { navigation: Object }) {
   const [username, setUsername] = useState('');
   const [userNameErr, setUserNameErr] = useState('');
 
-  const [name, setName] = useState('');
-  const [nameErr, setNameErr] = useState('');
-
   const [mobileNumber, setMobileNumber] = useState('');
   const [mobileNumberErr, setMobileNumberErr] = useState('');
 
@@ -137,7 +134,6 @@ function SignUpScreen({navigation}: { navigation: Object }) {
           attributes: { 
               email, 
               phone_number:`+91${mobileNumber}`,
-              name,
               birthdate: dob,
               gender
             }
@@ -209,7 +205,6 @@ function SignUpScreen({navigation}: { navigation: Object }) {
       <View>
         <View style={{...margin(20, 30, 10, 30)}}>
           <InputComponent label="Username" updateParentState={setUsername} errMsg={userNameErr} />
-          <InputComponent label="Name" updateParentState={setName} errMsg={nameErr} />
           <InputComponent label="Email" updateParentState={setEmail} errMsg={emailErr} />
           <InputComponent label="Mobile Number" updateParentState={setMobileNumber} errMsg={mobileNumberErr} />
           <InputComponent label="Password"  updateParentState={setPassword} errMsg={passwordErr} showPasswordIcon={true} />
@@ -231,8 +226,6 @@ export default SignUpScreen;
 
 const formStyles = StyleSheet.create({
   dobContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
     ...margin(10,0,0,0),
     flex: 1
   },
