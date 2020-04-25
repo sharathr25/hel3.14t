@@ -19,7 +19,7 @@ const { VERIFICATION, LOGIN, TERMS_AND_CONDITIONS } = SCREEN_DETAILS;
 const { ERRORS } = SIGN_UP_SCREEN;
 
 const {
-  EMPTY_NAME_ERROR,EMPTY_EMAIL_ERROR, 
+  EMPTY_EMAIL_ERROR, 
   INVALID_EMAIL_ERROR, 
   EMPTY_MOBILE_NUMBER_ERROR, 
   INVALID_MOBILE_NUMBER_ERROR,
@@ -84,8 +84,6 @@ function SignUpScreen({navigation}: { navigation: Object }) {
     
     if(username.length === 0) {
       setUserNameErr('Username cannot be empty');
-    } else if (name.length === 0) {
-      setNameErr(EMPTY_NAME_ERROR);
     } else if (email.length === 0) {
       setEmailErr(EMPTY_EMAIL_ERROR );
     } else if (!email.match(regex.email)) {
@@ -133,7 +131,7 @@ function SignUpScreen({navigation}: { navigation: Object }) {
           password, 
           attributes: { 
               email, 
-              name: userName,
+              name: username,
               phone_number:`+91${mobileNumber}`,
               birthdate: dob,
               gender
