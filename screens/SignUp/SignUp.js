@@ -133,6 +133,7 @@ function SignUpScreen({navigation}: { navigation: Object }) {
           password, 
           attributes: { 
               email, 
+              name: userName,
               phone_number:`+91${mobileNumber}`,
               birthdate: dob,
               gender
