@@ -22,17 +22,18 @@ const RankDetails = ({rank, name, xp, rating}) => {
     const rankColor = colors[rank];
     return (
         <View style={{flex: 1, flexDirection: 'row' }}>
-            {
-                rankColor 
-                    ? <Icon name="trophy-variant" color={rankColor} size={20} style={{flex: 1}} /> 
-                    : <Text style={{flex: 1}}>{rank}</Text>
-            }
+            <Text style={{flex: 1, color: BLACK }}>{rank}</Text>
             <Text style={{color: BLACK, flex: 6 }}>{name}</Text> 
             <View style={{flex: 2, flexDirection: 'row', alignItems: 'center'}}>
                 <Text style={{color: ORANGE}}>{rating} </Text>
                 <Icon name="star-circle-outline" color={ORANGE} size={20} />
             </View>
             <Text style={{flex: 2, color: GREEN}}>{xp} XP</Text>
+            {
+                rankColor 
+                    ? <Icon name="trophy-variant" color={rankColor} size={20} style={{flex: 1}} /> 
+                    : <Text style={{flex: 1}} />
+            }
         </View>
     )
 }
@@ -54,7 +55,6 @@ const Helpers = () => {
     if(error) return <CustomModal variant="error" />
 
     const { topHelpers } = data;
-
     return (
         <FlatList 
             renderItem={getListItem}

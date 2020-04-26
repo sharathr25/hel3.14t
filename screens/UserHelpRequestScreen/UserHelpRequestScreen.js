@@ -109,7 +109,7 @@ const UserHelpRequestScreen = ({ route } : { route: Object }) => {
     return (
         <ScrollView style={{ backgroundColor: WHITE }}>
           <View style={{ margin: 10 }}>
-            <Description height={200}>{description}</Description>
+            <Description height={300}>{description}</Description>
             <TimeAndStatus timeStamp={timeStamp} status={status} />
             <EventLocation latitude={latitude} longitude={longitude} />
             {loadingForUpdateHelp ?  <View style={{...CTAContainerStyle, padding: 20 }}><InlineLoader /></View> : statusToCTAMapping[status]}

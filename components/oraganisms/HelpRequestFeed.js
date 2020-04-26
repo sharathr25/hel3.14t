@@ -6,7 +6,10 @@ import gql from 'graphql-tag';
 import { useQuery } from 'react-apollo';
 import { HelpRequestCard } from "../oraganisms";
 import { useLocation } from "../../customHooks";
+import { Heading, NotificationMessage } from "../atoms";
+import { WHITE } from "../../styles/colors";
 
+const DISTANCE_THRESHOLD = 50;
 if (Platform.OS === 'android') {
   if (UIManager.setLayoutAnimationEnabledExperimental) {
     UIManager.setLayoutAnimationEnabledExperimental(true);
@@ -58,7 +61,8 @@ const HelpRequestFeed = () => {
     if(!locationProviderAvailable) return feedItems;
     const requestedHelpRequests = getRequestedHelpRequests(feedItems);
     const helpRequestsWithDistance = getHelpRequestsWithDistance(requestedHelpRequests);
-    const helpRequestsSortedByDistance = sortByDistance(helpRequestsWithDistance);
+    const helpRequestsWithinThresholdDistance = getRequestedHelpRequestsWithinThresholdDistance(helpRequestsWithDistance, DISTANCE_THRESHOLD)
+    const helpRequestsSortedByDistance = sortByDistance(helpRequestsWithinThresholdDistance);
     return helpRequestsSortedByDistance;
   }
 
@@ -83,6 +87,10 @@ const HelpRequestFeed = () => {
     });
   }
 
+  const getRequestedHelpRequestsWithinThresholdDistance = (helpRequests, thresholdDistance) => {
+    return helpRequests.filter(({distance}) => distance <= thresholdDistance)
+  }
+
   removeHelpRequest = (idOfHelpRequest) => {
     data.helps = data.helps.filter(({_id}) => idOfHelpRequest !== _id)
   }
@@ -91,13 +99,16 @@ const HelpRequestFeed = () => {
     return <HelpRequestCard helpRequestDetails={item} removeMe={removeHelpRequest} />
   }
 
+  const helpRequestsSortedByDistance = gethelpRequestsSortedByDistance(data ? data.helps : [])
+
   return (
     <FlatList
-      data={gethelpRequestsSortedByDistance(data ? data.helps : [])}
+      data={helpRequestsSortedByDistance}
       renderItem={getHelpRequest}
       keyExtractor={(_, index) => index.toString()}
       onRefresh={getHelps}
       refreshing={loading}
+      ListHeaderComponent={helpRequestsSortedByDistance.length ? null : <NotificationMessage bgColor={WHITE}>No help requests</NotificationMessage>}
     />
   );
 }

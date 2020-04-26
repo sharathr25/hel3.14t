@@ -48,7 +48,7 @@ function BottomTabNavigator(props:any) {
   const noOfNotifications = notifications.length > 0 ? notifications.length : false;
 
   return (
-    <Tab.Navigator tabBarOptions={{ activeTintColor: ORANGE, inactiveTintColor: BLACK }}>
+    <Tab.Navigator tabBarOptions={{ activeTintColor: ORANGE, inactiveTintColor: BLACK }} initialRouteName="Home" >
         <Tab.Screen name="Top Ranks" component={Helpers} options={{ tabBarIcon: RankIcon }} />
         <Tab.Screen name="Home" children={() => <Helps {...props} />} options={{ tabBarIcon: HomeIcon }} />
         <Tab.Screen name="New Help Request" component={HelpRequestFormScreen} 

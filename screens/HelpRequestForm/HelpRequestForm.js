@@ -10,7 +10,7 @@ import { useLocation, useAuth } from "../../customHooks/";
 import { CustomModal } from "../../components/molecules";
 import { padding } from "../../styles/mixins";
 
-const WORD_LIMIT = 5;
+const WORD_LIMIT = 100;
 const NO_OF_LINES_FOR_DESC = Math.ceil(Dimensions.get("window").height / 50);
 const noOfPeopleSelectBoxOptions = [1, 2, 3, 4, 5, 6];
 
