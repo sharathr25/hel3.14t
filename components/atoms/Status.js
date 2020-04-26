@@ -6,7 +6,7 @@ import { padding } from '../../styles/mixins';
 
 export const STATUS_TEXT_MAPPING = {
     'REQUESTED': 'Requested',
-    'ON_GOING': 'On going',
+    'ON_GOING': 'In Progress',
     'COMPLETED': 'Completed',
     'CANCELLED': 'Cancelled'
 }

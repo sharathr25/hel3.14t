@@ -40,7 +40,7 @@ const HelpRequestCard = (props) => {
   }
 
   const _onPress = () => {
-      navigation.navigate(HELP_REQUEST.screenName, { idOfHelpRequest: _id });
+      navigation.navigate(HELP_REQUEST.screenName, { idOfHelpRequest: _id, distance });
   }
 
   return (

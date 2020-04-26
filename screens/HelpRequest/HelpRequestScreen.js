@@ -58,7 +58,7 @@ const isUserIsThereInUsers = (users, userUid) => users.some((user) => user.uid =
 
 const HelpRequestScreen = ({ route } : { route: Object }) => {
     const { params } = route;
-    const { idOfHelpRequest } = params;
+    const { idOfHelpRequest, distance } = params;
     const { data, loading, error } = useQuery(QUERY, { variables: { id: idOfHelpRequest }, pollInterval: 100 });
     const [updateHelp, { loading: loadingForUpdateHelp, error: errorForUpdateHelp }] = useMutation(HELP_UPDATE_SCHEMA);
     const { user } = useAuth();
@@ -67,7 +67,7 @@ const HelpRequestScreen = ({ route } : { route: Object }) => {
     const { uid, attributes, username } = user;
     const { name , phone_number} = attributes;
     const { help } = data;
-    const { description, distance, timeStamp, usersRequested, creatorName, usersRejected, usersAccepted, usersCancelled } = help;
+    const { description, timeStamp, usersRequested, creatorName, usersRejected, usersAccepted, usersCancelled } = help;
     
     const handleHelp = () => {
         if(!loadingForUpdateHelp)
@@ -89,9 +89,7 @@ const HelpRequestScreen = ({ route } : { route: Object }) => {
         footer = <Message>You Rejected to help this guy</Message>
     } else {
         footer = (
-            <View style={{flexDirection: "row", justifyContent: 'flex-end', padding: 10 }}>
-                <Button bgColor={LIGHTEST_GRAY}>Refer</Button>
-                <View style={{width: 10}} />
+            <View style={{flexDirection: "row", justifyContent: 'center', padding: 10 }}>
                 <Button onPress={handleHelp} loading={loadingForUpdateHelp} bgColor={ORANGE} textColor={WHITE}>Help</Button>
             </View>
         );

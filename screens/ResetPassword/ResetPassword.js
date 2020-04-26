@@ -1,7 +1,7 @@
 // @flow
 import React, { useState } from 'react';
-import { View, Text } from 'react-native';
-import { ORANGE, WHITE, BLACK, LIGHT_GRAY } from '../../styles/colors';
+import { View } from 'react-native';
+import { ORANGE, WHITE } from '../../styles/colors';
 import { Button, NotificationMessage } from '../../components/atoms';
 import { CustomModal, InputComponent } from '../../components/molecules';
 import { margin } from '../../styles/mixins';
@@ -43,8 +43,7 @@ const ResetPassowrdScreen = ({ navigation,route }: ResetPassowrdScreenProps) => 
       const { username, otp } = params;
       setStatus({loading:true, success: false, error: false});
       try {
-          const data = await Auth.forgotPasswordSubmit(username, otp, password)
-          console.log(data)
+          await Auth.forgotPasswordSubmit(username, otp, password)
           setSuccessDesc('Password Changed Sucessfully');
           setStatus({loading:false, success: true, error: false});
       } catch (error) {

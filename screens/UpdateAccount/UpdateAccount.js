@@ -7,6 +7,7 @@ import { Auth } from "aws-amplify";
 import { SCREEN_DETAILS, SIGN_UP_SCREEN } from "../../constants/appConstants";
 import { InputComponent, CustomModal } from '../../components/molecules';
 import { regex, getAge } from '../../utils';
+import { padding } from '../../styles/mixins';
 
 const AGE_LIMIT = 15;
 const GENDER_OPTIONS = [
@@ -133,9 +134,8 @@ const UpdateAccount = ({ navigation, route }) => {
                     <Selector options={GENDER_OPTIONS} label="Gender" onValueChange={setGender} defaultValue={gender} />
                 </View>  
             </View>
-            <View style={{felx: 1, flexDirection: 'row', justifyContent: 'flex-end', padding: 10, backgroundColor: LIGHTEST_GRAY }}>
-              <Button onPress={handleCancel} bgColor={LIGHTEST_GRAY}>Cancel</Button>
-              <View style={{width: 10 }} />    
+            <View style={{felx: 1, flexDirection: 'row', justifyContent: 'space-between', ...padding(10,20,10,20), backgroundColor: LIGHTEST_GRAY }}>
+              <Button onPress={handleCancel} bgColor={LIGHTEST_GRAY}>Cancel</Button>  
             <Button bgColor={ORANGE} textColor={WHITE} onPress={handleUpdate}>Update</Button>
           </View>
         </ScrollView>

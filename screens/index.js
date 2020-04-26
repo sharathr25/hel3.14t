@@ -17,6 +17,7 @@ import HelpRequestScreen from "./HelpRequest";
 import UserHelpRequestScreen from "./UserHelpRequestScreen";
 import UpdateAccount from "./UpdateAccount";
 import UserContributionScreen from "./UserContributionScreen";
+import MoreScreen from "./More";
 
 export {
     Comments,
@@ -36,5 +37,6 @@ export {
     HelpRequestScreen,
     UserHelpRequestScreen,
     UpdateAccount,
-    UserContributionScreen
+    UserContributionScreen,
+    MoreScreen
 }

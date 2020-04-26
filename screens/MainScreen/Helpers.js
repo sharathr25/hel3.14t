@@ -38,7 +38,7 @@ const RankDetails = ({rank, name, xp, rating}) => {
 }
 
 const Helpers = () => {
-    const { data, loading, error } = useQuery(TOP_HELPERS_QUERY);
+    const { data, loading, error, refetch } = useQuery(TOP_HELPERS_QUERY);
 
     const getListItem = ({item, index}) => {
         const { username, xp, stars } = item;
@@ -61,6 +61,8 @@ const Helpers = () => {
             data={topHelpers}
             keyExtractor={(_, i) => i.toString()}
             style={{backgroundColor :WHITE}}
+            onRefresh={refetch}
+            refreshing={loading}
         />
     );
 }
