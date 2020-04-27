@@ -1,6 +1,6 @@
 // @flow
-import React, { useEffect } from 'react';
-import { View, Text, StyleSheet, Dimensions, ScrollView } from 'react-native';
+import React, { useEffect, useState } from 'react';
+import { View, Text, StyleSheet, Dimensions, ScrollView, ToastAndroid } from 'react-native';
 import { useLazyQuery } from 'react-apollo';
 import gql from 'graphql-tag';
 import { ORANGE, WHITE, BLACK, LIGHTEST_GRAY } from '../../styles/colors';
@@ -9,9 +9,9 @@ import { Auth } from "aws-amplify";
 import { SCREEN_DETAILS } from "../../constants/appConstants";
 import { useAuth } from "../../customHooks";
 import { FONT_BOLD, FONT_SIZE_20 } from '../../styles/typography';
-import { CustomModal } from '../../components/molecules';
+import { CustomModal, OTPVerificationModal } from '../../components/molecules';
 
-const { LOGIN, VERIFICATION, UPDATE_ACCOUNT } = SCREEN_DETAILS; 
+const { UPDATE_ACCOUNT } = SCREEN_DETAILS; 
 
 const USER_QUERY = gql`
     query User($uid:String!) {
@@ -26,14 +26,21 @@ type MyAccountScreenProps = {
     navigation: Object
 }
 
-const EmailVerifyMessage = ({handleVerify}) => (
+type DetailProps = {
+    label: string,
+    value: string,
+    showSeparator?: boolean,
+    subDetail?: any,
+}
+
+const EmailVerifyMessage = ({handleVerify}:{ handleVerify: Function}) => (
     <View style={{ flexDirection: 'row' }}>
         <Text>Email is not verified - </Text>
         <Link onPress={handleVerify}>Verify</Link>
     </View>
 );
 
-const Detail = ({ label, value, showSeparator = true, subDetail = undefined }) => {
+const Detail = ({ label, value, showSeparator = true, subDetail = undefined }: DetailProps) => {
     const width = Dimensions.get('screen').width - 100;
     return (
         <View style={{ flex: 1, padding: 20, borderBottomWidth: showSeparator ? 0.5 : 0, width }}>
@@ -77,10 +84,17 @@ const ProgressDetails = ({ xp, stars }) => {
 
 const MyAccountScreen = ({ navigation }: MyAccountScreenProps) => {
     const [getUserData, { error, data, loading }] = useLazyQuery(USER_QUERY, { pollInterval: 100 });
+    const [otp, setOtp] = useState('')
+    const [emailVerified, setEmailVerified] = useState(true);
+    const [showOtpInput, setShowOtpInput] = useState(false)
     const { user } = useAuth();
     useEffect(() => {
-        if(user)
+        if(user) {
             getUserData({ variables: { uid : user.uid } })
+            const { attributes } = user;
+            const { email_verified } = attributes;
+            setEmailVerified(email_verified)
+        }
     }, [user])
 
     if (!user || loading) {
@@ -91,28 +105,30 @@ const MyAccountScreen = ({ navigation }: MyAccountScreenProps) => {
     }
 
     const { attributes, username } = user;
-    const { email, phone_number: phoneNumber, email_verified, gender, birthdate } = attributes;
+    const { email, phone_number: phoneNumber, gender, birthdate } = attributes;
     const phoneNumberWithoutCountryCode = phoneNumber.replace("+91", "");
     const { xp = 0, stars = 0 } = data ? data.user : {};
     const { column, container } = styles;
 
-    const verify = async (otp) => {
-        await Auth.verifyCurrentUserAttributeSubmit('email', otp)
+    const verify = async () => {
+        try {
+            await Auth.verifyCurrentUserAttributeSubmit('email', otp)
+            // TODO : Need to show toast sucess
+            setEmailVerified(true)
+            setShowOtpInput(false)   
+        } catch (error) {
+            // TODO : Need to show toast error
+            setEmailVerified(false)
+        }
     }
 
     const resend = async () => {
         return await Auth.verifyCurrentUserAttribute('email')
     }
 
-    const redirectTo = async () => {
-        await Auth.signOut();
-        navigation.navigate(LOGIN.screenName);
-    }
-
     const handleVerify = async () => {
         await Auth.verifyCurrentUserAttribute('email');
-        const paramsForVerificationScreen = { verify, redirectTo, resend, message: "Enter OTP sent to registered email" };
-        navigation.navigate(VERIFICATION.screenName, paramsForVerificationScreen);
+        setShowOtpInput(true);
     }
 
     const handleEdit = () => {
@@ -127,12 +143,20 @@ const MyAccountScreen = ({ navigation }: MyAccountScreenProps) => {
                 <ProgressDetails xp={xp} stars={stars} />
             </View>
             <View style={{...column, padding: 0 }}>
-                <Detail label="Email" value={email} subDetail={!email_verified && <EmailVerifyMessage handleVerify={handleVerify} />} />
+                <Detail label="Email" value={email} subDetail={!emailVerified && <EmailVerifyMessage handleVerify={handleVerify} />} />
                 <Detail label="Phone" value={phoneNumberWithoutCountryCode} />
                 <Detail label="Gender" value={gender} />
                 <Detail label="Date of birth" value={birthdate} showSeparator={false} />
                 <Button bgColor={ORANGE} textColor={WHITE} onPress={handleEdit} >Edit</Button>
             </View>
+            <OTPVerificationModal 
+                show={showOtpInput}
+                onClose={() => {setShowOtpInput(!showOtpInput)}}
+                verify={verify}
+                resend={resend}
+                setOtp={setOtp}
+                recepient={email}
+            />
         </View>
         </ScrollView>
     );

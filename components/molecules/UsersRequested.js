@@ -4,14 +4,14 @@ import Requester from './Requester';
 import { Heading } from '../atoms';
 
 const UsersRequested = ({ usersRequested, keyOfHelpRequest, noPeopleRequired , usersAccepted}) => {
-  getRequestedUser = ({ item }) => {
+  const getRequestedUser = ({ item }) => {
     const { xp, uid, stars, mobileNo, username } = item;
     const userDetails = { username, xp, stars, mobileNo, uidOfRequester: uid } 
     const helpRequestDetails = { keyOfHelpRequest, noPeopleRequired, usersAccepted }
     return <Requester userDetails={userDetails} helpRequestDetails={helpRequestDetails} />
   }
 
-  getRequestedUserKey = (item, index) => {
+  const getRequestedUserKey = (item, index) => {
     return "requestedusers" + item.key + index.toString() + new Date().getTime();
   }
 

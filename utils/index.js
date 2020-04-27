@@ -60,7 +60,7 @@ export const sortByDistance = (helpRequests: Array<Object>):Array<Object> => {
   return sortedHelpRequests;
 }
 
-export const getURLForMaps = (lat, lng) => {
+export const getURLForMaps = (lat: number, lng: number) => {
   const scheme = Platform.select({ ios: 'maps:0,0?q=', android: 'geo:0,0?q=' });
   const latLng = `${lat},${lng}`;
   const label = 'Custom Label';
@@ -72,12 +72,12 @@ export const getURLForMaps = (lat, lng) => {
 }
 
 
-export const openMapsAppWithLatLng = (lat, lng) => {
-  url = getURLForMaps(lat, lng);
+export const openMapsAppWithLatLng = (lat: number, lng: number) => {
+  const url = getURLForMaps(lat, lng);
   Linking.openURL(url);
 }
 
-export const callPhone = (phone) => {
+export const callPhone = (phone: string) => {
     console.log('callNumber ----> ', phone);
     let phoneNumber = phone;
     if (Platform.OS !== 'android') {

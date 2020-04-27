@@ -11,7 +11,8 @@ type ButtonProps = {
   loading?: string,
   BoxButton?: string,
   onPress: Function,
-  iconName?: any
+  iconName?: any,
+  title: string
 }
 
 const BoxButton = (props: ButtonProps) => {

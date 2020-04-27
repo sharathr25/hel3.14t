@@ -25,7 +25,7 @@ const ScreenNavigationOption = ({ iconName, text, onPress }) => {
 
 const MoreScreen = ({ navigation } : { navigation: Object }) => {
 
-    handleLogOut = async () => {
+    const handleLogOut = async () => {
         await Auth.signOut();
         navigation.navigate(LOGIN.screenName);
     }

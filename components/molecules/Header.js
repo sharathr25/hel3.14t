@@ -17,7 +17,7 @@ const Header = (props) => {
       ? options.title
       : scene.route.name;
 
-    let screenName = "Top Ranks";
+    let screenName = "Home";
     
     if(title === "Main") {
       if(scene.route.state) {

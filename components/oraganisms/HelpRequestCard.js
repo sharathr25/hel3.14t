@@ -26,7 +26,7 @@ query Help($id: String!){
 }
 `;
 
-const HelpRequestCard = (props) => {
+const HelpRequestCard = (props: { helpRequestDetails:Object , removeMe: Function }) => {
   const { helpRequestDetails , removeMe } = props;
   const navigation = useNavigation();
   const { distance, _id } = helpRequestDetails;

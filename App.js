@@ -9,7 +9,6 @@ import { useAuth } from './customHooks';
 import { NavigationContainer } from '@react-navigation/native';
 import Amplify from 'aws-amplify';
 import awsConfig from './aws-exports';
-import { FullScreenLoader } from './components/atoms';
 import { CustomModal } from './components/molecules';
 
 Amplify.configure({...awsConfig});

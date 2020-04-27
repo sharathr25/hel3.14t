@@ -36,7 +36,7 @@ const QUERY = gql`
   }
 `;
 
-const UserHelpRequestCard = (props) => {
+const UserHelpRequestCard = (props: { keyOfHelpRequest: string }) => {
   const { keyOfHelpRequest } = props;
   let { data , error } = useQuery(QUERY, { variables: { id: keyOfHelpRequest }, pollInterval: 100 });
   const navigation = useNavigation();

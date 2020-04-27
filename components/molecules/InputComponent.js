@@ -12,7 +12,8 @@ type InputComponentProps = {
   updateParentState: Function,
   errMsg: string,
   rightIcon: any,
-  showPasswordIcon: boolean
+  showPasswordIcon: boolean,
+  defaultValue: string
 }
 
 const InputComponent = (props: InputComponentProps) => {

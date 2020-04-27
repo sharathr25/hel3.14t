@@ -6,7 +6,8 @@ import gql from 'graphql-tag';
 import { useQuery } from 'react-apollo';
 import { HelpRequestCard } from "../oraganisms";
 import { useLocation } from "../../customHooks";
-import { Heading, NotificationMessage } from "../atoms";
+import { NotificationMessage } from "../atoms";
+import { CustomModal } from "../molecules";
 import { WHITE } from "../../styles/colors";
 
 const DISTANCE_THRESHOLD = 50;
@@ -91,7 +92,7 @@ const HelpRequestFeed = () => {
     return helpRequests.filter(({distance}) => distance <= thresholdDistance)
   }
 
-  removeHelpRequest = (idOfHelpRequest) => {
+  const removeHelpRequest = (idOfHelpRequest) => {
     data.helps = data.helps.filter(({_id}) => idOfHelpRequest !== _id)
   }
 

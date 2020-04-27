@@ -8,20 +8,20 @@ import { margin } from '../../styles/mixins';
 
 type UsersAcceptedProps = {
   usersAccepted: [Object],
-  keyOfHelpRequest: String,
-  status: String
+  keyOfHelpRequest: string,
+  status: string
 }
 
 const UsersAccepted = ({usersAccepted, keyOfHelpRequest, status }:UsersAcceptedProps) => {
-  getAcceptedUser = ({ item }) => {
+  const getAcceptedUser = ({ item }) => {
     const { mobileNo, stars, uid, username } = item;
     const userDetails = { username, mobileNo, stars, uidOfAccepter: uid }
     const helpRequestDetails = { keyOfHelpRequest, status }
     return <Accepter userDetails={userDetails} helpRequestDetails={helpRequestDetails} />
   }
 
-  getAcceptedUserKey = (item, index) => {
-    return "acceptedusers" + item.key + index.toString() + new Date().getTime();
+  const getAcceptedUserKey = (item : { key:string }, index) => {
+    return "acceptedusers" + item.key + index + `${new Date().getTime()}`;
   }
 
   const heading = status === "COMPLETED" ? "People who helped you" : "People who are helping you"
@@ -32,7 +32,6 @@ const UsersAccepted = ({usersAccepted, keyOfHelpRequest, status }:UsersAcceptedP
             data={usersAccepted}
             renderItem={getAcceptedUser}
             keyExtractor={getAcceptedUserKey}
-            listKey={getAcceptedUserKey}
             ListHeaderComponent={usersAccepted.length ? <Heading>{heading}</Heading> : null}
         />
     </View>

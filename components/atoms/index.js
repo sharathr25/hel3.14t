@@ -18,6 +18,7 @@ import Heading from "./Heading";
 import BoxButton from "./BoxButton";
 import InlineLoader from "./InlineLoader";
 import NotificationMessage from "./NotificationMessage";
+import Toast from './Toast';
 
 export {
     Status,
@@ -39,5 +40,6 @@ export {
     Heading,
     BoxButton,
     InlineLoader,
-    NotificationMessage
+    NotificationMessage,
+    Toast
 };

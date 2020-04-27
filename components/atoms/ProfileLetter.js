@@ -3,7 +3,7 @@ import React from 'react';
 import { Text, View, StyleSheet } from 'react-native';
 import { ORANGE, WHITE } from '../../styles/colors';
 
-const ProfileLetter = (props : { letter : String }) => {
+const ProfileLetter = (props : { letter : String, size: number }) => {
   const { letter, size = 30 } = props;
   const { textContainer, text } = styles;
   return (

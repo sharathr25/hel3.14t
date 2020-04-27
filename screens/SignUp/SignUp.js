@@ -3,6 +3,7 @@ import React, { useState } from 'react';
 import { Text, CheckBox } from 'react-native-elements';
 import { View, Alert, StyleSheet } from 'react-native';
 import { ScrollView } from 'react-native-gesture-handler';
+import Modal from "react-native-modal"
 import { SIGN_UP_SCREEN , SCREEN_DETAILS} from '../../constants/appConstants';
 import { ORANGE, WHITE, BLACK } from '../../styles/colors';
 import { margin } from "../../styles/mixins";
@@ -10,12 +11,12 @@ import { regex } from '../../utils/index';
 import { getAge } from '../../utils';
 import gql from 'graphql-tag';
 import { useMutation } from 'react-apollo';
-import { CustomModal, InputComponent } from '../../components/molecules';
-import { CustomDatePicker, Selector, Button, Link } from '../../components/atoms';
+import { CustomModal, InputComponent, OTPVerificationModal } from '../../components/molecules';
+import { CustomDatePicker, Selector, Button, Link, Heading } from '../../components/atoms';
 import { padding } from "../../styles/mixins";
 import { Auth } from "aws-amplify";
 
-const { VERIFICATION, LOGIN, TERMS_AND_CONDITIONS } = SCREEN_DETAILS;
+const { LOGIN, TERMS_AND_CONDITIONS, MAIN } = SCREEN_DETAILS;
 const { ERRORS } = SIGN_UP_SCREEN;
 
 const {
@@ -57,8 +58,7 @@ function SignUpScreen({navigation}: { navigation: Object }) {
   const [passwordErr, setPasswordErr] = useState('');
 
   const [confirmPassword, setConfirmPassword] = useState('');
-  const [confirmPasswordErr, setConfirmPasswordErr] = useState('');
-  
+  const [confirmPasswordErr, setConfirmPasswordErr] = useState('');  
   const [dob, setDob] = useState('');
 
   const [gender, setGender] = useState(GENDER_OPTIONS[0].value);
@@ -68,6 +68,11 @@ function SignUpScreen({navigation}: { navigation: Object }) {
   const [isLoading, setIsLoading] = useState(false);
 
   const [err, setErr] = useState('');
+
+  const [showOtpInput, setShowOtpInput] = useState(false);
+  const [showChangeMobile, setShowChangeMobile] = useState(false);
+
+  const [otp, setOtp] = useState("");
 
   const [createUser, { loading, data, error }] = useMutation(CREATE_USER);
 
@@ -110,12 +115,14 @@ function SignUpScreen({navigation}: { navigation: Object }) {
     return valid;
   };
 
-  const verify = async (otp) => {
-    return await Auth.confirmSignUp(username, otp, { forceAliasCreation: true });
-  }
-
-  const redirectTo = (otp) => {
-    navigation.navigate(LOGIN.screenName);
+  const verify = async () => {
+    try{
+      await Auth.confirmSignUp(username, otp, { forceAliasCreation: true });
+      setShowOtpInput(false);
+      navigation.navigate(MAIN.screenName);
+    } catch(error) {
+      console.log(error)
+    }
   }
 
   const resend = async () => {
@@ -142,18 +149,13 @@ function SignUpScreen({navigation}: { navigation: Object }) {
         const { userSub, user } = data;
         const { username : userName } = user;
         createUser({ variables: { uid : userSub, username: userName } });
-        const paramsForVerificationScreen = { verify, redirectTo, resend, message: `Enter OTP sent to xxxxxxxx${mobileNumber.substr(8)}` };
-        navigation.navigate(VERIFICATION.screenName, paramsForVerificationScreen);
+        setShowOtpInput(true);
       } catch (error) {
         setErr(error.message);
       } finally {
         setIsLoading(false);
     }
   };
-
-  const getUserNameErrMsg = (username:string) => {
-    return username.length ? "Username can't be empty" : "";
-  }
 
   const DateOfBirthInput = () => (
     <View style={formStyles.dobContainer}>
@@ -205,7 +207,7 @@ function SignUpScreen({navigation}: { navigation: Object }) {
         <View style={{...margin(20, 30, 10, 30)}}>
           <InputComponent label="Username" updateParentState={setUsername} errMsg={userNameErr} />
           <InputComponent label="Email" updateParentState={setEmail} errMsg={emailErr} />
-          <InputComponent label="Mobile Number" updateParentState={setMobileNumber} errMsg={mobileNumberErr} />
+          <InputComponent label="Mobile number" updateParentState={setMobileNumber} errMsg={mobileNumberErr} />
           <InputComponent label="Password"  updateParentState={setPassword} errMsg={passwordErr} showPasswordIcon={true} />
           <InputComponent label="Confirm Password" updateParentState={setConfirmPassword} errMsg={confirmPasswordErr} showPasswordIcon={true} />
           <DateOfBirthInput />
@@ -216,6 +218,15 @@ function SignUpScreen({navigation}: { navigation: Object }) {
           <SignUpButton />
           <LoginLink />
         </View>
+        <OTPVerificationModal 
+          show={showOtpInput}
+          setOtp={setOtp} 
+          verify={verify}
+          resend={resend}
+          setOtp={setOtp}
+          recepient={mobileNumber}
+          onClose={() => setShowOtpInput(!showOtpInput)}
+        />
       </View>
     </ScrollView>
   );

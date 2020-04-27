@@ -22,7 +22,8 @@ type CreatorProps = {
     creatorName: string, 
     mobileNo: string,
     stars: number, 
-    uid: string
+    uidOfAccepter: string,
+    uidOfCreator: string
   },
   helpRequestDetails: {
     keyOfHelpRequest: string,

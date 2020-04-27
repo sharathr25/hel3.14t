@@ -1,27 +1,37 @@
 // @flow
-import React, { useState } from 'react';
-import { View, StyleSheet, Text } from 'react-native';
-import { ORANGE, WHITE, BLACK, LIGHT_GRAY } from '../../styles/colors';
+import React, { useState, useEffect } from 'react';
+import { View, StyleSheet } from 'react-native';
+import { ORANGE, WHITE, BLACK } from '../../styles/colors';
 import { Button, NotificationMessage } from '../../components/atoms';
-import { CustomModal, InputComponent, Message } from '../../components/molecules';
+import { CustomModal, InputComponent, OTPVerificationModal } from '../../components/molecules';
 import { margin } from '../../styles/mixins';
-import { FONT_SIZE_14 } from "../../styles/typography";
 import { Auth } from 'aws-amplify';
 import { SCREEN_DETAILS } from "../../constants/appConstants";
 
-const { RESET_PASSWORD, VERIFICATION } = SCREEN_DETAILS;
+const { RESET_PASSWORD } = SCREEN_DETAILS;
 
 type ResetPassowrdScreenProps = {
-  navigation: Object
+  navigation: Object,
+  route: Object
 }
 
-const ResetPassowrdScreen = ({navigation}: ResetPassowrdScreenProps) => {
+const ResetPassowrdScreen = ({navigation, route}: ResetPassowrdScreenProps) => {
   const [showModal, setShowModal] = useState(false);
   const [status, setStatus] = useState({loading: false, success: false, error: false});
   const [successDesc, setSuccessDesc] = useState('');
   const [errorDesc, setErrorDesc] = useState('');
   const [username, setUsername] = useState('sharathr25');
   const [usernameErrorMessage, setUsernameErrorMessage] = useState('');
+  const [otp, setOtp] = useState('');
+  const [showOtpInput, setShowOtpInput] = useState(false)
+  const [recepient, setRecepient] = useState('');
+
+  useEffect(() => {
+    if(route.params) {
+      setShowOtpInput(route.params.showOtpInput)
+      setUsername(route.params.username)
+    }
+  }, [route.params])
 
   const checkUsernameField = () => {
     let valid = false;
@@ -32,15 +42,14 @@ const ResetPassowrdScreen = ({navigation}: ResetPassowrdScreenProps) => {
     return valid;
   }
 
-  const verify = (otp) => {
+  const verify = () => {
+    setShowOtpInput(false)
     navigation.navigate(RESET_PASSWORD.screenName, { username, otp });
   }
 
   const resend = async () => {
     return await Auth.forgotPassword(username);
   }
-
-  const redirectTo = (otp) => {}
 
   const handleSendOTP = async () => {
     if(checkUsernameField()) {
@@ -49,12 +58,8 @@ const ResetPassowrdScreen = ({navigation}: ResetPassowrdScreenProps) => {
         const { DeliveryMedium }  = CodeDeliveryDetails;
         setSuccessDesc('OTP sent Sucessfully');
         setStatus({loading:false, success: true, error: false});
-        const paramsForVerificationScreen = { 
-          verify, redirectTo, resend, 
-          message : `Enter OTP sent registered ${DeliveryMedium === 'SMS' ? "Mobile number" : "Email"}`, 
-          showStatus : false 
-        }
-        navigation.navigate(VERIFICATION.screenName, paramsForVerificationScreen);
+        setShowOtpInput(true)
+        setRecepient(DeliveryMedium === 'SMS' ? "Mobile number" : "Email")
       } catch (error) {
         setErrorDesc('Something went wrong');
         console.log(error);
@@ -66,6 +71,7 @@ const ResetPassowrdScreen = ({navigation}: ResetPassowrdScreenProps) => {
 }
 
   if (showModal) {
+    // TODO : try to figure out how to show this in toast
     const { loading, success, error } = status;
     if (loading) {
       return <CustomModal variant="loading" />
@@ -94,6 +100,14 @@ const ResetPassowrdScreen = ({navigation}: ResetPassowrdScreenProps) => {
             <Button bgColor={ORANGE} textColor={WHITE} onPress={handleSendOTP}>Send OTP</Button>
           </View>
         </View>
+        <OTPVerificationModal 
+          show={showOtpInput}
+          setOtp={setOtp}
+          verify={verify}
+          resend={resend}
+          recepient={recepient}
+          onClose={() => setShowOtpInput(false)}
+        />
       </View>
   );
 }

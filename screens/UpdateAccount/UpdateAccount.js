@@ -5,7 +5,7 @@ import { ORANGE, WHITE, LIGHTEST_GRAY } from '../../styles/colors';
 import { Button, CustomDatePicker, Selector} from '../../components/atoms';
 import { Auth } from "aws-amplify";
 import { SCREEN_DETAILS, SIGN_UP_SCREEN } from "../../constants/appConstants";
-import { InputComponent, CustomModal } from '../../components/molecules';
+import { InputComponent, CustomModal, OTPVerificationModal } from '../../components/molecules';
 import { regex, getAge } from '../../utils';
 import { padding } from '../../styles/mixins';
 
@@ -21,9 +21,9 @@ const {
   EMPTY_MOBILE_NUMBER_ERROR, 
   INVALID_MOBILE_NUMBER_ERROR,
 } = ERRORS;
-const { LOGIN, VERIFICATION, MY_ACCOUNT } = SCREEN_DETAILS;
+const { MY_ACCOUNT } = SCREEN_DETAILS;
 
-const UpdateAccount = ({ navigation, route }) => {
+const UpdateAccount = ({ navigation, route }:{ navigation : Object, route : Object}) => {
     const { params } = route;
     const { user } = params;
     const { attributes } = user;
@@ -37,6 +37,8 @@ const UpdateAccount = ({ navigation, route }) => {
     const [ emailErr, setEmailErr ] = useState('');
     const [ mobileNumberErr, setMobileNumberErr ] = useState('');
     const [ loading, setLoading] = useState(false);
+    const [ otp, setOtp] = useState('')
+    const [showOtpInput, setShowOtpInput] = useState(false)
 
     const isValid = () => {
         let valid = false;
@@ -60,17 +62,19 @@ const UpdateAccount = ({ navigation, route }) => {
         return valid;
       };
 
-      const verify = async (otp) => {
-        return await Auth.verifyCurrentUserAttributeSubmit('phone_number', otp);
-      }
-    
-      const redirectTo = async (otp) => {
-        await Auth.signOut();
-        navigation.navigate(LOGIN.screenName);
+      const verify = async () => {
+        try {
+          await Auth.verifyCurrentUserAttributeSubmit('phone_number', otp);
+          // TODO : Show success toast
+          setShowOtpInput(false)
+          navigation.navigate(MY_ACCOUNT.screenName)
+        } catch (error) {
+          // TODO : show error toast
+        }
       }
     
       const resend = async () => {
-        return await Auth.verifyCurrentUserAttribute('phone_number')
+        await Auth.verifyCurrentUserAttribute('phone_number')
       }
     
     const handleUpdate = async () => {
@@ -87,11 +91,7 @@ const UpdateAccount = ({ navigation, route }) => {
               });
               setLoading(false);
               if(phoneNumberForUpdate !== phoneNumberWithoutCountryCode){
-                const paramsForVerificationScreen = { verify, redirectTo, resend, message: `Enter OTP sent to xxxxxxxx${phoneNumberForUpdate.substr(8)}`};
-                navigation.navigate(VERIFICATION.screenName, paramsForVerificationScreen);
-              } else {
-                await Auth.signOut();
-                navigation.navigate(LOGIN.screenName);
+                setShowOtpInput(true);
               }
             } catch (error) {
               setLoading(false);
@@ -108,6 +108,14 @@ const UpdateAccount = ({ navigation, route }) => {
 
     return (
         <ScrollView style={{ backgroundColor: WHITE }} contentContainerStyle={{ flexGrow: 1 }}>
+            <OTPVerificationModal 
+              show={showOtpInput}
+              onClose={() => {setShowOtpInput(!showOtpInput)}}
+              verify={verify}
+              resend={resend}
+              setOtp={setOtp}
+              recepient={phoneNumberWithoutCountryCode}
+            />
             <View style={{ flex: 1, margin: 20 }}>
                 <View style={{flex: 1}}>
                     <InputComponent 
@@ -120,7 +128,7 @@ const UpdateAccount = ({ navigation, route }) => {
                 </View>
                 <View style={{flex: 1}}>
                     <InputComponent 
-                        label="Mobile Number" 
+                        label="Mobile number" 
                         updateParentState={setPhoneNumber} 
                         errMsg={mobileNumberErr} 
                         value={phoneNumberForUpdate}
@@ -134,7 +142,7 @@ const UpdateAccount = ({ navigation, route }) => {
                     <Selector options={GENDER_OPTIONS} label="Gender" onValueChange={setGender} defaultValue={gender} />
                 </View>  
             </View>
-            <View style={{felx: 1, flexDirection: 'row', justifyContent: 'space-between', ...padding(10,20,10,20), backgroundColor: LIGHTEST_GRAY }}>
+            <View style={{flex: 1, flexDirection: 'row', justifyContent: 'space-between', ...padding(10,20,10,20), backgroundColor: LIGHTEST_GRAY }}>
               <Button onPress={handleCancel} bgColor={LIGHTEST_GRAY}>Cancel</Button>  
             <Button bgColor={ORANGE} textColor={WHITE} onPress={handleUpdate}>Update</Button>
           </View>

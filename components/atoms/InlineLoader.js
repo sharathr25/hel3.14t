@@ -4,7 +4,7 @@ import Heading from "./Heading";
 import { LIGHT_GRAY, LIGHT_GREEN, LIGHT_RED } from "../../styles/colors";
 
 type InlineLoaderProps = {
-    size: Number,
+    size: number,
     message: String,
     variant: String,
 }

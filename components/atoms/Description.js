@@ -5,7 +5,7 @@ import { FONT_SIZE_14, FONT_SIZE_18 } from "../../styles/typography";
 import { BLACK } from "../../styles/colors";
 import { margin } from "../../styles/mixins";
 
-const Description = ({children, height} : { children: any, height: Number }) => {
+const Description = ({children, height} : { children: any, height: number }) => {
   const { descriptionContainer, descriptionStyle } = styles;
   return (
     <ScrollView style={{...descriptionContainer, height }}>

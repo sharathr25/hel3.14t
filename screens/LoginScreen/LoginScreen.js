@@ -29,7 +29,6 @@ const LoginScreen = ({navigation}: LoginScreenProps) => {
   const [err, setError] = useState('');
 
   const handleSignUp = () => {
-    navigation.goBack();
     navigation.navigate(SIGNUP.screenName);
   }
 
@@ -115,7 +114,7 @@ const LoginScreen = ({navigation}: LoginScreenProps) => {
       <View style={{flex: 1}}>
         <HeadingTitle />
         <View style={{flex: 1,justifyContent:'space-evenly', ...margin(0,30,0,30)}}>
-          <InputComponent label="Email or Mobile Number" updateParentState={onUsernameChange} errMsg={userNameErrorMessage} />
+          <InputComponent label="Email or Mobile number" updateParentState={onUsernameChange} errMsg={userNameErrorMessage} />
           <View>
             <InputComponent 
               label="Password" 

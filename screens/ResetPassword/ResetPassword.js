@@ -63,7 +63,7 @@ const ResetPassowrdScreen = ({ navigation,route }: ResetPassowrdScreenProps) => 
 
   const handleError = () => {
     setShowModal(!showModal);
-    navigation.goBack();
+    navigation.navigate(SCREEN_DETAILS.FORGOT_PASSWORD.screenName, { showOtpInput: true, username: route.params.username });
   }
 
   const onPasswordChange = (value) => {
@@ -77,6 +77,7 @@ const ResetPassowrdScreen = ({ navigation,route }: ResetPassowrdScreenProps) => 
   }
 
   if (showModal) {
+    // TODO : try to figure out how to show toast
     const { loading, success, error } = status;
     if (loading) {
       return <CustomModal variant="loading" />

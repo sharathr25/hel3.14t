@@ -10,17 +10,17 @@ import { margin } from '../../styles/mixins';
 
 type RequesterProps = {
   userDetails: {
-    username:string, xp: Number, stars:Number, mobileNo:string, uidOfRequester: string
+    username:string, xp: number, stars:number, mobileNo:string, uidOfRequester: string
   },
   helpRequestDetails: {
-    keyOfHelpRequest: string, noPeopleRequired: Number, usersAccepted: Array<Object>
+    keyOfHelpRequest: string, noPeopleRequired: number, usersAccepted: Array<Object>
   }
 }
 
 const Requester = (props: RequesterProps) => {
   const { userDetails, helpRequestDetails } = props;
   const { keyOfHelpRequest, usersAccepted, noPeopleRequired } = helpRequestDetails;
-  const { uidOfRequester, xp, name, mobileNo, stars, username } = userDetails;
+  const { uidOfRequester, xp, mobileNo, stars, username } = userDetails;
 
   const QUERY = gql`
     mutation UpdateHelp($key:String!, $value:Any, $operation:String!){
@@ -39,7 +39,7 @@ const Requester = (props: RequesterProps) => {
     } else if (usersAccepted.indexOf(uidOfRequester) > -1) {
       Alert.alert("You are already helping....");
     } else {
-      updateHelpForAccept({ variables: { key: "usersAccepted", value: { uid: uidOfRequester, name, mobileNo, username }, operation: "push" } });
+      updateHelpForAccept({ variables: { key: "usersAccepted", value: { uid: uidOfRequester, mobileNo, username }, operation: "push" } });
     }
   };
 
