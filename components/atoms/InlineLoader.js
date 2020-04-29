@@ -10,7 +10,7 @@ type InlineLoaderProps = {
 }
 
 const InlineLoader = (props: InlineLoaderProps) => {
-    const { size = 20, message = "Please wait...", variant="loading" } = props;
+    const { size, message, variant } = props;
     const varaintToColorMapping = {
         loading : LIGHT_GRAY,
         success : LIGHT_GREEN,
@@ -23,6 +23,12 @@ const InlineLoader = (props: InlineLoaderProps) => {
             <Heading size={size} color={varaintToColorMapping[variant]}>{message}</Heading>
         </View>
     )
+}
+
+InlineLoader.defaultProps = {
+    size: 20, 
+    message: "Please wait...", 
+    variant: "loading"   
 }
 
 export default InlineLoader;

@@ -3,7 +3,13 @@ import React from "react";
 import { View, StyleSheet } from "react-native";
 import { Time, Status } from "../atoms";
 
-const TimeAndStatus = ({ timeStamp, status } : { timeStamp: number, status: string }) => {
+type TimeAndStatusProps = {
+    timeStamp: number, 
+    status: string
+}
+
+const TimeAndStatus = (props : TimeAndStatusProps) => {
+    const { timeStamp, status } = props;
     const { timeAndDistance } = styles;
 
     return (

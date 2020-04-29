@@ -3,7 +3,9 @@ import { View, FlatList } from 'react-native';
 import Requester from './Requester';
 import { Heading } from '../atoms';
 
-const UsersRequested = ({ usersRequested, keyOfHelpRequest, noPeopleRequired , usersAccepted}) => {
+const UsersRequested = () => {
+  const { usersRequested, keyOfHelpRequest, noPeopleRequired , usersAccepted} = props;
+  
   const getRequestedUser = ({ item }) => {
     const { xp, uid, stars, mobileNo, username } = item;
     const userDetails = { username, xp, stars, mobileNo, uidOfRequester: uid } 
@@ -15,6 +17,8 @@ const UsersRequested = ({ usersRequested, keyOfHelpRequest, noPeopleRequired , u
     return "requestedusers" + item.key + index.toString() + new Date().getTime();
   }
 
+  const heading = usersRequested.length ? <Heading>People who are willing to help you</Heading> : null
+
   return (
     <View>
         <FlatList
@@ -22,7 +26,7 @@ const UsersRequested = ({ usersRequested, keyOfHelpRequest, noPeopleRequired , u
             renderItem={getRequestedUser}
             keyExtractor={getRequestedUserKey}
             listKey={getRequestedUserKey}
-            ListHeaderComponent={usersRequested.length ? <Heading>People who are willing to help you</Heading> : null}
+            ListHeaderComponent={heading}
         />
     </View>
   );

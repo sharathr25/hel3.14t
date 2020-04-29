@@ -13,12 +13,26 @@ type ButtonProps = {
 }
 
 const Button = (props: ButtonProps) => {
-  const { borderColor = ORANGE, textColor = ORANGE, bgColor = WHITE, loading = false, onPress, children } = props;
+  const { borderColor, textColor, bgColor, loading, onPress, children } = props;
+
+  const _onPress = () => {
+    if(!loading) onPress();
+  }
+
+  const { container, text } = styles;
+
   return (
-    <TouchableOpacity style={{ ...styles.container, borderColor, backgroundColor: bgColor }} onPress={loading ? () => { } : onPress}>
-      {typeof children === "string" ? <Text style={{ ...styles.text, color: textColor }}>{children}</Text> : children}
+    <TouchableOpacity style={{ ...container, borderColor, backgroundColor: bgColor }} onPress={_onPress}>
+      {typeof children === "string" ? <Text style={{ ...text, color: textColor }}>{children}</Text> : children}
     </TouchableOpacity>
   );
+}
+
+Button.defaultProps = {
+  borderColor: ORANGE, 
+  textColor: ORANGE, 
+  bgColor: WHITE, 
+  loading: false
 }
 
 export default Button;

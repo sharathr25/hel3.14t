@@ -3,11 +3,17 @@ import React, { useRef } from 'react';
 import DatePicker from 'react-native-datepicker'
 import { ORANGE , BLACK, WHITE } from '../../styles/colors';
 import { FONT_WEIGHT_REGULAR } from "../../styles/typography";
-import { StyleSheet, View, Text, TouchableOpacity } from 'react-native';
-import Icon from "react-native-vector-icons/MaterialCommunityIcons"
+import { StyleSheet, View, Text } from 'react-native';
 import { padding } from "../../styles/mixins";
 
-const CustomDatePicker = (props: { date: string , updateParentState: Function, label: string, value: string }) => {
+type CustomDatePickerProps = { 
+  date: string , 
+  updateParentState: Function, 
+  label: string, 
+  value: string 
+}
+
+const CustomDatePicker = (props: CustomDatePickerProps) => {
   const datePickerRef = useRef(null);
   const { date, updateParentState, label } = props;
   const { dateInput, labelStyle, container, datePickerContainer, dateStyle } = styles;
@@ -15,7 +21,7 @@ const CustomDatePicker = (props: { date: string , updateParentState: Function, l
     <View style={container}>
       <Text style={labelStyle}>{label}</Text>
       <View style={datePickerContainer}>
-      <DatePicker
+        <DatePicker
           customStyles={{ dateInput }}
           style={dateStyle}
           date={date}
@@ -28,9 +34,6 @@ const CustomDatePicker = (props: { date: string , updateParentState: Function, l
           showIcon={false}
           ref={datePickerRef}
         />
-        {/* <TouchableOpacity onPress={() => datePickerRef.current && datePickerRef.current.onPressDate()} style={{justifyContent: 'center'}}>
-          <Icon name="arrow-down-drop-circle" size={25} color={ORANGE} />
-        </TouchableOpacity> */}
       </View>
     </View>
   );

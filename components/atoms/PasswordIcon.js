@@ -4,7 +4,7 @@ import Icon from "react-native-vector-icons/Ionicons";
 
 const PasswordIcon = ({showPassword, setShowPassword}) => (
     <TouchableOpacity onPress={setShowPassword}>
-        {showPassword ? <Icon name="md-eye-off" size={22} /> : <Icon name="md-eye" size={22} onPress={setShowPassword} />}
+        <Icon name={`md-eye${showPassword ? "-off" : ""}`} size={22} />
     </TouchableOpacity>
 );
 

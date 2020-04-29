@@ -1,6 +1,6 @@
 // @flow
 import React from "react";
-import { FlatList, Platform, UIManager, Text } from 'react-native';
+import { FlatList, Platform, UIManager } from 'react-native';
 import { getDistanceFromLatLonInKm, sortByDistance } from '../../utils';
 import gql from 'graphql-tag';
 import { useQuery } from 'react-apollo';
@@ -56,13 +56,11 @@ const HelpRequestFeed = () => {
     })
   }
 
-  if (error) return <Text>{error.networkError}</Text>
-
   const gethelpRequestsSortedByDistance = (feedItems) => {
     if(!locationProviderAvailable) return feedItems;
     const requestedHelpRequests = getRequestedHelpRequests(feedItems);
     const helpRequestsWithDistance = getHelpRequestsWithDistance(requestedHelpRequests);
-    const helpRequestsWithinThresholdDistance = getRequestedHelpRequestsWithinThresholdDistance(helpRequestsWithDistance, DISTANCE_THRESHOLD)
+    const helpRequestsWithinThresholdDistance = getHelpRequestsWithinThresholdDistance(helpRequestsWithDistance, DISTANCE_THRESHOLD)
     const helpRequestsSortedByDistance = sortByDistance(helpRequestsWithinThresholdDistance);
     return helpRequestsSortedByDistance;
   }
@@ -88,7 +86,7 @@ const HelpRequestFeed = () => {
     });
   }
 
-  const getRequestedHelpRequestsWithinThresholdDistance = (helpRequests, thresholdDistance) => {
+  const getHelpRequestsWithinThresholdDistance = (helpRequests, thresholdDistance) => {
     return helpRequests.filter(({distance}) => distance <= thresholdDistance)
   }
 

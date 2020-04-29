@@ -2,7 +2,7 @@
 import React, { useState } from 'react';
 import { View, ScrollView, Alert } from 'react-native';
 import { ORANGE, WHITE, LIGHTEST_GRAY } from '../../styles/colors';
-import { Button, CustomDatePicker, Selector} from '../../components/atoms';
+import { Button, CustomDatePicker, Selector, Toast} from '../../components/atoms';
 import { Auth } from "aws-amplify";
 import { SCREEN_DETAILS, SIGN_UP_SCREEN } from "../../constants/appConstants";
 import { InputComponent, CustomModal, OTPVerificationModal } from '../../components/molecules';
@@ -39,6 +39,7 @@ const UpdateAccount = ({ navigation, route }:{ navigation : Object, route : Obje
     const [ loading, setLoading] = useState(false);
     const [ otp, setOtp] = useState('')
     const [showOtpInput, setShowOtpInput] = useState(false)
+    const [toast, setToast] = useState({ type: "", message: ""})
 
     const isValid = () => {
         let valid = false;
@@ -65,16 +66,19 @@ const UpdateAccount = ({ navigation, route }:{ navigation : Object, route : Obje
       const verify = async () => {
         try {
           await Auth.verifyCurrentUserAttributeSubmit('phone_number', otp);
-          // TODO : Show success toast
           setShowOtpInput(false)
           navigation.navigate(MY_ACCOUNT.screenName)
         } catch (error) {
-          // TODO : show error toast
+          
         }
       }
     
       const resend = async () => {
-        await Auth.verifyCurrentUserAttribute('phone_number')
+        try {
+          await Auth.verifyCurrentUserAttribute('phone_number')
+        } catch (error) {
+          console.log(error)
+        }
       }
     
     const handleUpdate = async () => {
@@ -92,9 +96,12 @@ const UpdateAccount = ({ navigation, route }:{ navigation : Object, route : Obje
               setLoading(false);
               if(phoneNumberForUpdate !== phoneNumberWithoutCountryCode){
                 setShowOtpInput(true);
+              } else {
+                setToast({ type: "success", message: "Update successfull"})
               }
             } catch (error) {
               setLoading(false);
+              setToast({ type: "danger", message: "Update failed"})
               console.log(error); 
             }
         }
@@ -114,8 +121,9 @@ const UpdateAccount = ({ navigation, route }:{ navigation : Object, route : Obje
               verify={verify}
               resend={resend}
               setOtp={setOtp}
-              recepient={phoneNumberWithoutCountryCode}
+              recepient={phoneNumberForUpdate}
             />
+            {toast.type ? <Toast type={toast.type} message={toast.message} onClose/> : null}
             <View style={{ flex: 1, margin: 20 }}>
                 <View style={{flex: 1}}>
                     <InputComponent 
@@ -142,7 +150,7 @@ const UpdateAccount = ({ navigation, route }:{ navigation : Object, route : Obje
                     <Selector options={GENDER_OPTIONS} label="Gender" onValueChange={setGender} defaultValue={gender} />
                 </View>  
             </View>
-            <View style={{flex: 1, flexDirection: 'row', justifyContent: 'space-between', ...padding(10,20,10,20), backgroundColor: LIGHTEST_GRAY }}>
+            <View style={{ flexDirection: 'row', justifyContent: 'space-between', ...padding(10,20,10,20), backgroundColor: LIGHTEST_GRAY }}>
               <Button onPress={handleCancel} bgColor={LIGHTEST_GRAY}>Cancel</Button>  
             <Button bgColor={ORANGE} textColor={WHITE} onPress={handleUpdate}>Update</Button>
           </View>

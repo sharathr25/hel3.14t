@@ -5,7 +5,8 @@ import { FONT_FAMILY_REGULAR,FONT_SIZE_20 } from '../../styles/typography';
 import { WHITE, ORANGE } from '../../styles/colors';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons'
 
-const HeaderTitle = ({title, width, height , showBackButton = true, navigation, headerLeft}) => {
+const HeaderTitle = (props) => {
+  const {title, width, height , showBackButton, navigation, headerLeft} = props;
   const { container, titleStyle, BackButtonStyle } = styles;
   const BackButton = () => {
       return (
@@ -21,6 +22,10 @@ const HeaderTitle = ({title, width, height , showBackButton = true, navigation, 
       <Text style={titleStyle}>{title}</Text>
     </View>
   );
+}
+
+HeaderTitle.defaultProps = {
+  showBackButton: true
 }
 
 export default HeaderTitle;

@@ -10,28 +10,33 @@ import { margin } from '../../styles/mixins';
 
 type RequesterProps = {
   userDetails: {
-    username:string, xp: number, stars:number, mobileNo:string, uidOfRequester: string
+    username:string, 
+    xp: number, 
+    stars:number, 
+    mobileNo:string, 
+    uidOfRequester: string
   },
   helpRequestDetails: {
-    keyOfHelpRequest: string, noPeopleRequired: number, usersAccepted: Array<Object>
+    keyOfHelpRequest: string, 
+    noPeopleRequired: number, 
+    usersAccepted: Array<Object>
   }
 }
+
+const QUERY = gql`
+  mutation UpdateHelp($key:String!, $value:Any, $operation:String!){
+    updateHelp(id:"$id", key:$key, value:$value, type:"array", operation:$operation){
+      _id
+    }
+  }
+`;
 
 const Requester = (props: RequesterProps) => {
   const { userDetails, helpRequestDetails } = props;
   const { keyOfHelpRequest, usersAccepted, noPeopleRequired } = helpRequestDetails;
   const { uidOfRequester, xp, mobileNo, stars, username } = userDetails;
-
-  const QUERY = gql`
-    mutation UpdateHelp($key:String!, $value:Any, $operation:String!){
-      updateHelp(id:"${keyOfHelpRequest}", key:$key, value:$value, type:"array", operation:$operation){
-        _id
-      }
-    }
-  `;
-
-  const [updateHelpForAccept, { loading: loadingForAccept }] = useMutation(QUERY);
-  const [updateHelpForReject, { loading: loadingForReject }] = useMutation(QUERY);
+  const [updateHelpForAccept, { loading: loadingForAccept }] = useMutation(QUERY, { variables: { id: keyOfHelpRequest }});
+  const [updateHelpForReject, { loading: loadingForReject }] = useMutation(QUERY, { variables: { id: keyOfHelpRequest }});
 
   const handleAccept = async () => {
     if (noPeopleRequired === usersAccepted.length) {
@@ -39,12 +44,25 @@ const Requester = (props: RequesterProps) => {
     } else if (usersAccepted.indexOf(uidOfRequester) > -1) {
       Alert.alert("You are already helping....");
     } else {
-      updateHelpForAccept({ variables: { key: "usersAccepted", value: { uid: uidOfRequester, mobileNo, username }, operation: "push" } });
+      updateHelpForAccept({ 
+        variables: { 
+          key: "usersAccepted", 
+          value: { uid: uidOfRequester, mobileNo, username }, 
+          operation: "push" 
+        } 
+      });
     }
   };
 
   const handleReject = async () => {
-    updateHelpForReject({ variables: { key: "usersRejected", value: { uid: uidOfRequester }, operation: "push", type: "array" } });
+    updateHelpForReject({ 
+      variables: { 
+        key: "usersRejected", 
+        value: { uid: uidOfRequester }, 
+        operation: "push", 
+        type: "array" 
+      } 
+    });
   };
 
   const { container, content, details, buttons } = styles;

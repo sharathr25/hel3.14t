@@ -1,4 +1,3 @@
-
 import React from 'react'
 import { View } from 'react-native';
 import { WHITE } from '../../styles/colors';
@@ -9,7 +8,7 @@ const Header = (props) => {
     const { width, height } = layout;
     const { descriptor } = scene;
     const { options } = descriptor;
-    const {  headerLeft=null } = options;
+    const {  headerLeft = null } = options;
 
     let title = options.headerTitle !== undefined
       ? options.headerTitle
@@ -28,14 +27,12 @@ const Header = (props) => {
     }
 
     return (
-      <View>
-        <View style={{backgroundColor: WHITE, height: 60}}>
-          <Curve zIndex={2} width={width} bottom={8} backgroundColor="#FF9933">
-            <HeaderTitle title={title} width={width} height={height} navigation={navigation} headerLeft={headerLeft} />
-          </Curve>
-          <Curve bottom={4} zIndex={1} backgroundColor="#FFA64D" width={width} />
-          <Curve bottom={0} zIndex={0} backgroundColor="#FFB366" width={width} />
-        </View>
+      <View style={{backgroundColor: WHITE, height: 60}}>
+        <Curve zIndex={2} width={width} bottom={8} backgroundColor="#FF9933">
+          <HeaderTitle title={title} width={width} height={height} navigation={navigation} headerLeft={headerLeft} />
+        </Curve>
+        <Curve bottom={4} zIndex={1} backgroundColor="#FFA64D" width={width} />
+        <Curve bottom={0} zIndex={0} backgroundColor="#FFB366" width={width} />
       </View>
     );
   }

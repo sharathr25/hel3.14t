@@ -5,10 +5,11 @@ import { getTimeDiffrence } from '../../utils/index';
 import { FONT_FAMILY_REGULAR, FONT_SIZE_16 } from "../../styles/typography";
 import { LIGHT_GRAY } from "../../styles/colors";
 
-const Time = ({ time }: {time : number }) => {
+const Time = ({ time }: { time : number }) => {
   const { text } = styles;
+  const timeDiffrence = getTimeDiffrence(time) === " ago" ? "just now" : getTimeDiffrence(time)
   return (
-    <Text style={text}>{getTimeDiffrence(time) === " ago" ? "just now" : getTimeDiffrence(time)}</Text>
+    <Text style={text}>{timeDiffrence}</Text>
   );
 };
 

@@ -1,6 +1,6 @@
 import React from 'react';
 import { Text, StyleSheet, View } from 'react-native';
-import { RED, ORANGE, GREEN, LIGHT_RED, LIGHT_ORANGE, LIGHT_GREEN, BLUE, LIGHT_BLUE_2 } from '../../styles/colors';
+import { RED, ORANGE, GREEN, LIGHT_RED, LIGHT_ORANGE, LIGHT_GREEN, LIGHT_BLUE, BLUE } from '../../styles/colors';
 import { FONT_SIZE_14, FONT_BOLD } from '../../styles/typography';
 import { padding } from '../../styles/mixins';
 
@@ -19,7 +19,7 @@ export const STATUS_COLOR_MAPPING = {
 }
 
 export const STATUS_LIGHT_COLOR_MAPPING = {
-    'REQUESTED': LIGHT_BLUE_2,
+    'REQUESTED': LIGHT_BLUE,
     'ON_GOING': LIGHT_ORANGE,
     'COMPLETED': LIGHT_GREEN,
     'CANCELLED' : LIGHT_RED
@@ -27,11 +27,13 @@ export const STATUS_LIGHT_COLOR_MAPPING = {
 
  const Status = (props) => {
     const { children } = props;
-    const { container } = styles;
+    const { container, textStyle } = styles;
 
     return (
         <View style={{ ...container, backgroundColor: STATUS_LIGHT_COLOR_MAPPING[children] }}>
-            <Text style={{ color: STATUS_COLOR_MAPPING[children] , textAlign: 'center', ...FONT_BOLD, fontSize: FONT_SIZE_14 }}>{STATUS_TEXT_MAPPING[children]}</Text>
+            <Text style={{ ...textStyle , color: STATUS_COLOR_MAPPING[children] }}>
+                {STATUS_TEXT_MAPPING[children]}
+            </Text>
         </View>
     );
 }
@@ -43,5 +45,10 @@ const styles = StyleSheet.create({
         borderRadius: 50,
         alignSelf: 'flex-start',
         ...padding(2,10,2,10)
+    },
+    textStyle: {
+        textAlign: 'center', 
+        ...FONT_BOLD, 
+        fontSize: FONT_SIZE_14
     }
 });

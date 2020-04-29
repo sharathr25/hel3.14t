@@ -2,7 +2,7 @@
 import React from "react";
 import { TouchableOpacity, StyleSheet, Text } from "react-native";
 import { ORANGE, LIGHT_ORANGE } from "../../styles/colors";
-import { FONT_BOLD } from "../../styles/typography";
+import { FONT_BOLD, FONT_SIZE_20 } from "../../styles/typography";
 import Icon from "react-native-vector-icons/FontAwesome";
 
 type ButtonProps = {
@@ -12,18 +12,33 @@ type ButtonProps = {
   BoxButton?: string,
   onPress: Function,
   iconName?: any,
-  title: string
+  title?: string
 }
 
 const BoxButton = (props: ButtonProps) => {
-  const { titleColor = ORANGE, bgColor = LIGHT_ORANGE, loading = false, onPress, title, iconName = "" } = props;
+  const { titleColor, bgColor , loading , onPress, title, iconName } = props;
+
+  const _onPress = () => {
+    if(!loading) onPress();
+  }
+
+  const { container } = styles;
   return (
-    <TouchableOpacity style={{ ...styles.container, backgroundColor: bgColor }} onPress={loading ? () => { } : onPress}>
+    <TouchableOpacity style={{ ...container, backgroundColor: bgColor }} onPress={_onPress}>
         {iconName ? <Icon color={titleColor} size={25} name={iconName} />: null}
-        <Text style={{color: titleColor, ...FONT_BOLD }}>{title}</Text>
+        <Text style={{color: titleColor, ...FONT_BOLD}}>{title}</Text>
     </TouchableOpacity>
   );
 }
+
+BoxButton.defaultProps = {
+  titleColor : ORANGE, 
+  bgColor : LIGHT_ORANGE, 
+  loading : false, 
+  onPress : () => {}, 
+  title : "", 
+  iconName : ""
+};
 
 export default BoxButton;
 
@@ -33,8 +48,5 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     width: 75, 
     height: 75
-  },
-  text: {
-    fontSize: 20,
   },
 });

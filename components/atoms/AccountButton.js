@@ -6,12 +6,17 @@ import { WHITE } from "../../styles/colors";
 import { SCREEN_DETAILS } from '../../constants/appConstants';
 
 const { MORE_SCREEN } = SCREEN_DETAILS;
+
 const AccountButton = () => {
     const navigation = useNavigation();
-    const height = Dimensions.get('screen').height;
-    const width = Dimensions.get('screen').width;
+    const { width, height } = Dimensions.get('screen');
+
+    const _onPress = () => {
+      navigation.navigate(MORE_SCREEN.screenName)
+    }
+
     return (
-      <TouchableOpacity style={{position:'absolute', left: height > width ? 10 : 150, bottom: 5 }} onPress={() => navigation.navigate(MORE_SCREEN.screenName)}>
+      <TouchableOpacity style={{position:'absolute', left: height > width ? 10 : 150, bottom: 5 }} onPress={_onPress}>
         <Icon name="account-circle" size={25} color={WHITE}/>
       </TouchableOpacity>
     );

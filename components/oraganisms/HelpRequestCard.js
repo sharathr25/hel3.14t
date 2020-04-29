@@ -26,11 +26,16 @@ query Help($id: String!){
 }
 `;
 
-const HelpRequestCard = (props: { helpRequestDetails:Object , removeMe: Function }) => {
+type HelpRequestCardProps = {
+  helpRequestDetails:Object, 
+  removeMe: Function
+}
+
+const HelpRequestCard = (props: HelpRequestCardProps) => {
   const { helpRequestDetails , removeMe } = props;
   const navigation = useNavigation();
   const { distance, _id } = helpRequestDetails;
-  const { loading, data, error} = useQuery(QUERY, { variables: { id: _id }, pollInterval: 100 });
+  const { data } = useQuery(QUERY, { variables: { id: _id }, pollInterval: 100 });
   if(!data) return null;
   const { help } = data;
   const { creatorName, timeStamp, description, status } = help;

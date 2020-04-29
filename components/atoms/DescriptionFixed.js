@@ -4,13 +4,15 @@ import { Text, StyleSheet } from "react-native";
 import { FONT_SIZE_14 } from "../../styles/typography";
 import { BLACK, LIGHT_GRAY } from "../../styles/colors";
 
-const DescriptionFixed = ({children} : { children: any }) => {
+type DescriptionFixedProps = {
+  children: any
+}
+const DescriptionFixed = ({children} : DescriptionFixedProps) => {
   const { descriptionStyle } = styles;
   return (
     <Text style={descriptionStyle} numberOfLines={5}>
         {children}
-    </Text>
-            
+    </Text>    
   );
 };
 

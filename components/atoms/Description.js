@@ -3,9 +3,12 @@ import React from "react";
 import { Text, StyleSheet, ScrollView } from "react-native";
 import { FONT_SIZE_14, FONT_SIZE_18 } from "../../styles/typography";
 import { BLACK } from "../../styles/colors";
-import { margin } from "../../styles/mixins";
 
-const Description = ({children, height} : { children: any, height: number }) => {
+type DescriptionProps = {
+  children: any, height: number
+}
+
+const Description = ({children, height} : DescriptionProps) => {
   const { descriptionContainer, descriptionStyle } = styles;
   return (
     <ScrollView style={{...descriptionContainer, height }}>

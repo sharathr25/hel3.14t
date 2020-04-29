@@ -1,10 +1,13 @@
 // @flow
 import React from "react";
-import { Text, StyleSheet, TouchableOpacity } from "react-native";
-import { FONT_FAMILY_REGULAR } from "../../styles/typography";
+import { Text, TouchableOpacity } from "react-native";
 import { LIGHT_BLUE } from "../../styles/colors";
 
-const Link = (props: {onPress : Function, children: any, style: Object }) => {
+type LinkProps = {
+  onPress : Function, children: any, style: Object 
+}
+
+const Link = (props: LinkProps) => {
   const { onPress , children , style = {}} = props;
   return (
     <TouchableOpacity onPress={onPress} style={{...style}}>
@@ -14,9 +17,3 @@ const Link = (props: {onPress : Function, children: any, style: Object }) => {
 };
 
 export default Link;
-
-const styles = StyleSheet.create({
-  text: {
-    fontFamily: FONT_FAMILY_REGULAR
-  }
-});

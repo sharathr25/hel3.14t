@@ -14,7 +14,7 @@ type CustomModalProps = {
 }
 
 const CustomModal = (props: CustomModalProps) => {
-    const { onClose, variant = "loading", desc, buttonText="close" } = props;
+    const { onClose, variant, desc, buttonText } = props;
     const { outerContainer, content, variantContainer } = styles;
     const message = desc ? <Heading size={FONT_SIZE_20}>{desc}</Heading> : null
 
@@ -59,20 +59,25 @@ const CustomModal = (props: CustomModalProps) => {
 
     return (
         <View style={outerContainer}>
-                <View style={content}>
-                    {variants[variant].icon}
-                    <View style={{ margin: 30, alignItems: 'center', justifyContent: 'center' }}>
-                        {message}
-                    </View>
-                </View>
-                <View style={{flex: 1, padding: 20 }}>
-                    {onClose && variants[variant].CTA}
+            <View style={content}>
+                {variants[variant].icon}
+                <View style={{ margin: 30, alignItems: 'center', justifyContent: 'center' }}>
+                    {message}
                 </View>
             </View>
+            <View style={{flex: 1, padding: 20 }}>
+                {onClose && variants[variant].CTA}
+            </View>
+        </View>
     );
 }
 
 export default CustomModal;
+
+CustomModal.defaultProps = {
+    buttonText: "close",
+    variant: "loading"
+}
 
 const styles = StyleSheet.create({
     outerContainer: {

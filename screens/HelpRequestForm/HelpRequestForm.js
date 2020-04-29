@@ -9,6 +9,7 @@ import { useMutation } from "react-apollo";
 import { useLocation, useAuth } from "../../customHooks/";
 import { CustomModal } from "../../components/molecules";
 import { padding } from "../../styles/mixins";
+import { Toast } from "../../components/atoms";
 
 const WORD_LIMIT = 100;
 const NO_OF_LINES_FOR_DESC = Math.ceil(Dimensions.get("window").height / 50);
@@ -45,7 +46,6 @@ const HelpRequestForm = () => {
         locationErrorMessage: "",
     });
 
-    const [showModal, setShowModal] = useState(false);
     const [createHelp, { loading, data, error }] = useMutation(HELP_REQUEST);
     const { longitude, latitude, locationProviderAvailable, locationErrorMessage } = useLocation();
     const { user: currentUser } = useAuth();
@@ -72,7 +72,6 @@ const HelpRequestForm = () => {
             Alert.alert(locationErrorMessage ? locationErrorMessage : "location error");
         } else {
             Keyboard.dismiss();
-            setShowModal(true);
             createHelp({
                 variables: {
                     uid,
@@ -122,19 +121,20 @@ const HelpRequestForm = () => {
         }
     }
 
-    if (showModal) {
-        if (loading) {
-            return <CustomModal onClose={() => setShowModal(!showModal)} variant="loading" />
-        } else if (data) {
-            return <CustomModal onClose={() => setShowModal(!showModal)} variant="success" desc="Goto Activity tab to check your help request" />
-        } else if (error) {
-            return <CustomModal onClose={() => setShowModal(!showModal)} variant="error" />
-        }
+    const getToast = () => {
+        if(data) return { type: "success", message: "Success, Check activity" }
+        else if(error) return { type: "danger", message: "Something went wrong! try again"}
+        return  { type: "", message: "" }
+    }
+
+    if (loading) {
+        return <CustomModal variant="loading" />
     }
 
     return (
         <ScrollView style={{backgroundColor: WHITE}}>
             <View style={container}>
+                {getToast().type ? <Toast type={getToast().type} message={getToast().message} duration={4000} /> : null}
                 <View style={innerContainer}>
                     <Text style={{...label, padding:10}}>Request will be created for current location</Text>
                     <Input
@@ -143,7 +143,7 @@ const HelpRequestForm = () => {
                         multiline={true}
                         numberOfLines={NO_OF_LINES_FOR_DESC}
                         onChangeText={_onChangeText}
-                        inputStyle={{textAlign: 'center'}}
+                        inputStyle={{ textAlignVertical: 'top' }}
                         value={state.description}
                     />
                     <WordLimitStatus />
@@ -170,7 +170,7 @@ const styles = StyleSheet.create({
     innerContainer: {
         backgroundColor: WHITE, 
         borderRadius: 10, 
-        elevation: 10, 
+        // elevation: 10, 
         borderWidth: 0.1, 
         borderColor: BLACK
     },

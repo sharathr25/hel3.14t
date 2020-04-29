@@ -17,14 +17,15 @@ type InputComponentProps = {
 }
 
 const InputComponent = (props: InputComponentProps) => {
+  const { label, updateParentState, errMsg, showPasswordIcon, defaultValue } = props;
   const [showPassword, setShowPassword] = useState(false);
 
   const _setShowPassword = () => {
     setShowPassword(!showPassword);
   }
 
-  const { label = "", updateParentState, errMsg = "", showPasswordIcon = false, defaultValue = "" } = props;
   const { labelStyle, containerStyle, inputContainerStyle, inputStyle } = styles;
+
   return (
     <Input
       label={label}
@@ -35,7 +36,7 @@ const InputComponent = (props: InputComponentProps) => {
       secureTextEntry={showPasswordIcon && !showPassword}
       onChangeText={value => updateParentState(value)}
       errorMessage={errMsg}
-      rightIcon={showPasswordIcon ? <PasswordIcon showPassword={showPassword} setShowPassword={_setShowPassword} /> : null}
+      rightIcon={showPasswordIcon && <PasswordIcon showPassword={showPassword} setShowPassword={_setShowPassword} />}
       rightIconContainerStyle={{ right: 8 }}
       defaultValue={defaultValue}
     />
@@ -71,4 +72,12 @@ const styles = StyleSheet.create({
     color: BLACK,
   },
 });
+
+InputComponent.defaultProps = {
+  label : "", 
+  errMsg : "", 
+  showPasswordIcon : false, 
+  defaultValue : ""
+}
+
 export default InputComponent;

@@ -4,9 +4,9 @@ import { View } from 'react-native';
 import { ORANGE } from '../../styles/colors';
 import { ProfileLetter, Heading } from '../atoms';
 
-const ProfileName = (props : { name : String }) => {
-  const { name } = props;
+const ProfileName = ({ name } : { name : String }) => {
   const letter = name.substring(0,1).toUpperCase();
+  
   return (
     <View style={{flexDirection: 'row', alignItems: 'center'}}>
         <ProfileLetter letter={letter} />

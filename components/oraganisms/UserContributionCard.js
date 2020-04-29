@@ -14,22 +14,7 @@ const QUERY = gql`
     help(id:$id) {
       status,
       description,
-      usersAccepted {
-        uid
-        username
-        mobileNo
-        xp
-        stars
-      },
-      usersRequested {
-        uid
-        username,
-        xp,
-        mobileNo,
-        stars
-      },
       timeStamp,
-      noPeopleRequired
     }
   }
 `;
@@ -37,9 +22,8 @@ const QUERY = gql`
 const { USER_CONTRIBUTION } = SCREEN_DETAILS;
 
 
-const UserContributionCard = (props : { keyOfHelpRequest :string }) => {
-    const { keyOfHelpRequest } = props;
-    let { data , error } = useQuery(QUERY, { variables: { id: keyOfHelpRequest }, pollInterval: 100 });
+const UserContributionCard = ({ keyOfHelpRequest } : { keyOfHelpRequest :string }) => {
+    let { data } = useQuery(QUERY, { variables: { id: keyOfHelpRequest }, pollInterval: 100 });
     const navigation = useNavigation();
 
     if (!data) return null;
@@ -48,7 +32,7 @@ const UserContributionCard = (props : { keyOfHelpRequest :string }) => {
     const { status, description, timeStamp } = help;
 
     const _onPress = () => {
-        navigation.navigate(USER_CONTRIBUTION.screenName, { keyOfHelpRequest });
+      navigation.navigate(USER_CONTRIBUTION.screenName, { keyOfHelpRequest });
     }
 
     return (

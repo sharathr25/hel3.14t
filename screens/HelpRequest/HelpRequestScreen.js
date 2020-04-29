@@ -4,11 +4,9 @@ import { Dimensions, View } from 'react-native';
 import gql from 'graphql-tag';
 import { useQuery, useMutation } from 'react-apollo';
 import { useAuth } from '../../customHooks';
-import { Description, Button, Heading, InlineLoader } from '../../components/atoms';
-import { WHITE, LIGHTEST_GRAY, ORANGE, LIGHT_GRAY } from '../../styles/colors';
+import { Description, Button, InlineLoader } from '../../components/atoms';
+import { WHITE, ORANGE } from '../../styles/colors';
 import { ProfileName, TimeAndDistance, CustomModal, Message } from '../../components/molecules';
-import { margin } from '../../styles/mixins';
-import { FONT_SIZE_20 } from '../../styles/typography';
 
 const heightForDescription = Dimensions.get('screen').height - 380
 
@@ -59,8 +57,8 @@ const isUserIsThereInUsers = (users, userUid) => users.some((user) => user.uid =
 const HelpRequestScreen = ({ route } : { route: Object }) => {
     const { params } = route;
     const { idOfHelpRequest, distance } = params;
-    const { data, loading, error } = useQuery(QUERY, { variables: { id: idOfHelpRequest }, pollInterval: 100 });
-    const [updateHelp, { loading: loadingForUpdateHelp, error: errorForUpdateHelp }] = useMutation(HELP_UPDATE_SCHEMA);
+    const { data } = useQuery(QUERY, { variables: { id: idOfHelpRequest }, pollInterval: 100 });
+    const [updateHelp, { loading, error }] = useMutation(HELP_UPDATE_SCHEMA);
     const { user } = useAuth();
 
     if(!user || !data) return <CustomModal variant="loading" />
@@ -70,14 +68,20 @@ const HelpRequestScreen = ({ route } : { route: Object }) => {
     const { description, timeStamp, usersRequested, creatorName, usersRejected, usersAccepted, usersCancelled } = help;
     
     const handleHelp = () => {
-        if(!loadingForUpdateHelp)
-            updateHelp({ variables: { id: idOfHelpRequest, key: "usersRequested", value: { uid, name , xp: 0, mobileNo: phone_number , stars: 0, username } } });
+        if(!loading)
+            updateHelp({ 
+                variables: { 
+                    id: idOfHelpRequest, 
+                    key: "usersRequested", 
+                    value: { uid, name , xp: 0, mobileNo: phone_number , stars: 0, username } 
+                } 
+            });
     }
 
     let footer;
-    if(errorForUpdateHelp) {
+    if(error) {
         footer = <InlineLoader variant="error" message="something went wrong" />
-    } else if(loadingForUpdateHelp) {
+    } else if(loading) {
         footer = <InlineLoader />
     } else if(isUserIsThereInUsers(usersRequested, uid)) {
         footer = <Message>Verification pending</Message>
@@ -90,7 +94,7 @@ const HelpRequestScreen = ({ route } : { route: Object }) => {
     } else {
         footer = (
             <View style={{flexDirection: "row", justifyContent: 'center', padding: 10 }}>
-                <Button onPress={handleHelp} loading={loadingForUpdateHelp} bgColor={ORANGE} textColor={WHITE}>Help</Button>
+                <Button onPress={handleHelp} loading={loading} bgColor={ORANGE} textColor={WHITE}>Help</Button>
             </View>
         );
     }
