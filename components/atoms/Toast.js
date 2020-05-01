@@ -1,8 +1,24 @@
 import React, { useEffect, useRef, useState } from "react";
 import { Text, View, TouchableOpacity, Animated, Dimensions, StyleSheet } from "react-native";
 import { WHITE, GREEN, LIGHT_GREEN, LIGHT_GRAY, LIGHTEST_GRAY, 
-    LIGHT_BLUE, LIGHT_BLUE_2, YELLOW, LIGHT_YELLOW, RED, LIGHT_RED } from "../../styles/colors";
+    LIGHT_BLUE, LIGHT_BLUE_2, YELLOW, LIGHT_YELLOW, RED, LIGHT_RED, BLACK } from "../../styles/colors";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons"
+
+const heightOfToast = 50;
+const heightOfToastFooter = 5;
+
+const LoadingLine = () => {
+    return (
+        <View style={{
+                height: heightOfToastFooter, 
+                backgroundColor: LIGHT_YELLOW, 
+                marginHorizontal: 5, 
+                flex: 1,
+                borderRadius: heightOfToastFooter
+            }} 
+        />
+    )
+}
 
 const Toast = (props) => {
     const { type = "success", message = "Success" , autoClose = true, duration = 2000 } = props;
@@ -10,6 +26,7 @@ const Toast = (props) => {
     const windowHeight = Dimensions.get('window').height;
     const yValue  = useRef(new Animated.Value(-1)).current;
     const xValue = useRef(new Animated.Value(0)).current;
+    const lValue = useRef(new Animated.Value(0)).current;
     const [bgColor, setBgColor] = useState("")
     const [lineColor, setLineColor] = useState("")
     const [messageText, setMessageText] = useState("")
@@ -41,6 +58,11 @@ const Toast = (props) => {
             lineColor: LIGHTEST_GRAY,
             bgColor: LIGHT_GRAY,
             messageText: "Default"
+        },
+        "loading": {
+            lineColor: LIGHT_YELLOW,
+            bgColor: YELLOW,
+            messageText: "loading"
         }
     }
 
@@ -50,14 +72,15 @@ const Toast = (props) => {
         setLineColor(lineColor)
         setMessageText(message || messageText)
         showToast()
-    }, [])
+        if(type === "loading") moveLine();
+    }, [type])
 
     const showToast = () => {
         Animated.timing(yValue, {
             toValue: 0,
             duration: DURATION_FOR_Y,
             useNativeDriver: true
-        }).start(hideLine())
+        }).start(type !== "loading" ? hideLine() : () => {})
     }
 
     const hideLine = () => {
@@ -86,19 +109,36 @@ const Toast = (props) => {
         }).start()
     }
 
+    const moveLine = () => {
+        Animated.loop(
+            Animated.sequence([
+                Animated.timing(lValue, {
+                    toValue: -1,
+                    duration: DURATION_FOR_X,
+                    useNativeDriver: true
+                }),
+                Animated.timing(lValue, {
+                    toValue: 0,
+                    duration: DURATION_FOR_X,
+                    useNativeDriver: true
+                }),
+            ])
+        ).start()  
+    }
+
     const { container } = styles;
 
     return (
         <View style={container}>
             <Animated.View style={{
                 backgroundColor: bgColor,
-                height: 50,
+                height: heightOfToast,
                 justifyContent: 'center',
                 alignItems: 'center',
                 flexDirection: 'row',
                 transform: [{ translateY: yValue.interpolate({
                         inputRange: [-1, 0],
-                        outputRange: [-50, 0]
+                        outputRange: [-heightOfToast, 0]
                     })       
                 }]
             }}>
@@ -106,22 +146,39 @@ const Toast = (props) => {
                     <Text style={{color: WHITE}}>{messageText}</Text>
                 </View>
                 {
-                !autoClose && (
+                !autoClose && type !== "loading" && (
                         <TouchableOpacity style={{flex: 1}} onPress={closeXToast}>
                             <Icon name="close" size={25}></Icon>
                         </TouchableOpacity>
                     )
                 }
             </Animated.View>
-            <Animated.View style={{
-                backgroundColor: lineColor,
-                height: 10 ,
-                transform: [{ translateX: xValue.interpolate({
-                        inputRange: [-1, 0],
-                        outputRange: [-windowWidth, 0]
-                    }) 
-                }]
-            }} />
+            {type === "loading" 
+                ?   <Animated.View style={{
+                        flex: 1, 
+                        height: heightOfToastFooter,
+                        transform: [{ translateX: lValue.interpolate({
+                            inputRange: [-1, 0],
+                            outputRange: [-windowWidth, 0]
+                        }) 
+                    }] }}>
+                        <View style={{flex: 1, flexDirection: 'row', justifyContent: "center"}}>
+                            <LoadingLine />
+                            <LoadingLine />
+                            <LoadingLine />
+                            <LoadingLine />
+                        </View>
+                    </Animated.View>
+                :   <Animated.View style={{
+                        backgroundColor: lineColor,
+                        height: heightOfToastFooter ,
+                        transform: [{ translateX: xValue.interpolate({
+                                inputRange: [-1, 0],
+                                outputRange: [-windowWidth, 0]
+                            }) 
+                        }]
+                    }} />
+            }
         </View>
     )
 }
@@ -137,7 +194,7 @@ export default Toast;
 const styles = StyleSheet.create({
     container: {
         position: 'absolute', 
-        zIndex: 99, 
+        zIndex: 999, 
         top: 0, 
         right: 0, 
         left: 0
