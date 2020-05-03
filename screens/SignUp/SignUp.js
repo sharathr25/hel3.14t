@@ -3,7 +3,6 @@ import React, { useState } from 'react';
 import { Text, CheckBox } from 'react-native-elements';
 import { View, Alert, StyleSheet } from 'react-native';
 import { ScrollView } from 'react-native-gesture-handler';
-import Modal from "react-native-modal"
 import { SIGN_UP_SCREEN , SCREEN_DETAILS} from '../../constants/appConstants';
 import { ORANGE, WHITE, BLACK } from '../../styles/colors';
 import { margin } from "../../styles/mixins";
@@ -11,10 +10,11 @@ import { regex } from '../../utils/index';
 import { getAge } from '../../utils';
 import gql from 'graphql-tag';
 import { useMutation } from 'react-apollo';
-import { CustomModal, InputComponent, OTPVerificationModal } from '../../components/molecules';
-import { CustomDatePicker, Selector, Button, Link, Heading } from '../../components/atoms';
+import { InputComponent, OTPVerificationToast } from '../../components/molecules';
+import { CustomDatePicker, Selector, Button, Link } from '../../components/atoms';
 import { padding } from "../../styles/mixins";
 import { Auth } from "aws-amplify";
+import Toast, { toastTypes } from '../../components/atoms/Toast';
 
 const { LOGIN, TERMS_AND_CONDITIONS, MAIN } = SCREEN_DETAILS;
 const { ERRORS } = SIGN_UP_SCREEN;
@@ -65,16 +65,13 @@ function SignUpScreen({navigation}: { navigation: Object }) {
 
   const [termsAndConditionChecked, settermsAndConditionChecked] = useState(false);
 
-  const [isLoading, setIsLoading] = useState(false);
-
-  const [err, setErr] = useState('');
-
-  const [showOtpInput, setShowOtpInput] = useState(false);
-  const [showChangeMobile, setShowChangeMobile] = useState(false);
+  const [showOtpInput, setShowOtpInput] = useState(true);
 
   const [otp, setOtp] = useState("");
 
   const [createUser, { loading, data, error }] = useMutation(CREATE_USER);
+
+  const [toast, setToast] = useState({type:"", message:""})
 
   const handleTermsAndConditions = () => {
     navigation.navigate(TERMS_AND_CONDITIONS.screenName);
@@ -117,22 +114,32 @@ function SignUpScreen({navigation}: { navigation: Object }) {
 
   const verify = async () => {
     try{
+      setToast({ type:toastTypes.LOADING, message: "please wait"})
       await Auth.confirmSignUp(username, otp, { forceAliasCreation: true });
+      await Auth.signIn({ username: `+91${mobileNumber}`, password})
+      setToast({ type: toastTypes.SUCCESS, message: "Verification successfull"})
       setShowOtpInput(false);
       navigation.navigate(MAIN.screenName);
     } catch(error) {
+      setToast({ type: toastTypes.ERROR, message: "verification failed"})
       console.log(error)
     }
   }
 
   const resend = async () => {
-    return await Auth.resendSignUp(username)
+    try {
+      setToast({ type: toastTypes.LOADING, message: "please wait"})
+      await Auth.resendSignUp(username)
+      setToast({ type: toastTypes.SUCCESS, message: "OTP has be resent"})
+    } catch (error) {
+      setToast({ type: toastTypes.ERROR, message: "something wend wrong"})
+    }
   }
 
   const handleSignUp = async () => {  
     if(isValid())
       try {
-        setIsLoading(true);
+        setToast({ type: toastTypes.LOADING, message: "Please wait"})
         const data = await Auth.signUp({
           username,
           password, 
@@ -145,16 +152,14 @@ function SignUpScreen({navigation}: { navigation: Object }) {
             }
           }
         );
-        setErr('');
+        setToast({ type: toastTypes.SUCCESS, message: "OTP has been sent"})
+        setShowOtpInput(true);
         const { userSub, user } = data;
         const { username : userName } = user;
         createUser({ variables: { uid : userSub, username: userName } });
-        setShowOtpInput(true);
       } catch (error) {
-        setErr(error.message);
-      } finally {
-        setIsLoading(false);
-    }
+        setToast({ type: toastTypes.ERROR, message: "Something went wrong"})
+      }
   };
 
   const DateOfBirthInput = () => (
@@ -197,12 +202,18 @@ function SignUpScreen({navigation}: { navigation: Object }) {
     </View>
   )
 
-  if(isLoading) return <CustomModal desc="Please wait..."/>
-
-  if(err.length !== 0) return <CustomModal variant="error" desc={err} onClose={() => setErr('')}/>
-
   return (
-    <ScrollView style={{ backgroundColor: WHITE }}>
+    <View style={{flex: 1}}>
+      <OTPVerificationToast 
+        show={showOtpInput}
+        setOtp={setOtp} 
+        verify={verify}
+        resend={resend}
+        recepient={mobileNumber}
+        onClose={() => setShowOtpInput(!showOtpInput)}
+      />
+      {toast.type ? <Toast type={toast.type} message={toast.message} /> : null}
+      <ScrollView style={{ backgroundColor: WHITE }}>
       <View>
         <View style={{...margin(20, 30, 10, 30)}}>
           <InputComponent label="Username" updateParentState={setUsername} errMsg={userNameErr} />
@@ -218,17 +229,9 @@ function SignUpScreen({navigation}: { navigation: Object }) {
           <SignUpButton />
           <LoginLink />
         </View>
-        <OTPVerificationModal 
-          show={showOtpInput}
-          setOtp={setOtp} 
-          verify={verify}
-          resend={resend}
-          setOtp={setOtp}
-          recepient={mobileNumber}
-          onClose={() => setShowOtpInput(!showOtpInput)}
-        />
       </View>
     </ScrollView>
+    </View>
   );
 }
 

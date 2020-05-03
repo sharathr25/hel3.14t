@@ -1,11 +1,20 @@
 import React, { useEffect, useRef, useState } from "react";
 import { Text, View, TouchableOpacity, Animated, Dimensions, StyleSheet } from "react-native";
 import { WHITE, GREEN, LIGHT_GREEN, LIGHT_GRAY, LIGHTEST_GRAY, 
-    LIGHT_BLUE, LIGHT_BLUE_2, YELLOW, LIGHT_YELLOW, RED, LIGHT_RED, BLACK } from "../../styles/colors";
+    LIGHT_BLUE, LIGHT_BLUE_2, YELLOW, LIGHT_YELLOW, RED, LIGHT_RED } from "../../styles/colors";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons"
 
-const heightOfToast = 50;
+const heightOfToast = 55;
 const heightOfToastFooter = 5;
+
+export const toastTypes = {
+    "LOADING": "loading",
+    "SUCCESS": "success",
+    "ERROR": "danger",
+    "INFO": "info",
+    "DEFAULT": "default",
+    "WARNING": "warning"
+}
 
 const LoadingLine = () => {
     return (
@@ -34,32 +43,32 @@ const Toast = (props) => {
     const DURATION_FOR_X = duration;
 
     const typeMapping = {
-        "success" : {
+        [toastTypes.SUCCESS] : {
             lineColor: LIGHT_GREEN,
             bgColor: GREEN,
             messageText: message || "Success"
         },
-        "info" : {
+        [toastTypes.INFO] : {
             lineColor: LIGHT_BLUE_2,
             bgColor: LIGHT_BLUE,
             messageText: "Info"
         },
-        "warning" : {
+        [toastTypes.WARNING] : {
             lineColor: LIGHT_YELLOW,
             bgColor: YELLOW,
             messageText: "Warning"
         },
-        "danger" : {
+        [toastTypes.ERROR] : {
             lineColor: LIGHT_RED,
             bgColor: RED,
             messageText: "Error"
         },
-        "default": {
+        [toastTypes.DEFAULT]: {
             lineColor: LIGHTEST_GRAY,
             bgColor: LIGHT_GRAY,
             messageText: "Default"
         },
-        "loading": {
+        [toastTypes.LOADING]: {
             lineColor: LIGHT_YELLOW,
             bgColor: YELLOW,
             messageText: "loading"
@@ -72,7 +81,7 @@ const Toast = (props) => {
         setLineColor(lineColor)
         setMessageText(message || messageText)
         showToast()
-        if(type === "loading") moveLine();
+        if(type === toastTypes.LOADING) moveLine();
     }, [type])
 
     const showToast = () => {
@@ -80,7 +89,7 @@ const Toast = (props) => {
             toValue: 0,
             duration: DURATION_FOR_Y,
             useNativeDriver: true
-        }).start(type !== "loading" ? hideLine() : () => {})
+        }).start(type !== toastTypes.LOADING ? hideLine() : () => {})
     }
 
     const hideLine = () => {
@@ -126,36 +135,35 @@ const Toast = (props) => {
         ).start()  
     }
 
-    const { container } = styles;
-
     return (
-        <View style={container}>
             <Animated.View style={{
                 backgroundColor: bgColor,
                 height: heightOfToast,
-                justifyContent: 'center',
-                alignItems: 'center',
-                flexDirection: 'row',
                 transform: [{ translateY: yValue.interpolate({
                         inputRange: [-1, 0],
                         outputRange: [-heightOfToast, 0]
                     })       
-                }]
+                }],
+                position: 'absolute', 
+                zIndex: 999, 
+                top: 0,
+                right: 0, 
+                left: 0
             }}>
-                <View style={{flex: 8, marginLeft: 20 }}>
-                    <Text style={{color: WHITE}}>{messageText}</Text>
+                <View style={{flex: 8, alignItems: 'center', flexDirection: 'row' }}>
+                    <View style={{flex: 8, marginLeft: 20 }}>
+                        <Text style={{color: WHITE}}>{messageText}</Text>
+                    </View>
+                    {
+                    !autoClose && type !== toastTypes.LOADING && (
+                            <TouchableOpacity style={{flex: 1}} onPress={closeXToast}>
+                                <Icon name="close" size={25}></Icon>
+                            </TouchableOpacity>
+                        )
+                    }
                 </View>
-                {
-                !autoClose && type !== "loading" && (
-                        <TouchableOpacity style={{flex: 1}} onPress={closeXToast}>
-                            <Icon name="close" size={25}></Icon>
-                        </TouchableOpacity>
-                    )
-                }
-            </Animated.View>
-            {type === "loading" 
-                ?   <Animated.View style={{
-                        flex: 1, 
+                {type === toastTypes.LOADING 
+                ?   <Animated.View style={{ 
                         height: heightOfToastFooter,
                         transform: [{ translateX: lValue.interpolate({
                             inputRange: [-1, 0],
@@ -163,6 +171,10 @@ const Toast = (props) => {
                         }) 
                     }] }}>
                         <View style={{flex: 1, flexDirection: 'row', justifyContent: "center"}}>
+                            <LoadingLine />
+                            <LoadingLine />
+                            <LoadingLine />
+                            <LoadingLine />
                             <LoadingLine />
                             <LoadingLine />
                             <LoadingLine />
@@ -176,10 +188,11 @@ const Toast = (props) => {
                                 inputRange: [-1, 0],
                                 outputRange: [-windowWidth, 0]
                             }) 
-                        }]
+                        }],
+                        flex: 1
                     }} />
             }
-        </View>
+            </Animated.View>
     )
 }
 
@@ -195,7 +208,7 @@ const styles = StyleSheet.create({
     container: {
         position: 'absolute', 
         zIndex: 999, 
-        top: 0, 
+        top: -60,
         right: 0, 
         left: 0
     },
