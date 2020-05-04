@@ -9,7 +9,7 @@ import { Auth } from "aws-amplify";
 import { SCREEN_DETAILS } from "../../constants/appConstants";
 import { useAuth } from "../../customHooks";
 import { FONT_BOLD, FONT_SIZE_20 } from '../../styles/typography';
-import { CustomModal, OTPVerificationModal, OTPVerificationToast } from '../../components/molecules';
+import { CustomModal, OTPVerificationToast } from '../../components/molecules';
 import { toastTypes } from '../../components/atoms/Toast';
 
 const { UPDATE_ACCOUNT } = SCREEN_DETAILS; 

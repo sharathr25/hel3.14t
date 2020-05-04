@@ -65,7 +65,7 @@ function SignUpScreen({navigation}: { navigation: Object }) {
 
   const [termsAndConditionChecked, settermsAndConditionChecked] = useState(false);
 
-  const [showOtpInput, setShowOtpInput] = useState(true);
+  const [showOtpInput, setShowOtpInput] = useState(false);
 
   const [otp, setOtp] = useState("");
 
@@ -204,6 +204,7 @@ function SignUpScreen({navigation}: { navigation: Object }) {
 
   return (
     <View style={{flex: 1}}>
+      <ScrollView style={{ backgroundColor: WHITE }}>
       <OTPVerificationToast 
         show={showOtpInput}
         setOtp={setOtp} 
@@ -212,8 +213,7 @@ function SignUpScreen({navigation}: { navigation: Object }) {
         recepient={mobileNumber}
         onClose={() => setShowOtpInput(!showOtpInput)}
       />
-      {toast.type ? <Toast type={toast.type} message={toast.message} /> : null}
-      <ScrollView style={{ backgroundColor: WHITE }}>
+      {toast.type !== "" && <Toast type={toast.type} message={toast.message} />}
       <View>
         <View style={{...margin(20, 30, 10, 30)}}>
           <InputComponent label="Username" updateParentState={setUsername} errMsg={userNameErr} />

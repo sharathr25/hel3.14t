@@ -18,7 +18,7 @@ type OTPVerificationModalProps = {
     show: Boolean
 }
 
-const OTPVerificationModal = (props: OTPVerificationModalProps) => {
+const OTPVerificationToast = (props: OTPVerificationModalProps) => {
     const { recepient, verify, setOtp , resend, show, onClose = () => {} } = props; 
     const yValue  = useRef(new Animated.Value(-1)).current;
 
@@ -81,7 +81,7 @@ const OTPVerificationModal = (props: OTPVerificationModalProps) => {
     )
 }
 
-export default OTPVerificationModal;
+export default OTPVerificationToast;
 
 const styles = StyleSheet.create({
     innerContainer: {

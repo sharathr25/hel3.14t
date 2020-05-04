@@ -2,29 +2,30 @@
 import React, { useState, useEffect } from 'react';
 import { View, StyleSheet } from 'react-native';
 import { ORANGE, WHITE, BLACK } from '../../styles/colors';
-import { Button, NotificationMessage } from '../../components/atoms';
-import { CustomModal, InputComponent, OTPVerificationModal } from '../../components/molecules';
+import { Button, NotificationMessage, Toast } from '../../components/atoms';
+import { CustomModal, InputComponent, OTPVerificationToast } from '../../components/molecules';
 import { margin } from '../../styles/mixins';
 import { Auth } from 'aws-amplify';
 import { SCREEN_DETAILS } from "../../constants/appConstants";
+import { toastTypes } from '../../components/atoms/Toast';
 
 const { RESET_PASSWORD } = SCREEN_DETAILS;
 
 type ResetPassowrdScreenProps = {
-  navigation: Object,
   route: Object
 }
 
-const ResetPassowrdScreen = ({navigation, route}: ResetPassowrdScreenProps) => {
-  const [showModal, setShowModal] = useState(false);
-  const [status, setStatus] = useState({loading: false, success: false, error: false});
-  const [successDesc, setSuccessDesc] = useState('');
-  const [errorDesc, setErrorDesc] = useState('');
-  const [username, setUsername] = useState('sharathr25');
+const ResetPassowrdScreen = ({route}: ResetPassowrdScreenProps) => {
+  const [username, setUsername] = useState('');
   const [usernameErrorMessage, setUsernameErrorMessage] = useState('');
+  const [password, setPassword] = useState('');
+  const [confirmPassword, setConfirmPassowrd] = useState('');
+  const [passwordErrorMessage, setPasswordErrorMessage] = useState('');
+  const [confirmPasswordErrorMessage, setConfirmPasswordErrorMessage] = useState('');
   const [otp, setOtp] = useState('');
   const [showOtpInput, setShowOtpInput] = useState(false)
   const [recepient, setRecepient] = useState('');
+  const [toast, setToast] = useState({ type: "", message: ""});
 
   useEffect(() => {
     if(route.params) {
@@ -37,53 +38,82 @@ const ResetPassowrdScreen = ({navigation, route}: ResetPassowrdScreenProps) => {
     let valid = false;
     if (username.length === 0) {
       setUsernameErrorMessage('Username cannot be empty');
-    } 
-    else valid = true;
+    } else if (password.length === 0) {
+      setPasswordErrorMessage('Password cannot be empty');
+    } else if(confirmPassword.length === 0) {
+      setConfirmPasswordErrorMessage('Password cannot be empty');
+    } else if (password !== confirmPassword) {
+      setConfirmPasswordErrorMessage('Password mismatch');
+    } else 
+        valid = true;
     return valid;
   }
 
-  const verify = () => {
-    setShowOtpInput(false)
-    navigation.navigate(RESET_PASSWORD.screenName, { username, otp });
+  const verify = async () => {
+    try {
+      setToast({ type: toastTypes.LOADING, message: "Verifying" })
+      console.log(username, otp, password)
+      await Auth.forgotPasswordSubmit(username, otp, password)
+      setToast({ type: toastTypes.SUCCESS, message: "Success, go back and login"})
+      setShowOtpInput(false)
+    } catch (error) {
+      setToast({ type: toastTypes.ERROR, message: "Invalid OTP" })
+      console.log(error) 
+    }
   }
 
   const resend = async () => {
-    return await Auth.forgotPassword(username);
+    try {
+      setToast({ type: toastTypes.LOADING, message: "Please wait"})
+      await Auth.forgotPassword(username);
+      setToast({ type: toastTypes.SUCCESS, message: "OTP has been sent"})
+    } catch (error) {
+      setToast({ type: toastTypes.ERROR, message: "Couldn't send OTP"})
+    }
+  }
+
+  const onPasswordChange = (value) => {
+    setPassword(value); 
+    setPasswordErrorMessage('')
+  }
+
+  const onConfirmPasswordChange = (value) => {
+    setConfirmPassowrd(value); 
+    setConfirmPasswordErrorMessage('')
+  }
+
+  const onUserNameChange = (value) => {
+    setUsername(value);
+    setUsernameErrorMessage('')
   }
 
   const handleSendOTP = async () => {
     if(checkUsernameField()) {
       try {
+        setToast({ type: toastTypes.LOADING, message: "Please wait" })
         const { CodeDeliveryDetails } = await Auth.forgotPassword(username);
         const { DeliveryMedium }  = CodeDeliveryDetails;
-        setSuccessDesc('OTP sent Sucessfully');
-        setStatus({loading:false, success: true, error: false});
+        setToast({ type: toastTypes.SUCCESS, message: "OTP sent Sucessfully" })
         setShowOtpInput(true)
         setRecepient(DeliveryMedium === 'SMS' ? "Mobile number" : "Email")
       } catch (error) {
-        setErrorDesc('Something went wrong');
+        setToast({ type: toastTypes.ERROR, message: "Something went wrong" })
         console.log(error);
-        setStatus({loading:false, success: false, error: true});
-      } finally {
-        setShowModal(true);
       }
   }
 }
 
-  if (showModal) {
-    // TODO : try to figure out how to show this in toast
-    const { loading, success, error } = status;
-    if (loading) {
-      return <CustomModal variant="loading" />
-    } else if (success) {
-      return <CustomModal variant="success" onClose={() => setShowModal(!showModal)} desc={successDesc}/>
-    } else if (error) {
-      return <CustomModal variant="error" onClose={() => setShowModal(!showModal)} desc={errorDesc}/>
-    }
-  }
-
   return (
       <View style={{ flex: 1, backgroundColor: WHITE }}>
+        {toast.type !== "" && <Toast type={toast.type} message={toast.message} />}
+        <OTPVerificationToast 
+          show={showOtpInput}
+          setOtp={setOtp}
+          verify={verify}
+          resend={resend}
+          recepient={recepient}
+          onClose={() => setShowOtpInput(false)}
+        />
         <View style={{...margin(30,0,30,0)}}>
           <NotificationMessage>
             Enter registered Email(Verified) or Username
@@ -93,21 +123,25 @@ const ResetPassowrdScreen = ({navigation, route}: ResetPassowrdScreenProps) => {
           <InputComponent
             label="Email or Username"
             secureTextEntry={false}
-            updateParentState={value => {setUsername(value); setUsernameErrorMessage('')}}
+            updateParentState={onUserNameChange}
             errMsg={usernameErrorMessage}
           />
+          <InputComponent
+            label="Password"
+            showPasswordIcon={true}
+            updateParentState={onPasswordChange}
+            errMsg={passwordErrorMessage}
+          />
+          <InputComponent
+            label="Confirm Password"
+            showPasswordIcon={true}
+            updateParentState={onConfirmPasswordChange}
+            errMsg={confirmPasswordErrorMessage}
+          />
           <View>
-            <Button bgColor={ORANGE} textColor={WHITE} onPress={handleSendOTP}>Send OTP</Button>
+            <Button bgColor={ORANGE} textColor={WHITE} onPress={handleSendOTP}>Update</Button>
           </View>
         </View>
-        <OTPVerificationModal 
-          show={showOtpInput}
-          setOtp={setOtp}
-          verify={verify}
-          resend={resend}
-          recepient={recepient}
-          onClose={() => setShowOtpInput(false)}
-        />
       </View>
   );
 }

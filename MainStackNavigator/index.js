@@ -19,7 +19,8 @@ import {
   UserHelpRequestScreen,
   UpdateAccount,
   UserContributionScreen,
-  MoreScreen
+  MoreScreen,
+  ChangePassword
  } from "../screens";
 import { AccountButton } from '../components/atoms';
 
@@ -38,7 +39,8 @@ const {
   USER_HELP_REQUEST,
   UPDATE_ACCOUNT,
   USER_CONTRIBUTION,
-  MORE_SCREEN
+  MORE_SCREEN,
+  CHANGE_PASSOWRD
 } = SCREEN_DETAILS;
 
 
@@ -125,6 +127,11 @@ const MainNavigator = (props: { isLogedIn: boolean }) => {
         name={MORE_SCREEN.screenName} 
         component={MoreScreen} 
         options={{ title: MORE_SCREEN.screenTitle }}>
+      </Stack.Screen>
+      <Stack.Screen 
+        name={CHANGE_PASSOWRD.screenName} 
+        component={ChangePassword} 
+        options={{ title: CHANGE_PASSOWRD.screenTitle }}>
       </Stack.Screen>
     </Stack.Navigator>
   );
