@@ -27,7 +27,8 @@ const MoreScreen = ({ navigation } : { navigation: Object }) => {
 
     const handleLogOut = async () => {
         await Auth.signOut();
-        navigation.navigate(LOGIN.screenName);
+        navigation.popToTop()
+        navigation.replace(LOGIN.screenName);
     }
 
     const { container } = styles
