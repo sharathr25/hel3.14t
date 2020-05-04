@@ -3,7 +3,7 @@ import { View, FlatList } from 'react-native';
 import Requester from './Requester';
 import { Heading } from '../atoms';
 
-const UsersRequested = () => {
+const UsersRequested = (props) => {
   const { usersRequested, keyOfHelpRequest, noPeopleRequired , usersAccepted} = props;
   
   const getRequestedUser = ({ item }) => {

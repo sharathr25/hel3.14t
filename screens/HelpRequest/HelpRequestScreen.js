@@ -80,7 +80,7 @@ const HelpRequestScreen = ({ route } : { route: Object }) => {
 
     let footer;
     if(error) {
-        footer = <InlineLoader variant="error" message="something went wrong" />
+        footer = <Message>something went wrong</Message>
     } else if(loading) {
         footer = <InlineLoader />
     } else if(isUserIsThereInUsers(usersRequested, uid)) {

@@ -134,7 +134,9 @@ const UserContributionScreen = ({ route } : { route: Object }) => {
                   ? <View style={{...CTAContainerStyle, padding: 20}}><InlineLoader /></View>
                   : <View style={CTAContainerStyle}>
                       <Heading color={LIGHT_GRAY} size={FONT_SIZE_20}>Change of mind</Heading>
-                      <Button onPress={handleCancel} bgColor={LIGHTEST_GRAY} textColor={RED}>Cancel</Button>
+                      <Button onPress={handleCancel} bgColor={LIGHTEST_GRAY} textColor={RED} borderColor={RED}>
+                        Cancel
+                      </Button>
                     </View>
               : null
             }

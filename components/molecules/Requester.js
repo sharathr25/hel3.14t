@@ -24,8 +24,8 @@ type RequesterProps = {
 }
 
 const QUERY = gql`
-  mutation UpdateHelp($key:String!, $value:Any, $operation:String!){
-    updateHelp(id:"$id", key:$key, value:$value, type:"array", operation:$operation){
+  mutation UpdateHelp($id:String!, $key:String!, $value:Any){
+    updateHelp(id:$id, key:$key, value:$value, type:"array", operation:"push"){
       _id
     }
   }
@@ -46,9 +46,9 @@ const Requester = (props: RequesterProps) => {
     } else {
       updateHelpForAccept({ 
         variables: { 
+          id: keyOfHelpRequest,
           key: "usersAccepted", 
           value: { uid: uidOfRequester, mobileNo, username }, 
-          operation: "push" 
         } 
       });
     }
@@ -57,10 +57,9 @@ const Requester = (props: RequesterProps) => {
   const handleReject = async () => {
     updateHelpForReject({ 
       variables: { 
+        id: keyOfHelpRequest,
         key: "usersRejected", 
         value: { uid: uidOfRequester }, 
-        operation: "push", 
-        type: "array" 
       } 
     });
   };
