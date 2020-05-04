@@ -8,7 +8,6 @@ import CustomDatePicker from './CustomDatePicker';
 import ProfileLetter from './ProfileLetter';
 import Selector from './Selector';
 import Link from './Link';
-import HeaderTitle from './HeaderTitle'
 import Curve from "./Curve";
 import PasswordIcon from "./PasswordIcon";
 import Description from "./Description";
@@ -19,6 +18,7 @@ import BoxButton from "./BoxButton";
 import InlineLoader from "./InlineLoader";
 import NotificationMessage from "./NotificationMessage";
 import Toast from './Toast';
+import BackButton from './BackButton';
 
 export {
     Status,
@@ -31,7 +31,6 @@ export {
     ProfileLetter,
     Selector,
     Link,
-    HeaderTitle,
     Curve,
     PasswordIcon,
     Description,
@@ -41,5 +40,6 @@ export {
     BoxButton,
     InlineLoader,
     NotificationMessage,
-    Toast
+    Toast,
+    BackButton
 };

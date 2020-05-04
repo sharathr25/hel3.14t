@@ -1,7 +1,6 @@
 // @flow
 import React from 'react';
 import { createStackNavigator } from '@react-navigation/stack';
-import { rightToLeft, leftToRight } from "./cardInterpolators";
 import { Header } from '../components/molecules'
 import { SCREEN_DETAILS } from "../constants/appConstants";
 
@@ -23,9 +22,6 @@ import {
   MoreScreen
  } from "../screens";
 import { AccountButton } from '../components/atoms';
-
-const Stack = createStackNavigator();
-
 
 const {
   MAIN,
@@ -49,6 +45,9 @@ const {
 const MainNavigator = (props: { isLogedIn: boolean }) => {
   const { isLogedIn } = props;
   const initialScreen = isLogedIn ? MAIN.screenName : APP_LANDING_SCREEN.screenName;
+
+  const Stack = createStackNavigator();
+
   return (
     <Stack.Navigator initialRouteName={initialScreen} 
       screenOptions={{ header: (props) => <Header {...props} /> }}>
@@ -70,12 +69,12 @@ const MainNavigator = (props: { isLogedIn: boolean }) => {
       <Stack.Screen 
         name={SIGNUP.screenName} 
         component={SignUp} 
-        options={{ title: SIGNUP.screenTitle, cardStyleInterpolator: leftToRight }}>
+        options={{ title: SIGNUP.screenTitle }}>
       </Stack.Screen>
       <Stack.Screen 
         name={LOGIN.screenName} 
         component={LoginScreen} 
-        options={{ title: LOGIN.screenTitle,cardStyleInterpolator: rightToLeft }}>
+        options={{ title: LOGIN.screenTitle }}>
       </Stack.Screen>
       <Stack.Screen 
         name={FORGOT_PASSWORD.screenName} 

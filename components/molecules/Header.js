@@ -1,40 +1,68 @@
 import React from 'react'
-import { View } from 'react-native';
-import { WHITE } from '../../styles/colors';
-import { Curve, HeaderTitle } from "../atoms/";
+import { View, StyleSheet, Text } from 'react-native';
+import { WHITE, ORANGE, LIGHTER_ORANGE, LIGHTEST_ORANGE } from '../../styles/colors';
+import { FONT_SIZE_20, FONT_FAMILY_BOLD } from '../../styles/typography';
+import { BackButton } from '../atoms';
 
 const Header = (props) => {
-    const { layout, scene, navigation } = props;
-    const { width, height } = layout;
-    const { descriptor } = scene;
-    const { options } = descriptor;
-    const {  headerLeft = null } = options;
+  const { scene, navigation } = props;
+  const { descriptor } = scene;
+  const { options } = descriptor;
+  const {  headerLeft = null } = options;
 
-    let title = options.headerTitle !== undefined
-      ? options.headerTitle
-      : options.title !== undefined
+  let title = options.headerTitle !== undefined
+    ? options.headerTitle
+    : options.title !== undefined
       ? options.title
       : scene.route.name;
-
+  
+  if(title === "Main") {
     let screenName = "Home";
-    
-    if(title === "Main") {
-      if(scene.route.state) {
-        index = scene.route.state.index;
-        screenName = scene.route.state.routeNames[index];
-      }
-      title = screenName;
+    if(scene.route.state) {
+      index = scene.route.state.index;
+      screenName = scene.route.state.routeNames[index];
     }
-
-    return (
-      <View style={{backgroundColor: WHITE, height: 60}}>
-        <Curve zIndex={2} width={width} bottom={8} backgroundColor="#FF9933">
-          <HeaderTitle title={title} width={width} height={height} navigation={navigation} headerLeft={headerLeft} />
-        </Curve>
-        <Curve bottom={4} zIndex={1} backgroundColor="#FFA64D" width={width} />
-        <Curve bottom={0} zIndex={0} backgroundColor="#FFB366" width={width} />
-      </View>
-    );
+    title = screenName;
   }
 
-  export default Header;
+  const { container, titleStyle, column } = styles;
+
+  return (
+    <View style={{backgroundColor: WHITE, height: 60}}>
+      <View style={container}>
+        <View style={column}>
+          {headerLeft ? headerLeft : <BackButton navigation={navigation} />}
+        </View>
+        <View style={{...column, flex: 5}}>
+          <Text style={titleStyle}>{title}</Text>
+        </View>
+        <View style={column}>
+          {/* {headerRight ? headerRight : null} */}
+        </View>
+      </View>
+      <View style={{backgroundColor: LIGHTER_ORANGE, height: 4}} />
+      <View style={{backgroundColor: LIGHTEST_ORANGE, height: 4}} />
+    </View>
+  );
+}
+
+export default Header;
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1, 
+    backgroundColor: ORANGE ,
+    flexDirection: 'row',
+    height: 60
+  },
+  titleStyle: {
+    color: WHITE, 
+    fontSize: FONT_SIZE_20, 
+    fontFamily:FONT_FAMILY_BOLD
+  },
+  column: {
+    flex: 1, 
+    alignItems: 'center', 
+    justifyContent:'center'
+  }
+});
