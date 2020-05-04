@@ -3,13 +3,13 @@ import React, { useState } from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import { WHITE, ORANGE, BLACK } from '../../styles/colors';
 import { regex } from '../../utils/index';
-import { Link, Button, NotificationMessage } from '../../components/atoms';
-import { CustomModal,InputComponent } from '../../components/molecules';
+import { Link, Button, NotificationMessage, Toast } from '../../components/atoms';
+import { InputComponent } from '../../components/molecules';
 import { ScrollView } from 'react-native-gesture-handler';
-import { LIGHT_GRAY } from '../../styles/colors';
 import { margin } from '../../styles/mixins';
 import { Auth } from "aws-amplify";
 import { LOGIN_SCREEN, SCREEN_DETAILS } from "../../constants/appConstants";
+import { toastTypes } from '../../components/atoms/Toast';
 
 const { SIGNUP, FORGOT_PASSWORD , MAIN } = SCREEN_DETAILS;
 
@@ -23,10 +23,8 @@ const LoginScreen = ({navigation}: LoginScreenProps) => {
   const [userName, setUserName] = useState('');
   const [userNameErrorMessage, setUserNameErrorMessage] = useState('');
   const [password, setPassword] = useState('');
-  const [showPassword, setShowPassword] = useState(false);
   const [passwordErrorMessage, setPasswordErrorMessage] = useState('');
-  const [loaderVisible, setLoaderVisible] = useState(false);
-  const [err, setError] = useState('');
+  const [toast, setToast] = useState({ type: "", message: "" })
 
   const handleSignUp = () => {
     navigation.navigate(SIGNUP.screenName);
@@ -55,15 +53,13 @@ const LoginScreen = ({navigation}: LoginScreenProps) => {
   const handleLogin = async () => {
     if (isValid()) {
       try {
-        setLoaderVisible(true);
+        setToast({ type: toastTypes.LOADING, message: "Please wait" })
         const uname = userName.match(emailRegex) ? userName : `+91${userName}`
         await Auth.signIn({username: uname , password });
         navigation.replace(MAIN.screenName);
       } catch (error) {
         console.log(error);
-        setError(error.message);
-      } finally {
-        setLoaderVisible(false);
+        setToast({ type: toastTypes.ERROR, message: error.message })
       }
     }
   }
@@ -101,12 +97,9 @@ const LoginScreen = ({navigation}: LoginScreenProps) => {
     setPasswordErrorMessage('')
   }
 
-  if(loaderVisible) return <CustomModal desc="Please Wait..." />
-
-  if(err.length !== 0) return <CustomModal variant="error" desc={err} onClose={() => setError('')}/>
-
   return (
     <ScrollView contentContainerStyle={{ flex: 1, backgroundColor: WHITE, }}>
+      {toast.type ? <Toast type={toast.type} message={toast.message} /> : null}
       <View style={{flex: 1}}>
         <HeadingTitle />
         <View style={{flex: 1,justifyContent:'space-evenly', ...margin(0,30,0,30)}}>

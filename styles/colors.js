@@ -1,6 +1,8 @@
 // @flow
 export const ORANGE = '#FF9933';
 export const LIGHT_ORANGE = '#FFDCB9';
+export const LIGHTER_ORANGE = "#FFA64D";
+export const LIGHTEST_ORANGE = "#FFB366";
 export const WHITE = '#FFFFFF';
 export const GREEN = '#28a745';  // #138808
 export const LIGHT_GREEN = '#AAF2A4';

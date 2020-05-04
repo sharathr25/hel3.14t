@@ -5,9 +5,10 @@ import { ORANGE, WHITE, LIGHTEST_GRAY } from '../../styles/colors';
 import { Button, CustomDatePicker, Selector, Toast} from '../../components/atoms';
 import { Auth } from "aws-amplify";
 import { SCREEN_DETAILS, SIGN_UP_SCREEN } from "../../constants/appConstants";
-import { InputComponent, CustomModal, OTPVerificationModal } from '../../components/molecules';
+import { InputComponent, OTPVerificationToast } from '../../components/molecules';
 import { regex, getAge } from '../../utils';
 import { padding } from '../../styles/mixins';
+import { toastTypes } from '../../components/atoms/Toast';
 
 const AGE_LIMIT = 15;
 const GENDER_OPTIONS = [
@@ -36,7 +37,6 @@ const UpdateAccount = ({ navigation, route }:{ navigation : Object, route : Obje
     const [ genderForUpdate, setGender ] = useState(gender);
     const [ emailErr, setEmailErr ] = useState('');
     const [ mobileNumberErr, setMobileNumberErr ] = useState('');
-    const [ loading, setLoading] = useState(false);
     const [ otp, setOtp] = useState('')
     const [showOtpInput, setShowOtpInput] = useState(false)
     const [toast, setToast] = useState({ type: "", message: ""})
@@ -65,19 +65,23 @@ const UpdateAccount = ({ navigation, route }:{ navigation : Object, route : Obje
 
       const verify = async () => {
         try {
+          setToast({ type: toastTypes.LOADING, message: "Please wait"})
           await Auth.verifyCurrentUserAttributeSubmit('phone_number', otp);
+          setToast({ type: toastTypes.SUCCESS, message: "Succesfully updated"})
           setShowOtpInput(false)
-          navigation.navigate(MY_ACCOUNT.screenName)
         } catch (error) {
-          
+          setToast({ type: toastTypes.ERROR, message: "couln't update"})
         }
       }
     
       const resend = async () => {
         try {
+          setToast({ type: toastTypes.LOADING, message: "Sending OTP"})
           await Auth.verifyCurrentUserAttribute('phone_number')
+          setToast({ type: toastTypes.SUCCESS, message: "OTP has been sent again"})
         } catch (error) {
           console.log(error)
+          setToast({ type: toastTypes.ERROR, message: "couln't send OTP"})
         }
       }
     
@@ -85,7 +89,7 @@ const UpdateAccount = ({ navigation, route }:{ navigation : Object, route : Obje
         if(isValid()) {
             const phoneNumberWithCountryCode = `+91${phoneNumberForUpdate}`;
             try {
-              setLoading(true);
+              setToast({ type: toastTypes.LOADING, message: "Please wait"})
               const user = await Auth.currentAuthenticatedUser();
               await Auth.updateUserAttributes(user, { 
                 "email" : emailForUpdate,
@@ -93,15 +97,14 @@ const UpdateAccount = ({ navigation, route }:{ navigation : Object, route : Obje
                 "birthdate" : birthdateForUpdate,
                 "gender": genderForUpdate 
               });
-              setLoading(false);
               if(phoneNumberForUpdate !== phoneNumberWithoutCountryCode){
+                setToast({ type: "", message :""})
                 setShowOtpInput(true);
               } else {
-                setToast({ type: "success", message: "Update successfull"})
+                setToast({ type: toastTypes.SUCCESS, message: "Update successfull"})
               }
             } catch (error) {
-              setLoading(false);
-              setToast({ type: "danger", message: "Update failed"})
+              setToast({ type: toastTypes.ERROR, message: "Update failed"})
               console.log(error); 
             }
         }
@@ -111,11 +114,10 @@ const UpdateAccount = ({ navigation, route }:{ navigation : Object, route : Obje
         navigation.navigate(MY_ACCOUNT.screenName);
     }
 
-    if(loading) return <CustomModal variant="loading" desc="Please wait" />
-
     return (
         <ScrollView style={{ backgroundColor: WHITE }} contentContainerStyle={{ flexGrow: 1 }}>
-            <OTPVerificationModal 
+          {toast.type !== "" && <Toast type={toast.type} message={toast.message} />}
+          <OTPVerificationToast
               show={showOtpInput}
               onClose={() => {setShowOtpInput(!showOtpInput)}}
               verify={verify}
@@ -123,7 +125,6 @@ const UpdateAccount = ({ navigation, route }:{ navigation : Object, route : Obje
               setOtp={setOtp}
               recepient={phoneNumberForUpdate}
             />
-            {toast.type ? <Toast type={toast.type} message={toast.message} onClose/> : null}
             <View style={{ flex: 1, margin: 20 }}>
                 <View style={{flex: 1}}>
                     <InputComponent 

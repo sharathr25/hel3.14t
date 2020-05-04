@@ -1,11 +1,11 @@
 // @flow
 import React, { useState, useEffect } from 'react';
 import { View } from 'react-native'
-import { WHITE } from '../../styles/colors';
 import { HelpRequestFeed } from '../../components/oraganisms';
 import { CustomModal } from "../../components/molecules";
 import { useAuth } from "../../customHooks";
 import { Toast } from '../../components/atoms';
+import { toastTypes } from '../../components/atoms/Toast';
 
 const Helps = ({ route }:{ route: Object }) => {
   const { params } = route;
@@ -23,8 +23,8 @@ const Helps = ({ route }:{ route: Object }) => {
   if(!user) return <CustomModal variant="loading" />
 
   return (
-    <View style={{ flex: 1, backgroundColor: WHITE }}>
-      {showToast && <Toast type="warning" message="Email not verified" duration={3000} />}
+    <View style={{flex: 1}}>
+      {showToast && <Toast type={toastTypes.WARNING} message="Email not verified" duration={3000} />}
       <HelpRequestFeed />
     </View>
   ); 

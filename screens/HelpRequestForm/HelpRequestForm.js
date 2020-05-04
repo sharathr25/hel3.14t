@@ -122,13 +122,10 @@ const HelpRequestForm = () => {
     }
 
     const getToast = () => {
-        if(data) return { type: "success", message: "Success, Check activity" }
+        if(loading) return { type: "loading", message: "Please wait..."}
+        else if(data) return { type: "success", message: "Success, Check activity" }
         else if(error) return { type: "danger", message: "Something went wrong! try again"}
         return  { type: "", message: "" }
-    }
-
-    if (loading) {
-        return <CustomModal variant="loading" />
     }
 
     return (

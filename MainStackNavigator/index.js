@@ -1,7 +1,6 @@
 // @flow
 import React from 'react';
 import { createStackNavigator } from '@react-navigation/stack';
-import { rightToLeft, leftToRight } from "./cardInterpolators";
 import { Header } from '../components/molecules'
 import { SCREEN_DETAILS } from "../constants/appConstants";
 
@@ -20,12 +19,10 @@ import {
   UserHelpRequestScreen,
   UpdateAccount,
   UserContributionScreen,
-  MoreScreen
+  MoreScreen,
+  ChangePassword
  } from "../screens";
 import { AccountButton } from '../components/atoms';
-
-const Stack = createStackNavigator();
-
 
 const {
   MAIN,
@@ -42,13 +39,17 @@ const {
   USER_HELP_REQUEST,
   UPDATE_ACCOUNT,
   USER_CONTRIBUTION,
-  MORE_SCREEN
+  MORE_SCREEN,
+  CHANGE_PASSOWRD
 } = SCREEN_DETAILS;
 
 
 const MainNavigator = (props: { isLogedIn: boolean }) => {
   const { isLogedIn } = props;
   const initialScreen = isLogedIn ? MAIN.screenName : APP_LANDING_SCREEN.screenName;
+
+  const Stack = createStackNavigator();
+
   return (
     <Stack.Navigator initialRouteName={initialScreen} 
       screenOptions={{ header: (props) => <Header {...props} /> }}>
@@ -70,12 +71,12 @@ const MainNavigator = (props: { isLogedIn: boolean }) => {
       <Stack.Screen 
         name={SIGNUP.screenName} 
         component={SignUp} 
-        options={{ title: SIGNUP.screenTitle, cardStyleInterpolator: leftToRight }}>
+        options={{ title: SIGNUP.screenTitle }}>
       </Stack.Screen>
       <Stack.Screen 
         name={LOGIN.screenName} 
         component={LoginScreen} 
-        options={{ title: LOGIN.screenTitle,cardStyleInterpolator: rightToLeft }}>
+        options={{ title: LOGIN.screenTitle }}>
       </Stack.Screen>
       <Stack.Screen 
         name={FORGOT_PASSWORD.screenName} 
@@ -126,6 +127,11 @@ const MainNavigator = (props: { isLogedIn: boolean }) => {
         name={MORE_SCREEN.screenName} 
         component={MoreScreen} 
         options={{ title: MORE_SCREEN.screenTitle }}>
+      </Stack.Screen>
+      <Stack.Screen 
+        name={CHANGE_PASSOWRD.screenName} 
+        component={ChangePassword} 
+        options={{ title: CHANGE_PASSOWRD.screenTitle }}>
       </Stack.Screen>
     </Stack.Navigator>
   );

@@ -4,12 +4,13 @@ import { View, Text, StyleSheet, Dimensions, ScrollView, ToastAndroid } from 're
 import { useLazyQuery } from 'react-apollo';
 import gql from 'graphql-tag';
 import { ORANGE, WHITE, BLACK, LIGHTEST_GRAY } from '../../styles/colors';
-import { ProfileLetter, Button, Link} from '../../components/atoms';
+import { ProfileLetter, Button, Link, Toast} from '../../components/atoms';
 import { Auth } from "aws-amplify";
 import { SCREEN_DETAILS } from "../../constants/appConstants";
 import { useAuth } from "../../customHooks";
 import { FONT_BOLD, FONT_SIZE_20 } from '../../styles/typography';
-import { CustomModal, OTPVerificationModal } from '../../components/molecules';
+import { CustomModal, OTPVerificationToast } from '../../components/molecules';
+import { toastTypes } from '../../components/atoms/Toast';
 
 const { UPDATE_ACCOUNT } = SCREEN_DETAILS; 
 
@@ -88,6 +89,7 @@ const MyAccountScreen = ({ navigation }: MyAccountScreenProps) => {
     const [emailVerified, setEmailVerified] = useState(true);
     const [showOtpInput, setShowOtpInput] = useState(false)
     const { user } = useAuth();
+    const [toast, setToast] = useState({ type: "", message: "" })
     useEffect(() => {
         if(user) {
             getUserData({ variables: { uid : user.uid } })
@@ -112,23 +114,36 @@ const MyAccountScreen = ({ navigation }: MyAccountScreenProps) => {
 
     const verify = async () => {
         try {
+            setToast({ type: toastTypes.LOADING, message: "Verifying OTP" })
             await Auth.verifyCurrentUserAttributeSubmit('email', otp)
-            // TODO : Need to show toast sucess
+            setToast({ type: toastTypes.SUCCESS, message: "Email has been verified" })
             setEmailVerified(true)
             setShowOtpInput(false)   
         } catch (error) {
-            // TODO : Need to show toast error
+            setToast({ type: toastTypes.ERROR, message: "Incorrect OTP" })
             setEmailVerified(false)
         }
     }
 
     const resend = async () => {
-        return await Auth.verifyCurrentUserAttribute('email')
+        try {
+            setToast({ type: toastTypes.LOADING, message: "Please wait" })
+            await Auth.verifyCurrentUserAttribute('email')
+            setToast({ type: toastTypes.SUCCESS, message: "OTP has been sent" })
+        } catch (error) {
+            setToast({ type: toastTypes.ERROR, message: "Couldn't send OTP, sorry" })
+        }
     }
 
     const handleVerify = async () => {
-        await Auth.verifyCurrentUserAttribute('email');
-        setShowOtpInput(true);
+        try {
+            setToast({ type: toastTypes.LOADING, message: "Sending OTP" })
+            await Auth.verifyCurrentUserAttribute('email');
+            setToast({ type: toastTypes.SUCCESS, message: "OTP has been sent" })    
+            setShowOtpInput(true);
+        } catch (error) {          
+            setToast({ type: toastTypes.ERROR, message: "Couldn't send OTP" })  
+        }
     }
 
     const handleEdit = () => {
@@ -136,20 +151,10 @@ const MyAccountScreen = ({ navigation }: MyAccountScreenProps) => {
     }
 
     return (
-        <ScrollView style={{ backgroundColor: LIGHTEST_GRAY }}>
-        <View style={container}>
-            <View style={{ ...column, backgroundColor: WHITE }}>
-                <ProfileName username={username} />
-                <ProgressDetails xp={xp} stars={stars} />
-            </View>
-            <View style={{...column, padding: 0 }}>
-                <Detail label="Email" value={email} subDetail={!emailVerified && <EmailVerifyMessage handleVerify={handleVerify} />} />
-                <Detail label="Phone" value={phoneNumberWithoutCountryCode} />
-                <Detail label="Gender" value={gender} />
-                <Detail label="Date of birth" value={birthdate} showSeparator={false} />
-                <Button bgColor={ORANGE} textColor={WHITE} onPress={handleEdit} >Edit</Button>
-            </View>
-            <OTPVerificationModal 
+        <View style={{flex: 1}}>
+            <ScrollView style={{ backgroundColor: LIGHTEST_GRAY }}>
+            {toast.type !== "" && <Toast type={toast.type} message={toast.message} />}
+            <OTPVerificationToast 
                 show={showOtpInput}
                 onClose={() => {setShowOtpInput(!showOtpInput)}}
                 verify={verify}
@@ -157,8 +162,21 @@ const MyAccountScreen = ({ navigation }: MyAccountScreenProps) => {
                 setOtp={setOtp}
                 recepient={email}
             />
+                <View style={container}>
+                    <View style={{ ...column, backgroundColor: WHITE }}>
+                        <ProfileName username={username} />
+                        <ProgressDetails xp={xp} stars={stars} />
+                    </View>
+                    <View style={{...column, padding: 0 }}>
+                        <Detail label="Email" value={email} subDetail={!emailVerified && <EmailVerifyMessage handleVerify={handleVerify} />} />
+                        <Detail label="Phone" value={phoneNumberWithoutCountryCode} />
+                        <Detail label="Gender" value={gender} />
+                        <Detail label="Date of birth" value={birthdate} showSeparator={false} />
+                        <Button bgColor={ORANGE} textColor={WHITE} onPress={handleEdit} >Edit</Button>
+                    </View>
+                </View>
+            </ScrollView>
         </View>
-        </ScrollView>
     );
 }
 

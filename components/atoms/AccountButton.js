@@ -16,7 +16,7 @@ const AccountButton = () => {
     }
 
     return (
-      <TouchableOpacity style={{position:'absolute', left: height > width ? 10 : 150, bottom: 5 }} onPress={_onPress}>
+      <TouchableOpacity onPress={_onPress}>
         <Icon name="account-circle" size={25} color={WHITE}/>
       </TouchableOpacity>
     );

@@ -7,7 +7,7 @@ import { SCREEN_DETAILS } from "../../constants/appConstants";
 import { FONT_SIZE_20 } from '../../styles/typography';
 import Icon from "react-native-vector-icons/MaterialCommunityIcons"
 
-const { LOGIN, MY_ACCOUNT } = SCREEN_DETAILS; 
+const { LOGIN, MY_ACCOUNT, CHANGE_PASSOWRD } = SCREEN_DETAILS; 
 
 const ScreenNavigationOption = ({ iconName, text, onPress }) => {
     return (
@@ -27,7 +27,8 @@ const MoreScreen = ({ navigation } : { navigation: Object }) => {
 
     const handleLogOut = async () => {
         await Auth.signOut();
-        navigation.navigate(LOGIN.screenName);
+        navigation.popToTop()
+        navigation.replace(LOGIN.screenName);
     }
 
     const { container } = styles
@@ -42,7 +43,7 @@ const MoreScreen = ({ navigation } : { navigation: Object }) => {
                 <ScreenNavigationOption 
                     text="Change Password" 
                     iconName="eye" 
-                    onPress={() => {}}
+                    onPress={() => navigation.navigate(CHANGE_PASSOWRD.screenName)}
                 />
                 <ScreenNavigationOption 
                     text="Settings" 

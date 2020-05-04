@@ -12,7 +12,7 @@ import UsersRequested from './UsersRequested';
 import Creator from './Creator';
 import EventLocation from "./EventLocation";
 import Message from "./Message";
-import OTPVerificationModal from "./OTPVerificationModal"
+import OTPVerificationToast from "./OTPVerificationToast";
 
 export { 
     TimeAndDistance, 
@@ -29,5 +29,5 @@ export {
     Creator,
     EventLocation,
     Message,
-    OTPVerificationModal
+    OTPVerificationToast
 }

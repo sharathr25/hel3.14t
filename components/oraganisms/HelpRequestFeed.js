@@ -107,6 +107,7 @@ const HelpRequestFeed = () => {
       keyExtractor={(_, index) => index.toString()}
       onRefresh={getHelps}
       refreshing={loading}
+      style={{backgroundColor: WHITE }}
       ListHeaderComponent={helpRequestsSortedByDistance.length ? null : <NotificationMessage bgColor={WHITE}>No help requests</NotificationMessage>}
     />
   );
