@@ -8,6 +8,7 @@ import { WHITE, ORANGE } from '../../styles/colors';
 import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
 import { useAuth } from "../../customHooks";
 import { CustomModal } from '../../components/molecules';
+import { POLL_INTERVAL } from '../../config';
 
 const REQUESTED_HELPS_QUERY = gql`
 query User($uid: String!) {
@@ -37,7 +38,7 @@ type ContributionsProps = {
 const MyHelps = (props:HelpsProps) => {
     const { currentUser } = props;
     const { uid } = currentUser;
-    const { data, error, loading, refetch } = useQuery(REQUESTED_HELPS_QUERY, { variables: { uid }, pollInterval: 100 });
+    const { data, error, loading, refetch } = useQuery(REQUESTED_HELPS_QUERY, { variables: { uid }, pollInterval: POLL_INTERVAL });
     if (!data) return null;
     let { user } = data;
     let { createdHelpRequests } = user;
@@ -60,7 +61,7 @@ const MyHelps = (props:HelpsProps) => {
 const MyContributions = (props: ContributionsProps) => {
     const { currentUser } = props;
     const { uid } = currentUser;
-    const { data, error, loading, refetch } = useQuery(HELPING_HELPS_QUERY, { variables: { uid }, pollInterval: 100 });
+    const { data, error, loading, refetch } = useQuery(HELPING_HELPS_QUERY, { variables: { uid }, pollInterval: POLL_INTERVAL });
     if (!data) return null;
     let { user } = data;
     let { helpedHelpRequests } = user;

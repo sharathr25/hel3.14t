@@ -1,6 +1,6 @@
 import React from 'react';
 import { Text, StyleSheet, View } from 'react-native';
-import { RED, ORANGE, GREEN, LIGHT_RED, LIGHT_ORANGE, LIGHT_GREEN, LIGHT_BLUE, BLUE } from '../../styles/colors';
+import { RED, ORANGE, GREEN, LIGHT_RED, LIGHT_ORANGE, LIGHT_GREEN, GRAY, LIGHT_GRAY } from '../../styles/colors';
 import { FONT_SIZE_14, FONT_BOLD } from '../../styles/typography';
 import { padding } from '../../styles/mixins';
 
@@ -12,14 +12,14 @@ export const STATUS_TEXT_MAPPING = {
 }
 
 export const STATUS_COLOR_MAPPING = {
-    'REQUESTED': BLUE,
+    'REQUESTED': GRAY,
     'ON_GOING': ORANGE,
     'COMPLETED': GREEN,
     'CANCELLED' : RED
 }
 
 export const STATUS_LIGHT_COLOR_MAPPING = {
-    'REQUESTED': LIGHT_BLUE,
+    'REQUESTED': LIGHT_GRAY,
     'ON_GOING': LIGHT_ORANGE,
     'COMPLETED': LIGHT_GREEN,
     'CANCELLED' : LIGHT_RED

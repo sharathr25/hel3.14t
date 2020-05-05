@@ -8,6 +8,7 @@ import { WHITE, LIGHTEST_GRAY, LIGHT_GRAY, RED } from '../../styles/colors';
 import { margin } from '../../styles/mixins';
 import { FONT_SIZE_20 } from '../../styles/typography';
 import { useAuth } from '../../customHooks';
+import { POLL_INTERVAL } from '../../config';
 
 const QUERY = gql`
   query Help($id: String!){
@@ -61,7 +62,7 @@ const UserContributionScreen = ({ route } : { route: Object }) => {
     const { keyOfHelpRequest } = params;
     const { user } = useAuth();
     const [updateHelp, { loading: loadingForUpdateHelp }] = useMutation(UPDATE_HELP_QUERY);
-    let { data , error } = useQuery(QUERY, { variables: { id: keyOfHelpRequest }, pollInterval: 100 });
+    let { data , error } = useQuery(QUERY, { variables: { id: keyOfHelpRequest }, pollInterval: POLL_INTERVAL });
 
     if (!data || !user) return <CustomModal variant="loading" />;
     if(error) return <CustomModal variant="error" />

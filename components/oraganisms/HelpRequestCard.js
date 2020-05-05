@@ -11,6 +11,7 @@ import { ProfileName } from "../molecules";
 import { margin } from "../../styles/mixins";
 import gql from "graphql-tag";
 import { useQuery } from "react-apollo";
+import { POLL_INTERVAL } from "../../config";
 
 const { HELP_REQUEST } = SCREEN_DETAILS;
 
@@ -35,7 +36,7 @@ const HelpRequestCard = (props: HelpRequestCardProps) => {
   const { helpRequestDetails , removeMe } = props;
   const navigation = useNavigation();
   const { distance, _id } = helpRequestDetails;
-  const { data } = useQuery(QUERY, { variables: { id: _id }, pollInterval: 100 });
+  const { data } = useQuery(QUERY, { variables: { id: _id }, pollInterval: POLL_INTERVAL });
   if(!data) return null;
   const { help } = data;
   const { creatorName, timeStamp, description, status } = help;

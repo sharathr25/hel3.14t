@@ -8,6 +8,7 @@ import gql from "graphql-tag";
 import { useQuery } from "react-apollo";
 import { TimeAndStatus } from "../molecules";
 import { margin } from "../../styles/mixins";
+import { POLL_INTERVAL } from "../../config";
 
 const QUERY = gql`
   query Help($id: String!){
@@ -23,7 +24,7 @@ const { USER_CONTRIBUTION } = SCREEN_DETAILS;
 
 
 const UserContributionCard = ({ keyOfHelpRequest } : { keyOfHelpRequest :string }) => {
-    let { data } = useQuery(QUERY, { variables: { id: keyOfHelpRequest }, pollInterval: 100 });
+    let { data } = useQuery(QUERY, { variables: { id: keyOfHelpRequest }, pollInterval: POLL_INTERVAL });
     const navigation = useNavigation();
 
     if (!data) return null;

@@ -11,6 +11,7 @@ import { useAuth } from "../../customHooks";
 import { FONT_BOLD, FONT_SIZE_20 } from '../../styles/typography';
 import { CustomModal, OTPVerificationToast } from '../../components/molecules';
 import { toastTypes } from '../../components/atoms/Toast';
+import { POLL_INTERVAL } from '../../config';
 
 const { UPDATE_ACCOUNT } = SCREEN_DETAILS; 
 
@@ -84,7 +85,7 @@ const ProgressDetails = ({ xp, stars }) => {
 }
 
 const MyAccountScreen = ({ navigation }: MyAccountScreenProps) => {
-    const [getUserData, { error, data, loading }] = useLazyQuery(USER_QUERY, { pollInterval: 100 });
+    const [getUserData, { error, data, loading }] = useLazyQuery(USER_QUERY, { pollInterval: POLL_INTERVAL });
     const [otp, setOtp] = useState('')
     const [emailVerified, setEmailVerified] = useState(true);
     const [showOtpInput, setShowOtpInput] = useState(false)

@@ -7,6 +7,7 @@ import { useAuth } from '../../customHooks';
 import { Description, Button, InlineLoader } from '../../components/atoms';
 import { WHITE, ORANGE } from '../../styles/colors';
 import { ProfileName, TimeAndDistance, CustomModal, Message } from '../../components/molecules';
+import { POLL_INTERVAL } from '../../config';
 
 const heightForDescription = Dimensions.get('screen').height - 380
 
@@ -57,7 +58,7 @@ const isUserIsThereInUsers = (users, userUid) => users.some((user) => user.uid =
 const HelpRequestScreen = ({ route } : { route: Object }) => {
     const { params } = route;
     const { idOfHelpRequest, distance } = params;
-    const { data } = useQuery(QUERY, { variables: { id: idOfHelpRequest }, pollInterval: 100 });
+    const { data } = useQuery(QUERY, { variables: { id: idOfHelpRequest }, pollInterval: POLL_INTERVAL });
     const [updateHelp, { loading, error }] = useMutation(HELP_UPDATE_SCHEMA);
     const { user } = useAuth();
 

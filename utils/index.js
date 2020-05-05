@@ -96,3 +96,133 @@ export const callPhone = (phone: string) => {
   })
   .catch(err => console.log(err));
 }
+
+// type ValidatatorType = {
+//   isValid: Function,
+//   getMessage: Function,
+//   setValue: Function
+// }
+
+// export class EmailValidator {
+//   constructor() {
+//     this.email = ""
+//     this.regex = /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/
+//   }
+
+//   setValue(email: string) {
+//     this.email = email
+//   }
+
+//   isValid() {
+//     return this.email.length !== 0 && this.regex.test(this.email)
+//   }
+
+//   getMessage() {
+//     if(this.value.length === 0) return "* Required"
+//     if(!this.regex.test(this.email)) return "Invalid email" 
+//     return ""
+//   }
+// }
+
+// export class PhoneNumberValidator {
+//   constructor() {
+//     this.phoneNumber = ""
+//     this.regex = /^\d{10}$/
+//   }
+
+//   setValue(phoneNumber: string) {
+//     this.phoneNumber = phoneNumber
+//   }
+
+//   isValid() {
+//     return this.phoneNumber.length !== 0 && this.regex.test(this.phoneNumber)
+//   }
+
+//   getMessage() {
+//     if(this.phoneNumber.length === 0) return "* Required"
+//     if(!this.regex.test(this.phoneNumber)) return "Invalid phone number" 
+//     return ""
+//   }
+// }
+
+// export class DateOfBirthValidator {
+//   constructor() {
+//     this.dateOfBirth = ""
+//     this.limit = 15
+//   }
+
+//   setValue(dateOfBirth: string) {
+//     this.dateOfBirth = dateOfBirth
+//   }
+
+//   isValid() {
+//     return this.dateOfBirth.length !== 0 && getAge(this.dateOfBirth) >= limit
+//   }
+
+//   getMessage() {
+//     if(this.dateOfBirth.length === 0) return "* Required"
+//     if(getAge(this.dateOfBirth) < limit) return `Age should more than ${this.limit}`; 
+//     return ""
+//   }
+// }
+
+// export class PasswordValidator {
+//   constructor() {
+//     this.password = ""
+//     this.limit = 6
+//   }
+
+//   setValue(password: string) {
+//     this.password = password
+//   }
+
+//   isValid() {
+//     return this.password.length !== 0 && this.password >= limit
+//   }
+
+//   getMessage() {
+//     if(this.password.length === 0) return "* Required"
+//     if(this.password < limit) return `Password should be more than ${this.limit}` 
+//     return ""
+//   }
+// }
+
+// export class ConfirmPasswordValidator {
+//   constructor() {
+//     this.password = ""
+//     this.confirmedPassword = ""
+//   }
+
+//   setValue(password: string, confirmedPassword: string) {
+//     this.password = password
+//     this.confirmedPassword = confirmedPassword
+//   }
+
+//   isValid() {
+//     return this.confirmedPassword.length !== 0 && this.confirmedPassword != this.password
+//   }
+
+//   getMessage() {
+//     if(this.confirmedPassword.length === 0) return "* Required"
+//     if(this.confirmedPassword !== this.password) return "Confirmed password is not mathching with password" 
+//     return ""
+//   }
+// }
+
+// export class Validatator {
+//   constructor(validator: ValidatatorType) {
+//     this.validator = validator
+//   }
+
+//   setValue(value: string) {
+//     this.validator.setValue(value)
+//   }
+
+//   isValid() {
+//     return this.validator.isValid()
+//   }
+
+//   getMessage() {
+//     return this.validator.getMessage()
+//   }
+// }

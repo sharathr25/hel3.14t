@@ -6,6 +6,7 @@ import { Description, Heading, Button, InlineLoader } from '../../components/ato
 import { TimeAndStatus, UsersAccepted, UsersRequested, EventLocation } from "../../components/molecules";
 import { WHITE, LIGHTEST_GRAY, GREEN, RED } from '../../styles/colors';
 import { margin } from '../../styles/mixins';
+import { POLL_INTERVAL } from '../../config';
 
 const UPDATE_HELP_QUERY = gql`
   mutation UpdateHelp($key:String!, $value:Any, $type:String!, $operation:String!, $id: String!){
@@ -53,7 +54,7 @@ const INCREMENT_XP_FOR_USER = gql`
 const UserHelpRequestScreen = ({ route } : { route: Object }) => {
     const { params } = route;
     const { keyOfHelpRequest } = params;
-    let { data , error } = useQuery(QUERY, { variables: { id: keyOfHelpRequest }, pollInterval: 100 });
+    let { data , error } = useQuery(QUERY, { variables: { id: keyOfHelpRequest }, pollInterval: POLL_INTERVAL });
     const [updateHelp, { loading: loadingForUpdateHelp }] = useMutation(UPDATE_HELP_QUERY);
     const [incrementXpForUser] = useMutation(INCREMENT_XP_FOR_USER);
 
