@@ -1,5 +1,5 @@
 // @flow
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import { Input } from 'react-native-elements';
 import { WHITE, ORANGE, BLACK } from '../../styles/colors';
 import { FONT_WEIGHT_REGULAR } from "../../styles/typography";
@@ -10,35 +10,55 @@ type InputComponentProps = {
   label?: string,
   secureTextEntry?: boolean,
   updateParentState: Function,
-  errMsg: string,
   rightIcon: any,
   showPasswordIcon: boolean,
-  defaultValue: string
+  defaultValue: string,
+  constraints: [Function],
+  setIsValid: Function
 }
 
 const InputComponent = (props: InputComponentProps) => {
-  const { label, updateParentState, errMsg, showPasswordIcon, defaultValue } = props;
+  const { label, updateParentState, showPasswordIcon, defaultValue, setIsValid, constraints } = props;
+  const [value, setValue] = useState("")
+  const [err, setErr] = useState("")
   const [showPassword, setShowPassword] = useState(false);
+  const input = useRef();
 
   const _setShowPassword = () => {
     setShowPassword(!showPassword);
+  }
+
+  const _onBlur = () => {
+    const [isValid, message] = constraints.reduce((acc, cur) => {
+      return acc[0] ? [cur.fun(value), cur.fun(value) ? "" : cur.message]: acc
+    }, [true, ""])
+    setErr(message)
+    setIsValid(isValid)
+    if(!isValid && input.current) input.current.shake()
+  }
+
+  const _onChangeText = (value) => {
+    setValue(value)
+    updateParentState(value)
   }
 
   const { labelStyle, containerStyle, inputContainerStyle, inputStyle } = styles;
 
   return (
     <Input
+      ref={input}
       label={label}
       labelStyle={labelStyle}
       inputContainerStyle={inputContainerStyle}
       inputStyle={inputStyle}
       containerStyle={containerStyle}
       secureTextEntry={showPasswordIcon && !showPassword}
-      onChangeText={value => updateParentState(value)}
-      errorMessage={errMsg}
+      onChangeText={_onChangeText}
+      errorMessage={err}
       rightIcon={showPasswordIcon && <PasswordIcon showPassword={showPassword} setShowPassword={_setShowPassword} />}
       rightIconContainerStyle={{ right: 8 }}
       defaultValue={defaultValue}
+      onBlur={_onBlur}
     />
   );
 }
@@ -77,7 +97,9 @@ InputComponent.defaultProps = {
   label : "", 
   errMsg : "", 
   showPasswordIcon : false, 
-  defaultValue : ""
+  defaultValue : "",
+  setIsValid: () => {},
+  constraints: []
 }
 
 export default InputComponent;

@@ -2,13 +2,13 @@
 import React, { useState } from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import { WHITE, ORANGE, BLACK } from '../../styles/colors';
-import { regex } from '../../utils/index';
+import { regex, passwordConstraints, loginUserNameConstraints } from '../../utils/index';
 import { Link, Button, NotificationMessage, Toast } from '../../components/atoms';
 import { InputComponent } from '../../components/molecules';
 import { ScrollView } from 'react-native-gesture-handler';
 import { margin } from '../../styles/mixins';
 import { Auth } from "aws-amplify";
-import { LOGIN_SCREEN, SCREEN_DETAILS } from "../../constants/appConstants";
+import { SCREEN_DETAILS } from "../../constants/appConstants";
 import { toastTypes } from '../../components/atoms/Toast';
 
 const { SIGNUP, FORGOT_PASSWORD , MAIN } = SCREEN_DETAILS;
@@ -21,10 +21,10 @@ type LoginScreenProps = {
 
 const LoginScreen = ({navigation}: LoginScreenProps) => {
   const [userName, setUserName] = useState('');
-  const [userNameErrorMessage, setUserNameErrorMessage] = useState('');
   const [password, setPassword] = useState('');
-  const [passwordErrorMessage, setPasswordErrorMessage] = useState('');
   const [toast, setToast] = useState({ type: "", message: "" })
+  const [isUserNameValid, setUserNameIsValid] = useState(false)
+  const [isPasswordValid, setIsPasswordValid] = useState(false)
 
   const handleSignUp = () => {
     navigation.navigate(SIGNUP.screenName);
@@ -34,24 +34,8 @@ const LoginScreen = ({navigation}: LoginScreenProps) => {
     navigation.navigate(FORGOT_PASSWORD.screenName);
   }
 
-  const isValid = () => {
-    let valid = false;
-    if (userName.length === 0) {
-      setUserNameErrorMessage(LOGIN_SCREEN.ERRORS.EMPTY_USERNAME_ERROR);
-    } else if (!(userName.match(regex.email) || userName.match(regex.phoneNo))) {
-      setUserNameErrorMessage(LOGIN_SCREEN.ERRORS.INVALID_USERNAME_ERROR);
-    } else if (password.length === 0) {
-      setPasswordErrorMessage(LOGIN_SCREEN.ERRORS.EMPTY_PASSWORD_ERROR);
-    } else if (password.length < 6) {
-      setPasswordErrorMessage(LOGIN_SCREEN.ERRORS.INVALID_PASSWORD_ERROR);
-    } else {
-      valid = true;
-    }
-    return valid;
-  }
-
   const handleLogin = async () => {
-    if (isValid()) {
+    if(isUserNameValid && isPasswordValid) {
       try {
         setToast({ type: toastTypes.LOADING, message: "Please wait" })
         const uname = userName.match(emailRegex) ? userName : `+91${userName}`
@@ -61,7 +45,7 @@ const LoginScreen = ({navigation}: LoginScreenProps) => {
         console.log(error);
         setToast({ type: toastTypes.ERROR, message: error.message })
       }
-    }
+    } else return;
   }
 
   const { registerContainer } = styles;
@@ -87,16 +71,6 @@ const LoginScreen = ({navigation}: LoginScreenProps) => {
     </View>
   )
 
-  const onUsernameChange = (value) => {
-    setUserName(value); 
-    setUserNameErrorMessage('')
-  }
-
-  const onPasswordChange = (value) => {
-    setPassword(value); 
-    setPasswordErrorMessage('')
-  }
-
   return (
     <ScrollView contentContainerStyle={{ flex: 1, backgroundColor: WHITE, }}>
       {toast.type ? <Toast type={toast.type} message={toast.message} /> : null}
@@ -105,15 +79,17 @@ const LoginScreen = ({navigation}: LoginScreenProps) => {
         <View style={{flex: 1,justifyContent:'space-evenly', ...margin(0,30,0,30)}}>
           <InputComponent 
             label="Email or Mobile number" 
-            updateParentState={onUsernameChange} 
-            errMsg={userNameErrorMessage} 
+            updateParentState={setUserName} 
+            setIsValid={setUserNameIsValid}
+            constraints={loginUserNameConstraints}
           />
           <View>
             <InputComponent 
               label="Password" 
-              updateParentState={onPasswordChange} 
-              errMsg={passwordErrorMessage} 
+              updateParentState={setPassword} 
               showPasswordIcon={true}
+              setIsValid={setIsPasswordValid}
+              constraints={passwordConstraints}
             />
             <Link onPress={handleResetPassword} style={{ alignSelf: 'flex-end', paddingRight: 10, fontSize: 15 }} >Forgot Password?</Link>
           </View>
