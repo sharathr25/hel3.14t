@@ -13,7 +13,8 @@ const TOP_HELPERS_QUERY = gql`
         topHelpers{
             username
             xp,
-            stars
+            stars,
+            totalRaters
     }
   }
 `
@@ -42,10 +43,12 @@ const Helpers = () => {
     const { data, loading, error, refetch } = useQuery(TOP_HELPERS_QUERY);
 
     const getListItem = ({item, index}) => {
-        const { username, xp, stars } = item;
+        console.log(item)
+        const { username, xp, stars, totalRaters } = item;
         const rank = index + 1;
+        const rating = totalRaters !== 0 ? stars / totalRaters : stars; 
         return <ListItem 
-            title={<RankDetails rank={rank} name={username} xp={xp} rating={stars} />} 
+            title={<RankDetails rank={rank} name={username} xp={xp} rating={rating} />} 
             bottomDivider 
         />
     }

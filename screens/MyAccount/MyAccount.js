@@ -1,6 +1,6 @@
 // @flow
 import React, { useEffect, useState } from 'react';
-import { View, Text, StyleSheet, Dimensions, ScrollView, ToastAndroid } from 'react-native';
+import { View, Text, StyleSheet, Dimensions, ScrollView } from 'react-native';
 import { useLazyQuery } from 'react-apollo';
 import gql from 'graphql-tag';
 import { ORANGE, WHITE, BLACK, LIGHTEST_GRAY } from '../../styles/colors';
@@ -19,7 +19,8 @@ const USER_QUERY = gql`
     query User($uid:String!) {
         user(uid:$uid){
             xp,
-            stars
+            stars,
+            totalRaters,
         }
     }
 `;
@@ -110,7 +111,7 @@ const MyAccountScreen = ({ navigation }: MyAccountScreenProps) => {
     const { attributes, username } = user;
     const { email, phone_number: phoneNumber, gender, birthdate } = attributes;
     const phoneNumberWithoutCountryCode = phoneNumber.replace("+91", "");
-    const { xp = 0, stars = 0 } = data ? data.user : {};
+    const { xp = 0, stars = 0, totalRaters } = data ? data.user : {};
     const { column, container } = styles;
 
     const verify = async () => {
@@ -166,7 +167,7 @@ const MyAccountScreen = ({ navigation }: MyAccountScreenProps) => {
                 <View style={container}>
                     <View style={{ ...column, backgroundColor: WHITE }}>
                         <ProfileName username={username} />
-                        <ProgressDetails xp={xp} stars={stars} />
+                        <ProgressDetails xp={xp} stars={totalRaters !== 0 ? stars/totalRaters : stars} />
                     </View>
                     <View style={{...column, padding: 0 }}>
                         <Detail label="Email" value={email} subDetail={!emailVerified && <EmailVerifyMessage handleVerify={handleVerify} />} />
