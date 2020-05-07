@@ -1,13 +1,14 @@
 // @flow
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Dimensions, View } from 'react-native';
 import gql from 'graphql-tag';
-import { useQuery, useMutation } from 'react-apollo';
+import { useQuery, useMutation, useLazyQuery } from 'react-apollo';
 import { useAuth } from '../../customHooks';
 import { Description, Button, InlineLoader } from '../../components/atoms';
 import { WHITE, ORANGE } from '../../styles/colors';
 import { ProfileName, TimeAndDistance, CustomModal, Message } from '../../components/molecules';
 import { POLL_INTERVAL } from '../../config';
+import { getRatings } from '../../utils';
 
 const heightForDescription = Dimensions.get('screen').height - 380
 
@@ -53,6 +54,16 @@ const HELP_UPDATE_SCHEMA = gql`
   }
 `;
 
+const USER_QUERY = gql`
+    query User($uid:String!) {
+        user(uid:$uid){
+            xp,
+            stars,
+            totalRaters,
+        }
+    }
+`;
+
 const isUserIsThereInUsers = (users, userUid) => users.some((user) => user.uid === userUid);
 
 const HelpRequestScreen = ({ route } : { route: Object }) => {
@@ -60,7 +71,15 @@ const HelpRequestScreen = ({ route } : { route: Object }) => {
     const { idOfHelpRequest, distance } = params;
     const { data } = useQuery(QUERY, { variables: { id: idOfHelpRequest }, pollInterval: POLL_INTERVAL });
     const [updateHelp, { loading, error }] = useMutation(HELP_UPDATE_SCHEMA);
+    const [getUserData, { error: error1, data: userData, loading: loading1 }] = useLazyQuery(USER_QUERY, { pollInterval: POLL_INTERVAL });
     const { user } = useAuth();
+    
+    useEffect(() => {
+        if(user) {
+            const {uid} = user;
+            getUserData({variables: { uid }})
+        }
+    }, [user])
 
     if(!user || !data) return <CustomModal variant="loading" />
     const { uid, attributes, username } = user;
@@ -69,21 +88,24 @@ const HelpRequestScreen = ({ route } : { route: Object }) => {
     const { description, timeStamp, usersRequested, creatorName, usersRejected, usersAccepted, usersCancelled } = help;
     
     const handleHelp = () => {
-        if(!loading)
+        if(!loading) {
+            const { user } = userData;
+            const { xp, stars, totalRaters } = user;
             updateHelp({ 
                 variables: { 
                     id: idOfHelpRequest, 
                     key: "usersRequested", 
-                    value: { uid, name , xp: 0, mobileNo: phone_number , stars: 0, username } 
+                    value: { uid, name , xp: xp, mobileNo: phone_number , stars: getRatings(stars, totalRaters), username } 
                 } 
             });
+        }
     }
 
     let footer;
     if(error) {
         footer = <Message>something went wrong</Message>
-    } else if(loading) {
-        footer = <InlineLoader />
+    } else if(loading || !userData) {
+        footer = <Message loading={true}>Please wait</Message>
     } else if(isUserIsThereInUsers(usersRequested, uid)) {
         footer = <Message>Verification pending</Message>
     } else if(isUserIsThereInUsers(usersRejected, uid)) {

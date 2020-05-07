@@ -4,7 +4,8 @@ import {
   getDistanceFromLatLonInKm, 
   getPluralStr, 
   getTimeDiffrence,
-  sortByDistance
+  sortByDistance,
+  getRatings
 } from "./utils"
 
 import {
@@ -28,5 +29,6 @@ export {
   callPhone,
   regex,
   loginUserNameConstraints,
-  passwordConstraints
+  passwordConstraints,
+  getRatings
 }

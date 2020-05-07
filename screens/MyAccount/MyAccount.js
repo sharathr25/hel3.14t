@@ -12,6 +12,7 @@ import { FONT_BOLD, FONT_SIZE_20 } from '../../styles/typography';
 import { CustomModal, OTPVerificationToast } from '../../components/molecules';
 import { toastTypes } from '../../components/atoms/Toast';
 import { POLL_INTERVAL } from '../../config';
+import { getRatings } from '../../utils';
 
 const { UPDATE_ACCOUNT } = SCREEN_DETAILS; 
 
@@ -76,11 +77,11 @@ const ProgressDetail = ({ label, value }) => {
     );
 }
 
-const ProgressDetails = ({ xp, stars }) => {
+const ProgressDetails = ({ xp, ratings }) => {
     return (
         <View style={{flexDirection: 'row', justifyContent: 'center', marginTop: 10}}>
             <ProgressDetail label="XP" value={xp} />
-            <ProgressDetail label="Rating" value={stars} />
+            <ProgressDetail label="Rating" value={ratings} />
         </View>
     );
 }
@@ -111,7 +112,7 @@ const MyAccountScreen = ({ navigation }: MyAccountScreenProps) => {
     const { attributes, username } = user;
     const { email, phone_number: phoneNumber, gender, birthdate } = attributes;
     const phoneNumberWithoutCountryCode = phoneNumber.replace("+91", "");
-    const { xp = 0, stars = 0, totalRaters } = data ? data.user : {};
+    const { xp = 0, stars = 0, totalRaters = 0 } = data ? data.user : {};
     const { column, container } = styles;
 
     const verify = async () => {
@@ -167,7 +168,7 @@ const MyAccountScreen = ({ navigation }: MyAccountScreenProps) => {
                 <View style={container}>
                     <View style={{ ...column, backgroundColor: WHITE }}>
                         <ProfileName username={username} />
-                        <ProgressDetails xp={xp} stars={totalRaters !== 0 ? stars/totalRaters : stars} />
+                        <ProgressDetails xp={xp} ratings={getRatings(stars, totalRaters)} />
                     </View>
                     <View style={{...column, padding: 0 }}>
                         <Detail label="Email" value={email} subDetail={!emailVerified && <EmailVerifyMessage handleVerify={handleVerify} />} />

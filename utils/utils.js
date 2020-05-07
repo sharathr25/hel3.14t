@@ -53,3 +53,8 @@ export const sortByDistance = (helpRequests: Array<Object>):Array<Object> => {
   })
   return sortedHelpRequests;
 }
+
+export const getRatings = (stars: number, totalRaters: number) => {
+  if(totalRaters === 0) return 0;
+  return Math.ceil(stars / totalRaters);
+}

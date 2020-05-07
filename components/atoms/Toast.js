@@ -16,6 +16,39 @@ export const toastTypes = {
     "WARNING": "warning"
 }
 
+const typeMapping = {
+    [toastTypes.SUCCESS] : {
+        lineColor: LIGHT_GREEN,
+        bgColor: GREEN,
+        messageText: "Success"
+    },
+    [toastTypes.INFO] : {
+        lineColor: LIGHT_BLUE_2,
+        bgColor: LIGHT_BLUE,
+        messageText: "Info"
+    },
+    [toastTypes.WARNING] : {
+        lineColor: LIGHT_YELLOW,
+        bgColor: YELLOW,
+        messageText: "Warning"
+    },
+    [toastTypes.ERROR] : {
+        lineColor: LIGHT_RED,
+        bgColor: RED,
+        messageText: "Error"
+    },
+    [toastTypes.DEFAULT]: {
+        lineColor: LIGHTEST_GRAY,
+        bgColor: LIGHT_GRAY,
+        messageText: "Default"
+    },
+    [toastTypes.LOADING]: {
+        lineColor: LIGHT_YELLOW,
+        bgColor: YELLOW,
+        messageText: "loading"
+    }
+}
+
 const LoadingLine = () => {
     return (
         <View style={{
@@ -30,7 +63,7 @@ const LoadingLine = () => {
 }
 
 const Toast = (props) => {
-    const { type = "success", message = "Success" , autoClose = true, duration = 2000 } = props;
+    const { type, message , autoClose, duration, cbForToastEnd } = props;
     const windowWidth = Dimensions.get('window').width;
     const windowHeight = Dimensions.get('window').height;
     const yValue  = useRef(new Animated.Value(-1)).current;
@@ -41,39 +74,6 @@ const Toast = (props) => {
     const [messageText, setMessageText] = useState("")
     const DURATION_FOR_Y = 500;
     const DURATION_FOR_X = duration;
-
-    const typeMapping = {
-        [toastTypes.SUCCESS] : {
-            lineColor: LIGHT_GREEN,
-            bgColor: GREEN,
-            messageText: message || "Success"
-        },
-        [toastTypes.INFO] : {
-            lineColor: LIGHT_BLUE_2,
-            bgColor: LIGHT_BLUE,
-            messageText: "Info"
-        },
-        [toastTypes.WARNING] : {
-            lineColor: LIGHT_YELLOW,
-            bgColor: YELLOW,
-            messageText: "Warning"
-        },
-        [toastTypes.ERROR] : {
-            lineColor: LIGHT_RED,
-            bgColor: RED,
-            messageText: "Error"
-        },
-        [toastTypes.DEFAULT]: {
-            lineColor: LIGHTEST_GRAY,
-            bgColor: LIGHT_GRAY,
-            messageText: "Default"
-        },
-        [toastTypes.LOADING]: {
-            lineColor: LIGHT_YELLOW,
-            bgColor: YELLOW,
-            messageText: "loading"
-        }
-    }
 
     useEffect(() => {
         const { bgColor, lineColor, messageText } = typeMapping[type]
@@ -106,7 +106,7 @@ const Toast = (props) => {
                 toValue: -1,
                 duration: DURATION_FOR_Y,
                 useNativeDriver: true
-            }).start()
+            }).start(cbForToastEnd())
         }, DURATION_FOR_X)
     }
 
@@ -115,7 +115,7 @@ const Toast = (props) => {
             toValue: -1,
             duration: DURATION_FOR_Y,
             useNativeDriver: true
-        }).start()
+        }).start(cbForToastEnd())
     }
 
     const moveLine = () => {
@@ -198,8 +198,10 @@ const Toast = (props) => {
 
 Toast.defaultProps = {
     type: "default", 
+    message: "default",
     autoClose: true,
-    duration: 2000
+    duration: 2000,
+    cbForToastEnd: () => {}
 }
 
 export default Toast;

@@ -6,6 +6,7 @@ import Icon from "react-native-vector-icons/MaterialCommunityIcons"
 import gql from "graphql-tag";
 import { useQuery } from "react-apollo";
 import { CustomModal } from "../../components/molecules";
+import { getRatings } from "../../utils";
 
 const colors = [undefined, "#ffd700", "#aaa9ad", "#b08d57"];
 const TOP_HELPERS_QUERY = gql`
@@ -43,10 +44,9 @@ const Helpers = () => {
     const { data, loading, error, refetch } = useQuery(TOP_HELPERS_QUERY);
 
     const getListItem = ({item, index}) => {
-        console.log(item)
         const { username, xp, stars, totalRaters } = item;
         const rank = index + 1;
-        const rating = totalRaters !== 0 ? stars / totalRaters : stars; 
+        const rating = getRatings(stars, totalRaters) 
         return <ListItem 
             title={<RankDetails rank={rank} name={username} xp={xp} rating={rating} />} 
             bottomDivider 

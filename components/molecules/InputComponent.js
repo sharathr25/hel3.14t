@@ -14,11 +14,12 @@ type InputComponentProps = {
   showPasswordIcon: boolean,
   defaultValue: string,
   constraints: [Function],
-  setIsValid: Function
+  setIsValid: Function,
+  keyboardType?: string
 }
 
 const InputComponent = (props: InputComponentProps) => {
-  const { label, updateParentState, showPasswordIcon, defaultValue, setIsValid, constraints } = props;
+  const { label, updateParentState, showPasswordIcon, defaultValue, setIsValid, constraints, keyboardType } = props;
   const [value, setValue] = useState("")
   const [err, setErr] = useState("")
   const [showPassword, setShowPassword] = useState(false);
@@ -59,6 +60,7 @@ const InputComponent = (props: InputComponentProps) => {
       rightIconContainerStyle={{ right: 8 }}
       defaultValue={defaultValue}
       onBlur={_onBlur}
+      keyboardType={keyboardType}
     />
   );
 }
@@ -99,7 +101,8 @@ InputComponent.defaultProps = {
   showPasswordIcon : false, 
   defaultValue : "",
   setIsValid: () => {},
-  constraints: []
+  constraints: [],
+  keyboardType: "default"
 }
 
 export default InputComponent;

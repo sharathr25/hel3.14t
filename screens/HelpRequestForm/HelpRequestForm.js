@@ -8,8 +8,9 @@ import gql from "graphql-tag";
 import { useMutation } from "react-apollo";
 import { useLocation, useAuth } from "../../customHooks/";
 import { CustomModal } from "../../components/molecules";
-import { padding } from "../../styles/mixins";
+import { padding, margin } from "../../styles/mixins";
 import { Toast } from "../../components/atoms";
+import Icon from "react-native-vector-icons/FontAwesome";
 
 const WORD_LIMIT = 100;
 const NO_OF_LINES_FOR_DESC = Math.ceil(Dimensions.get("window").height / 50);
@@ -36,7 +37,7 @@ const HELP_REQUEST = gql`
   }
 `;
 
-const HelpRequestForm = () => {
+const HelpRequestForm = ({navigation}: {navigation: Object}) => {
     const [state, setState] = useState({
         noPeopleRequired: 1,
         description: "",
@@ -122,17 +123,24 @@ const HelpRequestForm = () => {
     }
 
     const getToast = () => {
-        if(loading) return { type: "loading", message: "Please wait..."}
-        else if(data) return { type: "success", message: "Success, Check activity" }
-        else if(error) return { type: "danger", message: "Something went wrong! try again"}
-        return  { type: "", message: "" }
+        if(loading) return { type: "loading", message: "Please wait...", cbForToastEnd: () => {}}
+        else if(data) return { type: "success", message: "Success, taking you to activity", cbForToastEnd: () => navigation.jumpTo('Activity')}
+        else if(error) return { type: "danger", message: "Something went wrong! try again", cbForToastEnd: () => {}}
+        return  { type: "", message: "", cbForToastEnd: () => {} }
+    }
+
+    const _onPress = () => {
+        navigation.jumpTo('Home')
     }
 
     return (
         <ScrollView style={{backgroundColor: WHITE}}>
             <View style={container}>
-                {getToast().type ? <Toast type={getToast().type} message={getToast().message} duration={4000} /> : null}
+                {getToast().type ? <Toast type={getToast().type} message={getToast().message} duration={4000} cbForToastEnd={getToast().cbForToastEnd}/> : null}
                 <View style={innerContainer}>
+                    <TouchableOpacity onPress={_onPress} style={{alignItems: 'flex-end', ...margin(5,5,0,0) }}>
+                        <Icon name="remove" size={25} color={LIGHT_GRAY} />
+                    </TouchableOpacity>
                     <Text style={{...label, padding:10}}>Request will be created for current location</Text>
                     <Input
                         placeholder="Please describe your help"

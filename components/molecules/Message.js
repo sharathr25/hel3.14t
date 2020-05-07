@@ -8,7 +8,7 @@ const Message = (props) => {
     const { children, loading, bgColor, messageColor } = props;
     
     return (
-        <View style={{ backgroundColor: bgColor, justifyContent: 'center', alignItems: 'center', padding: 20 }}>
+        <View style={{ backgroundColor: bgColor, justifyContent: 'center', alignItems: 'center', padding: 20, flexDirection: 'row' }}>
             {loading && <><ActivityIndicator size={20} color={messageColor} /><View style={{width: 10 }}/></>}
             <Heading color={messageColor} size={FONT_SIZE_20}>{children}</Heading>
         </View>

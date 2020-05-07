@@ -174,19 +174,17 @@ function SignUpScreen({navigation}: { navigation: Object }) {
   )
 
   return (
-    <View style={{flex: 1}}>
+      <ScrollView style={{ backgroundColor: WHITE }} contentContainerStyle={{flexGrow: 1 }}>
+      {toast.type !== "" && <Toast type={toast.type} message={toast.message} />}
       <OTPVerificationToast 
         show={showOtpInput}
         setOtp={setOtp} 
         verify={verify}
         resend={resend}
-        recepient={mobileNumber}
+        recepient={"9886739069"}
         onClose={() => setShowOtpInput(!showOtpInput)}
       />
-      {toast.type !== "" && <Toast type={toast.type} message={toast.message} />}
-      <ScrollView style={{ backgroundColor: WHITE }}>
-      <View>
-        <View style={{...margin(20, 30, 10, 30)}}>
+      <View style={{...margin(20, 30, 10, 30)}}>
           <InputComponent 
             label="Username" 
             updateParentState={setUsername} 
@@ -227,9 +225,7 @@ function SignUpScreen({navigation}: { navigation: Object }) {
           <SignUpButton />
           <LoginLink />
         </View>
-      </View>
-    </ScrollView>
-    </View>
+      </ScrollView>
   );
 }
 

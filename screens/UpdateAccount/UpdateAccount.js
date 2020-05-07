@@ -32,8 +32,8 @@ const UpdateAccount = ({ navigation, route }:{ navigation : Object, route : Obje
   const [ otp, setOtp] = useState('')
   const [showOtpInput, setShowOtpInput] = useState(false)
   const [toast, setToast] = useState({ type: "", message: ""})
-  const [isEmailValid, setIsEmailValid]  =useState(false)
-  const [isPhoneNumberValid, setIsPhoneNumberValid] = useState(false)
+  const [isEmailValid, setIsEmailValid]  =useState(true)
+  const [isPhoneNumberValid, setIsPhoneNumberValid] = useState(true)
 
   const verify = async () => {
     try {
@@ -59,6 +59,7 @@ const UpdateAccount = ({ navigation, route }:{ navigation : Object, route : Obje
   
   const handleUpdate = async () => {
     const age = getAge(birthdateForUpdate)
+    console.log(isEmailValid && isPhoneNumberValid && age > AGE_LIMIT)
     if(isEmailValid && isPhoneNumberValid && age > AGE_LIMIT) {
       const phoneNumberWithCountryCode = `+91${phoneNumberForUpdate}`;
       try {
