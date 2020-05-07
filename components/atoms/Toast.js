@@ -82,7 +82,7 @@ const Toast = (props) => {
         setMessageText(message || messageText)
         showToast()
         if(type === toastTypes.LOADING) moveLine();
-    }, [type])
+    }, [type, message])
 
     const showToast = () => {
         Animated.timing(yValue, {

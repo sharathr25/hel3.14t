@@ -1,12 +1,10 @@
 // @flow
 import React, { useState } from 'react';
 import { Text, CheckBox } from 'react-native-elements';
-import { View, Alert, StyleSheet } from 'react-native';
-import { ScrollView } from 'react-native-gesture-handler';
-import { SIGN_UP_SCREEN , SCREEN_DETAILS} from '../../constants/appConstants';
+import { View, Alert, StyleSheet, ScrollView } from 'react-native';
+import { SCREEN_DETAILS} from '../../constants/appConstants';
 import { ORANGE, WHITE, BLACK } from '../../styles/colors';
 import { margin } from "../../styles/mixins";
-import { regex } from '../../utils/index';
 import { getAge } from '../../utils';
 import gql from 'graphql-tag';
 import { useMutation } from 'react-apollo';
@@ -15,19 +13,9 @@ import { CustomDatePicker, Selector, Button, Link } from '../../components/atoms
 import { padding } from "../../styles/mixins";
 import { Auth } from "aws-amplify";
 import Toast, { toastTypes } from '../../components/atoms/Toast';
+import { userNameConstraints, emailConstraints, mobileNoConstraints, passwordConstraints } from '../../utils/formConstraints';
 
 const { LOGIN, TERMS_AND_CONDITIONS, MAIN } = SCREEN_DETAILS;
-const { ERRORS } = SIGN_UP_SCREEN;
-
-const {
-  EMPTY_EMAIL_ERROR, 
-  INVALID_EMAIL_ERROR, 
-  EMPTY_MOBILE_NUMBER_ERROR, 
-  INVALID_MOBILE_NUMBER_ERROR,
-  EMPTY_PASSWORD_ERROR,
-  INVALID_PASSWORD_ERROR,
-  PASSWORD_MISMATCH_ERROR
-} = ERRORS;
 
 const AGE_LIMIT = 15;
 
@@ -46,21 +34,20 @@ const GENDER_OPTIONS = [
 
 function SignUpScreen({navigation}: { navigation: Object }) {
   const [username, setUsername] = useState('');
-  const [userNameErr, setUserNameErr] = useState('');
+  const [isUserNameValid, setIsUserNameValid] = useState(false)
+  const [isMobileNumberValid, setIsMobileNumberValid] = useState(false)
+  const [isEmailValid, setIsEmailValid] = useState(false)
+  const [isPasswordValid, setIsPasswordValid] = useState(false)
+  const [isConfirmpasswordValid, setIsConfirmpasswordValid] = useState(false)
 
   const [mobileNumber, setMobileNumber] = useState('');
-  const [mobileNumberErr, setMobileNumberErr] = useState('');
-
+  
   const [email, setEmail] = useState('');
-  const [emailErr, setEmailErr] = useState('');
-
+  
   const [password, setPassword] = useState('');
-  const [passwordErr, setPasswordErr] = useState('');
-
+  
   const [confirmPassword, setConfirmPassword] = useState('');
-  const [confirmPasswordErr, setConfirmPasswordErr] = useState('');  
   const [dob, setDob] = useState('');
-
   const [gender, setGender] = useState(GENDER_OPTIONS[0].value);
 
   const [termsAndConditionChecked, settermsAndConditionChecked] = useState(false);
@@ -80,37 +67,6 @@ function SignUpScreen({navigation}: { navigation: Object }) {
   const handleLogin = () => {
     navigation.navigate(LOGIN.screenName);
   }
-
-  const isValid = () => {
-    let valid = false;
-    
-    if(username.length === 0) {
-      setUserNameErr('Username cannot be empty');
-    } else if (email.length === 0) {
-      setEmailErr(EMPTY_EMAIL_ERROR );
-    } else if (!email.match(regex.email)) {
-      setEmailErr(INVALID_EMAIL_ERROR )
-    } else if (mobileNumber.length === 0) {
-      setMobileNumberErr(EMPTY_MOBILE_NUMBER_ERROR)
-    } else if (!mobileNumber.match(regex.phoneNo)) {
-      setMobileNumberErr(INVALID_MOBILE_NUMBER_ERROR);
-    } else if (password.length === 0) {
-      setPasswordErr(EMPTY_PASSWORD_ERROR);
-    } else if (password.length < 6) {
-      setPasswordErr(INVALID_PASSWORD_ERROR );
-    } else if (password !== confirmPassword) {
-      setConfirmPasswordErr(PASSWORD_MISMATCH_ERROR);
-    } else if(dob.length === 0) {
-      Alert.alert("Date of birth can't be empty");
-    } else if(getAge(dob) < AGE_LIMIT) {
-      Alert.alert("You should me more than "+ AGE_LIMIT + " years");
-    } else if(!termsAndConditionChecked) {
-      Alert.alert("Please accept terms and conditions");
-    } else {
-      valid = true;
-    }
-    return valid;
-  };
 
   const verify = async () => {
     try{
@@ -137,7 +93,16 @@ function SignUpScreen({navigation}: { navigation: Object }) {
   }
 
   const handleSignUp = async () => {  
-    if(isValid())
+    const age = getAge(dob);
+    if(
+      isUserNameValid 
+      && isMobileNumberValid 
+      && isEmailValid 
+      && isPasswordValid 
+      && isConfirmpasswordValid
+      && getAge(dob) > AGE_LIMIT
+      && termsAndConditionChecked
+    ){
       try {
         setToast({ type: toastTypes.LOADING, message: "Please wait"})
         const data = await Auth.signUp({
@@ -160,13 +125,19 @@ function SignUpScreen({navigation}: { navigation: Object }) {
       } catch (error) {
         setToast({ type: toastTypes.ERROR, message: "Something went wrong"})
       }
+    } else {
+      if(age <= AGE_LIMIT) Alert.alert("You should be more than 15")
+      else if(!termsAndConditionChecked) Alert.alert("Please accept terms, conditions and privacy policy")
+    }
   };
 
-  const DateOfBirthInput = () => (
-    <View style={formStyles.dobContainer}>
-      <CustomDatePicker date={dob} updateParentState={setDob} label="Date of Birth" />
-    </View>
-  );
+  const DateOfBirthInput = () => {
+    return (
+      <View style={formStyles.dobContainer}>
+        <CustomDatePicker date={dob} updateParentState={setDob} label="Date of Birth" />
+      </View>
+    )
+  };
 
   const GenderSelector = () => (
     <View>
@@ -204,7 +175,6 @@ function SignUpScreen({navigation}: { navigation: Object }) {
 
   return (
     <View style={{flex: 1}}>
-      <ScrollView style={{ backgroundColor: WHITE }}>
       <OTPVerificationToast 
         show={showOtpInput}
         setOtp={setOtp} 
@@ -214,13 +184,41 @@ function SignUpScreen({navigation}: { navigation: Object }) {
         onClose={() => setShowOtpInput(!showOtpInput)}
       />
       {toast.type !== "" && <Toast type={toast.type} message={toast.message} />}
+      <ScrollView style={{ backgroundColor: WHITE }}>
       <View>
         <View style={{...margin(20, 30, 10, 30)}}>
-          <InputComponent label="Username" updateParentState={setUsername} errMsg={userNameErr} />
-          <InputComponent label="Email" updateParentState={setEmail} errMsg={emailErr} />
-          <InputComponent label="Mobile number" updateParentState={setMobileNumber} errMsg={mobileNumberErr} />
-          <InputComponent label="Password"  updateParentState={setPassword} errMsg={passwordErr} showPasswordIcon={true} />
-          <InputComponent label="Confirm Password" updateParentState={setConfirmPassword} errMsg={confirmPasswordErr} showPasswordIcon={true} />
+          <InputComponent 
+            label="Username" 
+            updateParentState={setUsername} 
+            constraints={userNameConstraints} 
+            setIsValid={setIsUserNameValid}
+          />
+          <InputComponent 
+            label="Email" 
+            updateParentState={setEmail} 
+            constraints={emailConstraints}
+            setIsValid={setIsEmailValid}
+          />
+          <InputComponent 
+            label="Mobile number" 
+            updateParentState={setMobileNumber} 
+            constraints={mobileNoConstraints} 
+            setIsValid={setIsMobileNumberValid}  
+          />
+          <InputComponent 
+            label="Password" 
+            updateParentState={setPassword} 
+            setIsValid={setIsPasswordValid} 
+            showPasswordIcon={true}
+            constraints={passwordConstraints} 
+          />
+          <InputComponent 
+            label="Confirm Password" 
+            updateParentState={setConfirmPassword} 
+            showPasswordIcon={true} 
+            setIsValid={setIsConfirmpasswordValid}
+            constraints={[...passwordConstraints, { fun: () => password === confirmPassword, message: "password mismatch"}]}
+          />
           <DateOfBirthInput />
           <GenderSelector />
         </View>  

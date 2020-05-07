@@ -39,6 +39,7 @@ export const getDistanceFromLatLonInKm = (lat1: number, lon1: number, lat2: numb
 const deg2rad = deg => deg * (Math.PI / 180);
   
 export const getAge = (dob: string) => {
+  if(dob == "") return 0;
   const birthday = new Date(dob);
   const ageDifMs = Date.now() - birthday.getTime();
   const ageDate = new Date(ageDifMs); // miliseconds from epoch

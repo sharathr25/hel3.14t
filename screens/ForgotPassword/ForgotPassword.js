@@ -1,15 +1,13 @@
 // @flow
 import React, { useState, useEffect } from 'react';
-import { View, StyleSheet } from 'react-native';
+import { View, StyleSheet, ScrollView } from 'react-native';
 import { ORANGE, WHITE, BLACK } from '../../styles/colors';
 import { Button, NotificationMessage, Toast } from '../../components/atoms';
-import { CustomModal, InputComponent, OTPVerificationToast } from '../../components/molecules';
+import { InputComponent, OTPVerificationToast } from '../../components/molecules';
 import { margin } from '../../styles/mixins';
 import { Auth } from 'aws-amplify';
-import { SCREEN_DETAILS } from "../../constants/appConstants";
 import { toastTypes } from '../../components/atoms/Toast';
-
-const { RESET_PASSWORD } = SCREEN_DETAILS;
+import { userNameConstraints, passwordConstraints } from '../../utils/formConstraints';
 
 type ResetPassowrdScreenProps = {
   route: Object
@@ -17,15 +15,15 @@ type ResetPassowrdScreenProps = {
 
 const ResetPassowrdScreen = ({route}: ResetPassowrdScreenProps) => {
   const [username, setUsername] = useState('');
-  const [usernameErrorMessage, setUsernameErrorMessage] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassowrd] = useState('');
-  const [passwordErrorMessage, setPasswordErrorMessage] = useState('');
-  const [confirmPasswordErrorMessage, setConfirmPasswordErrorMessage] = useState('');
   const [otp, setOtp] = useState('');
   const [showOtpInput, setShowOtpInput] = useState(false)
   const [recepient, setRecepient] = useState('');
   const [toast, setToast] = useState({ type: "", message: ""});
+  const [isPasswordValid, setIsPasswordValid] = useState(false)
+  const [isConfirmPasswordValid, setIsConfirmPasswordValid] = useState(false)
+  const [isUserNameValid, setIsUserNamevalid] = useState(false)
 
   useEffect(() => {
     if(route.params) {
@@ -33,21 +31,6 @@ const ResetPassowrdScreen = ({route}: ResetPassowrdScreenProps) => {
       setUsername(route.params.username)
     }
   }, [route.params])
-
-  const checkUsernameField = () => {
-    let valid = false;
-    if (username.length === 0) {
-      setUsernameErrorMessage('Username cannot be empty');
-    } else if (password.length === 0) {
-      setPasswordErrorMessage('Password cannot be empty');
-    } else if(confirmPassword.length === 0) {
-      setConfirmPasswordErrorMessage('Password cannot be empty');
-    } else if (password !== confirmPassword) {
-      setConfirmPasswordErrorMessage('Password mismatch');
-    } else 
-        valid = true;
-    return valid;
-  }
 
   const verify = async () => {
     try {
@@ -72,23 +55,8 @@ const ResetPassowrdScreen = ({route}: ResetPassowrdScreenProps) => {
     }
   }
 
-  const onPasswordChange = (value) => {
-    setPassword(value); 
-    setPasswordErrorMessage('')
-  }
-
-  const onConfirmPasswordChange = (value) => {
-    setConfirmPassowrd(value); 
-    setConfirmPasswordErrorMessage('')
-  }
-
-  const onUserNameChange = (value) => {
-    setUsername(value);
-    setUsernameErrorMessage('')
-  }
-
   const handleSendOTP = async () => {
-    if(checkUsernameField()) {
+    if(isUserNameValid && isPasswordValid && isConfirmPasswordValid) {
       try {
         setToast({ type: toastTypes.LOADING, message: "Please wait" })
         const { CodeDeliveryDetails } = await Auth.forgotPassword(username);
@@ -100,11 +68,12 @@ const ResetPassowrdScreen = ({route}: ResetPassowrdScreenProps) => {
         setToast({ type: toastTypes.ERROR, message: "Something went wrong" })
         console.log(error);
       }
-  }
+  } else return;
 }
 
   return (
-      <View style={{ flex: 1, backgroundColor: WHITE }}>
+      <ScrollView contentContainerStyle={{flexGrow: 1}} style={{backgroundColor: WHITE}}>
+        <View style={{ flex: 1 }}>
         {toast.type !== "" && <Toast type={toast.type} message={toast.message} />}
         <OTPVerificationToast 
           show={showOtpInput}
@@ -123,26 +92,30 @@ const ResetPassowrdScreen = ({route}: ResetPassowrdScreenProps) => {
           <InputComponent
             label="Email or Username"
             secureTextEntry={false}
-            updateParentState={onUserNameChange}
-            errMsg={usernameErrorMessage}
+            updateParentState={setUsername}
+            setIsValid={setIsUserNamevalid}
+            constraints={userNameConstraints}
           />
           <InputComponent
             label="Password"
             showPasswordIcon={true}
-            updateParentState={onPasswordChange}
-            errMsg={passwordErrorMessage}
+            updateParentState={setPassword}
+            setIsValid={setIsPasswordValid}
+            constraints={passwordConstraints}
           />
           <InputComponent
             label="Confirm Password"
             showPasswordIcon={true}
-            updateParentState={onConfirmPasswordChange}
-            errMsg={confirmPasswordErrorMessage}
+            updateParentState={setConfirmPassowrd}
+            setIsValid={setIsConfirmPasswordValid}
+            constraints={[...passwordConstraints, { fun: () => password === confirmPassword, message: "password mismatch"}]}
           />
           <View>
             <Button bgColor={ORANGE} textColor={WHITE} onPress={handleSendOTP}>Update</Button>
           </View>
         </View>
       </View>
+      </ScrollView>
   );
 }
 
