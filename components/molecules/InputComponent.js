@@ -69,7 +69,7 @@ const styles = StyleSheet.create({
   containerStyle: {
     marginTop: 10,
     marginBottom: 10,
-    paddingHorizontal: 0
+    paddingHorizontal: 0,
   },
   labelStyle: {
     backgroundColor: WHITE,

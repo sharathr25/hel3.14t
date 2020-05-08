@@ -8,7 +8,6 @@ import Main from "./MainScreen";
 import MyAccount  from "./MyAccount";
 import MyHelpRequests  from "./MyHelpRequests";
 import Notifications  from "./Notifications";
-import ResetPassword  from "./ResetPassword";
 import SignUp  from "./SignUp";
 import TermsAndConditions from "./TermsAndConditions";
 import Verification from "./Verification";
@@ -26,7 +25,6 @@ export {
     HelpRequestForm,
     MyHelpRequests,
     Notifications,
-    ResetPassword,
     SignUp,
     LoginScreen,
     LandingScreen,

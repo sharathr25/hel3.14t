@@ -1,19 +1,14 @@
 // @flow
-import React, { useState, useEffect } from 'react';
-import { View, StyleSheet, ScrollView } from 'react-native';
-import { ORANGE, WHITE, BLACK } from '../../styles/colors';
+import React, { useState } from 'react';
+import { View, ScrollView } from 'react-native';
+import { ORANGE, WHITE } from '../../styles/colors';
 import { Button, NotificationMessage, Toast } from '../../components/atoms';
 import { InputComponent, OTPVerificationToast } from '../../components/molecules';
-import { margin } from '../../styles/mixins';
 import { Auth } from 'aws-amplify';
 import { toastTypes } from '../../components/atoms/Toast';
 import { userNameConstraints, passwordConstraints } from '../../utils/formConstraints';
 
-type ResetPassowrdScreenProps = {
-  route: Object
-}
-
-const ResetPassowrdScreen = ({route}: ResetPassowrdScreenProps) => {
+const ResetPassowrdScreen = () => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassowrd] = useState('');
@@ -24,13 +19,6 @@ const ResetPassowrdScreen = ({route}: ResetPassowrdScreenProps) => {
   const [isPasswordValid, setIsPasswordValid] = useState(false)
   const [isConfirmPasswordValid, setIsConfirmPasswordValid] = useState(false)
   const [isUserNameValid, setIsUserNamevalid] = useState(false)
-
-  useEffect(() => {
-    if(route.params) {
-      setShowOtpInput(route.params.showOtpInput)
-      setUsername(route.params.username)
-    }
-  }, [route.params])
 
   const verify = async () => {
     try {
@@ -68,12 +56,11 @@ const ResetPassowrdScreen = ({route}: ResetPassowrdScreenProps) => {
         setToast({ type: toastTypes.ERROR, message: "Something went wrong" })
         console.log(error);
       }
-  } else return;
-}
+    } else return;
+  }
 
   return (
       <ScrollView contentContainerStyle={{flexGrow: 1}} style={{backgroundColor: WHITE}}>
-        <View style={{ flex: 1 }}>
         {toast.type !== "" && <Toast type={toast.type} message={toast.message} />}
         <OTPVerificationToast 
           show={showOtpInput}
@@ -83,68 +70,47 @@ const ResetPassowrdScreen = ({route}: ResetPassowrdScreenProps) => {
           recepient={recepient}
           onClose={() => setShowOtpInput(false)}
         />
-        <View style={{...margin(30,0,30,0)}}>
-          <NotificationMessage>
-            Enter registered Email(Verified) or Username
-          </NotificationMessage>
-        </View>
-        <View style={{ flex: 1, justifyContent: 'space-evenly', ...margin(0,30,0,30)}}>
-          <InputComponent
-            label="Email or Username"
-            secureTextEntry={false}
-            updateParentState={setUsername}
-            setIsValid={setIsUserNamevalid}
-            constraints={userNameConstraints}
-          />
-          <InputComponent
-            label="Password"
-            showPasswordIcon={true}
-            updateParentState={setPassword}
-            setIsValid={setIsPasswordValid}
-            constraints={passwordConstraints}
-          />
-          <InputComponent
-            label="Confirm Password"
-            showPasswordIcon={true}
-            updateParentState={setConfirmPassowrd}
-            setIsValid={setIsConfirmPasswordValid}
-            constraints={[...passwordConstraints, { fun: () => password === confirmPassword, message: "password mismatch"}]}
-          />
-          <View>
-            <Button bgColor={ORANGE} textColor={WHITE} onPress={handleSendOTP}>Update</Button>
+        <View style={{ flex: 1 }}>
+          <View style={{ flex: 1, justifyContent: 'center' }}>
+            <NotificationMessage>
+              Enter registered Email(Verified) or Username
+            </NotificationMessage>
+          </View>
+          <View style={{ flex: 5, margin: 20 }}>
+            <View style={{ flex: 1, justifyContent: 'center' }}>
+              <InputComponent
+                label="Email or Username"
+                secureTextEntry={false}
+                updateParentState={setUsername}
+                setIsValid={setIsUserNamevalid}
+                constraints={userNameConstraints}
+              />
+            </View>
+            <View style={{flex: 1, justifyContent: 'center'}}>
+              <InputComponent
+                label="Password"
+                showPasswordIcon={true}
+                updateParentState={setPassword}
+                setIsValid={setIsPasswordValid}
+                constraints={passwordConstraints}
+              />
+            </View>
+            <View style={{flex: 1, justifyContent: 'center'}}>
+              <InputComponent
+                label="Confirm Password"
+                showPasswordIcon={true}
+                updateParentState={setConfirmPassowrd}
+                setIsValid={setIsConfirmPasswordValid}
+                constraints={[...passwordConstraints, { fun: () => password === confirmPassword, message: "password mismatch"}]}
+              />
+            </View>
+            <View style={{flex: 1, justifyContent: 'center'}}>
+              <Button bgColor={ORANGE} textColor={WHITE} onPress={handleSendOTP}>Reset</Button>
+            </View>
           </View>
         </View>
-      </View>
       </ScrollView>
   );
 }
 
 export default ResetPassowrdScreen;
-
-const styles = StyleSheet.create({
-  appTitle: {
-    marginBottom: 30,
-    color: ORANGE,
-    textAlign: 'center',
-    fontSize: 20,
-    fontFamily: 'cursive'
-  },
-  screenTitle: {
-    marginBottom: 40,
-    textAlign: 'center',
-    fontSize: 30,
-    color: BLACK,
-  },
-  signInContainerStyle: {
-    margin: 10,
-    marginTop: 25,
-    padding: 10,
-    backgroundColor: ORANGE,
-    borderRadius: 25
-  },
-  signInText: {
-    textAlign: 'center',
-    color: WHITE,
-    fontSize: 18
-  },
-});

@@ -7,7 +7,6 @@ import { SCREEN_DETAILS } from "../constants/appConstants";
 import { 
   MyAccount,
   ForgotPassword,
-  ResetPassword,
   SignUp,
   LandingScreen,
   LoginScreen,
@@ -31,7 +30,6 @@ const {
   SIGNUP,
   VERIFICATION,
   FORGOT_PASSWORD,
-  RESET_PASSWORD,
   TERMS_AND_CONDITIONS,
   NOTIFICATIONS,
   MY_ACCOUNT,
@@ -82,11 +80,6 @@ const MainNavigator = (props: { isLogedIn: boolean }) => {
         name={FORGOT_PASSWORD.screenName} 
         component={ForgotPassword} 
         options={{ title: FORGOT_PASSWORD.screenTitle }}>
-      </Stack.Screen>
-      <Stack.Screen 
-        name={RESET_PASSWORD.screenName} 
-        component={ResetPassword} 
-        options={{ title: RESET_PASSWORD.screenTitle }}>
       </Stack.Screen>
       <Stack.Screen 
         name={TERMS_AND_CONDITIONS.screenName} 

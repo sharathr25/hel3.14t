@@ -3,14 +3,13 @@ import React, { useState } from 'react';
 import { Text, CheckBox } from 'react-native-elements';
 import { View, Alert, StyleSheet, ScrollView } from 'react-native';
 import { SCREEN_DETAILS} from '../../constants/appConstants';
-import { ORANGE, WHITE, BLACK } from '../../styles/colors';
+import { ORANGE, WHITE, BLACK, LIGHT_GRAY } from '../../styles/colors';
 import { margin } from "../../styles/mixins";
 import { getAge } from '../../utils';
 import gql from 'graphql-tag';
 import { useMutation } from 'react-apollo';
 import { InputComponent, OTPVerificationToast } from '../../components/molecules';
 import { CustomDatePicker, Selector, Button, Link } from '../../components/atoms';
-import { padding } from "../../styles/mixins";
 import { Auth } from "aws-amplify";
 import Toast, { toastTypes } from '../../components/atoms/Toast';
 import { userNameConstraints, emailConstraints, mobileNoConstraints, passwordConstraints } from '../../utils/formConstraints';
@@ -174,35 +173,42 @@ function SignUpScreen({navigation}: { navigation: Object }) {
   )
 
   return (
-      <ScrollView style={{ backgroundColor: WHITE }} contentContainerStyle={{flexGrow: 1 }}>
+    <ScrollView style={{ backgroundColor: WHITE }} contentContainerStyle={{flexGrow: 1 }}>
       {toast.type !== "" && <Toast type={toast.type} message={toast.message} />}
       <OTPVerificationToast 
         show={showOtpInput}
         setOtp={setOtp} 
         verify={verify}
         resend={resend}
-        recepient={"9886739069"}
+        recepient={mobileNumber}
         onClose={() => setShowOtpInput(!showOtpInput)}
       />
-      <View style={{...margin(20, 30, 10, 30)}}>
+      <View style={{ flex: 1, margin: 20 }}>
+        <View>
           <InputComponent 
             label="Username" 
             updateParentState={setUsername} 
             constraints={userNameConstraints} 
             setIsValid={setIsUserNameValid}
           />
+        </View>
+        <View>
           <InputComponent 
             label="Email" 
             updateParentState={setEmail} 
             constraints={emailConstraints}
             setIsValid={setIsEmailValid}
           />
+        </View>
+        <View>  
           <InputComponent 
             label="Mobile number" 
             updateParentState={setMobileNumber} 
             constraints={mobileNoConstraints} 
             setIsValid={setIsMobileNumberValid}  
           />
+        </View>
+        <View>
           <InputComponent 
             label="Password" 
             updateParentState={setPassword} 
@@ -210,6 +216,8 @@ function SignUpScreen({navigation}: { navigation: Object }) {
             showPasswordIcon={true}
             constraints={passwordConstraints} 
           />
+        </View>
+        <View>
           <InputComponent 
             label="Confirm Password" 
             updateParentState={setConfirmPassword} 
@@ -217,15 +225,16 @@ function SignUpScreen({navigation}: { navigation: Object }) {
             setIsValid={setIsConfirmpasswordValid}
             constraints={[...passwordConstraints, { fun: () => password === confirmPassword, message: "password mismatch"}]}
           />
-          <DateOfBirthInput />
-          <GenderSelector />
-        </View>  
-        <TermsAndConditionsCheckBox />
-        <View style={{...margin(20, 30, 10, 30)}}>
-          <SignUpButton />
-          <LoginLink />
         </View>
-      </ScrollView>
+        <DateOfBirthInput />
+        <GenderSelector />
+      </View>  
+      <TermsAndConditionsCheckBox />
+      <View style={{ margin: 20 }}>
+        <SignUpButton />
+        <LoginLink />
+      </View>
+    </ScrollView>
   );
 }
 
@@ -239,12 +248,10 @@ const formStyles = StyleSheet.create({
   loginContainer: {
     flexDirection: 'row',
     alignSelf: 'center',
-    margin: 10
   },
   termsAndConditionsContainer: {
     flexDirection: 'row' , 
     alignItems: 'center', 
-    backgroundColor: "#DBD5D5", 
-    ...padding(10,5,10,5)
+    backgroundColor: LIGHT_GRAY, 
   }
 });

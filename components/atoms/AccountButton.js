@@ -9,7 +9,6 @@ const { MORE_SCREEN } = SCREEN_DETAILS;
 
 const AccountButton = () => {
     const navigation = useNavigation();
-    const { width, height } = Dimensions.get('screen');
 
     const _onPress = () => {
       navigation.navigate(MORE_SCREEN.screenName)

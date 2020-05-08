@@ -1,27 +1,25 @@
 // @flow
 import React from 'react';
 import { View, Text, StyleSheet, ScrollView, TouchableOpacity } from 'react-native';
-import { ORANGE, WHITE, BLACK } from '../../styles/colors';
+import Icon from "react-native-vector-icons/MaterialCommunityIcons"
 import { Auth } from "aws-amplify";
+import { ORANGE, WHITE, BLACK, LIGHTEST_GRAY } from '../../styles/colors';
 import { SCREEN_DETAILS } from "../../constants/appConstants";
 import { FONT_SIZE_20 } from '../../styles/typography';
-import Icon from "react-native-vector-icons/MaterialCommunityIcons"
 
 const { LOGIN, MY_ACCOUNT, CHANGE_PASSOWRD } = SCREEN_DETAILS; 
 
-const ScreenNavigationOption = ({ iconName, text, onPress }) => {
+const Option = ({ iconName, text, onPress }) => {
+    const sizeOfIcon = FONT_SIZE_20 + 10
+    const { optionStyle } = styles;
     return (
-        <TouchableOpacity onPress={onPress} style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', margin: 20 }}>
-            <View style={{flexDirection: 'row', alignItems: 'center'}}>
-                <Icon color={BLACK} style={{ marginRight: 20 }} name={iconName} size={FONT_SIZE_20 + 10}/>
-                <Text style={{color: BLACK, fontSize: FONT_SIZE_20 }}>{text}</Text>
-            </View>
-            <Icon color={ORANGE} name="trending-neutral" size={FONT_SIZE_20 + 10} />
+        <TouchableOpacity onPress={onPress} style={optionStyle}>
+            <Icon color={BLACK} name={iconName} size={sizeOfIcon} />
+            <Text style={{color: BLACK, fontSize: FONT_SIZE_20, flex: 1, marginLeft: 10 }}>{text}</Text>
+            <Icon color={ORANGE} name="trending-neutral" size={sizeOfIcon} />
         </TouchableOpacity>
     )
 }
-
-
 
 const MoreScreen = ({ navigation } : { navigation: Object }) => {
 
@@ -31,46 +29,40 @@ const MoreScreen = ({ navigation } : { navigation: Object }) => {
         navigation.replace(LOGIN.screenName);
     }
 
-    const { container } = styles
     return (
-        <ScrollView style={{ backgroundColor: WHITE }}>
-            <View style={container}>
-                <ScreenNavigationOption 
+        <ScrollView style={{ backgroundColor: WHITE }} contentContainerStyle={{ flexGrow: 1 }}>
+            <View style={{ flex: 1, margin: 10 }}>
+                <Option 
                     text="Account Details" 
                     iconName="account-box" 
                     onPress={() => navigation.navigate(MY_ACCOUNT.screenName)}
                 />
-                <ScreenNavigationOption 
+                <Option 
                     text="Change Password" 
                     iconName="eye" 
                     onPress={() => navigation.navigate(CHANGE_PASSOWRD.screenName)}
                 />
-                <ScreenNavigationOption 
+                <Option 
                     text="Settings" 
                     iconName="settings" 
                     onPress={() => {}}
                 />
-                <ScreenNavigationOption 
-                    text="Help & Feedback" 
-                    iconName="help-circle-outline" 
-                    onPress={() => {}}
-                />
-                <ScreenNavigationOption 
+                <Option 
                     text="Terms & Conditions" 
                     iconName="file-check" 
                     onPress={() => {}}
                 />
-                <ScreenNavigationOption 
+                <Option 
                     text="Privacy Policy" 
                     iconName="shield-lock-outline" 
                     onPress={() => {}}
                 />
-                <ScreenNavigationOption 
+                <Option 
                     text="Refer" 
                     iconName="account-group" 
                     onPress={() => {}}
                 />
-                <ScreenNavigationOption 
+                <Option 
                     text="Logout" 
                     iconName="logout-variant" 
                     onPress={handleLogOut}
@@ -83,7 +75,13 @@ const MoreScreen = ({ navigation } : { navigation: Object }) => {
 export default MoreScreen;
 
 const styles = StyleSheet.create({
-    container: {
-        backgroundColor: WHITE, justifyContent: 'space-evenly', margin: 30
+    optionStyle : {
+        flexDirection: 'row', 
+        alignItems: 'center', 
+        justifyContent: 'space-between', 
+        margin: 10, 
+        flex: 1, 
+        backgroundColor: LIGHTEST_GRAY, 
+        padding: 10
     }
 });

@@ -4,7 +4,6 @@ import { View, StyleSheet, ScrollView } from 'react-native';
 import { ORANGE, WHITE, BLACK } from '../../styles/colors';
 import { Button, Toast } from '../../components/atoms';
 import { InputComponent } from '../../components/molecules';
-import { margin } from '../../styles/mixins';
 import { Auth } from 'aws-amplify';
 import { toastTypes } from '../../components/atoms/Toast';
 import { passwordConstraints } from '../../utils';
@@ -37,8 +36,8 @@ const ResetPassowrdScreen = () => {
   return (
     <ScrollView contentContainerStyle={{flexGrow: 1}} style={{backgroundColor: WHITE}}>
       {toast.type !== "" && <Toast type={toast.type} message={toast.message} />}
-      <View style={{flex: 1, justifyContent: 'center', margin: 20 }}>
-        <View style={{flex: 1}}>
+      <View style={{flex: 1, margin: 20 }}>
+        <View style={{flex: 1, justifyContent: 'center' }}>
           <InputComponent
             label="Old Password"
             showPasswordIcon={true}
@@ -47,7 +46,7 @@ const ResetPassowrdScreen = () => {
             constraints={passwordConstraints}
           />
         </View>
-        <View style={{flex: 1}}>
+        <View style={{flex: 1, justifyContent: 'center'}}>
           <InputComponent
             label="Password"
             showPasswordIcon={true}
@@ -56,7 +55,7 @@ const ResetPassowrdScreen = () => {
             constraints={passwordConstraints}
           />
         </View>
-        <View style={{flex: 1}}>
+        <View style={{flex: 1, justifyContent: 'center'}}>
           <InputComponent
             label="Confirm Password"
             showPasswordIcon={true}
@@ -65,40 +64,12 @@ const ResetPassowrdScreen = () => {
             constraints={[...passwordConstraints, { fun: () => password === confirmPassword, message: "Password mismatch" }]}
           />
         </View>
-        <View style={{flex: 1}}>
-            <Button bgColor={ORANGE} textColor={WHITE} onPress={handleChange}>Change</Button>
-          </View>
+        <View style={{flex: 1, justifyContent: 'center'}}>
+          <Button bgColor={ORANGE} textColor={WHITE} onPress={handleChange}>Change</Button>
+        </View>
       </View>
     </ScrollView>
   );
 }
 
 export default ResetPassowrdScreen;
-
-const styles = StyleSheet.create({
-  appTitle: {
-    marginBottom: 30,
-    color: ORANGE,
-    textAlign: 'center',
-    fontSize: 20,
-    fontFamily: 'cursive'
-  },
-  screenTitle: {
-    marginBottom: 40,
-    textAlign: 'center',
-    fontSize: 30,
-    color: BLACK,
-  },
-  signInContainerStyle: {
-    margin: 10,
-    marginTop: 25,
-    padding: 10,
-    backgroundColor: ORANGE,
-    borderRadius: 25
-  },
-  signInText: {
-    textAlign: 'center',
-    color: WHITE,
-    fontSize: 18
-  },
-});
