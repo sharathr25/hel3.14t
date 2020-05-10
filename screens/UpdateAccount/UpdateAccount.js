@@ -10,6 +10,7 @@ import { padding } from '../../styles/mixins';
 import { toastTypes } from '../../components/atoms/Toast';
 import { mobileNoConstraints, emailConstraints } from '../../utils/formConstraints';
 import { getAge } from '../../utils';
+import { useForm } from '../../customHooks';
 
 const AGE_LIMIT = 15;
 const GENDER_OPTIONS = [
@@ -18,22 +19,24 @@ const GENDER_OPTIONS = [
 ];
 
 const { MY_ACCOUNT } = SCREEN_DETAILS;
+const EMAIL = 'email'
+const MOBILE_NUMBER = 'mobileNumber'
 
 const UpdateAccount = ({ navigation, route }:{ navigation : Object, route : Object}) => {
   const { params } = route;
   const { user } = params;
   const { attributes } = user;
+  const { values, errors, bindField, isValid }  =useForm({
+    [EMAIL]: { constraints: emailConstraints },
+    [MOBILE_NUMBER]: { constraints: mobileNoConstraints },
+  })
   const { email, phone_number: phoneNumber, gender, birthdate } = attributes;
   const phoneNumberWithoutCountryCode = phoneNumber.replace("+91", "");
-  const [ emailForUpdate, setEmail ] = useState(email);
-  const [ phoneNumberForUpdate, setPhoneNumber ] = useState(phoneNumberWithoutCountryCode);
   const [ birthdateForUpdate, setBirthdate ] = useState(birthdate);
   const [ genderForUpdate, setGender ] = useState(gender);
-  const [ otp, setOtp] = useState('')
+  const [ otp, setOtp ] = useState('')
   const [showOtpInput, setShowOtpInput] = useState(false)
   const [toast, setToast] = useState({ type: "", message: ""})
-  const [isEmailValid, setIsEmailValid]  =useState(true)
-  const [isPhoneNumberValid, setIsPhoneNumberValid] = useState(true)
 
   const verify = async () => {
     try {
@@ -59,19 +62,18 @@ const UpdateAccount = ({ navigation, route }:{ navigation : Object, route : Obje
   
   const handleUpdate = async () => {
     const age = getAge(birthdateForUpdate)
-    console.log(isEmailValid && isPhoneNumberValid && age > AGE_LIMIT)
-    if(isEmailValid && isPhoneNumberValid && age > AGE_LIMIT) {
-      const phoneNumberWithCountryCode = `+91${phoneNumberForUpdate}`;
+    if(isValid() && age > AGE_LIMIT) {
+      const phoneNumberWithCountryCode = `+91${values[MOBILE_NUMBER]}`;
       try {
         setToast({ type: toastTypes.LOADING, message: "Please wait"})
         const user = await Auth.currentAuthenticatedUser();
         await Auth.updateUserAttributes(user, { 
-          "email" : emailForUpdate,
+          "email" : values[EMAIL],
           "phone_number": phoneNumberWithCountryCode,
           "birthdate" : birthdateForUpdate,
           "gender": genderForUpdate 
         });
-        if(phoneNumberForUpdate !== phoneNumberWithoutCountryCode){
+        if(values[MOBILE_NUMBER] !== phoneNumberWithoutCountryCode){
           setToast({ type: "", message :""})
           setShowOtpInput(true);
         } else {
@@ -99,31 +101,27 @@ const UpdateAccount = ({ navigation, route }:{ navigation : Object, route : Obje
           verify={verify}
           resend={resend}
           setOtp={setOtp}
-          recepient={phoneNumberForUpdate}
+          recepient={values[MOBILE_NUMBER]}
         />
         <View style={{ flex: 1, margin: 20 }}>
           <View style={{flex: 1}}>
             <InputComponent 
               label="Email" 
-              updateParentState={setEmail} 
-              constraints={emailConstraints} 
-              value={emailForUpdate} 
               defaultValue={email}
-              setIsValid={setIsEmailValid}
+              {...bindField(EMAIL)}
+              errorMessage={errors[EMAIL]}
             />
           </View>
             <View style={{flex: 1}}>
               <InputComponent 
-                  label="Mobile number" 
-                  updateParentState={setPhoneNumber} 
-                  value={phoneNumberForUpdate}
-                  defaultValue={phoneNumberWithoutCountryCode}
-                  setIsValid={setIsPhoneNumberValid}
-                  constraints={mobileNoConstraints}
+                label="Mobile number" 
+                defaultValue={phoneNumberWithoutCountryCode}
+                {...bindField(MOBILE_NUMBER)}
+                errorMessage={errors[MOBILE_NUMBER]}
               />
             </View>
           <View style={{flex: 1, marginTop: 10}}>
-              <CustomDatePicker dob={birthdate} updateParentState={setBirthdate} label="Date of Birth" date={birthdate} />
+              <CustomDatePicker updateParentState={setBirthdate} label="Date of Birth" date={birthdate} />
           </View>
           <View style={{flex: 1}}>
               <Selector options={GENDER_OPTIONS} label="Gender" onValueChange={setGender} defaultValue={gender} />

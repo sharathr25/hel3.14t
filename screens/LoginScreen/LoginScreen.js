@@ -9,6 +9,7 @@ import { Auth } from "aws-amplify";
 import { SCREEN_DETAILS } from "../../constants/appConstants";
 import { toastTypes } from '../../components/atoms/Toast';
 import { FONT_SIZE_16 } from '../../styles/typography';
+import { useForm } from '../../customHooks';
 
 const { SIGNUP, FORGOT_PASSWORD , MAIN } = SCREEN_DETAILS;
 
@@ -18,12 +19,15 @@ type LoginScreenProps = {
   navigation: Object
 }
 
+const USER_NAME = 'username';
+const PASSWORD = 'password';
+
 const LoginScreen = ({navigation}: LoginScreenProps) => {
-  const [userName, setUserName] = useState('');
-  const [password, setPassword] = useState('');
+  const { values, errors, bindField, isValid } = useForm({
+    [USER_NAME]: { constraints: loginUserNameConstraints },
+    [PASSWORD]: { constraints: passwordConstraints }
+  });
   const [toast, setToast] = useState({ type: "", message: "" })
-  const [isUserNameValid, setUserNameIsValid] = useState(false)
-  const [isPasswordValid, setIsPasswordValid] = useState(false)
 
   const handleSignUp = () => {
     navigation.navigate(SIGNUP.screenName);
@@ -34,11 +38,12 @@ const LoginScreen = ({navigation}: LoginScreenProps) => {
   }
 
   const handleLogin = async () => {
-    if(isUserNameValid && isPasswordValid) {
+    console.log(values, errors, isValid())
+    if(isValid()) {
       try {
         setToast({ type: toastTypes.LOADING, message: "Please wait" })
-        const uname = userName.match(emailRegex) ? userName : `+91${userName}`
-        await Auth.signIn({username: uname , password });
+        const uname = values[USER_NAME].match(emailRegex) ? values[USER_NAME] : `+91${values[USER_NAME]}`
+        await Auth.signIn({username: uname , password: values[PASSWORD] });
         if(navigation.canGoBack()) navigation.popToTop();
         navigation.replace(MAIN.screenName);
       } catch (error) {
@@ -79,18 +84,16 @@ const LoginScreen = ({navigation}: LoginScreenProps) => {
         <View style={{flex: 1, justifyContent: 'center' }}>
           <InputComponent 
             label="Email or Mobile number" 
-            updateParentState={setUserName} 
-            setIsValid={setUserNameIsValid}
-            constraints={loginUserNameConstraints}
+            {...bindField(USER_NAME)}
+            errorMessage={errors[USER_NAME]}
           />
         </View>
         <View style={{flex :1, alignItems: 'flex-end', justifyContent: 'center' }}>
           <InputComponent 
             label="Password" 
-            updateParentState={setPassword} 
             showPasswordIcon={true}
-            setIsValid={setIsPasswordValid}
-            constraints={passwordConstraints}
+            {...bindField(PASSWORD)}
+            errorMessage={errors[PASSWORD]}
           />
           <Link onPress={handleResetPassword}>
             Forgot Password?
@@ -109,9 +112,6 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: 'flex-end',
     justifyContent: 'center'
-  },
-  linkStyle: {
-
   }
 });
 

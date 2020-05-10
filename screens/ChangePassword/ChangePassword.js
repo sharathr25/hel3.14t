@@ -1,30 +1,37 @@
 // @flow
 import React, { useState } from 'react';
-import { View, StyleSheet, ScrollView } from 'react-native';
-import { ORANGE, WHITE, BLACK } from '../../styles/colors';
+import { View, ScrollView } from 'react-native';
+import { ORANGE, WHITE } from '../../styles/colors';
 import { Button, Toast } from '../../components/atoms';
 import { InputComponent } from '../../components/molecules';
 import { Auth } from 'aws-amplify';
 import { toastTypes } from '../../components/atoms/Toast';
 import { passwordConstraints } from '../../utils';
+import { useForm } from '../../customHooks';
 
+const PASSWORD = 'password'
+const CONFIRM_PASSOWRD = 'confirmPassword'
+const OLD_PASSWORD = 'oldPassword';
 
 const ResetPassowrdScreen = () => {
-  const [oldPassword, setOldPassword] = useState('');
-  const [password, setPassword] = useState('');
-  const [confirmPassword, setConfirmPassowrd] = useState('');
+  const { values, errors, bindField, isValid } = useForm({
+    [OLD_PASSWORD]: { constraints: passwordConstraints },
+    [PASSWORD]: { constraints: passwordConstraints },
+    [CONFIRM_PASSOWRD]: { constraints: [
+      ...passwordConstraints, { 
+        fun: (value) => values[PASSWORD] === value,
+        message: "password mismatch" 
+      }
+    ]}
+  });
   const [toast, setToast] = useState({ type: "", message: ""});
-  const [isOldPasswordValid, setIsOldPasswordValid] = useState(false)
-  const [isPasswordValid, setIsPasswordValid] = useState(false)
-  const [isConfirmPasswordValid, setIsConfirmPasswordValid] = useState(false)
 
   const handleChange = async () => {
-    console.log(isOldPasswordValid , isPasswordValid , isConfirmPasswordValid)
-    if(isOldPasswordValid && isPasswordValid && isConfirmPasswordValid) {
+    if(isValid()) {
       try {
         setToast({ type: toastTypes.LOADING, message: "Please wait" })
         const user = await Auth.currentAuthenticatedUser()
-        await Auth.changePassword(user, oldPassword, password)
+        await Auth.changePassword(user, values[OLD_PASSWORD], values[PASSWORD])
         setToast({ type: toastTypes.SUCCESS, message: "Password changed" })
       } catch (error) {
         setToast({ type: toastTypes.ERROR, message: "Something went wrong" })
@@ -41,27 +48,24 @@ const ResetPassowrdScreen = () => {
           <InputComponent
             label="Old Password"
             showPasswordIcon={true}
-            updateParentState={setOldPassword}
-            setIsValid={setIsOldPasswordValid}
-            constraints={passwordConstraints}
+            {...bindField(OLD_PASSWORD)}
+            errorMessage={errors[OLD_PASSWORD]}
           />
         </View>
         <View style={{flex: 1, justifyContent: 'center'}}>
           <InputComponent
             label="Password"
             showPasswordIcon={true}
-            updateParentState={setPassword}
-            setIsValid={setIsPasswordValid}
-            constraints={passwordConstraints}
+            {...bindField(PASSWORD)}
+            errorMessage={errors[PASSWORD]}
           />
         </View>
         <View style={{flex: 1, justifyContent: 'center'}}>
           <InputComponent
             label="Confirm Password"
             showPasswordIcon={true}
-            updateParentState={setConfirmPassowrd}
-            setIsValid={setIsConfirmPasswordValid}
-            constraints={[...passwordConstraints, { fun: () => password === confirmPassword, message: "Password mismatch" }]}
+            {...bindField(CONFIRM_PASSOWRD)}
+            errorMessage={errors[CONFIRM_PASSOWRD]}
           />
         </View>
         <View style={{flex: 1, justifyContent: 'center'}}>

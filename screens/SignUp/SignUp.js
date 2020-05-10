@@ -13,6 +13,7 @@ import { CustomDatePicker, Selector, Button, Link } from '../../components/atoms
 import { Auth } from "aws-amplify";
 import Toast, { toastTypes } from '../../components/atoms/Toast';
 import { userNameConstraints, emailConstraints, mobileNoConstraints, passwordConstraints } from '../../utils/formConstraints';
+import { useForm } from '../../customHooks';
 
 const { LOGIN, TERMS_AND_CONDITIONS, MAIN } = SCREEN_DETAILS;
 
@@ -31,32 +32,31 @@ const GENDER_OPTIONS = [
   {label:"Female", value:"female"}
 ];
 
-function SignUpScreen({navigation}: { navigation: Object }) {
-  const [username, setUsername] = useState('');
-  const [isUserNameValid, setIsUserNameValid] = useState(false)
-  const [isMobileNumberValid, setIsMobileNumberValid] = useState(false)
-  const [isEmailValid, setIsEmailValid] = useState(false)
-  const [isPasswordValid, setIsPasswordValid] = useState(false)
-  const [isConfirmpasswordValid, setIsConfirmpasswordValid] = useState(false)
+const USER_NAME = 'username'
+const EMAIL = 'email'
+const MOBILE_NUMBER = 'mobileNumber'
+const PASSWORD = 'password'
+const CONFIRM_PASSOWRD = 'confirmPassword'
 
-  const [mobileNumber, setMobileNumber] = useState('');
-  
-  const [email, setEmail] = useState('');
-  
-  const [password, setPassword] = useState('');
-  
-  const [confirmPassword, setConfirmPassword] = useState('');
+function SignUpScreen({navigation}: { navigation: Object }) {
+  const { values, errors, bindField, isValid } = useForm({
+    [USER_NAME]: { constraints: userNameConstraints },
+    [EMAIL]: { constraints: emailConstraints },
+    [MOBILE_NUMBER]: { constraints: mobileNoConstraints },
+    [PASSWORD]: { constraints: passwordConstraints },
+    [CONFIRM_PASSOWRD]: { constraints: [
+      ...passwordConstraints, { 
+        fun: (value) => values[PASSWORD] === value,
+        message: "password mismatch" 
+      }
+    ]}
+  }); 
   const [dob, setDob] = useState('');
   const [gender, setGender] = useState(GENDER_OPTIONS[0].value);
-
   const [termsAndConditionChecked, settermsAndConditionChecked] = useState(false);
-
   const [showOtpInput, setShowOtpInput] = useState(false);
-
   const [otp, setOtp] = useState("");
-
   const [createUser, { loading, data, error }] = useMutation(CREATE_USER);
-
   const [toast, setToast] = useState({type:"", message:""})
 
   const handleTermsAndConditions = () => {
@@ -70,8 +70,9 @@ function SignUpScreen({navigation}: { navigation: Object }) {
   const verify = async () => {
     try{
       setToast({ type:toastTypes.LOADING, message: "please wait"})
-      await Auth.confirmSignUp(username, otp, { forceAliasCreation: true });
-      await Auth.signIn({ username: `+91${mobileNumber}`, password})
+      console.log(otp)
+      await Auth.confirmSignUp(values[USER_NAME], otp, { forceAliasCreation: true });
+      await Auth.signIn({ username: `+91${values[MOBILE_NUMBER]}`, password: values[PASSWORD]})
       setToast({ type: toastTypes.SUCCESS, message: "Verification successfull"})
       setShowOtpInput(false);
       navigation.navigate(MAIN.screenName);
@@ -84,7 +85,7 @@ function SignUpScreen({navigation}: { navigation: Object }) {
   const resend = async () => {
     try {
       setToast({ type: toastTypes.LOADING, message: "please wait"})
-      await Auth.resendSignUp(username)
+      await Auth.resendSignUp(values[USER_NAME])
       setToast({ type: toastTypes.SUCCESS, message: "OTP has be resent"})
     } catch (error) {
       setToast({ type: toastTypes.ERROR, message: "something wend wrong"})
@@ -93,24 +94,16 @@ function SignUpScreen({navigation}: { navigation: Object }) {
 
   const handleSignUp = async () => {  
     const age = getAge(dob);
-    if(
-      isUserNameValid 
-      && isMobileNumberValid 
-      && isEmailValid 
-      && isPasswordValid 
-      && isConfirmpasswordValid
-      && getAge(dob) > AGE_LIMIT
-      && termsAndConditionChecked
-    ){
+    if(isValid() && getAge(dob) > AGE_LIMIT && termsAndConditionChecked) {
       try {
         setToast({ type: toastTypes.LOADING, message: "Please wait"})
         const data = await Auth.signUp({
-          username,
-          password, 
+          username: values[USER_NAME],
+          password: values[PASSWORD], 
           attributes: { 
-              email, 
-              name: username,
-              phone_number:`+91${mobileNumber}`,
+              email: values[EMAIL], 
+              name: values[USER_NAME],
+              phone_number:`+91${values[MOBILE_NUMBER]}`,
               birthdate: dob,
               gender
             }
@@ -180,50 +173,45 @@ function SignUpScreen({navigation}: { navigation: Object }) {
         setOtp={setOtp} 
         verify={verify}
         resend={resend}
-        recepient={mobileNumber}
+        recepient={values[MOBILE_NUMBER]}
         onClose={() => setShowOtpInput(!showOtpInput)}
       />
       <View style={{ flex: 1, margin: 20 }}>
         <View>
           <InputComponent 
             label="Username" 
-            updateParentState={setUsername} 
-            constraints={userNameConstraints} 
-            setIsValid={setIsUserNameValid}
+            {...bindField(USER_NAME)}
+            errorMessage={errors[USER_NAME]}
           />
         </View>
         <View>
           <InputComponent 
             label="Email" 
-            updateParentState={setEmail} 
-            constraints={emailConstraints}
-            setIsValid={setIsEmailValid}
+            {...bindField(EMAIL)}
+            errorMessage={errors[EMAIL]}
           />
         </View>
         <View>  
           <InputComponent 
             label="Mobile number" 
-            updateParentState={setMobileNumber} 
-            constraints={mobileNoConstraints} 
-            setIsValid={setIsMobileNumberValid}  
+            {...bindField(MOBILE_NUMBER)}  
+            errorMessage={errors[MOBILE_NUMBER]}
           />
         </View>
         <View>
           <InputComponent 
             label="Password" 
-            updateParentState={setPassword} 
-            setIsValid={setIsPasswordValid} 
             showPasswordIcon={true}
-            constraints={passwordConstraints} 
+            {...bindField(PASSWORD)}
+            errorMessage={errors[PASSWORD]}
           />
         </View>
         <View>
           <InputComponent 
             label="Confirm Password" 
-            updateParentState={setConfirmPassword} 
             showPasswordIcon={true} 
-            setIsValid={setIsConfirmpasswordValid}
-            constraints={[...passwordConstraints, { fun: () => password === confirmPassword, message: "password mismatch"}]}
+            {...bindField(CONFIRM_PASSOWRD)}
+            errorMessage={errors[CONFIRM_PASSOWRD]}
           />
         </View>
         <DateOfBirthInput />

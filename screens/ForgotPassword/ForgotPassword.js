@@ -7,24 +7,33 @@ import { InputComponent, OTPVerificationToast } from '../../components/molecules
 import { Auth } from 'aws-amplify';
 import { toastTypes } from '../../components/atoms/Toast';
 import { userNameConstraints, passwordConstraints } from '../../utils/formConstraints';
+import { useForm } from '../../customHooks';
+
+const USER_NAME = 'username'
+const PASSWORD = 'password'
+const CONFIRM_PASSOWRD = 'confirmPassword'
 
 const ResetPassowrdScreen = () => {
-  const [username, setUsername] = useState('');
-  const [password, setPassword] = useState('');
-  const [confirmPassword, setConfirmPassowrd] = useState('');
   const [otp, setOtp] = useState('');
   const [showOtpInput, setShowOtpInput] = useState(false)
   const [recepient, setRecepient] = useState('');
   const [toast, setToast] = useState({ type: "", message: ""});
-  const [isPasswordValid, setIsPasswordValid] = useState(false)
-  const [isConfirmPasswordValid, setIsConfirmPasswordValid] = useState(false)
-  const [isUserNameValid, setIsUserNamevalid] = useState(false)
+
+  const { values, errors, bindField, isValid } = useForm({
+    [USER_NAME]:  { constraints: userNameConstraints },
+    [PASSWORD]: { constraints: passwordConstraints },
+    [CONFIRM_PASSOWRD]: { constraints: [
+      ...passwordConstraints, { 
+        fun: (value) => values[PASSWORD] === value,
+        message: "password mismatch" 
+      }
+    ]}
+  })
 
   const verify = async () => {
     try {
       setToast({ type: toastTypes.LOADING, message: "Verifying" })
-      console.log(username, otp, password)
-      await Auth.forgotPasswordSubmit(username, otp, password)
+      await Auth.forgotPasswordSubmit(values[USER_NAME], otp, values[PASSWORD])
       setToast({ type: toastTypes.SUCCESS, message: "Success, go back and login"})
       setShowOtpInput(false)
     } catch (error) {
@@ -36,7 +45,7 @@ const ResetPassowrdScreen = () => {
   const resend = async () => {
     try {
       setToast({ type: toastTypes.LOADING, message: "Please wait"})
-      await Auth.forgotPassword(username);
+      await Auth.forgotPassword(values[USER_NAME]);
       setToast({ type: toastTypes.SUCCESS, message: "OTP has been sent"})
     } catch (error) {
       setToast({ type: toastTypes.ERROR, message: "Couldn't send OTP"})
@@ -44,10 +53,10 @@ const ResetPassowrdScreen = () => {
   }
 
   const handleSendOTP = async () => {
-    if(isUserNameValid && isPasswordValid && isConfirmPasswordValid) {
+    if(isValid()) {
       try {
         setToast({ type: toastTypes.LOADING, message: "Please wait" })
-        const { CodeDeliveryDetails } = await Auth.forgotPassword(username);
+        const { CodeDeliveryDetails } = await Auth.forgotPassword(values[USER_NAME]);
         const { DeliveryMedium }  = CodeDeliveryDetails;
         setToast({ type: toastTypes.SUCCESS, message: "OTP sent Sucessfully" })
         setShowOtpInput(true)
@@ -81,27 +90,24 @@ const ResetPassowrdScreen = () => {
               <InputComponent
                 label="Email or Username"
                 secureTextEntry={false}
-                updateParentState={setUsername}
-                setIsValid={setIsUserNamevalid}
-                constraints={userNameConstraints}
+                {...bindField(USER_NAME)}
+                errorMessage={errors[USER_NAME]}
               />
             </View>
             <View style={{flex: 1, justifyContent: 'center'}}>
               <InputComponent
                 label="Password"
                 showPasswordIcon={true}
-                updateParentState={setPassword}
-                setIsValid={setIsPasswordValid}
-                constraints={passwordConstraints}
+                {...bindField(PASSWORD)}
+                errorMessage={errors[PASSWORD]}
               />
             </View>
             <View style={{flex: 1, justifyContent: 'center'}}>
               <InputComponent
                 label="Confirm Password"
                 showPasswordIcon={true}
-                updateParentState={setConfirmPassowrd}
-                setIsValid={setIsConfirmPasswordValid}
-                constraints={[...passwordConstraints, { fun: () => password === confirmPassword, message: "password mismatch"}]}
+                {...bindField(CONFIRM_PASSOWRD)}
+                errorMessage={errors[CONFIRM_PASSOWRD]}
               />
             </View>
             <View style={{flex: 1, justifyContent: 'center'}}>
