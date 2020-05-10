@@ -68,7 +68,7 @@ const OTPVerificationToast = (props: OTPVerificationModalProps) => {
                 </TouchableOpacity>
                 <Text>Enter OTP sent to</Text>
                 <Heading>{recepient}</Heading>
-                <InputComponent label="OTP" updateParentState={setOtp} keyboardType="numeric" />
+                <InputComponent label="OTP" onChangeText={setOtp} keyboardType="numeric" />
                 <Button onPress={verify} bgColor={ORANGE} textColor={WHITE}>verify</Button>
                 <View style={resendMessage}>
                     <Text style={{color: BLACK}}>Haven’t received OTP? </Text>

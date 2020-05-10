@@ -154,8 +154,7 @@ const MyAccountScreen = ({ navigation }: MyAccountScreenProps) => {
     }
 
     return (
-        <View style={{flex: 1}}>
-            <ScrollView style={{ backgroundColor: LIGHTEST_GRAY }}>
+        <ScrollView style={{ backgroundColor: LIGHTEST_GRAY }} contentContainerStyle={{flexGrow: 1}}>
             {toast.type !== "" && <Toast type={toast.type} message={toast.message} />}
             <OTPVerificationToast 
                 show={showOtpInput}
@@ -179,7 +178,6 @@ const MyAccountScreen = ({ navigation }: MyAccountScreenProps) => {
                     </View>
                 </View>
             </ScrollView>
-        </View>
     );
 }
 
