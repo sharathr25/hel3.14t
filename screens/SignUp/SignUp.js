@@ -132,7 +132,7 @@ function SignUpScreen({navigation}: { navigation: Object }) {
   };
 
   const GenderSelector = () => (
-    <View>
+    <View style={{flex: 1}}>
       <Selector options={GENDER_OPTIONS} label="Gender" onValueChange={setGender} />
     </View>
   );
@@ -177,28 +177,28 @@ function SignUpScreen({navigation}: { navigation: Object }) {
         onClose={() => setShowOtpInput(!showOtpInput)}
       />
       <View style={{ flex: 1, margin: 20 }}>
-        <View>
+        <View style={{flex: 1}}>
           <InputComponent 
             label="Username" 
             {...bindField(USER_NAME)}
             errorMessage={errors[USER_NAME]}
           />
         </View>
-        <View>
+        <View style={{flex: 1}}>
           <InputComponent 
             label="Email" 
             {...bindField(EMAIL)}
             errorMessage={errors[EMAIL]}
           />
         </View>
-        <View>  
+        <View style={{flex: 1}}>  
           <InputComponent 
             label="Mobile number" 
             {...bindField(MOBILE_NUMBER)}  
             errorMessage={errors[MOBILE_NUMBER]}
           />
         </View>
-        <View>
+        <View style={{flex: 1}}>
           <InputComponent 
             label="Password" 
             showPasswordIcon={true}
@@ -206,7 +206,7 @@ function SignUpScreen({navigation}: { navigation: Object }) {
             errorMessage={errors[PASSWORD]}
           />
         </View>
-        <View>
+        <View style={{flex: 1}}>
           <InputComponent 
             label="Confirm Password" 
             showPasswordIcon={true} 
