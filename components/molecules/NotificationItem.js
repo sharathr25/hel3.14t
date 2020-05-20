@@ -1,12 +1,15 @@
 // @flow
 import React from 'react';
-import { View, Text, StyleSheet } from 'react-native';
+import { StyleSheet, TouchableOpacity } from 'react-native';
 import Icon from 'react-native-vector-icons/AntDesign'
-import { Time, Button } from '../atoms';
+import { Time } from '../atoms';
 import gql from 'graphql-tag';
 import { useMutation } from 'react-apollo';
 import { ORANGE, BLACK } from '../../styles/colors';
 import { useAuth } from "../../customHooks/index";
+import { ListItem } from 'react-native-elements';
+import { useNavigation } from '@react-navigation/native';
+import { typeToScreenMapping } from '../../constants/appConstants';
 
 const QUERY_TO_REMOVE_NOTIFICATION = gql`
     mutation UpdateUser($uid: String!, $value: Any) {
@@ -22,12 +25,16 @@ type NotificationItemProps = {
     message: string,
     id: string,
     timeStamp?: number | "",
-    removeNotification: Function
+    removeNotification: Function,
+    type?: string,
+    idOfHelpRequest?: string
 }
 
 const NotificationItem = (props: NotificationItemProps) => {
-    const { message, id, timeStamp = "", removeNotification } = props;
-    const { user: { uid } } = useAuth();
+    const { message, id, timeStamp = "", removeNotification, type, idOfHelpRequest } = props;
+    const navigation = useNavigation()
+    const { user } = useAuth();
+    const { uid } = user || {};
     const [removeNotificationFromDb] = useMutation(QUERY_TO_REMOVE_NOTIFICATION);
 
     const _removeNotification = () => {
@@ -35,18 +42,24 @@ const NotificationItem = (props: NotificationItemProps) => {
         removeNotificationFromDb({ variables: { uid, value: { _id: id } } });
     }
 
-    const { notificationContainer, descriptionStyle, descriptionContainerStyle } = styles;
+    const _onClick = () => {
+        if(type) {
+            navigation.navigate(typeToScreenMapping[type], { keyOfHelpRequest : idOfHelpRequest })
+        }
+    }
 
     return (
-        <View style={notificationContainer}>
-            <View style={descriptionContainerStyle}>
-                <Text style={descriptionStyle}>{message}</Text>
-                <Button onPress={_removeNotification}>
-                    <Icon name="close" size={15} color={ORANGE} />
-                </Button>
-            </View>
-            {timeStamp ? <Time time={timeStamp} /> : null}
-        </View>
+        <ListItem 
+            onPress={_onClick}
+            title={message} 
+            subtitle={<Time time={timeStamp} />}
+            rightIcon={
+                <TouchableOpacity onPress={_removeNotification}>
+                    <Icon name="close" size={25} color={ORANGE} />
+                </TouchableOpacity>
+            }
+            bottomDivider={true}
+        />
     );
 }
 

@@ -4,15 +4,16 @@ import { Text, View, StyleSheet } from 'react-native';
 import { ORANGE, WHITE } from '../../styles/colors';
 
 type ProfileLetterProps = {
-  letter : String, 
-  size: number
+  letter : string, 
+  size: number,
+  bgColor: string
 }
 
 const ProfileLetter = (props: ProfileLetterProps) => {
-  const { letter, size = 30 } = props;
+  const { letter, size = 30, bgColor = ORANGE } = props;
   const { textContainer, text } = styles;
   return (
-    <View style={{ ...textContainer, width: size, height: size, borderRadius: size / 2 }}>
+    <View style={{ ...textContainer, width: size, height: size, borderRadius: size / 2, backgroundColor: bgColor }}>
       <Text style={{ ...text, fontSize: size - 10 }}>{letter}</Text>
     </View>
   );
@@ -25,7 +26,6 @@ const styles = StyleSheet.create({
     color: WHITE,
   },
   textContainer: {
-    backgroundColor: ORANGE,
     justifyContent: 'center',
     alignItems: 'center'
   }

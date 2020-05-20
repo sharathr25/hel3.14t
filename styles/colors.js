@@ -16,3 +16,4 @@ export const LIGHTEST_GRAY = "#f6f6f6";
 export const YELLOW = "#F2BD00";
 export const LIGHT_YELLOW = "#FFE074"
 export const LIGHT_BLUE = "#1DA1F2";
+export const GRAY = "gray";

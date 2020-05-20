@@ -11,19 +11,24 @@ const USER_NOTIFICATIONS_QUERY = gql`
             notifications{
                 _id,
                 message,
-                timeStamp
+                timeStamp,
+                type,
+                idOfHelpRequest
             }
         }
     }
 `;
 
 const useNotifications = () => {
-    const { user } = useAuth();
+    const { user: currentUser } = useAuth();
     const [getNotifications, { data, loading, error }] = useLazyQuery(USER_NOTIFICATIONS_QUERY, { pollInterval: POLL_INTERVAL });
+    
     useEffect(() => {
-        if(user) 
-            getNotifications({ variables: { uid:user.uid } })
-    }, [user])
+        if(currentUser) {
+            const { uid } = currentUser;
+            getNotifications({ variables: { uid } })
+        }
+    }, [currentUser])
 
     if (data) {
         const { user: { notifications } } = data;

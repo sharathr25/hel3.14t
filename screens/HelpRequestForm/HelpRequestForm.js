@@ -1,5 +1,5 @@
 // @flow
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Text, Input } from "react-native-elements";
 import { View, TouchableOpacity, StyleSheet, Alert, Keyboard, ScrollView, Dimensions } from "react-native";
 import { WHITE, ORANGE, BLACK, RED, LIGHT_GRAY } from "../../styles/colors";
@@ -12,7 +12,7 @@ import { padding, margin } from "../../styles/mixins";
 import { Toast } from "../../components/atoms";
 import Icon from "react-native-vector-icons/FontAwesome";
 
-const WORD_LIMIT = 100;
+const WORD_LIMIT = 500;
 const NO_OF_LINES_FOR_DESC = Math.ceil(Dimensions.get("window").height / 50);
 const noOfPeopleSelectBoxOptions = [1, 2, 3, 4, 5, 6];
 
@@ -41,15 +41,15 @@ const HelpRequestForm = ({navigation}: {navigation: Object}) => {
     const [state, setState] = useState({
         noPeopleRequired: 1,
         description: "",
-        latitude: null,
-        longitude: null,
-        locationProviderAvailable: false,
-        locationErrorMessage: "",
     });
 
     const [createHelp, { loading, data, error }] = useMutation(HELP_REQUEST);
     const { longitude, latitude, locationProviderAvailable, locationErrorMessage } = useLocation();
     const { user: currentUser } = useAuth();
+    useEffect(() => {
+        if(data) setState({ ...state, description: "" })
+    }, [data])
+
     if(!currentUser) return <CustomModal variant="loading" />
     const { uid, attributes, username } = currentUser;
     const { name, phone_number: phoneNumber } = attributes;
@@ -148,7 +148,7 @@ const HelpRequestForm = ({navigation}: {navigation: Object}) => {
                         multiline={true}
                         numberOfLines={NO_OF_LINES_FOR_DESC}
                         onChangeText={_onChangeText}
-                        inputStyle={{ textAlignVertical: 'top' }}
+                        inputStyle={{ textAlignVertical: 'top', textAlign: 'center' }}
                         value={state.description}
                     />
                     <WordLimitStatus />

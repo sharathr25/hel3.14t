@@ -93,6 +93,7 @@ const UserContributionScreen = ({ route } : { route: Object }) => {
 
     const getMessage = () => {
       if(status === "COMPLETED") return "Awesome, Help satisfied"
+      else if(status === "CANCELLED") return "This request got cancelled"
       else if(isUserIsThereInUsers(usersRequested, user.uid)) return "Your are in waiting list"
       else if(isUserIsThereInUsers(usersAccepted, user.uid)) return "You got accepted, You can help him"
       else if(isUserIsThereInUsers(usersRejected, user.uid)) return "You got rejected, Sorry"
