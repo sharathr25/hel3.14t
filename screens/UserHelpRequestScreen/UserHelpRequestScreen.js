@@ -88,14 +88,14 @@ const UserHelpRequestScreen = ({ route } : { route: Object }) => {
     const statusToCTAMapping = {
         'REQUESTED': (
         <View style={CTAContainerStyle}>
-            <Heading>If no need of help</Heading>
+            <Heading>If help not required</Heading>
             <Button bgColor={LIGHTEST_GRAY} onPress={handleCancel} borderColor={RED} textColor={RED}> Cancel </Button>
         </View>
         ),
         'ON_GOING': (
         <View style={CTAContainerStyle}>
             <Heading>If requested help satisfied</Heading>
-            <Button onPress={handleFinish} bgColor={LIGHTEST_GRAY} borderColor={GREEN} textColor={GREEN}> Finish </Button>
+            <Button onPress={handleFinish} bgColor={LIGHTEST_GRAY} borderColor={GREEN} textColor={GREEN}> End </Button>
         </View>
         ),
         'COMPLETED': null,

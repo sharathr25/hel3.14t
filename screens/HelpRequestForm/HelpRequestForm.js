@@ -1,20 +1,19 @@
 // @flow
 import React, { useState, useEffect } from "react";
 import { Text, Input } from "react-native-elements";
-import { View, TouchableOpacity, StyleSheet, Alert, Keyboard, ScrollView, Dimensions } from "react-native";
-import { WHITE, ORANGE, BLACK, RED, LIGHT_GRAY } from "../../styles/colors";
-import { FONT_FAMILY_REGULAR, FONT_SIZE_20, FONT_SIZE_12 } from "../../styles/typography";
+import { View, TouchableOpacity, StyleSheet, Alert, Keyboard, Dimensions } from "react-native";
+import { WHITE, ORANGE, RED, LIGHT_GRAY } from "../../styles/colors";
 import gql from "graphql-tag";
 import { useMutation } from "react-apollo";
 import { useLocation, useAuth } from "../../customHooks/";
 import { CustomModal } from "../../components/molecules";
-import { padding, margin } from "../../styles/mixins";
-import { Toast } from "../../components/atoms";
+import { Toast, Button } from "../../components/atoms";
 import Icon from "react-native-vector-icons/FontAwesome";
 
-const WORD_LIMIT = 500;
-const NO_OF_LINES_FOR_DESC = Math.ceil(Dimensions.get("window").height / 50);
-const noOfPeopleSelectBoxOptions = [1, 2, 3, 4, 5, 6];
+const WORD_LIMIT = 5;
+const { height } = Dimensions.get("window");
+const NO_OF_LINES_FOR_DESC = height / 30;
+const NO_OF_PEOPLE_REQUIRED_BY_DEFAULT = 1;
 
 const HELP_REQUEST = gql`
   mutation CreateHelpRequest($uid:String!,$username: String!, $mobileNo:String!,$lat:Float!,$long:Float!,$desc:String!, $time:Date!, $name:String!, $noPeopleRequired:Int!){
@@ -38,37 +37,21 @@ const HELP_REQUEST = gql`
 `;
 
 const HelpRequestForm = ({navigation}: {navigation: Object}) => {
-    const [state, setState] = useState({
-        noPeopleRequired: 1,
-        description: "",
-    });
-
+    const [desc, setDesc] = useState("")
+    const [noPeopleRequired, setNoPeopleRequired] = useState(NO_OF_PEOPLE_REQUIRED_BY_DEFAULT);
     const [createHelp, { loading, data, error }] = useMutation(HELP_REQUEST);
     const { longitude, latitude, locationProviderAvailable, locationErrorMessage } = useLocation();
     const { user: currentUser } = useAuth();
     useEffect(() => {
-        if(data) setState({ ...state, description: "" })
+        if(data) setDesc("");
     }, [data])
 
     if(!currentUser) return <CustomModal variant="loading" />
     const { uid, attributes, username } = currentUser;
     const { name, phone_number: phoneNumber } = attributes;
-    const { defaultCheckBoxStyle, activeCheckBox, 
-        inActiveCheckBox, activeText, inActiveText,
-        requestHelpStyle, requestButtonText, container, innerContainer,
-        label, descriptionContainerStyle, noPeopleSelector , WordLimitStatusText
-    } = styles;
-
-    const handleCheckBox = (val) => {
-        setState({ ...state, noPeopleRequired: val, [`checkBox${val}`]: true });
-    }
-
-    const getCheckBoxStyle = (val) => [defaultCheckBoxStyle, state.noPeopleRequired === val ? activeCheckBox : inActiveCheckBox];
-
-    const getCheckBoxTextStyle = (val) => state.noPeopleRequired === val ? activeText : inActiveText;
+    const { container, formInput, closeButtonContainer, closeButton } = styles;
 
     const requestHelp = () => {
-        const { description, noPeopleRequired } = state;
         if (locationProviderAvailable === false && latitude === null && longitude === null) {
             Alert.alert(locationErrorMessage ? locationErrorMessage : "location error");
         } else {
@@ -80,7 +63,7 @@ const HelpRequestForm = ({navigation}: {navigation: Object}) => {
                     mobileNo: phoneNumber,
                     lat: latitude,
                     long: longitude,
-                    desc: description,
+                    desc,
                     time: new Date().getTime(),
                     name,
                     username
@@ -89,44 +72,36 @@ const HelpRequestForm = ({navigation}: {navigation: Object}) => {
         }
     }
 
-    const Option = ({ val }) => (
-        <TouchableOpacity onPress={() => handleCheckBox(val)} style={getCheckBoxStyle(val)} key={val}>
-            <Text style={getCheckBoxTextStyle(val)}>{val}</Text>
-        </TouchableOpacity>
-    );
-
-    const RequestButton = () => (
-        <TouchableOpacity onPress={requestHelp} style={requestHelpStyle}>
-            <Text style={requestButtonText}>Request</Text>
-        </TouchableOpacity>
-    );
-
-    const getWordsLeft = (description) => {
-        return WORD_LIMIT - description.split(/\s/).length + 1;
-    }
+    const getWordsLeft = (desc) => WORD_LIMIT - desc.split(/\s/).length + 1;
 
     const WordLimitStatus = () => {
-        const { description } = state;
-        const wordsThreshold = getWordsLeft(description);
+        const wordsThreshold = getWordsLeft(desc);
         const textColor = wordsThreshold <= 0 ? RED : LIGHT_GRAY;
         const text = wordsThreshold <= 0 ? "Limit Reached" : `${wordsThreshold} words left`;
-        return <Text style={{...WordLimitStatusText, color: textColor }}>{text}</Text>
+        return <Text style={{color: textColor, alignSelf: 'flex-end' }}>{text}</Text>
     }
 
     const _onChangeText = (value) => {
-        const temp = state.description;
-        if(getWordsLeft(value) <= 0 && value[value.length - 1] !== ' ') {
-            setState({...state, description: temp});
-        } else {
-            setState({ ...state, description: value })
-        }
+        const temp = desc;
+        const lastCharacter = value[value.length - 1];
+        const descForUpdate = getWordsLeft(value) <= 0 && lastCharacter !== ' ' ? temp : value;
+        setDesc(descForUpdate);
     }
 
     const getToast = () => {
-        if(loading) return { type: "loading", message: "Please wait...", cbForToastEnd: () => {}}
-        else if(data) return { type: "success", message: "Success, taking you to activity", cbForToastEnd: () => navigation.jumpTo('Activity')}
-        else if(error) return { type: "danger", message: "Something went wrong! try again", cbForToastEnd: () => {}}
-        return  { type: "", message: "", cbForToastEnd: () => {} }
+        let type = "", message = "", cbForToastEnd = () => {};
+        if(loading) { 
+            type = "loading"
+            message = "Please wait..." 
+        } else if(data) { 
+            type = "success" 
+            message = "Your request has been created, taking you to activity" 
+            cbForToastEnd = () => navigation.jumpTo('Activity')
+        } else if(error) { 
+            type = "danger"; 
+            message = "Something went wrong! try again"
+        }
+        return  { type, message, cbForToastEnd }
     }
 
     const _onPress = () => {
@@ -134,32 +109,25 @@ const HelpRequestForm = ({navigation}: {navigation: Object}) => {
     }
 
     return (
-        <ScrollView style={{backgroundColor: WHITE}}>
-            <View style={container}>
-                {getToast().type ? <Toast type={getToast().type} message={getToast().message} duration={4000} cbForToastEnd={getToast().cbForToastEnd}/> : null}
-                <View style={innerContainer}>
-                    <TouchableOpacity onPress={_onPress} style={{alignItems: 'flex-end', ...margin(5,5,0,0) }}>
-                        <Icon name="remove" size={25} color={LIGHT_GRAY} />
-                    </TouchableOpacity>
-                    <Text style={{...label, padding:10}}>Request will be created for current location</Text>
-                    <Input
-                        placeholder="Please describe your help"
-                        inputContainerStyle={descriptionContainerStyle}
-                        multiline={true}
-                        numberOfLines={NO_OF_LINES_FOR_DESC}
-                        onChangeText={_onChangeText}
-                        inputStyle={{ textAlignVertical: 'top', textAlign: 'center' }}
-                        value={state.description}
-                    />
-                    <WordLimitStatus />
-                    <Text style={label}>Please select number of people required for help</Text>
-                    <View style={noPeopleSelector}>
-                        {noOfPeopleSelectBoxOptions.map((val) => <Option key={val} val={val} />)}
-                    </View>
-                    <RequestButton />
-                </View>
-            </View>
-        </ScrollView>  
+        <View style={container}>
+            {getToast().type !== "" && <Toast  duration={4000} {...getToast()} />}
+            <TouchableOpacity onPress={_onPress} style={closeButtonContainer}>
+                <Icon name="remove" size={25} color={WHITE} style={closeButton} />
+            </TouchableOpacity>
+            <Text style={{ alignSelf: 'center' }}>Request will be created for current location</Text>
+            <Input
+                placeholder="Please describe your help"
+                inputContainerStyle={formInput}
+                containerStyle={{ paddingHorizontal: 0, flex: 1 }}
+                multiline={true}
+                numberOfLines={NO_OF_LINES_FOR_DESC}
+                onChangeText={_onChangeText}
+                inputStyle={{ textAlignVertical: 'top', textAlign: 'center' }}
+                value={desc}
+            />
+            <WordLimitStatus />
+            <Button bgColor={ORANGE} textColor={WHITE} onPress={requestHelp}>Request</Button>
+        </View> 
     );
 }
 
@@ -167,81 +135,27 @@ export default HelpRequestForm;
 
 const styles = StyleSheet.create({
     container: {
-        flex: 1,
-        justifyContent: "center",
-        backgroundColor: WHITE,
         padding: 20,
-    },
-    innerContainer: {
-        backgroundColor: WHITE, 
-        borderRadius: 10, 
-        // elevation: 10, 
-        borderWidth: 0.1, 
-        borderColor: BLACK
-    },
-    requestHelpStyle: {
-        margin: 10,
-        ...padding(5,15,5,15),
-        backgroundColor: ORANGE,
-        borderRadius: 10,
-        alignSelf: 'center'
-    },
-    requestButtonText: {
-        textAlign: 'center',
-        color: WHITE,
-        fontSize: FONT_SIZE_20
-    },
-    descriptionContainerStyle: {
+        flex: 1,
         backgroundColor: WHITE,
-        borderWidth: 1, 
-        borderColor: BLACK,
     },
-    noPeopleSelector: {
-        display: 'flex',
-        flexDirection: 'row',
-        alignItems: 'center',
-        justifyContent: 'center'
-    },
-    activeCheckBox: {
-        backgroundColor: ORANGE,
-        borderColor: ORANGE,
-    },
-    defaultCheckBoxStyle: {
-        display: 'flex',
-        justifyContent: 'center',
-        alignItems: 'center',
+    formInput: {
+        flex: 1,
         borderWidth: 1,
-        paddingTop: 5,
-        paddingBottom: 5,
-        paddingLeft: 14,
-        paddingRight: 14,
-        margin: 5,
-        borderRadius: 5
+        borderRadius: 10,
     },
-    inActiveCheckBox: {
-        backgroundColor: WHITE,
-        borderColor: ORANGE,
+    closeButtonContainer: {
+        position: 'absolute', 
+        top:-55, 
+        right: -55, 
+        width: 100, 
+        height: 100, 
+        borderRadius: 50, 
+        backgroundColor: RED
     },
-    activeText: {
-        color: WHITE,
-        fontSize: 20,
-        fontFamily: FONT_FAMILY_REGULAR
-    },
-    inActiveText: {
-        color: ORANGE,
-        fontSize: 20,
-        fontFamily: FONT_FAMILY_REGULAR
-    },
-    label: {
-        color: BLACK,
-        fontSize: FONT_SIZE_12,
-        textAlign: 'center',
-    },
-    WordLimitStatusText: {
-        color: BLACK,
-        fontSize: FONT_SIZE_12,
-        textAlign: 'center', 
-        textAlign: 'right', 
-        right: 10
+    closeButton: {
+        position: 'absolute', 
+        top: 60, 
+        right: 65
     }
-});
+})

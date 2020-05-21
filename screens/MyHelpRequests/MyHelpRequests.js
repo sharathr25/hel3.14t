@@ -48,7 +48,7 @@ const MyHelps = (props:HelpsProps) => {
     return (
         <View style={{ flex: 1, backgroundColor: WHITE }}>
             <FlatList
-                data={createdHelpRequests}
+                data={createdHelpRequests.reverse()}
                 renderItem={getHelpRequest}
                 keyExtractor={(item, index) => item.key + index.toString()}
                 refreshing={loading}
@@ -71,7 +71,7 @@ const MyContributions = (props: ContributionsProps) => {
     return (
         <View style={{ flex: 1, backgroundColor: WHITE }}>
             <FlatList
-                data={helpedHelpRequests}
+                data={helpedHelpRequests.reverse()}
                 renderItem={getHelpRequest}
                 keyExtractor={(item, index) => item.key + index.toString()}
                 refreshing={loading}
@@ -89,7 +89,7 @@ function MyHelpRequestsScreen() {
     return (
         <Tab.Navigator tabBarOptions={{ indicatorStyle: { backgroundColor: ORANGE } }}>
             <Tab.Screen name="Requested" children={() => <MyHelps currentUser={user} />} />
-            <Tab.Screen name="Helping" children={() => <MyContributions currentUser={user} />} />
+            <Tab.Screen name="Contributed" children={() => <MyContributions currentUser={user} />} />
         </Tab.Navigator>                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        
     );
 }

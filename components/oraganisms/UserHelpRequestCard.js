@@ -44,9 +44,9 @@ const UserHelpRequestCard = ({ keyOfHelpRequest }: { keyOfHelpRequest: string })
   }
 
   const statusToTextMapping = {
-    "ON_GOING" : <Text style={{color: LIGHT_RED}}>People helping you please contact them & if your satisfied with help please finish</Text>,
-    "REQUESTED" : usersRequested.length !== 0 ? <Text style={{color: LIGHT_RED}}>People are willing to help you, please check</Text> : null,
-    "COMPLETED" : usersAccepted.some(({stars}) => stars === 0) ? <Text style={{color: LIGHT_RED}}>Please rate contributors upon there service</Text> : null
+    "ON_GOING" : <Text style={{color: LIGHT_RED}}>Contributors helping you please contact them & if requested help satisfied please end</Text>,
+    "REQUESTED" : usersRequested.length !== 0 ? <Text style={{color: LIGHT_RED}}>Contributors are willing to help you, please check</Text> : null,
+    "COMPLETED" : usersAccepted.some(({stars}) => stars === 0) ? <Text style={{color: LIGHT_RED}}>Please rate contributors upon there help</Text> : null
   }
 
   return (

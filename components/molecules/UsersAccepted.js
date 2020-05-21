@@ -1,10 +1,8 @@
 // @flow
 import React from 'react';
-import { View, FlatList, StyleSheet } from 'react-native';
+import { View, FlatList } from 'react-native';
 import Accepter from '../molecules/Accepter';
 import { Heading } from '../atoms';
-import { LIGHTEST_GRAY } from '../../styles/colors';
-import { margin } from '../../styles/mixins';
 
 type UsersAcceptedProps = {
   usersAccepted: [Object],
@@ -24,7 +22,7 @@ const UsersAccepted = ({usersAccepted, keyOfHelpRequest, status }:UsersAcceptedP
     return "acceptedusers" + item.key + index + `${new Date().getTime()}`;
   }
 
-  const heading = status === "COMPLETED" ? "People who helped you" : "People who are helping you"
+  const heading = status === "COMPLETED" ? "Contributors who helped you" : "Contributors who are helping you"
 
   return (
     <View>
@@ -39,14 +37,3 @@ const UsersAccepted = ({usersAccepted, keyOfHelpRequest, status }:UsersAcceptedP
 }
 
 export default UsersAccepted;
-
-const styles = StyleSheet.create({
-  CTAContainerStyle: {
-    flexDirection: 'row', 
-    alignItems: 'center' , 
-    backgroundColor: LIGHTEST_GRAY, 
-    ...margin(10,0,10,0), 
-    padding: 10,
-    justifyContent: 'space-between'
-  }
-});

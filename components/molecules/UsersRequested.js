@@ -17,7 +17,7 @@ const UsersRequested = (props) => {
     return "requestedusers" + item.key + index.toString() + new Date().getTime();
   }
 
-  const heading = usersRequested.length ? <Heading>People who are willing to help you</Heading> : null
+  const heading = usersRequested.length ? <Heading>Contributors who are willing to help you</Heading> : null
 
   return (
     <View>
