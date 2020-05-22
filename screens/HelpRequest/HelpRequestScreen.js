@@ -4,7 +4,7 @@ import { Dimensions, View } from 'react-native';
 import gql from 'graphql-tag';
 import { useQuery, useMutation, useLazyQuery } from 'react-apollo';
 import { useAuth } from '../../customHooks';
-import { Description, Button, InlineLoader } from '../../components/atoms';
+import { Description, Button } from '../../components/atoms';
 import { WHITE, ORANGE } from '../../styles/colors';
 import { ProfileName, TimeAndDistance, CustomModal, Message } from '../../components/molecules';
 import { POLL_INTERVAL } from '../../config';
@@ -71,7 +71,7 @@ const HelpRequestScreen = ({ route } : { route: Object }) => {
     const { idOfHelpRequest, distance } = params;
     const { data } = useQuery(QUERY, { variables: { id: idOfHelpRequest }, pollInterval: POLL_INTERVAL });
     const [updateHelp, { loading, error }] = useMutation(HELP_UPDATE_SCHEMA);
-    const [getUserData, { error: error1, data: userData, loading: loading1 }] = useLazyQuery(USER_QUERY, { pollInterval: POLL_INTERVAL });
+    const [getUserData, { data: userData }] = useLazyQuery(USER_QUERY, { pollInterval: POLL_INTERVAL });
     const { user } = useAuth();
     
     useEffect(() => {
@@ -95,7 +95,7 @@ const HelpRequestScreen = ({ route } : { route: Object }) => {
                 variables: { 
                     id: idOfHelpRequest, 
                     key: "usersRequested", 
-                    value: { uid, name , xp: xp, mobileNo: phone_number , stars: getRatings(stars, totalRaters), username } 
+                    value: { uid, name , xp, mobileNo: phone_number , stars: getRatings(stars, totalRaters), username } 
                 } 
             });
         }
@@ -116,8 +116,8 @@ const HelpRequestScreen = ({ route } : { route: Object }) => {
         footer = <Message>You Rejected to help this guy</Message>
     } else {
         footer = (
-            <View style={{flexDirection: "row", justifyContent: 'center', padding: 10 }}>
-                <Button onPress={handleHelp} loading={loading} bgColor={ORANGE} textColor={WHITE}>Help</Button>
+            <View style={{ alignItems: 'center', padding: 10 }}>
+                <Button onPress={handleHelp} bgColor={ORANGE} textColor={WHITE}>Help</Button>
             </View>
         );
     }

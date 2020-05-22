@@ -56,7 +56,7 @@ const RequestButton = ({color}) => {
     </View>
   )
 }
-const BottomTabNavigator = (props:any) => {
+const BottomTabNavigator = () => {
   const notifications = useNotifications();
   const noOfNotifications = notifications.length > 0 ? notifications.length : false;
   

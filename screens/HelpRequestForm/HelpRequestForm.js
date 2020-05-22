@@ -10,7 +10,7 @@ import { CustomModal } from "../../components/molecules";
 import { Toast, Button } from "../../components/atoms";
 import Icon from "react-native-vector-icons/FontAwesome";
 
-const WORD_LIMIT = 5;
+const WORD_LIMIT = 300;
 const { height } = Dimensions.get("window");
 const NO_OF_LINES_FOR_DESC = height / 30;
 const NO_OF_PEOPLE_REQUIRED_BY_DEFAULT = 1;
