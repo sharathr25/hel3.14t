@@ -3,6 +3,7 @@ package com.haisaa;
 import android.app.Application;
 
 import com.facebook.react.ReactApplication;
+import io.invertase.firebase.RNFirebasePackage;
 import com.reactcommunity.rndatetimepicker.RNDateTimePickerPackage;
 import com.amazonaws.RNAWSCognitoPackage;
 import com.reactnativecommunity.netinfo.NetInfoPackage;
@@ -19,6 +20,7 @@ import com.facebook.react.ReactNativeHost;
 import com.facebook.react.ReactPackage;
 import com.facebook.react.shell.MainReactPackage;
 import com.facebook.soloader.SoLoader;
+import com.dieam.reactnativepushnotification.ReactNativePushNotificationPackage; 
 
 import java.util.Arrays;
 import java.util.List;
@@ -35,6 +37,7 @@ public class MainApplication extends Application implements ReactApplication {
     protected List<ReactPackage> getPackages() {
       return Arrays.<ReactPackage>asList(
           new MainReactPackage(),
+            new RNFirebasePackage(),
             new RNDateTimePickerPackage(),
             new RNAWSCognitoPackage(),
             new NetInfoPackage(),
@@ -46,7 +49,8 @@ public class MainApplication extends Application implements ReactApplication {
             new ReanimatedPackage(),
             new VectorIconsPackage(),
             new MapsPackage(),
-            new RNGestureHandlerPackage()
+            new RNGestureHandlerPackage(),
+            new ReactNativePushNotificationPackage()
       );
     }
 
