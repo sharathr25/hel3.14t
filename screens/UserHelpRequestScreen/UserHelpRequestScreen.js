@@ -33,7 +33,8 @@ const QUERY = gql`
         username
         xp,
         mobileNo,
-        stars
+        stars,
+        pushNotificationToken
       },
       timeStamp,
       noPeopleRequired,

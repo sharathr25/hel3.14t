@@ -16,7 +16,7 @@ const wsEndPoint = process.env.NODE_ENV === "development" ? dev.SERVER_WEB_SOCKE
 
 console.log(httpEndPoint, wsEndPoint);
 
-const withAuthToken = (token = "") => {
+const withAuthToken = (tokenForAPI = "", tokenForPushNotifcation = "") => {
   // Create an http link:
   const httpLink = new HttpLink({
     uri: httpEndPoint,
@@ -25,7 +25,7 @@ const withAuthToken = (token = "") => {
   const middlewareLink = new ApolloLink((operation, forward) => {
     operation.setContext({
       headers: {
-        authorization: `Bearer ${token}`
+        authorization: `Bearer ${tokenForAPI} ${tokenForPushNotifcation}`,
       }
     });
     return forward(operation);

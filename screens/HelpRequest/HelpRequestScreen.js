@@ -3,7 +3,7 @@ import React, { useEffect } from 'react';
 import { Dimensions, View } from 'react-native';
 import gql from 'graphql-tag';
 import { useQuery, useMutation, useLazyQuery } from 'react-apollo';
-import { useAuth } from '../../customHooks';
+import { useAuth, usePushNotification } from '../../customHooks';
 import { Description, Button } from '../../components/atoms';
 import { WHITE, ORANGE } from '../../styles/colors';
 import { ProfileName, TimeAndDistance, CustomModal, Message } from '../../components/molecules';

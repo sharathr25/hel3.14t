@@ -34,7 +34,7 @@ const QUERY = gql`
 const Requester = (props: RequesterProps) => {
   const { userDetails, helpRequestDetails } = props;
   const { keyOfHelpRequest, usersAccepted, noPeopleRequired } = helpRequestDetails;
-  const { uidOfRequester, xp, mobileNo, stars, username } = userDetails;
+  const { uidOfRequester, xp, mobileNo, stars, username, pushNotificationToken } = userDetails;
   const [updateHelpForAccept, { loading: loadingForAccept }] = useMutation(QUERY, { variables: { id: keyOfHelpRequest }});
   const [updateHelpForReject, { loading: loadingForReject }] = useMutation(QUERY, { variables: { id: keyOfHelpRequest }});
 
@@ -48,7 +48,7 @@ const Requester = (props: RequesterProps) => {
         variables: { 
           id: keyOfHelpRequest,
           key: "usersAccepted", 
-          value: { uid: uidOfRequester, mobileNo, username }, 
+          value: { uid: uidOfRequester, mobileNo, username, pushNotificationToken }, 
         } 
       });
     }
@@ -59,7 +59,7 @@ const Requester = (props: RequesterProps) => {
       variables: { 
         id: keyOfHelpRequest,
         key: "usersRejected", 
-        value: { uid: uidOfRequester }, 
+        value: { uid: uidOfRequester, pushNotificationToken }, 
       } 
     });
   };
