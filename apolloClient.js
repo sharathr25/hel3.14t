@@ -5,6 +5,17 @@ import { HttpLink } from 'apollo-link-http';
 import { getMainDefinition } from 'apollo-utilities';
 import { InMemoryCache } from 'apollo-cache-inmemory';
 import { config } from './config';
+import { onError } from 'apollo-link-error'
+
+const errorHandlerLink = onError(({ graphQLErrors, networkError }) => {
+  if (graphQLErrors)
+    graphQLErrors.forEach(({ message, locations, path }) =>
+      console.log(
+        `[GraphQL error]: Message: ${message}, Location: ${locations}, Path: ${path}`
+      )
+    );
+  if (networkError) console.log(`[Network error]: ${networkError}`);
+});
 
 const { dev, prod } = config;
 
@@ -31,7 +42,7 @@ const withAuthToken = (tokenForAPI = "", tokenForPushNotifcation = "") => {
     return forward(operation);
   });
 
-  const linkWithAuthHeaders = middlewareLink.concat(httpLink);
+  const linkWithAuthHeaders = middlewareLink.concat(errorHandlerLink).concat(httpLink);
 
 // Create a WebSocket link:
   const wsLink = new WebSocketLink({
