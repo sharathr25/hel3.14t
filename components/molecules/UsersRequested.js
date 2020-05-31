@@ -7,7 +7,6 @@ const UsersRequested = (props) => {
   const { usersRequested, keyOfHelpRequest, noPeopleRequired , usersAccepted} = props;
   
   const getRequestedUser = ({ item }) => {
-    console.log(item)
     const { xp, uid, stars, mobileNo, username, pushNotificationToken } = item;
     const userDetails = { username, xp, stars, mobileNo, uidOfRequester: uid, pushNotificationToken } 
     const helpRequestDetails = { keyOfHelpRequest, noPeopleRequired, usersAccepted }

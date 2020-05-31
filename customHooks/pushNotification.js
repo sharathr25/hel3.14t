@@ -14,6 +14,7 @@ export default () => {
           
             // (required) Called when a remote is received or opened, or local notification is opened
             onNotification: (notification) => {
+              console.log("NOTIFICATION:", notification);
             },
           
             // Should the initial notification be popped automatically

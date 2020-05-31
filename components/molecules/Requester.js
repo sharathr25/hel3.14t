@@ -14,7 +14,8 @@ type RequesterProps = {
     xp: number, 
     stars:number, 
     mobileNo:string, 
-    uidOfRequester: string
+    uidOfRequester: string,
+    pushNotificationToken: String
   },
   helpRequestDetails: {
     keyOfHelpRequest: string, 
@@ -23,10 +24,26 @@ type RequesterProps = {
   }
 }
 
-const QUERY = gql`
-  mutation UpdateHelp($id:String!, $key:String!, $value:Any){
-    updateHelp(id:$id, key:$key, value:$value, type:"array", operation:"push"){
-      _id
+const ACCEPT_HELPER = gql`
+  mutation AcceptHelper($idOfHelpRequest:String!, $uid: String!, $username: String!, $mobileNo:String!, $pushNotificationToken: String!) {
+    acceptHelper(idOfHelpRequest:$idOfHelpRequest, userDetails: {
+        uid: $uid,
+        username: $username,
+        mobileNo: $mobileNo,
+        pushNotificationToken: $pushNotificationToken
+    }) {
+        _id
+    }
+  }
+`;
+
+const REJECT_HELPER = gql`
+  mutation RejectHelper($idOfHelpRequest:String!, $uid: String!, $pushNotificationToken: String!) {
+    rejectHelper(idOfHelpRequest:$idOfHelpRequest, userDetails: {
+        uid: $uid,
+        pushNotificationToken: $pushNotificationToken
+    }) {
+        _id
     }
   }
 `;
@@ -35,33 +52,34 @@ const Requester = (props: RequesterProps) => {
   const { userDetails, helpRequestDetails } = props;
   const { keyOfHelpRequest, usersAccepted, noPeopleRequired } = helpRequestDetails;
   const { uidOfRequester, xp, mobileNo, stars, username, pushNotificationToken } = userDetails;
-  const [updateHelpForAccept, { loading: loadingForAccept }] = useMutation(QUERY, { variables: { id: keyOfHelpRequest }});
-  const [updateHelpForReject, { loading: loadingForReject }] = useMutation(QUERY, { variables: { id: keyOfHelpRequest }});
-
+  const [acceptHelper, { loading: loadingForAccept }] = useMutation(ACCEPT_HELPER);
+  const [rejectHelper, { loading: loadingForReject }] = useMutation(REJECT_HELPER);
   const handleAccept = async () => {
     if (noPeopleRequired === usersAccepted.length) {
       Alert.alert("Users filled....")
     } else if (usersAccepted.indexOf(uidOfRequester) > -1) {
       Alert.alert("You are already helping....");
     } else {
-      updateHelpForAccept({ 
-        variables: { 
-          id: keyOfHelpRequest,
-          key: "usersAccepted", 
-          value: { uid: uidOfRequester, mobileNo, username, pushNotificationToken }, 
-        } 
-      });
+      acceptHelper({ 
+        variables: {
+          idOfHelpRequest: keyOfHelpRequest,
+          uid: uidOfRequester,
+          username,
+          mobileNo,
+          pushNotificationToken
+        }
+      })
     }
   };
 
   const handleReject = async () => {
-    updateHelpForReject({ 
-      variables: { 
-        id: keyOfHelpRequest,
-        key: "usersRejected", 
-        value: { uid: uidOfRequester, pushNotificationToken }, 
-      } 
-    });
+    rejectHelper({
+      variables: {
+        uid: uidOfRequester,
+        idOfHelpRequest: keyOfHelpRequest,
+        pushNotificationToken
+      }
+    })
   };
 
   const { container, content, details, buttons } = styles;

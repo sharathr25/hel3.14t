@@ -9,12 +9,12 @@ import { callPhone } from '../../utils';
 import { useMutation } from 'react-apollo';
 import { Slider } from 'react-native-elements';
 
-const UPDATE_HELP = gql`
-    mutation UpdateHelp($id:String!, $key:String!,$value:Any, $type:String!, $operation:String!){
-        updateHelp(id:$id, key:$key, value:$value, type:$type, operation:$operation){
-            _id
-        }
+const GIVE_RATINGS_TO_HELPER = gql`
+  mutation GiveRatingsToHelper($idOfHelpRequest:String!, $uid: String!, $ratings: Int!) {
+    giveRatingsToHelper(idOfHelpRequest:$idOfHelpRequest, ratings: $ratings, uid: $uid) {
+        _id
     }
+  }
 `;
 
 type AccepterProps = {
@@ -35,9 +35,9 @@ const Accepter = (props: AccepterProps) => {
   const { mobileNo, stars, uidOfAccepter, username } = userDetails;
   const { status, keyOfHelpRequest } = helpRequestDetails;
   const [starsGivenByUser, setStarsGivenByUser] = useState(0);
-  const [updateHelp, { loading }] = useMutation(UPDATE_HELP);
   const { container, details } = styles;
   const mobileNoWithoutCountryCode = mobileNo.replace(/^(\+91\d{6})(\d{4})/, "xxxxxx$2");
+  const [giveRatingsToHelper, {loading }] = useMutation(GIVE_RATINGS_TO_HELPER)
 
   const call = () => {
     callPhone(mobileNo)
@@ -45,15 +45,13 @@ const Accepter = (props: AccepterProps) => {
 
   const handleSubmit = () => {
     if(starsGivenByUser !== 0) {
-      updateHelp({
+      giveRatingsToHelper({
         variables: {
-            id: keyOfHelpRequest,
-            key: "usersAccepted",
-            value: { [uidOfAccepter]: { stars: starsGivenByUser } },
-            type: "array",
-            operation: "update"
+          idOfHelpRequest:keyOfHelpRequest, 
+          ratings: starsGivenByUser, 
+          uid: uidOfAccepter
         }
-      })
+      });
     } else {
         Alert.alert("You need give some rating");
         return;

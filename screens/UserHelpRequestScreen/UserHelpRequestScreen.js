@@ -8,11 +8,27 @@ import { WHITE, LIGHTEST_GRAY, GREEN, RED } from '../../styles/colors';
 import { margin } from '../../styles/mixins';
 import { POLL_INTERVAL } from '../../config';
 
-const UPDATE_HELP_QUERY = gql`
-  mutation UpdateHelp($key:String!, $value:Any, $type:String!, $operation:String!, $id: String!){
-      updateHelp(id:$id, key:$key, value:$value, type:$type, operation:$operation){
-          _id
-      }
+const FINISH_HELP = gql`
+  mutation FinishHelp($idOfHelpRequest:String!) {
+    finishHelp(idOfHelpRequest:$idOfHelpRequest) {
+        _id
+    }
+  }
+`;
+
+const REPOST_HELP = gql`
+  mutation RepostHelp($idOfHelpRequest:String!) {
+    repostHelp(idOfHelpRequest:$idOfHelpRequest) {
+        _id
+    }
+  }
+`;
+
+const CANCEL_HELP = gql`
+  mutation CancelHelp($idOfHelpRequest:String!) {
+    cancelHelp(idOfHelpRequest:$idOfHelpRequest) {
+        _id
+    }
   }
 `;
 
@@ -44,20 +60,13 @@ const QUERY = gql`
   }
 `;
 
-const INCREMENT_XP_FOR_USER = gql`
-  mutation IncrementXpForUser($uid:String!) {
-      incrementXpForUser(uid:$uid) {
-          xp
-      }
-  }
-`;
-
 const UserHelpRequestScreen = ({ route } : { route: Object }) => {
     const { params } = route;
     const { keyOfHelpRequest } = params;
-    let { data , error } = useQuery(QUERY, { variables: { id: keyOfHelpRequest }, pollInterval: POLL_INTERVAL });
-    const [updateHelp, { loading: loadingForUpdateHelp }] = useMutation(UPDATE_HELP_QUERY);
-    const [incrementXpForUser] = useMutation(INCREMENT_XP_FOR_USER);
+    let { data } = useQuery(QUERY, { variables: { id: keyOfHelpRequest }, pollInterval: POLL_INTERVAL });
+    const [finishHelp, { loading: loadingForFinsihHelp }] = useMutation(FINISH_HELP);
+    const [repostHelp, { loading: loadingForRepostHelp }] = useMutation(REPOST_HELP);
+    const [cancelHelp, { loading: loadingForCancelHelp }] = useMutation(CANCEL_HELP);
 
     if (!data) return null;
 
@@ -65,20 +74,15 @@ const UserHelpRequestScreen = ({ route } : { route: Object }) => {
     const { status, usersRequested, usersAccepted, description, timeStamp, noPeopleRequired, latitude, longitude } = help;
 
     const handleCancel = () => {
-        updateHelp({ variables: { key: "status", value: "CANCELLED", type: "update", operation: "update", id: keyOfHelpRequest } });
-        // TODO : send notification to accepted users if any that notification is closed either in app or backend 
+      cancelHelp({ variables: { idOfHelpRequest: keyOfHelpRequest }})
     }
 
     const handleRepost = () => {
-        updateHelp({ variables: { key: "", value: { status: "REQUESTED", timeStamp: new Date().getTime() }, type: "update", operation: "update", id: keyOfHelpRequest } });
+      repostHelp({ variables: { idOfHelpRequest: keyOfHelpRequest }})
     }
 
     const updateHelpRequestAndUsers = async () => {
-        updateHelp({ variables: { key: "status", value: "COMPLETED", type: "update", operation: "update", id: keyOfHelpRequest } });
-        usersAccepted.forEach((user) => {
-            const { uid } = user;
-            incrementXpForUser({ variables: { uid } });
-        });
+      finishHelp({ variables: { idOfHelpRequest: keyOfHelpRequest }})
     }
 
     const handleFinish = async () => {
@@ -114,7 +118,11 @@ const UserHelpRequestScreen = ({ route } : { route: Object }) => {
             <Description height={300}>{description}</Description>
             <TimeAndStatus timeStamp={timeStamp} status={status} />
             <EventLocation latitude={latitude} longitude={longitude} />
-            {loadingForUpdateHelp ?  <View style={{...CTAContainerStyle, padding: 20 }}><InlineLoader /></View> : statusToCTAMapping[status]}
+            {
+              loadingForFinsihHelp || loadingForRepostHelp || loadingForCancelHelp
+                ?  <View style={{...CTAContainerStyle, padding: 20 }}><InlineLoader /></View> 
+                : statusToCTAMapping[status]
+            }
             <UsersRequested usersRequested={usersRequested} keyOfHelpRequest={keyOfHelpRequest} noPeopleRequired={noPeopleRequired} usersAccepted={usersAccepted} />
             <UsersAccepted usersAccepted={usersAccepted} keyOfHelpRequest={keyOfHelpRequest} status={status} />
           </View>
