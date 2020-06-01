@@ -105,7 +105,7 @@ const Creator = (props: CreatorProps) => {
 
   return (
     <View style={{marginTop: 10 }}>
-      <Heading>Creator details</Heading>
+      <Heading>Help requester details</Heading>
       <View style={container}>
         <View style={details}>
           <Heading color={ORANGE}>{creatorName}</Heading>

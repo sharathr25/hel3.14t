@@ -23,7 +23,7 @@ const NotificationsScreen = ({ notifications } : { notifications : Object }) => 
     return (
         <View style={{ flex: 1, backgroundColor: WHITE }}>
             <FlatList
-                data={_notifications}
+                data={_notifications.reverse()}
                 renderItem={getNotification}
                 keyExtractor={(_, index) => index.toString()}
             />

@@ -21,6 +21,16 @@ const QUERY_TO_REMOVE_NOTIFICATION = gql`
     }
 `;
 
+const REMOVE_NOTIFICATION = gql`
+mutation RemoveNotification($uid: String!, $idOfNotification: String!) {
+    removeNotification(uid:$uid,idOfNotification:$idOfNotification ){
+    notifications{
+            _id
+        }
+    }
+}
+`;
+
 type NotificationItemProps = {
     message: string,
     id: string,
@@ -35,11 +45,11 @@ const NotificationItem = (props: NotificationItemProps) => {
     const navigation = useNavigation()
     const { user } = useAuth();
     const { uid } = user || {};
-    const [removeNotificationFromDb] = useMutation(QUERY_TO_REMOVE_NOTIFICATION);
+    const [removeNotificationFromDb] = useMutation(REMOVE_NOTIFICATION);
 
     const _removeNotification = () => {
         removeNotification(id);
-        removeNotificationFromDb({ variables: { uid, value: { _id: id } } });
+        removeNotificationFromDb({ variables: { uid, idOfNotification: id } });
     }
 
     const _onClick = () => {

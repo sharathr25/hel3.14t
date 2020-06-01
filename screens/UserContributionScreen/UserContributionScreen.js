@@ -93,10 +93,10 @@ const UserContributionScreen = ({ route } : { route: Object }) => {
     } 
 
     const getMessage = () => {
-      if(status === "COMPLETED") return "Awesome, Help satisfied"
+      if(status === "COMPLETED") return "Your contribution to help request ended please rate the help requester"
       else if(status === "CANCELLED") return "This request got cancelled"
-      else if(isUserIsThereInUsers(usersRequested, user.uid)) return "Your are in waiting list"
-      else if(isUserIsThereInUsers(usersAccepted, user.uid)) return "You got accepted, You can help him"
+      else if(isUserIsThereInUsers(usersRequested, user.uid)) return "Verification pending from help requester"
+      else if(isUserIsThereInUsers(usersAccepted, user.uid)) return "Your Verified you can help now please contact help requester"
       else if(isUserIsThereInUsers(usersRejected, user.uid)) return "You got rejected, Sorry"
       else if(isUserIsThereInUsers(usersCancelled, user.uid)) return "You rejected to help this guy"
       return "";
@@ -135,7 +135,7 @@ const UserContributionScreen = ({ route } : { route: Object }) => {
                 loadingForCancelToHelp 
                   ? <View style={{...CTAContainerStyle, padding: 20}}><InlineLoader /></View>
                   : <View style={CTAContainerStyle}>
-                      <Heading color={LIGHT_GRAY} size={FONT_SIZE_20}>Change of mind</Heading>
+                      <Heading color={LIGHT_GRAY} size={FONT_SIZE_20}>If you can't help</Heading>
                       <Button onPress={handleCancel} bgColor={LIGHTEST_GRAY} textColor={RED} borderColor={RED}>
                         Cancel
                       </Button>

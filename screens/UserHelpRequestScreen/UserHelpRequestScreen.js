@@ -81,12 +81,8 @@ const UserHelpRequestScreen = ({ route } : { route: Object }) => {
       repostHelp({ variables: { idOfHelpRequest: keyOfHelpRequest }})
     }
 
-    const updateHelpRequestAndUsers = async () => {
+    const handleFinish = () => {
       finishHelp({ variables: { idOfHelpRequest: keyOfHelpRequest }})
-    }
-
-    const handleFinish = async () => {
-        await updateHelpRequestAndUsers();
     }
 
     const { CTAContainerStyle } = styles;

@@ -1,6 +1,6 @@
 // @flow
 import React, { useEffect } from 'react';
-import { Dimensions, View } from 'react-native';
+import { Dimensions, View, Alert } from 'react-native';
 import gql from 'graphql-tag';
 import { useQuery, useMutation, useLazyQuery } from 'react-apollo';
 import { useAuth } from '../../customHooks';
@@ -110,6 +110,25 @@ const HelpRequestScreen = ({ route } : { route: Object }) => {
         }
     }
 
+    const yesOrNoToHelp = () => {
+        Alert.alert(
+            'Do you want to help?',
+            'You can only help if help requester accept your contribution request',
+            [
+              {
+                text: 'Yes',
+                onPress: () => handleHelp()
+              },
+              {
+                text: 'No',
+                onPress: () => {},
+                style: 'cancel'
+              },
+            ],
+            { cancelable: false }
+          );
+    }
+
     let footer;
     if(error) {
         footer = <Message>something went wrong</Message>
@@ -126,7 +145,7 @@ const HelpRequestScreen = ({ route } : { route: Object }) => {
     } else {
         footer = (
             <View style={{ alignItems: 'center', padding: 10 }}>
-                <Button onPress={handleHelp} bgColor={ORANGE} textColor={WHITE}>Help</Button>
+                <Button onPress={yesOrNoToHelp} bgColor={ORANGE} textColor={WHITE}>Help</Button>
             </View>
         );
     }
