@@ -1,10 +1,10 @@
 // @flow
 import React, { useEffect } from 'react';
-import { Dimensions, View } from 'react-native';
+import { Dimensions, View, Alert } from 'react-native';
 import gql from 'graphql-tag';
 import { useQuery, useMutation, useLazyQuery } from 'react-apollo';
 import { useAuth } from '../../customHooks';
-import { Description, Button, InlineLoader } from '../../components/atoms';
+import { Description, Button } from '../../components/atoms';
 import { WHITE, ORANGE } from '../../styles/colors';
 import { ProfileName, TimeAndDistance, CustomModal, Message } from '../../components/molecules';
 import { POLL_INTERVAL } from '../../config';
@@ -46,12 +46,18 @@ query Help($id: String!){
 }
 `;
 
-const HELP_UPDATE_SCHEMA = gql`
-  mutation UpdateHelp($id:String!,$key:String!,$value:Any){
-    updateHelp(id:$id,key:$key,value:$value, type:"array", operation:"push"){
-      _id
+const REQUEST_TO_HELP = gql`
+    mutation RequestToHelp($idOfHelpRequest:String!, $uid: String!, $username: String!, $xp: Int!, $stars: Int!, $mobileNo:String!) {
+        requestToHelp(idOfHelpRequest:$idOfHelpRequest, userDetails: {
+            uid: $uid,
+            username: $username,
+            xp: $xp,
+            stars: $stars,
+            mobileNo: $mobileNo
+        }) {
+            _id
+        }
     }
-  }
 `;
 
 const USER_QUERY = gql`
@@ -70,10 +76,10 @@ const HelpRequestScreen = ({ route } : { route: Object }) => {
     const { params } = route;
     const { idOfHelpRequest, distance } = params;
     const { data } = useQuery(QUERY, { variables: { id: idOfHelpRequest }, pollInterval: POLL_INTERVAL });
-    const [updateHelp, { loading, error }] = useMutation(HELP_UPDATE_SCHEMA);
-    const [getUserData, { error: error1, data: userData, loading: loading1 }] = useLazyQuery(USER_QUERY, { pollInterval: POLL_INTERVAL });
+    const [requestToHelp, { loading, error }] = useMutation(REQUEST_TO_HELP);
+    const [getUserData, { data: userData }] = useLazyQuery(USER_QUERY, { pollInterval: POLL_INTERVAL });
     const { user } = useAuth();
-    
+
     useEffect(() => {
         if(user) {
             const {uid} = user;
@@ -83,7 +89,7 @@ const HelpRequestScreen = ({ route } : { route: Object }) => {
 
     if(!user || !data) return <CustomModal variant="loading" />
     const { uid, attributes, username } = user;
-    const { name , phone_number} = attributes;
+    const { phone_number} = attributes;
     const { help } = data;
     const { description, timeStamp, usersRequested, creatorName, usersRejected, usersAccepted, usersCancelled } = help;
     
@@ -91,14 +97,36 @@ const HelpRequestScreen = ({ route } : { route: Object }) => {
         if(!loading) {
             const { user } = userData;
             const { xp, stars, totalRaters } = user;
-            updateHelp({ 
-                variables: { 
-                    id: idOfHelpRequest, 
-                    key: "usersRequested", 
-                    value: { uid, name , xp: xp, mobileNo: phone_number , stars: getRatings(stars, totalRaters), username } 
-                } 
-            });
+            requestToHelp({
+                variables: {
+                    idOfHelpRequest,
+                    uid,
+                    username,
+                    mobileNo: phone_number,
+                    xp,
+                    stars: getRatings(stars, totalRaters)
+                }
+            })
         }
+    }
+
+    const yesOrNoToHelp = () => {
+        Alert.alert(
+            'Do you want to help?',
+            'You can only help if help requester accept your contribution request',
+            [
+              {
+                text: 'Yes',
+                onPress: () => handleHelp()
+              },
+              {
+                text: 'No',
+                onPress: () => {},
+                style: 'cancel'
+              },
+            ],
+            { cancelable: false }
+          );
     }
 
     let footer;
@@ -116,8 +144,8 @@ const HelpRequestScreen = ({ route } : { route: Object }) => {
         footer = <Message>You Rejected to help this guy</Message>
     } else {
         footer = (
-            <View style={{flexDirection: "row", justifyContent: 'center', padding: 10 }}>
-                <Button onPress={handleHelp} loading={loading} bgColor={ORANGE} textColor={WHITE}>Help</Button>
+            <View style={{ alignItems: 'center', padding: 10 }}>
+                <Button onPress={yesOrNoToHelp} bgColor={ORANGE} textColor={WHITE}>Help</Button>
             </View>
         );
     }

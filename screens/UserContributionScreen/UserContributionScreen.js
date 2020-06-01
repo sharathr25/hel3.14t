@@ -47,11 +47,13 @@ const QUERY = gql`
   }
 `;
 
-const UPDATE_HELP_QUERY = gql`
-  mutation UpdateHelp($key:String!, $value:Any, $type:String!, $operation:String!, $id: String!){
-      updateHelp(id:$id, key:$key, value:$value, type:$type, operation:$operation){
-          _id
-      }
+const CANCEL_TO_HELP = gql`
+  mutation CancelTOHelp($idOfHelpRequest:String!, $uid: String!) {
+    cancelToHelp(idOfHelpRequest:$idOfHelpRequest, userDetails: {
+      uid: $uid
+    }) {
+        _id
+    }
   }
 `;
 
@@ -61,9 +63,8 @@ const UserContributionScreen = ({ route } : { route: Object }) => {
     const { params } = route;
     const { keyOfHelpRequest } = params;
     const { user } = useAuth();
-    const [updateHelp, { loading: loadingForUpdateHelp }] = useMutation(UPDATE_HELP_QUERY);
     let { data , error } = useQuery(QUERY, { variables: { id: keyOfHelpRequest }, pollInterval: POLL_INTERVAL });
-
+    const [cancelToHelp, { loading: loadingForCancelToHelp }] = useMutation(CANCEL_TO_HELP);
     if (!data || !user) return <CustomModal variant="loading" />;
     if(error) return <CustomModal variant="error" />
 
@@ -92,23 +93,23 @@ const UserContributionScreen = ({ route } : { route: Object }) => {
     } 
 
     const getMessage = () => {
-      if(status === "COMPLETED") return "Awesome, Help satisfied"
-      else if(isUserIsThereInUsers(usersRequested, user.uid)) return "Your are in waiting list"
-      else if(isUserIsThereInUsers(usersAccepted, user.uid)) return "You got accepted, You can help him"
+      if(status === "COMPLETED") return "Your contribution to help request ended please rate the help requester"
+      else if(status === "CANCELLED") return "This request got cancelled"
+      else if(isUserIsThereInUsers(usersRequested, user.uid)) return "Verification pending from help requester"
+      else if(isUserIsThereInUsers(usersAccepted, user.uid)) return "Your Verified you can help now please contact help requester"
       else if(isUserIsThereInUsers(usersRejected, user.uid)) return "You got rejected, Sorry"
       else if(isUserIsThereInUsers(usersCancelled, user.uid)) return "You rejected to help this guy"
       return "";
     }
 
     const handleCancel = () => {
-      const key = isUserIsThereInUsers(usersAccepted, user.uid) ? "usersAccepted" : "usersRequested"
-      updateHelp({ variables: {
-        id: keyOfHelpRequest,
-        key,
-        operation: "pull",
-        type: "array",
-        value: { uid: user.uid }
-      }})
+      const { uid } = user;
+      cancelToHelp({
+        variables: {
+          idOfHelpRequest: keyOfHelpRequest,
+          uid
+        }
+      })
     }
 
     const userDetails = {
@@ -131,10 +132,10 @@ const UserContributionScreen = ({ route } : { route: Object }) => {
             {
               (status === "REQUESTED" && !isUserIsThereInUsers(usersCancelled, user.uid)) 
               ?
-                loadingForUpdateHelp 
+                loadingForCancelToHelp 
                   ? <View style={{...CTAContainerStyle, padding: 20}}><InlineLoader /></View>
                   : <View style={CTAContainerStyle}>
-                      <Heading color={LIGHT_GRAY} size={FONT_SIZE_20}>Change of mind</Heading>
+                      <Heading color={LIGHT_GRAY} size={FONT_SIZE_20}>If you can't help</Heading>
                       <Button onPress={handleCancel} bgColor={LIGHTEST_GRAY} textColor={RED} borderColor={RED}>
                         Cancel
                       </Button>

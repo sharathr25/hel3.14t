@@ -45,9 +45,8 @@ const EmailVerifyMessage = ({handleVerify}:{ handleVerify: Function}) => (
 );
 
 const Detail = ({ label, value, showSeparator = true, subDetail = undefined }: DetailProps) => {
-    const width = Dimensions.get('screen').width - 100;
     return (
-        <View style={{ flex: 1, padding: 20, borderBottomWidth: showSeparator ? 0.5 : 0, width }}>
+        <View style={{ flex: 1, borderBottomWidth: showSeparator ? 0.5 : 0, justifyContent: 'center' }}>
             <Text style={{fontSize: FONT_SIZE_20, ...FONT_BOLD, color: BLACK }}>{label}</Text>
             <Text>{value}</Text>
             {subDetail}
@@ -58,7 +57,7 @@ const Detail = ({ label, value, showSeparator = true, subDetail = undefined }: D
 const ProfileName = ({ username }) => {
     const firstLetterOfDisplayName = username.charAt(0).toUpperCase();
     return (
-        <View style={{flexDirection: 'row', justifyContent: 'center', marginTop: 10}}>
+        <View style={{flexDirection: 'row', ...styles.row}}>
             <ProfileLetter letter={firstLetterOfDisplayName} size={100} />
             <View style={{justifyContent: 'center', paddingLeft: 10 }}>
                 <Text>Hi there</Text>
@@ -70,7 +69,7 @@ const ProfileName = ({ username }) => {
 
 const ProgressDetail = ({ label, value }) => {
     return (
-        <View style={{ flex: 1, alignItems: 'center' }}>
+        <View style={styles.row}>
             <Text style={{fontSize: FONT_SIZE_20, ...FONT_BOLD, color: ORANGE }}>{label}</Text>
             <Text>{value}</Text>
         </View>
@@ -79,7 +78,7 @@ const ProgressDetail = ({ label, value }) => {
 
 const ProgressDetails = ({ xp, ratings }) => {
     return (
-        <View style={{flexDirection: 'row', justifyContent: 'center', marginTop: 10}}>
+        <View style={{flexDirection: 'row', ...styles.row }}>
             <ProgressDetail label="XP" value={xp} />
             <ProgressDetail label="Rating" value={ratings} />
         </View>
@@ -113,7 +112,7 @@ const MyAccountScreen = ({ navigation }: MyAccountScreenProps) => {
     const { email, phone_number: phoneNumber, gender, birthdate } = attributes;
     const phoneNumberWithoutCountryCode = phoneNumber.replace("+91", "");
     const { xp = 0, stars = 0, totalRaters = 0 } = data ? data.user : {};
-    const { column, container } = styles;
+    const { details, container } = styles;
 
     const verify = async () => {
         try {
@@ -153,31 +152,33 @@ const MyAccountScreen = ({ navigation }: MyAccountScreenProps) => {
         navigation.navigate(UPDATE_ACCOUNT.screenName, { user })
     }
 
+    const _onClose = () => {
+        setShowOtpInput(!showOtpInput)
+    }
+
     return (
         <ScrollView style={{ backgroundColor: LIGHTEST_GRAY }} contentContainerStyle={{flexGrow: 1}}>
             {toast.type !== "" && <Toast type={toast.type} message={toast.message} />}
             <OTPVerificationToast 
                 show={showOtpInput}
-                onClose={() => {setShowOtpInput(!showOtpInput)}}
+                onClose={_onClose}
                 verify={verify}
                 resend={resend}
                 setOtp={setOtp}
                 recepient={email}
             />
-                <View style={container}>
-                    <View style={{ ...column, backgroundColor: WHITE }}>
-                        <ProfileName username={username} />
-                        <ProgressDetails xp={xp} ratings={getRatings(stars, totalRaters)} />
-                    </View>
-                    <View style={{...column, padding: 0 }}>
-                        <Detail label="Email" value={email} subDetail={!emailVerified && <EmailVerifyMessage handleVerify={handleVerify} />} />
-                        <Detail label="Phone" value={phoneNumberWithoutCountryCode} />
-                        <Detail label="Gender" value={gender} />
-                        <Detail label="Date of birth" value={birthdate} showSeparator={false} />
-                        <Button bgColor={ORANGE} textColor={WHITE} onPress={handleEdit} >Edit</Button>
-                    </View>
+            <View style={container}>
+                <ProfileName username={username} />
+                <ProgressDetails xp={xp} ratings={getRatings(stars, totalRaters)} />
+                <View style={details}>
+                    <Detail label="Email" value={email} subDetail={!emailVerified && <EmailVerifyMessage handleVerify={handleVerify} />} />
+                    <Detail label="Phone" value={phoneNumberWithoutCountryCode} />
+                    <Detail label="Gender" value={gender} />
+                    <Detail label="Date of birth" value={birthdate} showSeparator={false} />
+                    <Button bgColor={ORANGE} textColor={WHITE} onPress={handleEdit}>Edit</Button>
                 </View>
-            </ScrollView>
+            </View>
+        </ScrollView>
     );
 }
 
@@ -188,9 +189,14 @@ const styles = StyleSheet.create({
         flex: 1,
         backgroundColor: WHITE,
     },
-    column: {
-        backgroundColor: LIGHTEST_GRAY,
+    row: {
+        justifyContent: 'center',
         alignItems: 'center',
-        padding: 20
+        flex: 1
     },
+    details: {
+        flex: 6, 
+        backgroundColor: LIGHTEST_GRAY,
+        padding: 20
+    }
 });

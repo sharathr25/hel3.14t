@@ -14,7 +14,7 @@ const EventLocation = ({latitude, longitude}) => {
 
     return (
         <View style={container}>
-            <Heading>Event Location</Heading>
+            <Heading>Help request Location</Heading>
             <Button bgColor={LIGHTEST_GRAY} onPress={handleNavigate}>Navigate</Button>
         </View>
     );

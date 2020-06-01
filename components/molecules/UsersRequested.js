@@ -7,8 +7,8 @@ const UsersRequested = (props) => {
   const { usersRequested, keyOfHelpRequest, noPeopleRequired , usersAccepted} = props;
   
   const getRequestedUser = ({ item }) => {
-    const { xp, uid, stars, mobileNo, username } = item;
-    const userDetails = { username, xp, stars, mobileNo, uidOfRequester: uid } 
+    const { xp, uid, stars, mobileNo, username, pushNotificationToken } = item;
+    const userDetails = { username, xp, stars, mobileNo, uidOfRequester: uid, pushNotificationToken } 
     const helpRequestDetails = { keyOfHelpRequest, noPeopleRequired, usersAccepted }
     return <Requester userDetails={userDetails} helpRequestDetails={helpRequestDetails} />
   }
@@ -17,7 +17,7 @@ const UsersRequested = (props) => {
     return "requestedusers" + item.key + index.toString() + new Date().getTime();
   }
 
-  const heading = usersRequested.length ? <Heading>People who are willing to help you</Heading> : null
+  const heading = usersRequested.length ? <Heading>Contributors who are willing to help you</Heading> : null
 
   return (
     <View>

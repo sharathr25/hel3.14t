@@ -5,7 +5,7 @@ import ApolloClient from './apolloClient';
 import whyDidYouRender from "@welldone-software/why-did-you-render";
 import MainStackNavigator from './MainStackNavigator';
 import { PermissionsAndroid, Alert } from "react-native";
-import { useAuth } from './customHooks';
+import { useAuth, usePushNotification } from './customHooks';
 import { NavigationContainer } from '@react-navigation/native';
 import Amplify from 'aws-amplify';
 import awsConfig from './aws-exports';
@@ -19,6 +19,7 @@ const AppContainer = MainStackNavigator;
 
 function App() {
   const { initializing , user, token } = useAuth();
+  const tokenForPushNotification = usePushNotification();
 
   useEffect(() => {
     PermissionsAndroid.request(PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION)
@@ -29,7 +30,7 @@ function App() {
   if(initializing) return <CustomModal variant="loading" desc="" />
   
   return (
-    <ApolloProvider client={ApolloClient(token)}>
+    <ApolloProvider client={ApolloClient(token, tokenForPushNotification)}>
       <NavigationContainer>
         <AppContainer isLogedIn={user ? true : false} />
       </NavigationContainer>

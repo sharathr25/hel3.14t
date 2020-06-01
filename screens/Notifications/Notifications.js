@@ -15,16 +15,17 @@ const NotificationsScreen = ({ notifications } : { notifications : Object }) => 
         setNotifications(_notifications.filter(({ _id }) => _id !== id));
     }
 
-    const getNotification = ({ item: { _id, message, timeStamp } }) => (
-        <NotificationItem id={_id} message={message} timeStamp={timeStamp} removeNotification={_removeNotification} />
-    );
+    const getNotification = ({ item }) => {
+        const { _id } = item;
+        return <NotificationItem id={_id} {...item} removeNotification={_removeNotification} />
+    };
 
     return (
         <View style={{ flex: 1, backgroundColor: WHITE }}>
             <FlatList
-                data={_notifications}
+                data={_notifications.reverse()}
                 renderItem={getNotification}
-                keyExtractor={(item, index) => index.toString()}
+                keyExtractor={(_, index) => index.toString()}
             />
         </View>
     );

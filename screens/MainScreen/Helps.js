@@ -7,9 +7,8 @@ import { useAuth } from "../../customHooks";
 import { Toast } from '../../components/atoms';
 import { toastTypes } from '../../components/atoms/Toast';
 
-const Helps = ({ route }:{ route: Object }) => {
-  const { params } = route;
-  let { user } = useAuth() || params;
+const Helps = () => {
+  let { user } = useAuth();
   const [showToast, setShowToast] = useState(false);
 
   useEffect(() => {

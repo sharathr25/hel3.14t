@@ -6,22 +6,36 @@ import MyHelpRequestsScreen from '../MyHelpRequests';
 import NotificationsScreen from '../Notifications';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import HelpRequestFormScreen from '../HelpRequestForm';
-import { ORANGE, WHITE, BLACK, GREEN } from '../../styles/colors';
+import { ORANGE, WHITE, BLACK, GREEN, RED } from '../../styles/colors';
 import { useNotifications } from '../../customHooks';
 import Helps from "./Helps";
 import Helpers from "./Helpers";
+import { ProfileLetter } from '../../components/atoms';
+
+type NotificationIconProps= {
+  color: string;
+  size: number;
+  iconName?: string;
+  noOfNotifications: number | boolean
+}
+
+const NotificationIcon = (props:NotificationIconProps) => {
+  const { color, size = 20, iconName, noOfNotifications } = props;
+
+  return (
+    <View>
+      <MaterialCommunityIcons name={iconName} color={color} size={size} />
+      {
+        iconName === "bell-alert" && 
+          <View style={{ position: 'absolute' , right: -10, top: -5 }}>
+            {noOfNotifications && <ProfileLetter size={20} letter={noOfNotifications} bgColor={RED}/>}
+          </View>
+      }   
+    </View>
+  )
+}
 
 const Tab = createBottomTabNavigator();
-
-const ActivityIcon = ({ color, size = 20 }: { color: string, size: number }) => <MaterialCommunityIcons name="clipboard-text-outline" color={color} size={size} />
-
-const HomeIcon = ({ color, size = 20 }: { color: string, size: number }) => <MaterialCommunityIcons name="home-outline" color={color} size={size} />
-
-const RequestIcon = ({ color, size = 20 }: { color: string, size: number }) => <MaterialCommunityIcons name="plus" color={color} size={size} />
-
-const NotificationIcon = ({ color, size = 20 }: { color: string, size: number }) => <MaterialCommunityIcons name="bell-alert" color={color} size={size} />
-
-const RankIcon = ({ color, size = 20 }: { color: string, size: number }) => <MaterialCommunityIcons name="chart-bar" color={color} size={size} />
 
 const RequestButton = ({color}) => {
   const sizeOfbutton = 60;
@@ -38,27 +52,41 @@ const RequestButton = ({color}) => {
         top: 0
       }}
     >
-      <RequestIcon color={color === ORANGE ? WHITE : GREEN } size={sizeOfbutton / 2} />
+      <MaterialCommunityIcons name="plus" color={color === ORANGE ? WHITE : GREEN } size={sizeOfbutton / 2} />
     </View>
   )
 }
-
-function BottomTabNavigator(props:any) {
+const BottomTabNavigator = () => {
   const notifications = useNotifications();
   const noOfNotifications = notifications.length > 0 ? notifications.length : false;
-
+  
   return (
-    <Tab.Navigator tabBarOptions={{ activeTintColor: ORANGE, inactiveTintColor: BLACK }} initialRouteName="Home" >
-        <Tab.Screen name="Top Ranks" component={Helpers} options={{ tabBarIcon: RankIcon }} />
-        <Tab.Screen name="Home" children={() => <Helps {...props} />} options={{ tabBarIcon: HomeIcon }} />
-        <Tab.Screen name="New Help Request" component={HelpRequestFormScreen} 
-          options={{ tabBarIcon: RequestButton, tabBarLabel:"", title:"new help" }} />
-        <Tab.Screen name="Activity" component={MyHelpRequestsScreen} options={{ tabBarIcon: ActivityIcon }} />
-        <Tab.Screen 
-          name="Notification" 
-          options={{ tabBarIcon: NotificationIcon, tabBarBadge: noOfNotifications }} 
-          children={() => <NotificationsScreen notifications={notifications} />}
-        />
+    <Tab.Navigator tabBarOptions={{ activeTintColor: ORANGE, inactiveTintColor: BLACK }} initialRouteName="Home">
+      <Tab.Screen 
+        name="Top Ranks" 
+        component={Helpers} 
+        options={{ tabBarIcon: (props) => <NotificationIcon iconName="chart-bar" {...props} /> }} 
+      />
+      <Tab.Screen 
+        name="Home" 
+        component={Helps} 
+        options={{ tabBarIcon:(props) => <NotificationIcon iconName="home-outline" {...props} /> }} 
+      />
+      <Tab.Screen 
+        name="New Help Request" 
+        component={HelpRequestFormScreen} 
+        options={{ tabBarIcon: RequestButton, tabBarLabel:"", title:"new help" }} 
+      />
+      <Tab.Screen 
+        name="Activity" 
+        component={MyHelpRequestsScreen} 
+        options={{ tabBarIcon:(props) => <NotificationIcon iconName="clipboard-text-outline" {...props}/> }} 
+      />
+      <Tab.Screen 
+        name="Notification" 
+        options={{ tabBarIcon: (props) => <NotificationIcon iconName="bell-alert" {...props} noOfNotifications={noOfNotifications} /> }} 
+        children={() => <NotificationsScreen notifications={notifications} />}
+      />
     </Tab.Navigator>
   );
 }

@@ -9,12 +9,12 @@ import { callPhone } from '../../utils';
 import { useMutation } from 'react-apollo';
 import { Slider } from 'react-native-elements';
 
-const UPDATE_HELP = gql`
-    mutation UpdateHelp($id:String!, $key:String!,$value:Any, $type:String!, $operation:String!){
-        updateHelp(id:$id, key:$key, value:$value, type:$type, operation:$operation){
-            _id
-        }
+const GIVE_RATINGS_TO_CREATOR = gql`
+  mutation GiveRatingsToCreator($idOfHelpRequest:String!, $uid: String!, $ratings: Int!) {
+    giveRatingsToCreator(idOfHelpRequest:$idOfHelpRequest, ratings: $ratings, uid: $uid) {
+        _id
     }
+  }
 `;
 
 type CreatorProps = {
@@ -33,12 +33,12 @@ type CreatorProps = {
 
 const Creator = (props: CreatorProps) => {
   const { userDetails, helpRequestDetails } = props;
-  const { mobileNo, stars, uidOfCreator,uidOfAccepter, creatorName } = userDetails;
+  const { mobileNo, stars, uidOfCreator, creatorName } = userDetails;
   const { status, keyOfHelpRequest } = helpRequestDetails;
   const [starsGivenByUser, setStarsGivenByUser] = useState(0);
-  const [updateHelp, { loading }] = useMutation(UPDATE_HELP);
   const { container, details } = styles;
   const mobileNoWithoutCountryCode = mobileNo.replace(/^(\+91\d{6})(\d{4})/, "xxxxxx$2");
+  const [giveRatingsToCreator, {loading} ] = useMutation(GIVE_RATINGS_TO_CREATOR);
 
   const call = () => {
     callPhone(mobileNo)
@@ -46,13 +46,11 @@ const Creator = (props: CreatorProps) => {
 
   const handleSubmit = () => {
     if(starsGivenByUser !== 0) {
-      updateHelp({
+      giveRatingsToCreator({
         variables: {
-            id: keyOfHelpRequest,
-            key: "usersAccepted",
-            value: { [uidOfAccepter]: { starsForCreator: starsGivenByUser }, creatorUid: uidOfCreator },
-            type: "array",
-            operation: "update"
+          idOfHelpRequest:keyOfHelpRequest, 
+          ratings: starsGivenByUser, 
+          uid: uidOfCreator
         }
       })
     } else {
@@ -107,7 +105,7 @@ const Creator = (props: CreatorProps) => {
 
   return (
     <View style={{marginTop: 10 }}>
-      <Heading>Creator details</Heading>
+      <Heading>Help requester details</Heading>
       <View style={container}>
         <View style={details}>
           <Heading color={ORANGE}>{creatorName}</Heading>
