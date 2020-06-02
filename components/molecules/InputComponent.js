@@ -1,17 +1,17 @@
 // @flow
 import React, { useState } from 'react';
-import { Input } from 'react-native-elements';
-import { WHITE, ORANGE, BLACK } from '../../styles/colors';
-import { FONT_WEIGHT_REGULAR } from "../../styles/typography";
-import { StyleSheet } from 'react-native';
-import { PasswordIcon } from '../atoms'
+import { WHITE, ORANGE, BLACK, RED } from '../../styles/colors';
+import { FONT_WEIGHT_REGULAR, FONT_SIZE_18 } from "../../styles/typography";
+import { StyleSheet, TouchableOpacity } from 'react-native';
+import { PasswordIcon } from '../atoms';
+import {  Input as InputComponent, Label, Item, View, Text } from 'native-base'
 
 type InputComponentProps = {
   showPasswordIcon: boolean,
 }
 
-const InputComponent = (props: InputComponentProps) => {
-  const { showPasswordIcon } = props;
+const Input = (props: InputComponentProps) => {
+  const { showPasswordIcon, label, errMsg  } = props;
   const [showPassword, setShowPassword] = useState(false);
 
   const _setShowPassword = () => {
@@ -21,16 +21,17 @@ const InputComponent = (props: InputComponentProps) => {
   const { labelStyle, containerStyle, inputContainerStyle, inputStyle } = styles;
 
   return (
-    <Input
-      labelStyle={labelStyle}
-      inputContainerStyle={inputContainerStyle}
-      inputStyle={inputStyle}
-      containerStyle={containerStyle}
-      secureTextEntry={showPasswordIcon && !showPassword}
-      rightIcon={showPasswordIcon && <PasswordIcon showPassword={showPassword} setShowPassword={_setShowPassword} />}
-      rightIconContainerStyle={{ right: 8 }}
-      {...props}
-    />
+    <Item stackedLabel style={{ borderColor: 'transparent', padding: 0 }}>
+      <Label style={labelStyle}>{label}</Label>
+      <View style={{ borderColor: ORANGE,  borderWidth: 1, borderRadius: 5 , flexDirection: 'row' }}>
+        <InputComponent 
+          secureTextEntry={showPasswordIcon && !showPassword} 
+          {...props}
+        />
+        {showPasswordIcon && <PasswordIcon showPassword={showPassword} setShowPassword={_setShowPassword} />}
+      </View>
+      {errMsg !== "" && <Text style={{ color: RED }}>{errMsg}</Text>}
+    </Item>
   );
 }
 
@@ -41,17 +42,14 @@ const styles = StyleSheet.create({
     paddingHorizontal: 0,
   },
   labelStyle: {
-    backgroundColor: WHITE,
-    zIndex: 2,
-    left: 40,
-    top: -15,
-    alignSelf: 'flex-start',
-    position: 'absolute',
-    paddingLeft: 5,
-    paddingRight: 5,
-    fontSize: 20,
-    color: BLACK,
-    fontWeight: FONT_WEIGHT_REGULAR
+    backgroundColor: WHITE, 
+    zIndex: 2, 
+    left: 20, 
+    top: 10, 
+    paddingHorizontal: 10, 
+    textAlign: 'center',
+    color: ORANGE,
+    fontSize:FONT_SIZE_18
   },
   inputContainerStyle: {
     borderColor: ORANGE,
@@ -64,7 +62,7 @@ const styles = StyleSheet.create({
   },
 });
 
-InputComponent.defaultProps = {
+Input.defaultProps = {
   label : "", 
   errMsg : "", 
   showPasswordIcon : false, 
@@ -74,4 +72,4 @@ InputComponent.defaultProps = {
   keyboardType: "default"
 }
 
-export default InputComponent;
+export default Input;

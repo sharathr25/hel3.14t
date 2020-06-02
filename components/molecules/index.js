@@ -2,7 +2,7 @@ import TimeAndDistance from './TimeAndDistance';
 import CustomModal from './CustomModal';
 import NotificationItem from './NotificationItem';
 import Header from './Header';
-import InputComponent from './InputComponent';
+import Input from './InputComponent';
 import HelpRequestCard from '../oraganisms/HelpRequestCard';
 import ProfileName from './ProfileName';
 import UserHelpRequestCard from "../oraganisms/UserHelpRequestCard";
@@ -19,7 +19,7 @@ export {
     CustomModal, 
     NotificationItem,
     Header, 
-    InputComponent,
+    Input,
     HelpRequestCard,
     ProfileName,
     UserHelpRequestCard,
