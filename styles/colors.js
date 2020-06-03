@@ -1,4 +1,4 @@
-// @flow
+
 export const ORANGE = '#FF9933';
 export const LIGHT_ORANGE = '#FFDCB9';
 export const LIGHTER_ORANGE = "#FFA64D";

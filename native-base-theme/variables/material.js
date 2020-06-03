@@ -4,7 +4,7 @@ import color from 'color';
 import { Platform, Dimensions, PixelRatio } from 'react-native';
 
 import { PLATFORM } from './commonColor';
-import { ORANGE, LIGHT_BLUE_2, GREEN, RED, YELLOW, BLACK, LIGHTEST_ORANGE, LIGHT_GRAY } from '../../styles/colors';
+import { ORANGE, LIGHT_BLUE_2, GREEN, RED, YELLOW, BLACK, LIGHTEST_ORANGE, LIGHT_GRAY, WHITE } from '../../styles/colors';
 
 const deviceHeight = Dimensions.get('window').height;
 const deviceWidth = Dimensions.get('window').width;
@@ -120,9 +120,9 @@ export default {
   CheckboxIconSize: 16,
   CheckboxIconMarginTop: 1,
   CheckboxFontSize: 17,
-  checkboxBgColor: '#039BE5',
+  checkboxBgColor: ORANGE,
   checkboxSize: 20,
-  checkboxTickColor: '#fff',
+  checkboxTickColor: WHITE,
 
   // Color
   brandPrimary: ORANGE,

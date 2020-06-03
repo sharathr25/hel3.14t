@@ -1,4 +1,4 @@
-// @flow
+
 import { View, Text, Animated } from 'react-native';
 
 const { multiply } = Animated;

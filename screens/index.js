@@ -1,4 +1,4 @@
-// @flow
+
 import Comments  from "./Comments";
 import ForgotPassword  from "./ForgotPassword";
 import HelpRequestForm  from "./HelpRequestForm";

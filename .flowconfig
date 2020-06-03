@@ -8,6 +8,12 @@
 ; Ignore unexpected extra "@providesModule"
 .*/node_modules/.*/node_modules/fbjs/.*
 
+.*/node_modules/native-base/.*
+.*/node_modules/react-native-easy-grid/.*
+.*/node_modules/react-native-keyboard-aware-scroll-view/.*
+.*/node_modules/react-navigation/.*
+.*/native-base-theme/.*
+
 ; Ignore react-native-image-picker
 .*/node_modules/react-native-image-picker/lib/commonjs/index.js.flow 
 .*/node_modules/react-native-image-picker/lib/commonjs/internal/nativeInterface.js.flow
@@ -36,6 +42,12 @@ node_modules/react-native/flow/
 
 [options]
 emoji=true
+module.name_mapper='^react-navigation$' -> 'emptyObject'
+module.name_mapper='^native-base$' -> 'emptyObject'
+module.name_mapper='^react-native-easy-grid$' -> 'emptyObject'
+module.name_mapper='^react-native-keyboard-aware-scroll-view$' -> 'emptyObject'
+module.name_mapper='^.*native-base-theme/variables/material$' -> 'emptyObject'
+
 
 esproposal.optional_chaining=enable
 esproposal.nullish_coalescing=enable

@@ -1,4 +1,4 @@
-// @flow
+
 import React, { useState } from 'react';
 import { WHITE, ORANGE, BLACK, RED } from '../../styles/colors';
 import { FONT_WEIGHT_REGULAR, FONT_SIZE_18 } from "../../styles/typography";
@@ -8,6 +8,8 @@ import {  Input as InputComponent, Label, Item, View, Text } from 'native-base'
 
 type InputComponentProps = {
   showPasswordIcon: boolean,
+  label?:string,
+  errMsg?: string
 }
 
 const Input = (props: InputComponentProps) => {
@@ -48,7 +50,7 @@ const styles = StyleSheet.create({
     top: 10, 
     paddingHorizontal: 10, 
     textAlign: 'center',
-    color: ORANGE,
+    color: BLACK,
     fontSize:FONT_SIZE_18
   },
   inputContainerStyle: {

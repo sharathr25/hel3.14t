@@ -1,4 +1,4 @@
-// @flow
+
 import React from "react";
 import { Text, StyleSheet } from "react-native";
 import { FONT_FAMILY_REGULAR, FONT_SIZE_16 } from "../../styles/typography";

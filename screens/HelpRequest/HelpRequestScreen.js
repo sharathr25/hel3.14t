@@ -1,4 +1,4 @@
-// @flow
+
 import React, { useEffect } from 'react';
 import { Dimensions, View, Alert } from 'react-native';
 import gql from 'graphql-tag';

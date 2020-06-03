@@ -1,4 +1,4 @@
-// @flow
+
 import React from 'react';
 import { FlatList, View } from 'react-native';
 import { UserHelpRequestCard, UserContributionCard } from '../../components/oraganisms';

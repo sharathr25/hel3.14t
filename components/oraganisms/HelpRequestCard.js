@@ -1,4 +1,4 @@
-// @flow
+
 import React from "react";
 import { Text, TouchableOpacity, View } from 'react-native';
 import { BLACK, LIGHT_GRAY } from "../../styles/colors";

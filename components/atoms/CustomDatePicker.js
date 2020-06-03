@@ -1,32 +1,31 @@
-// @flow
+
 import React, { useRef } from 'react';
-import DatePicker from 'react-native-datepicker'
-import { ORANGE , BLACK, WHITE } from '../../styles/colors';
-import { FONT_WEIGHT_REGULAR } from "../../styles/typography";
-import { StyleSheet, View, Text } from 'react-native';
+import { ORANGE , BLACK, WHITE, RED } from '../../styles/colors';
+import { FONT_WEIGHT_REGULAR, FONT_SIZE_18, FONT_SIZE_16 } from "../../styles/typography";
+import { StyleSheet, Text } from 'react-native';
 import { padding } from "../../styles/mixins";
+import { DatePicker, Label, Item, View } from 'native-base';
 
 type CustomDatePickerProps = { 
   date: string , 
   updateParentState: Function, 
   label: string, 
-  value: string 
+  value: string ,
+  errMsg?: string
 }
 
 const CustomDatePicker = (props: CustomDatePickerProps) => {
   const datePickerRef = useRef(null);
-  const { date, updateParentState, label } = props;
+  const { date, updateParentState, label, errMsg = "" } = props;
   const { dateInput, labelStyle, container, datePickerContainer, dateStyle } = styles;
   return (
-    <View style={container}>
-      <Text style={labelStyle}>{label}</Text>
-      <View style={datePickerContainer}>
+    <View>
+      <Label style={labelStyle}>{label}</Label>
+      <View style={dateInput}>
         <DatePicker
-          customStyles={{ dateInput }}
-          style={dateStyle}
           date={date}
           mode="date"
-          placeholder="Select date"
+          placeholder="Select dat"
           format="YYYY-MM-DD"
           confirmBtnText="Confirm"
           cancelBtnText="Cancel"
@@ -35,6 +34,9 @@ const CustomDatePicker = (props: CustomDatePickerProps) => {
           ref={datePickerRef}
         />
       </View>
+      {errMsg !== "" && <Text style={{ color: RED, fontSize: FONT_SIZE_18, textAlign: 'center' }}>
+        {errMsg}
+      </Text>}
     </View>
   );
 }
@@ -43,21 +45,25 @@ export default CustomDatePicker;
 
 const styles = StyleSheet.create({
   labelStyle: {
-    backgroundColor: WHITE,
-    zIndex: 2,
-    left: 30,
-    top: -15,
-    alignSelf: 'flex-start',
-    position: 'absolute',
-    paddingLeft: 5,
-    paddingRight: 5,
-    fontSize: 20,
+    backgroundColor: WHITE, 
+    zIndex: 2, 
+    left: 20, 
+    top: 10, 
+    paddingHorizontal: 10, 
+    textAlign: 'center',
     color: BLACK,
-    fontWeight: FONT_WEIGHT_REGULAR
+    fontSize:FONT_SIZE_18,
+    alignSelf: 'flex-start'
   },
   dateInput: {
-    padding: 25,
-    borderWidth: 0,
+    borderColor: ORANGE, 
+    borderWidth: 1,
+    borderRadius: 5,
+    flexDirection: 'row',
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    height: 50
   },
   container: {
     borderColor: ORANGE, 
@@ -70,6 +76,7 @@ const styles = StyleSheet.create({
     flex: 1 
   },
   dateStyle : {
-    flex: 1
+    flex: 1,
+
   }
 });

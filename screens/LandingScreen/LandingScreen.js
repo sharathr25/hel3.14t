@@ -1,4 +1,4 @@
-// @flow
+
 import React from 'react';
 import { StyleSheet } from 'react-native';
 import { Container, Text, StyleProvider, Button, Thumbnail, View } from 'native-base';

@@ -1,4 +1,4 @@
-// @flow
+
 import React, { useEffect, useState } from 'react';
 import { View, Text, StyleSheet, Dimensions, ScrollView } from 'react-native';
 import { useLazyQuery } from 'react-apollo';
