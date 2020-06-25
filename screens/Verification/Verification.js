@@ -1,4 +1,4 @@
-// @flow
+
 import React, { useState } from 'react';
 import { View, TouchableOpacity, Text } from 'react-native';
 import { ORANGE, WHITE, BLACK, LIGHT_BLUE } from '../../styles/colors';

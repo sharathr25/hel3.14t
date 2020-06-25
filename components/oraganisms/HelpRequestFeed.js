@@ -1,4 +1,4 @@
-// @flow
+
 import React from "react";
 import { FlatList, Platform, UIManager } from 'react-native';
 import { getDistanceFromLatLonInKm, sortByDistance } from '../../utils';

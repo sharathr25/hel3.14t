@@ -1,8 +1,8 @@
 import React, {useState} from "react";
-import { View, StyleSheet, Picker, Text } from 'react-native';
+import { StyleSheet } from 'react-native';
 import { WHITE, BLACK, ORANGE } from "../../styles/colors";
-import { FONT_WEIGHT_REGULAR } from "../../styles/typography";
-import { margin } from "../../styles/mixins";
+import { FONT_SIZE_18 } from "../../styles/typography";
+import { View, Picker, Label} from 'native-base'
 
 const Selector = (props) => {
     const { options, label="", onValueChange } = props;
@@ -16,7 +16,7 @@ const Selector = (props) => {
 
     return (
         <View>
-            <Text style={labelStyle}>{label}</Text>
+            <Label style={labelStyle}>{label}</Label>
             <View style={pickerContainerStyle}>
                 <Picker
                     selectedValue={selectedValue}
@@ -34,22 +34,19 @@ export  default Selector;
 
 const styles = StyleSheet.create({
     labelStyle: {
-        backgroundColor: WHITE,
-        zIndex: 2,
-        left: 40,
-        top: 5,
-        alignSelf: 'flex-start',
-        position: 'absolute',
-        paddingLeft: 5,
-        paddingRight: 5,
-        fontSize: 20,
+        backgroundColor: WHITE, 
+        zIndex: 2, 
+        left: 20, 
+        top: 10, 
+        paddingHorizontal: 10, 
+        textAlign: 'center',
         color: BLACK,
-        fontWeight: FONT_WEIGHT_REGULAR
+        fontSize:FONT_SIZE_18,
+        alignSelf: 'flex-start'
     },
     pickerContainerStyle: {
         borderColor: ORANGE,
-        borderWidth: 1.5,
-        ...margin(20,0,10,0),
-        borderRadius: 10,
+        borderWidth: 1,
+        borderRadius: 5,
     }
 })

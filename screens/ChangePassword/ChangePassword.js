@@ -1,4 +1,4 @@
-// @flow
+
 import React, { useState } from 'react';
 import { View, ScrollView } from 'react-native';
 import { ORANGE, WHITE } from '../../styles/colors';

@@ -1,4 +1,4 @@
-// @flow
+
 import React from "react";
 import { StyleSheet, View, TouchableOpacity, ActivityIndicator } from "react-native";
 import { ORANGE, WHITE, LIGHT_ORANGE, LIGHT_GREEN, GREEN, LIGHT_RED, RED } from "../../styles/colors";

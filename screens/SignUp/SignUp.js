@@ -1,19 +1,21 @@
-// @flow
+
 import React, { useState } from 'react';
-import { Text, CheckBox } from 'react-native-elements';
-import { View, Alert, StyleSheet, ScrollView } from 'react-native';
+import { StyleProvider, Container, Content, Button ,Text, CheckBox, View } from 'native-base'
+import { StyleSheet } from 'react-native';
 import { SCREEN_DETAILS} from '../../constants/appConstants';
-import { ORANGE, WHITE, BLACK, LIGHT_GRAY } from '../../styles/colors';
+import { ORANGE, BLACK } from '../../styles/colors';
 import { margin } from "../../styles/mixins";
 import { getAge } from '../../utils';
 import gql from 'graphql-tag';
 import { useMutation } from 'react-apollo';
-import { InputComponent, OTPVerificationToast } from '../../components/molecules';
-import { CustomDatePicker, Selector, Button, Link } from '../../components/atoms';
+import { Input, OTPVerificationToast } from '../../components/molecules';
+import { CustomDatePicker, Selector, Link } from '../../components/atoms';
 import { Auth } from "aws-amplify";
 import Toast, { toastTypes } from '../../components/atoms/Toast';
 import { userNameConstraints, emailConstraints, mobileNoConstraints, passwordConstraints } from '../../utils/formConstraints';
 import { useForm } from '../../customHooks';
+import getTheme from '../../native-base-theme/components';
+import material from '../../native-base-theme/variables/material';
 
 const { LOGIN, TERMS_AND_CONDITIONS, MAIN } = SCREEN_DETAILS;
 
@@ -93,7 +95,6 @@ function SignUpScreen({navigation}: { navigation: Object }) {
   }
 
   const handleSignUp = async () => {  
-    const age = getAge(dob);
     if(isValid() && getAge(dob) > AGE_LIMIT && termsAndConditionChecked) {
       try {
         setToast({ type: toastTypes.LOADING, message: "Please wait"})
@@ -117,44 +118,21 @@ function SignUpScreen({navigation}: { navigation: Object }) {
       } catch (error) {
         setToast({ type: toastTypes.ERROR, message: "Something went wrong"})
       }
-    } else {
-      if(age <= AGE_LIMIT) Alert.alert("You should be more than 15")
-      else if(!termsAndConditionChecked) Alert.alert("Please accept terms, conditions and privacy policy")
+    } else if(!termsAndConditionChecked){
+        setToast({ type: toastTypes.ERROR, message: "Please check Terms of Service, Privacy, Policy" })
     }
   };
 
-  const DateOfBirthInput = () => {
-    return (
-      <View style={formStyles.dobContainer}>
-        <CustomDatePicker date={dob} updateParentState={setDob} label="Date of Birth" />
-      </View>
-    )
-  };
-
-  const GenderSelector = () => (
-    <View style={{flex: 1}}>
-      <Selector options={GENDER_OPTIONS} label="Gender" onValueChange={setGender} />
-    </View>
-  );
-
   const TermsAndConditionsCheckBox = () => (
     <View style={formStyles.termsAndConditionsContainer}>
-      <CheckBox
-          checked={termsAndConditionChecked}
-          onPress={() => settermsAndConditionChecked(!termsAndConditionChecked)}
-          checkedColor={ORANGE}
-          containerStyle={{padding: 0 , margin: 0}}
-          center={true}
-          uncheckedColor={BLACK}
-        />
-      <Text style={{color: BLACK}}>Click to accept </Text>
-      <Link onPress={handleTermsAndConditions}>Terms of Service, Privacy, Policy</Link>
-    </View>
-  );
-
-  const SignUpButton = () => (
-    <View>
-      <Button bgColor={ORANGE} textColor={WHITE} onPress={handleSignUp}>Register</Button>
+      <CheckBox 
+        checked={termsAndConditionChecked}
+        onPress={() => settermsAndConditionChecked(!termsAndConditionChecked)}    
+      />
+      <View style={{ flex: 1 , marginLeft: 20 }}>
+        <Text style={{color: BLACK}}>Click to accept </Text>
+        <Link onPress={handleTermsAndConditions}>Terms of Service, Privacy, Policy</Link>
+      </View>
     </View>
   );
 
@@ -166,7 +144,8 @@ function SignUpScreen({navigation}: { navigation: Object }) {
   )
 
   return (
-    <ScrollView style={{ backgroundColor: WHITE }} contentContainerStyle={{flexGrow: 1 }}>
+    <StyleProvider style={getTheme(material)}>
+      <Container>
       {toast.type !== "" && <Toast type={toast.type} message={toast.message} />}
       <OTPVerificationToast 
         show={showOtpInput}
@@ -176,70 +155,84 @@ function SignUpScreen({navigation}: { navigation: Object }) {
         recepient={values[MOBILE_NUMBER]}
         onClose={() => setShowOtpInput(!showOtpInput)}
       />
-      <View style={{ flex: 1, margin: 20 }}>
-        <View style={{flex: 1}}>
-          <InputComponent 
-            label="Username" 
-            {...bindField(USER_NAME)}
-            errorMessage={errors[USER_NAME]}
-          />
-        </View>
-        <View style={{flex: 1}}>
-          <InputComponent 
-            label="Email" 
-            {...bindField(EMAIL)}
-            errorMessage={errors[EMAIL]}
-          />
-        </View>
-        <View style={{flex: 1}}>  
-          <InputComponent 
-            label="Mobile number" 
-            {...bindField(MOBILE_NUMBER)}  
-            errorMessage={errors[MOBILE_NUMBER]}
-          />
-        </View>
-        <View style={{flex: 1}}>
-          <InputComponent 
-            label="Password" 
-            showPasswordIcon={true}
-            {...bindField(PASSWORD)}
-            errorMessage={errors[PASSWORD]}
-          />
-        </View>
-        <View style={{flex: 1}}>
-          <InputComponent 
-            label="Confirm Password" 
-            showPasswordIcon={true} 
-            {...bindField(CONFIRM_PASSOWRD)}
-            errorMessage={errors[CONFIRM_PASSOWRD]}
-          />
-        </View>
-        <DateOfBirthInput />
-        <GenderSelector />
-      </View>  
-      <TermsAndConditionsCheckBox />
-      <View style={{ margin: 20 }}>
-        <SignUpButton />
-        <LoginLink />
-      </View>
-    </ScrollView>
+        <Content style={{ marginHorizontal: 10 }} contentContainerStyle={{ flexGrow: 1 }}>
+          <View style={{flex: 1}}>
+            <Input 
+              label="Username" 
+              {...bindField(USER_NAME)}
+              errMsg={errors[USER_NAME]}
+            />
+            </View>
+          <View style={{flex: 1}}>
+            <Input 
+              label="Email" 
+              {...bindField(EMAIL)}
+              errMsg={errors[EMAIL]}
+            />
+          </View>
+          <View style={{flex: 1}}>  
+            <Input 
+              label="Mobile number" 
+              {...bindField(MOBILE_NUMBER)}  
+              errMsg={errors[MOBILE_NUMBER]}
+            />
+          </View>
+          <View style={{flex: 1}}>
+            <Input 
+              label="Password" 
+              showPasswordIcon={true}
+              {...bindField(PASSWORD)}
+              errMsg={errors[PASSWORD]}
+            />
+          </View>
+          <View style={{flex: 1}}>
+            <Input 
+              label="Confirm Password" 
+              showPasswordIcon={true} 
+              {...bindField(CONFIRM_PASSOWRD)}
+              errMsg={errors[CONFIRM_PASSOWRD]}
+            />
+          </View>
+          <View style={{ flex: 1 }}>
+            <CustomDatePicker 
+              date={dob} 
+              updateParentState={setDob} 
+              label="Date of Birth" 
+              errMsg={dob && getAge(dob) <= AGE_LIMIT ? "You should be more than 15" : ""}
+            />
+          </View>
+          <View style={{flex: 1}}>
+            <Selector options={GENDER_OPTIONS} label="Gender" onValueChange={setGender} />
+          </View>
+          <TermsAndConditionsCheckBox />
+          <View style={{ flex: 1 }}>
+            <Button primary full large onPress={handleSignUp}>
+              <Text>Register</Text>
+            </Button>
+          </View>
+          <LoginLink />
+        </Content>
+      </Container>
+    </StyleProvider>
   );
 }
 
 export default SignUpScreen;
 
 const formStyles = StyleSheet.create({
-  dobContainer: {
-    ...margin(10,0,0,0),
-    flex: 1
-  },
   loginContainer: {
     flexDirection: 'row',
     alignSelf: 'center',
+    margin: 10
   },
   termsAndConditionsContainer: {
-    flexDirection: 'row' , 
+    flex: 1, 
+    height: 55, 
     alignItems: 'center', 
-    backgroundColor: LIGHT_GRAY, 
+    flexDirection: 'row', 
+    borderWidth: 1, 
+    borderColor: ORANGE, 
+    borderRadius: 5, 
+    marginVertical: 20
   }
 });

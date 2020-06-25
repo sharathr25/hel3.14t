@@ -1,4 +1,4 @@
-// @flow
+
 import React, { useState, useEffect } from "react";
 import { Text, Input } from "react-native-elements";
 import { View, TouchableOpacity, StyleSheet, Alert, Keyboard, Dimensions } from "react-native";

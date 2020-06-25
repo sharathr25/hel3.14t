@@ -1,4 +1,4 @@
-// @flow
+
 import { useEffect, useState } from 'react';
 import geolocation from 'react-native-geolocation-service';
 

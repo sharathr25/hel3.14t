@@ -1,14 +1,18 @@
-// @flow
+
 import React from 'react';
-import { View, Text, StyleSheet, Alert, Image } from 'react-native';
+import { StyleSheet } from 'react-native';
+import { Container, Text, StyleProvider, Button, Thumbnail, View } from 'native-base';
 import { ORANGE, WHITE } from '../../styles/colors';
-import { TouchableOpacity } from 'react-native-gesture-handler';
 // import Icon from 'react-native-vector-icons/FontAwesome';
 import { SCREEN_DETAILS } from '../../constants/appConstants';
-import { padding, borderRadius, margin } from "../../styles/mixins";
+import { padding } from "../../styles/mixins";
 import { FONT_SIZE_20 } from "../../styles/typography";
+import getTheme from '../../native-base-theme/components';
+import material from '../../native-base-theme/variables/material';
 
 const { SIGNUP, LOGIN } = SCREEN_DETAILS;
+const IMAGE_HEIGHT = 360;
+const BUTTON_WIDTH_TO_CUT = 15;
 
 const LandingScreen = ({ navigation }: { navigation: Object}) => {
     const handleSignUp = () => {
@@ -18,53 +22,6 @@ const LandingScreen = ({ navigation }: { navigation: Object}) => {
     const handleSignIn = () => {
         navigation.navigate(LOGIN.screenName);
     }
-
-    // const handleFacebookSignIn = () => {
-    //     Alert.alert("need to implement facebook sign in");
-    // }
-
-    // const handleGoogleSignIn = () => {
-    //     Alert.alert("need to implement facebook sign in");
-    // }
-
-    // const handleTwitterSignIn = () => {
-    //     Alert.alert("need to implement facebook sign in");
-    // }
-
-    const {
-        container,
-        // appNameAndLogoContainer,
-        // appName, 
-        buttons,
-        // socialMediaLoginButton,
-        // socialMediaButtonText,
-        // separater,
-        // buttonContainerStyle,
-        buttonText
-    } = styles;
-
-    const RegisterButton = () => (
-        <TouchableOpacity onPress={handleSignUp} 
-        style={{
-            ...padding(10, 20, 10, 20),
-            backgroundColor: ORANGE,
-            ...borderRadius(0, 15, 15, 0),
-        }}>
-            <Text style={buttonText}>Register</Text>
-        </TouchableOpacity>
-    );
-
-    const LoginButton = () => (
-        <TouchableOpacity onPress={handleSignIn} 
-            style={{
-                ...padding(10, 30, 10, 30),
-                backgroundColor: ORANGE,
-                borderRadius: 15,
-                ...borderRadius(15, 0, 0, 15),
-            }}>
-            <Text style={buttonText}> Login </Text>
-        </TouchableOpacity>  
-    )
 
     // const LoginWithFacebook = () => (
     //     <TouchableOpacity style={{ ...socialMediaLoginButton, backgroundColor: "#3b5998" }} onPress={handleFacebookSignIn}>
@@ -94,19 +51,22 @@ const LandingScreen = ({ navigation }: { navigation: Object}) => {
     // );
 
     return (
-        <View style={container}>
-            <Image style={{ width: 360, height: 360, borderWidth: 1, alignSelf: "center", top: 30 }} source={require('../../assets/Adobe_Post_20200305_0056150.7629810774930801.png')} />    
-            <View style={buttons}>
-                {/* <LoginWithFacebook /> */}
-                {/* <LoginWithGoogle /> */}
-                {/* <LoginWithTwitter /> */}
-                {/* <Text style={separater}>OR WITH EMAIL</Text> */}
-                <View style={{flexDirection:'row', justifyContent: 'space-between', ...margin(0, 0, 40, 0)}}>
-                    <RegisterButton />
-                    <LoginButton />
+        <StyleProvider style={getTheme(material)}>
+            <Container style={{flex: 1}}>
+                <Thumbnail
+                    style={{ width: IMAGE_HEIGHT, height: IMAGE_HEIGHT }}
+                    source={require('../../assets/Adobe_Post_20200305_0056150.7629810774930801.png')} 
+                />
+                <View style={{ flex: 1, flexDirection: 'row', justifyContent: 'space-between', alignItems: 'flex-end', marginBottom: 20 }}>
+                    <Button rounded style={{ left: -BUTTON_WIDTH_TO_CUT }} onPress={handleSignUp}>
+                        <Text style={{ fontSize: FONT_SIZE_20 }}>Register</Text>
+                    </Button>
+                    <Button rounded style={{ right: -BUTTON_WIDTH_TO_CUT }} onPress={handleSignIn}>
+                        <Text style={{ fontSize: FONT_SIZE_20 }}> Login </Text>
+                    </Button>
                 </View>
-            </View>
-        </View>
+            </Container>
+        </StyleProvider>
     );
 }
 

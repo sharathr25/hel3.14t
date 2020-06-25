@@ -1,5 +1,5 @@
 
-// @flow
+
 import { Dimensions, PixelRatio } from 'react-native';
 
 const WINDOW_WIDTH = Dimensions.get('window').width;

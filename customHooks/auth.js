@@ -1,4 +1,4 @@
-// @flow
+
 import { useEffect, useState } from 'react';
 import { Hub, Auth } from 'aws-amplify';
 

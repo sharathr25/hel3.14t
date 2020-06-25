@@ -3,7 +3,7 @@ import { View, Text, StyleSheet, Animated, TouchableOpacity, Dimensions } from '
 import { Link, Heading , Button } from "../atoms";
 import { BLACK, ORANGE, WHITE } from "../../styles/colors";
 import { margin } from "../../styles/mixins";
-import { InputComponent } from ".";
+import { Input } from ".";
 import Icon from "react-native-vector-icons/FontAwesome";
 
 const { height } = Dimensions.get('window');
@@ -68,7 +68,7 @@ const OTPVerificationToast = (props: OTPVerificationModalProps) => {
                 </TouchableOpacity>
                 <Text>Enter OTP sent to</Text>
                 <Heading>{recepient}</Heading>
-                <InputComponent label="OTP" onChangeText={setOtp} keyboardType="numeric" />
+                <Input label="OTP" onChangeText={setOtp} keyboardType="numeric" />
                 <Button onPress={verify} bgColor={ORANGE} textColor={WHITE}>verify</Button>
                 <View style={resendMessage}>
                     <Text style={{color: BLACK}}>Haven’t received OTP? </Text>

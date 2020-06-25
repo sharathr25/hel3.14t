@@ -1,4 +1,4 @@
-// @flow
+
 import { useEffect } from "react";
 import gql from "graphql-tag";
 import { useLazyQuery } from "react-apollo";

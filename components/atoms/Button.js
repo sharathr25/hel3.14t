@@ -1,4 +1,4 @@
-// @flow
+
 import React from "react";
 import { TouchableOpacity, StyleSheet, Text } from "react-native";
 import { WHITE, ORANGE } from "../../styles/colors";

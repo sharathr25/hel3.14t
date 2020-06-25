@@ -1,4 +1,4 @@
-// @flow
+
 import React from 'react';
 import { Text, View, StyleSheet, Alert } from 'react-native';
 import { BoxButton, Heading, InlineLoader } from '../atoms';
