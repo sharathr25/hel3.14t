@@ -18,14 +18,10 @@ const { SIGNUP, FORGOT_PASSWORD , MAIN } = SCREEN_DETAILS;
 
 const { email: emailRegex } = regex;
 
-type LoginScreenProps = {
-  navigation: Object
-}
-
 const USER_NAME = 'username';
 const PASSWORD = 'password';
 
-const LoginScreen = ({navigation}: LoginScreenProps) => {
+const LoginScreen = ({navigation}) => {
   const { values, errors, bindField, isValid } = useForm({
     [USER_NAME]: { constraints: loginUserNameConstraints },
     [PASSWORD]: { constraints: passwordConstraints }

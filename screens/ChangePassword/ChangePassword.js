@@ -1,19 +1,20 @@
 
 import React, { useState } from 'react';
-import { View, ScrollView } from 'react-native';
-import { ORANGE, WHITE } from '../../styles/colors';
-import { Button, Toast } from '../../components/atoms';
-import { InputComponent } from '../../components/molecules';
+import { Toast } from '../../components/atoms';
+import { Input } from '../../components/molecules';
 import { Auth } from 'aws-amplify';
 import { toastTypes } from '../../components/atoms/Toast';
 import { passwordConstraints } from '../../utils';
 import { useForm } from '../../customHooks';
+import { Container, Content, StyleProvider, Text, View, Button } from 'native-base';
+import getTheme from '../../native-base-theme/components';
+import material from '../../native-base-theme/variables/material';
 
 const PASSWORD = 'password'
 const CONFIRM_PASSOWRD = 'confirmPassword'
 const OLD_PASSWORD = 'oldPassword';
 
-const ResetPassowrdScreen = () => {
+const ChangePasswordScreen = () => {
   const { values, errors, bindField, isValid } = useForm({
     [OLD_PASSWORD]: { constraints: passwordConstraints },
     [PASSWORD]: { constraints: passwordConstraints },
@@ -41,39 +42,43 @@ const ResetPassowrdScreen = () => {
 }
 
   return (
-    <ScrollView contentContainerStyle={{flexGrow: 1}} style={{backgroundColor: WHITE}}>
-      {toast.type !== "" && <Toast type={toast.type} message={toast.message} />}
-      <View style={{flex: 1, margin: 20 }}>
-        <View style={{flex: 1, justifyContent: 'center' }}>
-          <InputComponent
-            label="Old Password"
-            showPasswordIcon={true}
-            {...bindField(OLD_PASSWORD)}
-            errorMessage={errors[OLD_PASSWORD]}
-          />
-        </View>
-        <View style={{flex: 1, justifyContent: 'center'}}>
-          <InputComponent
-            label="Password"
-            showPasswordIcon={true}
-            {...bindField(PASSWORD)}
-            errorMessage={errors[PASSWORD]}
-          />
-        </View>
-        <View style={{flex: 1, justifyContent: 'center'}}>
-          <InputComponent
-            label="Confirm Password"
-            showPasswordIcon={true}
-            {...bindField(CONFIRM_PASSOWRD)}
-            errorMessage={errors[CONFIRM_PASSOWRD]}
-          />
-        </View>
-        <View style={{flex: 1, justifyContent: 'center'}}>
-          <Button bgColor={ORANGE} textColor={WHITE} onPress={handleChange}>Change</Button>
-        </View>
-      </View>
-    </ScrollView>
+    <StyleProvider style={getTheme(material)}>
+      <Container>
+        {toast.type !== "" && <Toast type={toast.type} message={toast.message} />}
+        <Content style={{ marginHorizontal: 10 }} contentContainerStyle={{ flexGrow: 1 }}>
+          <View style={{ flex: 1, justifyContent: 'center' }}>
+            <Input
+              label="Old Password"
+              showPasswordIcon={true}
+              {...bindField(OLD_PASSWORD)}
+              errMsg={errors[OLD_PASSWORD]}
+            />
+          </View>
+          <View style={{ flex: 1, justifyContent: 'center' }}>
+            <Input
+              label="Password"
+              showPasswordIcon={true}
+              {...bindField(PASSWORD)}
+              errMsg={errors[PASSWORD]}
+            />
+          </View>
+          <View style={{ flex: 1, justifyContent: 'center' }}>
+            <Input
+              label="Confirm Password"
+              showPasswordIcon={true}
+              {...bindField(CONFIRM_PASSOWRD)}
+              errMsg={errors[CONFIRM_PASSOWRD]}
+            />
+          </View>
+          <View style={{ flex: 1, justifyContent: 'center' }}>
+            <Button primary full large onPress={handleChange}>
+              <Text>Change</Text>
+            </Button>
+          </View>
+        </Content>
+      </Container>
+    </StyleProvider>
   );
 }
 
-export default ResetPassowrdScreen;
+export default ChangePasswordScreen;

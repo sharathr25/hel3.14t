@@ -1,19 +1,21 @@
 
 import React, { useState } from 'react';
-import { View, ScrollView } from 'react-native';
-import { ORANGE, WHITE } from '../../styles/colors';
-import { Button, NotificationMessage, Toast } from '../../components/atoms';
-import { InputComponent, OTPVerificationToast } from '../../components/molecules';
+import { View } from 'react-native';
+import { Toast } from '../../components/atoms';
+import { Input, OTPVerificationToast } from '../../components/molecules';
 import { Auth } from 'aws-amplify';
 import { toastTypes } from '../../components/atoms/Toast';
 import { userNameConstraints, passwordConstraints } from '../../utils/formConstraints';
 import { useForm } from '../../customHooks';
+import { Button, Text, StyleProvider, Container, Content, Header } from 'native-base'
+import getTheme from '../../native-base-theme/components';
+import material from '../../native-base-theme/variables/material';
 
 const USER_NAME = 'username'
 const PASSWORD = 'password'
 const CONFIRM_PASSOWRD = 'confirmPassword'
 
-const ResetPassowrdScreen = () => {
+const ForgotPasswordScreen = () => {
   const [otp, setOtp] = useState('');
   const [showOtpInput, setShowOtpInput] = useState(false)
   const [recepient, setRecepient] = useState('');
@@ -69,7 +71,8 @@ const ResetPassowrdScreen = () => {
   }
 
   return (
-      <ScrollView contentContainerStyle={{flexGrow: 1}} style={{backgroundColor: WHITE}}>
+    <StyleProvider style={getTheme(material)}>
+      <Container>
         {toast.type !== "" && <Toast type={toast.type} message={toast.message} />}
         <OTPVerificationToast 
           show={showOtpInput}
@@ -79,44 +82,45 @@ const ResetPassowrdScreen = () => {
           recepient={recepient}
           onClose={() => setShowOtpInput(false)}
         />
-        <View style={{ flex: 1 }}>
+        <Header>
+          <Text style={{ textAlignVertical: 'center' }}>
+            Enter registered Email(Verified) or Username
+          </Text>
+        </Header>
+        <Content style={{ marginHorizontal: 10 }} contentContainerStyle={{ flexGrow: 1 }}>
           <View style={{ flex: 1, justifyContent: 'center' }}>
-            <NotificationMessage>
-              Enter registered Email(Verified) or Username
-            </NotificationMessage>
+            <Input
+              label="Email or Username"
+              secureTextEntry={false}
+              {...bindField(USER_NAME)}
+              errMsg={errors[USER_NAME]}
+            />
           </View>
-          <View style={{ flex: 5, margin: 20 }}>
-            <View style={{ flex: 1, justifyContent: 'center' }}>
-              <InputComponent
-                label="Email or Username"
-                secureTextEntry={false}
-                {...bindField(USER_NAME)}
-                errorMessage={errors[USER_NAME]}
-              />
-            </View>
-            <View style={{flex: 1, justifyContent: 'center'}}>
-              <InputComponent
-                label="Password"
-                showPasswordIcon={true}
-                {...bindField(PASSWORD)}
-                errorMessage={errors[PASSWORD]}
-              />
-            </View>
-            <View style={{flex: 1, justifyContent: 'center'}}>
-              <InputComponent
-                label="Confirm Password"
-                showPasswordIcon={true}
-                {...bindField(CONFIRM_PASSOWRD)}
-                errorMessage={errors[CONFIRM_PASSOWRD]}
-              />
-            </View>
-            <View style={{flex: 1, justifyContent: 'center'}}>
-              <Button bgColor={ORANGE} textColor={WHITE} onPress={handleSendOTP}>Reset</Button>
-            </View>
+          <View style={{flex: 1, justifyContent: 'center'}}>
+            <Input
+              label="Password"
+              showPasswordIcon={true}
+              {...bindField(PASSWORD)}
+              errMsg={errors[PASSWORD]}
+            />
           </View>
-        </View>
-      </ScrollView>
+          <View style={{flex: 1, justifyContent: 'center'}}>
+            <Input
+              label="Confirm Password"
+              showPasswordIcon={true}
+              {...bindField(CONFIRM_PASSOWRD)}
+              errMsg={errors[CONFIRM_PASSOWRD]}
+            />
+          </View>
+          <View style={{flex: 1, justifyContent: 'center'}}>
+            <Button primary full large onPress={handleSendOTP}>
+              <Text>Reset</Text>
+            </Button>
+          </View>
+        </Content>
+      </Container>
+    </StyleProvider>
   );
 }
 
-export default ResetPassowrdScreen;
+export default ForgotPasswordScreen;

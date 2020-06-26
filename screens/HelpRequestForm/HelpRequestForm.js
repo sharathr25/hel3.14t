@@ -1,18 +1,20 @@
 
 import React, { useState, useEffect } from "react";
-import { Text, Input } from "react-native-elements";
-import { View, TouchableOpacity, StyleSheet, Alert, Keyboard, Dimensions } from "react-native";
-import { WHITE, ORANGE, RED, LIGHT_GRAY } from "../../styles/colors";
+import { TouchableOpacity, StyleSheet, Alert, Keyboard, Dimensions } from "react-native";
+import { WHITE, RED, LIGHT_GRAY } from "../../styles/colors";
 import gql from "graphql-tag";
 import { useMutation } from "react-apollo";
 import { useLocation, useAuth } from "../../customHooks/";
 import { CustomModal } from "../../components/molecules";
-import { Toast, Button } from "../../components/atoms";
-import Icon from "react-native-vector-icons/FontAwesome";
+import { Toast } from "../../components/atoms";
+import getTheme from '../../native-base-theme/components';
+import material from '../../native-base-theme/variables/material';
+import { StyleProvider, Container, Content, Textarea, Button, Text, Icon, View } from "native-base";
+import { FONT_SIZE_20 } from "../../styles/typography";
 
 const WORD_LIMIT = 300;
 const { height } = Dimensions.get("window");
-const NO_OF_LINES_FOR_DESC = height / 30;
+const NO_OF_LINES_FOR_DESC = height / 42;
 const NO_OF_PEOPLE_REQUIRED_BY_DEFAULT = 1;
 
 const HELP_REQUEST = gql`
@@ -36,7 +38,7 @@ const HELP_REQUEST = gql`
   }
 `;
 
-const HelpRequestForm = ({navigation}: {navigation: Object}) => {
+const HelpRequestForm = ({navigation}) => {
     const [desc, setDesc] = useState("")
     const [noPeopleRequired, setNoPeopleRequired] = useState(NO_OF_PEOPLE_REQUIRED_BY_DEFAULT);
     const [createHelp, { loading, data, error }] = useMutation(HELP_REQUEST);
@@ -108,26 +110,28 @@ const HelpRequestForm = ({navigation}: {navigation: Object}) => {
         navigation.jumpTo('Home')
     }
 
-    return (
-        <View style={container}>
-            {getToast().type !== "" && <Toast  duration={4000} {...getToast()} />}
-            <TouchableOpacity onPress={_onPress} style={closeButtonContainer}>
-                <Icon name="remove" size={25} color={WHITE} style={closeButton} />
-            </TouchableOpacity>
-            <Text style={{ alignSelf: 'center' }}>Request will be created for current location</Text>
-            <Input
-                placeholder="Please describe your help"
-                inputContainerStyle={formInput}
-                containerStyle={{ paddingHorizontal: 0, flex: 1 }}
-                multiline={true}
-                numberOfLines={NO_OF_LINES_FOR_DESC}
-                onChangeText={_onChangeText}
-                inputStyle={{ textAlignVertical: 'top', textAlign: 'center' }}
-                value={desc}
-            />
-            <WordLimitStatus />
-            <Button bgColor={ORANGE} textColor={WHITE} onPress={requestHelp}>Request</Button>
-        </View> 
+    return ( 
+        <StyleProvider style={getTheme(material)}>
+            <Container>
+                {getToast().type !== "" && <Toast  duration={4000} {...getToast()} />}
+                <Content style={{ marginHorizontal: 10 }} contentContainerStyle={{ flexGrow: 1, justifyContent: 'center' }}>
+                    <TouchableOpacity onPress={_onPress} style={{ alignSelf: 'flex-end', marginHorizontal: 5 }}>
+                        <Icon name="ios-close" style={{ color: RED, fontSize: 2 * FONT_SIZE_20 }} />
+                    </TouchableOpacity>
+                    <Textarea 
+                        placeholder="Please describe your help"
+                        rowSpan={NO_OF_LINES_FOR_DESC}
+                        onChangeText={_onChangeText}
+                        value={desc}
+                        bordered
+                    />
+                    <WordLimitStatus />
+                    <Button primary full large onPress={requestHelp}>
+                        <Text>Request</Text>
+                    </Button>
+                </Content>
+            </Container>
+        </StyleProvider>
     );
 }
 
