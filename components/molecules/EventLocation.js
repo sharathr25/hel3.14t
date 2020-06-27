@@ -1,9 +1,10 @@
 import React from "react";
-import { View, StyleSheet } from "react-native"
-import { Heading, Button } from "../atoms"
+import { StyleSheet } from "react-native"
+import { Heading } from "../atoms"
 import { LIGHTEST_GRAY } from "../../styles/colors"
 import { openMapsAppWithLatLng } from "../../utils"
 import { margin } from "../../styles/mixins";
+import { View, Button, Text } from 'native-base'
 
 const EventLocation = ({latitude, longitude}) => {
     const handleNavigate = () => {
@@ -15,7 +16,9 @@ const EventLocation = ({latitude, longitude}) => {
     return (
         <View style={container}>
             <Heading>Help request Location</Heading>
-            <Button bgColor={LIGHTEST_GRAY} onPress={handleNavigate}>Navigate</Button>
+            <Button bordered onPress={handleNavigate} primary bordered>
+                <Text>Navigate</Text>
+            </Button>
         </View>
     );
 }

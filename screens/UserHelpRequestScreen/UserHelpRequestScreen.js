@@ -1,12 +1,16 @@
 import React from 'react';
-import { View, ScrollView, StyleSheet } from 'react-native';
+import { StyleSheet } from 'react-native';
 import { useQuery, useMutation } from 'react-apollo';
 import gql from 'graphql-tag';
-import { Description, Heading, Button, InlineLoader } from '../../components/atoms';
+import { Description, Heading, InlineLoader } from '../../components/atoms';
 import { TimeAndStatus, UsersAccepted, UsersRequested, EventLocation } from "../../components/molecules";
 import { WHITE, LIGHTEST_GRAY, GREEN, RED } from '../../styles/colors';
 import { margin } from '../../styles/mixins';
 import { POLL_INTERVAL } from '../../config';
+import { StyleProvider, Container, Content } from 'native-base';
+import getTheme from '../../native-base-theme/components';
+import material from '../../native-base-theme/variables/material';
+import { Button, Text, View } from 'native-base';
 
 const FINISH_HELP = gql`
   mutation FinishHelp($idOfHelpRequest:String!) {
@@ -60,7 +64,7 @@ const QUERY = gql`
   }
 `;
 
-const UserHelpRequestScreen = ({ route } : { route: Object }) => {
+const UserHelpRequestScreen = ({ route }) => {
     const { params } = route;
     const { keyOfHelpRequest } = params;
     let { data } = useQuery(QUERY, { variables: { id: keyOfHelpRequest }, pollInterval: POLL_INTERVAL });
@@ -90,27 +94,28 @@ const UserHelpRequestScreen = ({ route } : { route: Object }) => {
         'REQUESTED': (
         <View style={CTAContainerStyle}>
             <Heading>If help not required</Heading>
-            <Button bgColor={LIGHTEST_GRAY} onPress={handleCancel} borderColor={RED} textColor={RED}> Cancel </Button>
+            <Button onPress={handleCancel} danger bordered><Text>Cancel</Text></Button>
         </View>
         ),
         'ON_GOING': (
         <View style={CTAContainerStyle}>
             <Heading>If requested help satisfied</Heading>
-            <Button onPress={handleFinish} bgColor={LIGHTEST_GRAY} borderColor={GREEN} textColor={GREEN}> End </Button>
+            <Button onPress={handleFinish} success bordered><Text>End</Text></Button>
         </View>
         ),
         'COMPLETED': null,
         'CANCELLED': (
         <View style={CTAContainerStyle}>
             <Heading>If help required again</Heading>
-            <Button bgColor={LIGHTEST_GRAY} onPress={handleRepost}> Repost </Button>
+            <Button onPress={handleRepost} primary bordered><Text>Repost</Text></Button>
         </View>
         ),
     }
 
     return (
-        <ScrollView style={{ backgroundColor: WHITE }}>
-          <View style={{ margin: 10 }}>
+      <StyleProvider style={getTheme(material)}>
+        <Container>
+          <Content style={{ margin: 10 }} contentContainerStyle={{ flexGrow: 1 }}>
             <Description height={300}>{description}</Description>
             <TimeAndStatus timeStamp={timeStamp} status={status} />
             <EventLocation latitude={latitude} longitude={longitude} />
@@ -121,8 +126,9 @@ const UserHelpRequestScreen = ({ route } : { route: Object }) => {
             }
             <UsersRequested usersRequested={usersRequested} keyOfHelpRequest={keyOfHelpRequest} noPeopleRequired={noPeopleRequired} usersAccepted={usersAccepted} />
             <UsersAccepted usersAccepted={usersAccepted} keyOfHelpRequest={keyOfHelpRequest} status={status} />
-          </View>
-        </ScrollView>
+          </Content>
+        </Container>
+      </StyleProvider>
     );
 }
 

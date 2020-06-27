@@ -1,14 +1,17 @@
 import React from 'react';
-import { View, ScrollView, StyleSheet } from 'react-native';
+import { StyleSheet } from 'react-native';
 import { useQuery, useMutation } from 'react-apollo';
 import gql from 'graphql-tag';
-import { Description, Heading, Button, InlineLoader } from '../../components/atoms';
+import { Description, Heading, InlineLoader } from '../../components/atoms';
 import { TimeAndStatus, Creator, CustomModal, EventLocation, Message } from "../../components/molecules";
 import { WHITE, LIGHTEST_GRAY, LIGHT_GRAY, RED } from '../../styles/colors';
 import { margin } from '../../styles/mixins';
 import { FONT_SIZE_20 } from '../../styles/typography';
 import { useAuth } from '../../customHooks';
 import { POLL_INTERVAL } from '../../config';
+import getTheme from '../../native-base-theme/components';
+import material from '../../native-base-theme/variables/material';
+import { StyleProvider, Container, Content, Button, View, Text } from 'native-base';
 
 const QUERY = gql`
   query Help($id: String!){
@@ -59,7 +62,7 @@ const CANCEL_TO_HELP = gql`
 
 const isUserIsThereInUsers = (users, userUid) => users.some((user) => user.uid === userUid);
 
-const UserContributionScreen = ({ route } : { route: Object }) => {
+const UserContributionScreen = ({ route }) => {
     const { params } = route;
     const { keyOfHelpRequest } = params;
     const { user } = useAuth();
@@ -123,28 +126,30 @@ const UserContributionScreen = ({ route } : { route: Object }) => {
     const { CTAContainerStyle } = styles;
 
     return (
-        <ScrollView style={{ backgroundColor: WHITE }}>
-          <View style={{ margin: 10 }}>
-            <Description height={300}>{description}</Description>
-            <TimeAndStatus timeStamp={timeStamp} status={status} />
-            <EventLocation latitude={latitude} longitude={longitude} />
-            <Message>{getMessage()}</Message>
-            {
-              (status === "REQUESTED" && !isUserIsThereInUsers(usersCancelled, user.uid)) 
-              ?
-                loadingForCancelToHelp 
-                  ? <View style={{...CTAContainerStyle, padding: 20}}><InlineLoader /></View>
-                  : <View style={CTAContainerStyle}>
-                      <Heading color={LIGHT_GRAY} size={FONT_SIZE_20}>If you can't help</Heading>
-                      <Button onPress={handleCancel} bgColor={LIGHTEST_GRAY} textColor={RED} borderColor={RED}>
-                        Cancel
-                      </Button>
-                    </View>
-              : null
-            }
-            <Creator userDetails={userDetails} helpRequestDetails={helpRequestDetails} />
-          </View>
-        </ScrollView>
+        <StyleProvider style={getTheme(material)}>
+          <Container>
+            <Content style={{ margin: 10 }} contentContainerStyle={{ flexGrow: 1 }}>
+              <Description height={300}>{description}</Description>
+              <TimeAndStatus timeStamp={timeStamp} status={status} />
+              <EventLocation latitude={latitude} longitude={longitude} />
+              <Message>{getMessage()}</Message>
+              {
+                (status === "REQUESTED" && !isUserIsThereInUsers(usersCancelled, user.uid)) 
+                ?
+                  loadingForCancelToHelp 
+                    ? <View style={{...CTAContainerStyle, padding: 20}}><InlineLoader /></View>
+                    : <View style={CTAContainerStyle}>
+                        <Heading color={LIGHT_GRAY} size={FONT_SIZE_20}>If you can't help</Heading>
+                        <Button onPress={handleCancel} danger bordered>
+                          <Text>Cancel</Text>
+                        </Button>
+                      </View>
+                : null
+              }
+              <Creator userDetails={userDetails} helpRequestDetails={helpRequestDetails} />
+            </Content>
+          </Container>
+        </StyleProvider>
     );
 }
 
