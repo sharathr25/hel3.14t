@@ -1,28 +1,16 @@
 
 import React from "react";
-import { StyleSheet } from "react-native";
-import { Time, Distance } from "../atoms";
-import { View, Text } from "native-base"
+import { Text } from "native-base"
+import { getTimeDiffrence } from "../../utils";
 
 const TimeAndDistance = (props) => {
     const { timeStamp, distance } = props
-    const { timeAndDistance } = styles;
-
+ 
     return (
-        <View style={timeAndDistance}>
-            <Time time={new Date(timeStamp).getTime()} />
-            <Distance distance={distance} />
-        </View>
+        <Text note>
+            {getTimeDiffrence(new Date(timeStamp).getTime()) === " ago" ? "just now" : getTimeDiffrence(new Date(timeStamp).getTime())} - {`${distance ? distance.toFixed(1) : 0} KM Away`}
+        </Text>
     );
 }
 
 export default TimeAndDistance;
-
-const styles = StyleSheet.create({
-    timeAndDistance: {
-        display: 'flex',
-        flex: 1,
-        flexDirection: 'row',
-        justifyContent: 'space-between',
-    }
-});

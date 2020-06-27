@@ -21,9 +21,7 @@ export default DescriptionFixed;
 const styles = StyleSheet.create({
     descriptionStyle : {
         color: BLACK, 
-        fontSize: FONT_SIZE_14, 
-        borderBottomWidth: 0.5, 
-        borderColor: LIGHT_GRAY, 
+        fontSize: FONT_SIZE_14,  
         height: 100 
     }
 });

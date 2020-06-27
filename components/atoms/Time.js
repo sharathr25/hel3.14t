@@ -1,24 +1,12 @@
-
 import React from "react";
-import { Text, StyleSheet } from "react-native";
 import { getTimeDiffrence } from '../../utils/index';
-import { FONT_FAMILY_REGULAR, FONT_SIZE_16 } from "../../styles/typography";
-import { LIGHT_GRAY } from "../../styles/colors";
+import { Text } from 'native-base';
 
-const Time = ({ time }: { time : number }) => {
-  const { text } = styles;
+const Time = ({ time }) => {
   const timeDiffrence = getTimeDiffrence(time) === " ago" ? "just now" : getTimeDiffrence(time)
   return (
-    <Text style={text}>{timeDiffrence}</Text>
+    <Text note>{timeDiffrence}</Text>
   );
 };
 
 export default Time;
-
-const styles = StyleSheet.create({
-  text: {
-    fontFamily: FONT_FAMILY_REGULAR,
-    color: LIGHT_GRAY,
-    fontSize: FONT_SIZE_16
-  }
-});

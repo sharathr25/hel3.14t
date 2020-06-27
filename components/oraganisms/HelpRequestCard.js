@@ -1,8 +1,8 @@
 
 import React from "react";
-import { Text, TouchableOpacity, View } from 'react-native';
-import { BLACK, LIGHT_GRAY } from "../../styles/colors";
-import { Card, DescriptionFixed } from "../atoms";
+import {  TouchableOpacity } from 'react-native';
+import { BLACK, LIGHT_GRAY, ORANGE } from "../../styles/colors";
+import { DescriptionFixed, ProfileLetter } from "../atoms";
 import TimeAndDistance from "../molecules/TimeAndDistance";
 import { FONT_SIZE_14, FONT_SIZE_18 } from "../../styles/typography";
 import { SCREEN_DETAILS } from "../../constants/appConstants";
@@ -12,6 +12,8 @@ import { margin } from "../../styles/mixins";
 import gql from "graphql-tag";
 import { useQuery } from "react-apollo";
 import { POLL_INTERVAL } from "../../config";
+import { Card, CardItem, Body, Text, View, Subtitle } from 'native-base';
+import { getTimeDiffrence } from "../../utils";
 
 const { HELP_REQUEST } = SCREEN_DETAILS;
 
@@ -27,12 +29,7 @@ query Help($id: String!){
 }
 `;
 
-type HelpRequestCardProps = {
-  helpRequestDetails:Object, 
-  removeMe: Function
-}
-
-const HelpRequestCard = (props: HelpRequestCardProps) => {
+const HelpRequestCard = (props) => {
   const { helpRequestDetails , removeMe } = props;
   const navigation = useNavigation();
   const { distance, _id } = helpRequestDetails;
@@ -51,14 +48,22 @@ const HelpRequestCard = (props: HelpRequestCardProps) => {
 
   return (
     <Card>
-      <TouchableOpacity style={{ padding: 10 }} onPress={_onPress}>
-        <ProfileName name={creatorName} />
-        <View style={{ ...margin(5, 0, 5, 0) }}>
-          <DescriptionFixed>
-            {description}
-          </DescriptionFixed>
+      <TouchableOpacity onPress={_onPress}>
+      <CardItem header>
+        <ProfileLetter letter={creatorName.substring(0,1).toUpperCase()} size={40} />
+        <View style={{ width: 3, backgroundColor: ORANGE, borderRadius: 1.5, height: 25, marginHorizontal: 15 } }><Text /></View>
+        <View>
+            <Subtitle style={{ color: ORANGE }}>{creatorName}</Subtitle>
+            <TimeAndDistance timeStamp={timeStamp} distance={distance} />
         </View>
-        <TimeAndDistance timeStamp={timeStamp} distance={distance} />
+      </CardItem>
+      <CardItem>
+        <Body>
+          <Text numberOfLines={5} style={{ minHeight: 100 }}>
+            {description}
+          </Text>
+        </Body>
+      </CardItem>
       </TouchableOpacity>
     </Card>
   );

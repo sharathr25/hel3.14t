@@ -1,11 +1,13 @@
 
 import React, { useState, useEffect } from 'react';
-import { View } from 'react-native'
 import { HelpRequestFeed } from '../../components/oraganisms';
 import { CustomModal } from "../../components/molecules";
 import { useAuth } from "../../customHooks";
 import { Toast } from '../../components/atoms';
 import { toastTypes } from '../../components/atoms/Toast';
+import getTheme from '../../native-base-theme/components';
+import material from '../../native-base-theme/variables/material';
+import { StyleProvider, Container, Content, List } from 'native-base';
 
 const Helps = () => {
   let { user } = useAuth();
@@ -22,10 +24,16 @@ const Helps = () => {
   if(!user) return <CustomModal variant="loading" />
 
   return (
-    <View style={{flex: 1}}>
-      {showToast && <Toast type={toastTypes.WARNING} message="Email not verified" duration={3000} />}
-      <HelpRequestFeed />
-    </View>
+    <StyleProvider style={getTheme(material)}>
+      <Container>
+        {showToast && <Toast type={toastTypes.WARNING} message="Email not verified" duration={3000} />}
+        <Content>
+          <List>
+            <HelpRequestFeed />
+          </List>
+        </Content>
+      </Container>
+    </StyleProvider>
   ); 
 }
 

@@ -6,7 +6,7 @@ import { useQuery, useMutation, useLazyQuery } from 'react-apollo';
 import { useAuth } from '../../customHooks';
 import { ProfileLetter } from '../../components/atoms';
 import { WHITE, ORANGE, LIGHTEST_GRAY } from '../../styles/colors';
-import { CustomModal, Message } from '../../components/molecules';
+import { CustomModal, Message, TimeAndDistance } from '../../components/molecules';
 import { POLL_INTERVAL } from '../../config';
 import { getRatings, getTimeDiffrence } from '../../utils';
 import { Container, Header, Content, Footer, StyleProvider, Button, Text, Title, View } from 'native-base';
@@ -155,7 +155,7 @@ const HelpRequestScreen = ({ route }) => {
                     <View style={{ width: 3, backgroundColor: ORANGE, borderRadius: 1.5, height: 25, marginHorizontal: 15 } }><Text /></View>
                     <View>
                         <Title style={{ color: ORANGE }}>{creatorName}</Title>
-                        <Text note>{getTimeDiffrence(timeStamp)} | {`${distance ? distance.toFixed(1) : 0} KM Away`}</Text>
+                        <TimeAndDistance timeStamp={timeStamp} distance={distance} />
                     </View>
                 </Header>
                 <Content style={{ margin: 10 }}>
