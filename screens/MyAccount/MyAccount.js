@@ -1,10 +1,10 @@
 
 import React, { useEffect, useState } from 'react';
-import { View, Text, StyleSheet, Dimensions, ScrollView } from 'react-native';
+import { StyleSheet } from 'react-native';
 import { useLazyQuery } from 'react-apollo';
 import gql from 'graphql-tag';
 import { ORANGE, WHITE, BLACK, LIGHTEST_GRAY } from '../../styles/colors';
-import { ProfileLetter, Button, Link, Toast} from '../../components/atoms';
+import { ProfileLetter, Link, Toast} from '../../components/atoms';
 import { Auth } from "aws-amplify";
 import { SCREEN_DETAILS } from "../../constants/appConstants";
 import { useAuth } from "../../customHooks";
@@ -13,6 +13,9 @@ import { CustomModal, OTPVerificationToast } from '../../components/molecules';
 import { toastTypes } from '../../components/atoms/Toast';
 import { POLL_INTERVAL } from '../../config';
 import { getRatings } from '../../utils';
+import { StyleProvider, Container, Content, View, Text, Button } from 'native-base';
+import getTheme from '../../native-base-theme/components';
+import material from '../../native-base-theme/variables/material';
 
 const { UPDATE_ACCOUNT } = SCREEN_DETAILS; 
 
@@ -26,25 +29,15 @@ const USER_QUERY = gql`
     }
 `;
 
-type MyAccountScreenProps = {
-    navigation: Object
-}
 
-type DetailProps = {
-    label: string,
-    value: string,
-    showSeparator?: boolean,
-    subDetail?: any,
-}
-
-const EmailVerifyMessage = ({handleVerify}:{ handleVerify: Function}) => (
+const EmailVerifyMessage = ({handleVerify}) => (
     <View style={{ flexDirection: 'row' }}>
         <Text>Email is not verified - </Text>
         <Link onPress={handleVerify}>Verify</Link>
     </View>
 );
 
-const Detail = ({ label, value, showSeparator = true, subDetail = undefined }: DetailProps) => {
+const Detail = ({ label, value, showSeparator = true, subDetail = undefined }) => {
     return (
         <View style={{ flex: 1, borderBottomWidth: showSeparator ? 0.5 : 0, justifyContent: 'center' }}>
             <Text style={{fontSize: FONT_SIZE_20, ...FONT_BOLD, color: BLACK }}>{label}</Text>
@@ -85,7 +78,7 @@ const ProgressDetails = ({ xp, ratings }) => {
     );
 }
 
-const MyAccountScreen = ({ navigation }: MyAccountScreenProps) => {
+const MyAccountScreen = ({ navigation }) => {
     const [getUserData, { error, data, loading }] = useLazyQuery(USER_QUERY, { pollInterval: POLL_INTERVAL });
     const [otp, setOtp] = useState('')
     const [emailVerified, setEmailVerified] = useState(true);
@@ -157,28 +150,34 @@ const MyAccountScreen = ({ navigation }: MyAccountScreenProps) => {
     }
 
     return (
-        <ScrollView style={{ backgroundColor: LIGHTEST_GRAY }} contentContainerStyle={{flexGrow: 1}}>
-            {toast.type !== "" && <Toast type={toast.type} message={toast.message} />}
-            <OTPVerificationToast 
-                show={showOtpInput}
-                onClose={_onClose}
-                verify={verify}
-                resend={resend}
-                setOtp={setOtp}
-                recepient={email}
-            />
-            <View style={container}>
-                <ProfileName username={username} />
-                <ProgressDetails xp={xp} ratings={getRatings(stars, totalRaters)} />
-                <View style={details}>
-                    <Detail label="Email" value={email} subDetail={!emailVerified && <EmailVerifyMessage handleVerify={handleVerify} />} />
-                    <Detail label="Phone" value={phoneNumberWithoutCountryCode} />
-                    <Detail label="Gender" value={gender} />
-                    <Detail label="Date of birth" value={birthdate} showSeparator={false} />
-                    <Button bgColor={ORANGE} textColor={WHITE} onPress={handleEdit}>Edit</Button>
-                </View>
-            </View>
-        </ScrollView>
+        <StyleProvider style={getTheme(material)}>
+            <Container>
+                {toast.type !== "" && <Toast type={toast.type} message={toast.message} />}
+                <OTPVerificationToast 
+                    show={showOtpInput}
+                    onClose={_onClose}
+                    verify={verify}
+                    resend={resend}
+                    setOtp={setOtp}
+                    recepient={email}
+                />
+                <Content contentContainerStyle={{ flexGrow: 1 }}>
+                    <View style={container}>
+                        <ProfileName username={username} />
+                        <ProgressDetails xp={xp} ratings={getRatings(stars, totalRaters)} />
+                        <View style={details}>
+                            <Detail label="Email" value={email} subDetail={!emailVerified && <EmailVerifyMessage handleVerify={handleVerify} />} />
+                            <Detail label="Phone" value={phoneNumberWithoutCountryCode} />
+                            <Detail label="Gender" value={gender} />
+                            <Detail label="Date of birth" value={birthdate} showSeparator={false} />
+                            <Button primary full large onPress={handleEdit}>
+                                <Text>Edit</Text>
+                            </Button>
+                        </View>
+                    </View>
+                </Content>
+            </Container>
+        </StyleProvider>
     );
 }
 

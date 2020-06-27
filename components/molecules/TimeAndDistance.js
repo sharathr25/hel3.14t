@@ -1,14 +1,10 @@
 
 import React from "react";
-import { View, StyleSheet } from "react-native";
+import { StyleSheet } from "react-native";
 import { Time, Distance } from "../atoms";
+import { View, Text } from "native-base"
 
-type TimeAndDistanceProps = {
-    timeStamp: number, 
-    distance: number
-}
-
-const TimeAndDistance = (props: TimeAndDistanceProps) => {
+const TimeAndDistance = (props) => {
     const { timeStamp, distance } = props
     const { timeAndDistance } = styles;
 

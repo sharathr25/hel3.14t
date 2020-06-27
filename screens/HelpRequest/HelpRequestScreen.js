@@ -1,16 +1,17 @@
 
 import React, { useEffect } from 'react';
-import { Dimensions, View, Alert } from 'react-native';
+import { Alert } from 'react-native';
 import gql from 'graphql-tag';
 import { useQuery, useMutation, useLazyQuery } from 'react-apollo';
 import { useAuth } from '../../customHooks';
-import { Description, Button } from '../../components/atoms';
-import { WHITE, ORANGE } from '../../styles/colors';
-import { ProfileName, TimeAndDistance, CustomModal, Message } from '../../components/molecules';
+import { ProfileLetter } from '../../components/atoms';
+import { WHITE, ORANGE, LIGHTEST_GRAY } from '../../styles/colors';
+import { CustomModal, Message } from '../../components/molecules';
 import { POLL_INTERVAL } from '../../config';
-import { getRatings } from '../../utils';
-
-const heightForDescription = Dimensions.get('screen').height - 380
+import { getRatings, getTimeDiffrence } from '../../utils';
+import { Container, Header, Content, Footer, StyleProvider, Button, Text, Title, View } from 'native-base';
+import getTheme from '../../native-base-theme/components';
+import material from '../../native-base-theme/variables/material';
 
 const QUERY = gql`
 query Help($id: String!){
@@ -72,7 +73,7 @@ const USER_QUERY = gql`
 
 const isUserIsThereInUsers = (users, userUid) => users.some((user) => user.uid === userUid);
 
-const HelpRequestScreen = ({ route } : { route: Object }) => {
+const HelpRequestScreen = ({ route }) => {
     const { params } = route;
     const { idOfHelpRequest, distance } = params;
     const { data } = useQuery(QUERY, { variables: { id: idOfHelpRequest }, pollInterval: POLL_INTERVAL });
@@ -116,50 +117,53 @@ const HelpRequestScreen = ({ route } : { route: Object }) => {
             'You can only help if help requester accept your contribution request',
             [
               {
-                text: 'Yes',
-                onPress: () => handleHelp()
-              },
-              {
                 text: 'No',
                 onPress: () => {},
                 style: 'cancel'
               },
+              {
+                text: 'Yes',
+                onPress: () => handleHelp(),
+              },
             ],
             { cancelable: false }
-          );
+        );
     }
 
     let footer;
     if(error) {
-        footer = <Message>something went wrong</Message>
+        footer = <Footer style={{ backgroundColor: LIGHTEST_GRAY }}><Message>something went wrong</Message></Footer>
     } else if(loading || !userData) {
-        footer = <Message loading={true}>Please wait</Message>
+        footer = <Footer style={{ backgroundColor: LIGHTEST_GRAY }}><Message loading={true}>Please wait</Message></Footer>
     } else if(isUserIsThereInUsers(usersRequested, uid)) {
-        footer = <Message>Verification pending</Message>
+        footer = <Footer style={{ backgroundColor: LIGHTEST_GRAY }}><Message>Verification pending</Message></Footer>
     } else if(isUserIsThereInUsers(usersRejected, uid)) {
-        footer = <Message>You can't help(Rejected)</Message>
+        footer = <Footer style={{ backgroundColor: LIGHTEST_GRAY }}><Message>You can't help(Rejected)</Message></Footer>
     } else if((isUserIsThereInUsers(usersAccepted, uid))) {
-        footer = <Message>Your already helping this guy</Message>
+        footer = <Footer style={{ backgroundColor: LIGHTEST_GRAY }}><Message>Your already helping this guy</Message></Footer>
     } else if(isUserIsThereInUsers(usersCancelled, uid)) {
-        footer = <Message>You Rejected to help this guy</Message>
+        footer = <Footer style={{ backgroundColor: LIGHTEST_GRAY }}><Message>You Rejected to help this guy</Message></Footer>
     } else {
-        footer = (
-            <View style={{ alignItems: 'center', padding: 10 }}>
-                <Button onPress={yesOrNoToHelp} bgColor={ORANGE} textColor={WHITE}>Help</Button>
-            </View>
-        );
+        footer = <Button primary full large onPress={yesOrNoToHelp}><Text>Help</Text></Button>
     }
 
     return (
-        <View style={{flex: 1}}>
-            <View style={{flex: 5, backgroundColor: WHITE, padding: 20 }}>
-                <ProfileName name={creatorName} />
-                <View style={{height: 20 }} />
-                <Description height={heightForDescription}>{description}</Description>
-                <TimeAndDistance timeStamp={timeStamp} distance={distance} />
-            </View>
-            {footer}
-        </View>
+        <StyleProvider style={getTheme(material)}>
+            <Container>
+                <Header style={{ backgroundColor: WHITE, justifyContent: 'flex-start', alignItems: 'center' }}>
+                    <ProfileLetter letter={creatorName.substring(0,1).toUpperCase()} size={40} />
+                    <View style={{ width: 3, backgroundColor: ORANGE, borderRadius: 1.5, height: 25, marginHorizontal: 15 } }><Text /></View>
+                    <View>
+                        <Title style={{ color: ORANGE }}>{creatorName}</Title>
+                        <Text note>{getTimeDiffrence(timeStamp)} | {`${distance ? distance.toFixed(1) : 0} KM Away`}</Text>
+                    </View>
+                </Header>
+                <Content style={{ margin: 10 }}>
+                    <Text>{description}</Text>
+                </Content>
+                {footer}
+            </Container>
+        </StyleProvider>
     );
 }
 

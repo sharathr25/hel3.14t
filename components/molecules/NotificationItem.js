@@ -1,15 +1,14 @@
 
 import React from 'react';
 import { StyleSheet, TouchableOpacity } from 'react-native';
-import Icon from 'react-native-vector-icons/AntDesign'
-import { Time } from '../atoms';
 import gql from 'graphql-tag';
 import { useMutation } from 'react-apollo';
 import { ORANGE, BLACK } from '../../styles/colors';
 import { useAuth } from "../../customHooks/index";
-import { ListItem } from 'react-native-elements';
+import { ListItem, Icon, Text, Left, View, Right } from 'native-base';
 import { useNavigation } from '@react-navigation/native';
 import { typeToScreenMapping } from '../../constants/appConstants';
+import { getTimeDiffrence } from '../../utils';
 
 const QUERY_TO_REMOVE_NOTIFICATION = gql`
     mutation UpdateUser($uid: String!, $value: Any) {
@@ -59,17 +58,19 @@ const NotificationItem = (props: NotificationItemProps) => {
     }
 
     return (
-        <ListItem 
-            onPress={_onClick}
-            title={message} 
-            subtitle={<Time time={timeStamp} />}
-            rightIcon={
+        <ListItem noIndent onPress={_onClick}>
+            <Left>
+                <View>
+                    <Text>{message}</Text>
+                    <Text note>{getTimeDiffrence(timeStamp)}</Text>
+                </View>
+            </Left>
+            <Right>
                 <TouchableOpacity onPress={_removeNotification}>
-                    <Icon name="close" size={25} color={ORANGE} />
+                    <Icon name="ios-close" style={{ color: ORANGE, fontSize: 40 }} />
                 </TouchableOpacity>
-            }
-            bottomDivider={true}
-        />
+            </Right>
+        </ListItem>
     );
 }
 

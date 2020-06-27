@@ -1,18 +1,12 @@
 
 import React, { useState } from 'react';
 import { WHITE, ORANGE, BLACK, RED } from '../../styles/colors';
-import { FONT_WEIGHT_REGULAR, FONT_SIZE_18 } from "../../styles/typography";
-import { StyleSheet, TouchableOpacity } from 'react-native';
+import { FONT_SIZE_18 } from "../../styles/typography";
+import { StyleSheet } from 'react-native';
 import { PasswordIcon } from '../atoms';
 import {  Input as InputComponent, Label, Item, View, Text } from 'native-base'
 
-type InputComponentProps = {
-  showPasswordIcon: boolean,
-  label?:string,
-  errMsg?: string
-}
-
-const Input = (props: InputComponentProps) => {
+const Input = (props) => {
   const { showPasswordIcon, label, errMsg  } = props;
   const [showPassword, setShowPassword] = useState(false);
 
@@ -20,7 +14,7 @@ const Input = (props: InputComponentProps) => {
     setShowPassword(!showPassword);
   }
 
-  const { labelStyle, containerStyle, inputContainerStyle, inputStyle } = styles;
+  const { labelStyle } = styles;
 
   return (
     <Item stackedLabel style={{ borderColor: 'transparent', padding: 0 }}>

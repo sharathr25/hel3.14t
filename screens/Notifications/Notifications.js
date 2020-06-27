@@ -1,10 +1,12 @@
 
 import React, { useState, useEffect } from 'react';
-import { View, FlatList } from 'react-native';
+import { FlatList } from 'react-native';
 import { NotificationItem } from '../../components/molecules';
-import { WHITE } from '../../styles/colors';
+import getTheme from '../../native-base-theme/components';
+import material from '../../native-base-theme/variables/material';
+import { StyleProvider, Container, Content, List } from 'native-base';
 
-const NotificationsScreen = ({ notifications } : { notifications : Object }) => {
+const NotificationsScreen = ({ notifications }) => {
     const [_notifications, setNotifications] = useState(notifications);
 
     useEffect(() => {
@@ -21,13 +23,19 @@ const NotificationsScreen = ({ notifications } : { notifications : Object }) => 
     };
 
     return (
-        <View style={{ flex: 1, backgroundColor: WHITE }}>
-            <FlatList
-                data={_notifications.reverse()}
-                renderItem={getNotification}
-                keyExtractor={(_, index) => index.toString()}
-            />
-        </View>
+        <StyleProvider style={getTheme(material) }>
+            <Container>
+                <Content>
+                    <List>
+                        <FlatList
+                            data={_notifications.reverse()}
+                            renderItem={getNotification}
+                            keyExtractor={(_, index) => index.toString()}
+                        />
+                    </List>
+                </Content>
+            </Container>
+        </StyleProvider>
     );
 }
 

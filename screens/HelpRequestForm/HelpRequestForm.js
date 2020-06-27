@@ -1,6 +1,6 @@
 
 import React, { useState, useEffect } from "react";
-import { TouchableOpacity, StyleSheet, Alert, Keyboard, Dimensions } from "react-native";
+import { StyleSheet, Alert, Keyboard, Dimensions } from "react-native";
 import { WHITE, RED, LIGHT_GRAY } from "../../styles/colors";
 import gql from "graphql-tag";
 import { useMutation } from "react-apollo";
@@ -9,8 +9,7 @@ import { CustomModal } from "../../components/molecules";
 import { Toast } from "../../components/atoms";
 import getTheme from '../../native-base-theme/components';
 import material from '../../native-base-theme/variables/material';
-import { StyleProvider, Container, Content, Textarea, Button, Text, Icon, View } from "native-base";
-import { FONT_SIZE_20 } from "../../styles/typography";
+import { StyleProvider, Container, Content, Textarea, Button, Text, View } from "native-base";
 
 const WORD_LIMIT = 300;
 const { height } = Dimensions.get("window");
@@ -115,9 +114,6 @@ const HelpRequestForm = ({navigation}) => {
             <Container>
                 {getToast().type !== "" && <Toast  duration={4000} {...getToast()} />}
                 <Content style={{ marginHorizontal: 10 }} contentContainerStyle={{ flexGrow: 1, justifyContent: 'center' }}>
-                    <TouchableOpacity onPress={_onPress} style={{ alignSelf: 'flex-end', marginHorizontal: 5 }}>
-                        <Icon name="ios-close" style={{ color: RED, fontSize: 2 * FONT_SIZE_20 }} />
-                    </TouchableOpacity>
                     <Textarea 
                         placeholder="Please describe your help"
                         rowSpan={NO_OF_LINES_FOR_DESC}
@@ -126,9 +122,14 @@ const HelpRequestForm = ({navigation}) => {
                         bordered
                     />
                     <WordLimitStatus />
-                    <Button primary full large onPress={requestHelp}>
-                        <Text>Request</Text>
-                    </Button>
+                    <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
+                        <Button onPress={_onPress} primary full large bordered>
+                            <Text>Cancel </Text>
+                        </Button>
+                        <Button primary full large onPress={requestHelp}>
+                            <Text>Request</Text>
+                        </Button>
+                    </View>
                 </Content>
             </Container>
         </StyleProvider>

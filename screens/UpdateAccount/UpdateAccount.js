@@ -1,16 +1,18 @@
 
 import React, { useState } from 'react';
-import { View, ScrollView, Alert } from 'react-native';
-import { ORANGE, WHITE, LIGHTEST_GRAY } from '../../styles/colors';
-import { Button, CustomDatePicker, Selector, Toast} from '../../components/atoms';
+import { Alert } from 'react-native';
+import { CustomDatePicker, Selector, Toast} from '../../components/atoms';
 import { Auth } from "aws-amplify";
 import { SCREEN_DETAILS } from "../../constants/appConstants";
-import { InputComponent, OTPVerificationToast } from '../../components/molecules';
-import { padding } from '../../styles/mixins';
+import { Input, OTPVerificationToast } from '../../components/molecules';
 import { toastTypes } from '../../components/atoms/Toast';
 import { mobileNoConstraints, emailConstraints } from '../../utils/formConstraints';
 import { getAge } from '../../utils';
 import { useForm } from '../../customHooks';
+import { StyleProvider, Container, Content, Footer, Left, Right, Button, Text , View} from 'native-base';
+import getTheme from '../../native-base-theme/components';
+import material from '../../native-base-theme/variables/material';
+import { LIGHTEST_GRAY, LIGHT_GRAY, LIGHTER_ORANGE } from '../../styles/colors';
 
 const AGE_LIMIT = 15;
 const GENDER_OPTIONS = [
@@ -22,7 +24,7 @@ const { MY_ACCOUNT } = SCREEN_DETAILS;
 const EMAIL = 'email'
 const MOBILE_NUMBER = 'mobileNumber'
 
-const UpdateAccount = ({ navigation, route }:{ navigation : Object, route : Object}) => {
+const UpdateAccount = ({ navigation, route }) => {
   const { params } = route;
   const { user } = params;
   const { attributes } = user;
@@ -93,7 +95,8 @@ const UpdateAccount = ({ navigation, route }:{ navigation : Object, route : Obje
   }
 
   return (
-      <ScrollView style={{ backgroundColor: WHITE }} contentContainerStyle={{ flexGrow: 1 }}>
+    <StyleProvider style={getTheme(material)}>
+      <Container>
         {toast.type !== "" && <Toast type={toast.type} message={toast.message} />}
         <OTPVerificationToast
           show={showOtpInput}
@@ -103,35 +106,44 @@ const UpdateAccount = ({ navigation, route }:{ navigation : Object, route : Obje
           setOtp={setOtp}
           recepient={values[MOBILE_NUMBER]}
         />
-        <View style={{ flex: 1, margin: 20 }}>
+        <Content style={{ marginHorizontal: 10 }} contentContainerStyle={{ flexGrow: 1 }}>
           <View style={{flex: 1}}>
-            <InputComponent 
+            <Input 
               label="Email" 
               defaultValue={email}
               {...bindField(EMAIL)}
-              errorMessage={errors[EMAIL]}
+              ereMsg={errors[EMAIL]}
             />
           </View>
-            <View style={{flex: 1}}>
-              <InputComponent 
-                label="Mobile number" 
-                defaultValue={phoneNumberWithoutCountryCode}
-                {...bindField(MOBILE_NUMBER)}
-                errorMessage={errors[MOBILE_NUMBER]}
-              />
-            </View>
+          <View style={{flex: 1}}>
+            <Input 
+              label="Mobile number" 
+              defaultValue={phoneNumberWithoutCountryCode}
+              {...bindField(MOBILE_NUMBER)}
+              ereMsg={errors[MOBILE_NUMBER]}
+            />
+          </View>
           <View style={{flex: 1, marginTop: 10}}>
               <CustomDatePicker updateParentState={setBirthdate} label="Date of Birth" date={birthdate} />
           </View>
           <View style={{flex: 1}}>
               <Selector options={GENDER_OPTIONS} label="Gender" onValueChange={setGender} defaultValue={gender} />
           </View>  
-        </View>
-        <View style={{ flexDirection: 'row', justifyContent: 'space-between', ...padding(10,20,10,20), backgroundColor: LIGHTEST_GRAY }}>
-          <Button onPress={handleCancel} bgColor={LIGHTEST_GRAY}>Cancel</Button>  
-        <Button bgColor={ORANGE} textColor={WHITE} onPress={handleUpdate}>Update</Button>
-      </View>
-    </ScrollView>
+        </Content>
+        <Footer style={{ backgroundColor: LIGHTEST_GRAY, paddingHorizontal: 10 }}>
+          <Left>
+            <Button onPress={handleCancel} bordered primary>
+              <Text>Cancel</Text>
+            </Button>
+          </Left>
+          <Right>
+            <Button onPress={handleUpdate} primary>
+              <Text>Update</Text>
+            </Button>
+          </Right>
+        </Footer>
+      </Container>
+    </StyleProvider>
   ); 
 }
 

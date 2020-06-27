@@ -14,7 +14,7 @@ const { SIGNUP, LOGIN } = SCREEN_DETAILS;
 const IMAGE_HEIGHT = 360;
 const BUTTON_WIDTH_TO_CUT = 15;
 
-const LandingScreen = ({ navigation }: { navigation: Object}) => {
+const LandingScreen = ({ navigation }) => {
     const handleSignUp = () => {
         navigation.navigate(SIGNUP.screenName);
     }

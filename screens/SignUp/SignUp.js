@@ -4,7 +4,6 @@ import { StyleProvider, Container, Content, Button ,Text, CheckBox, View } from 
 import { StyleSheet } from 'react-native';
 import { SCREEN_DETAILS} from '../../constants/appConstants';
 import { ORANGE, BLACK } from '../../styles/colors';
-import { margin } from "../../styles/mixins";
 import { getAge } from '../../utils';
 import gql from 'graphql-tag';
 import { useMutation } from 'react-apollo';
@@ -40,7 +39,7 @@ const MOBILE_NUMBER = 'mobileNumber'
 const PASSWORD = 'password'
 const CONFIRM_PASSOWRD = 'confirmPassword'
 
-function SignUpScreen({navigation}: { navigation: Object }) {
+function SignUpScreen({navigation}) {
   const { values, errors, bindField, isValid } = useForm({
     [USER_NAME]: { constraints: userNameConstraints },
     [EMAIL]: { constraints: emailConstraints },
